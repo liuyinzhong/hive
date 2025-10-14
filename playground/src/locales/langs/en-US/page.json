@@ -1,16 +1,19 @@
 {
   "auth": {
-    "login": "Login",
-    "register": "Register",
     "codeLogin": "Code Login",
-    "qrcodeLogin": "Qr Code Login",
+    "codeSentTo": "Code has been sent to {0}",
     "forgetPassword": "Forget Password",
-    "sendingCode": "SMS Code is sending...",
-    "codeSentTo": "Code has been sent to {0}"
+    "login": "Login",
+    "qrcodeLogin": "Qr Code Login",
+    "register": "Register",
+    "sendingCode": "SMS Code is sending..."
   },
   "dashboard": {
-    "title": "Dashboard",
     "analytics": "Analytics",
+    "title": "Dashboard",
     "workspace": "Workspace"
+  },
+  "user": {
+    "title": "user"
   }
 }

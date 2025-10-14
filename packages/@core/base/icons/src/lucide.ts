@@ -66,4 +66,6 @@ export {
   SwatchBook,
   UserRoundPen,
   X,
+  LucidePlus,
+  LucideTrash,
 } from 'lucide-vue-next';

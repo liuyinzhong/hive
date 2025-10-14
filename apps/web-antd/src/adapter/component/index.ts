@@ -61,6 +61,18 @@ const TreeSelect = defineAsyncComponent(
 );
 const Upload = defineAsyncComponent(() => import('ant-design-vue/es/upload'));
 
+const AiEditor = defineAsyncComponent(
+  () => import('#/components/aieditor/index.vue'),
+);
+
+const UserSelect = defineAsyncComponent(
+  () => import('#/components/UserSelect/index.vue'),
+);
+
+const ColorSelect = defineAsyncComponent(
+  () => import('#/components/ColorSelect/index.vue'),
+);
+
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
   type: 'input' | 'select',
@@ -122,6 +134,9 @@ export type ComponentType =
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
+  | 'AiEditor'
+  | 'UserSelect'
+  | 'ColorSelect'
   | BaseFormComponentType;
 
 async function initComponentAdapter() {
@@ -190,6 +205,9 @@ async function initComponentAdapter() {
     TimePicker,
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload,
+    AiEditor,
+    UserSelect: withDefaultPlaceholder(UserSelect, 'select'),
+    ColorSelect: withDefaultPlaceholder(ColorSelect, 'select'),
   };
 
   // 将组件注册到全局共享状态中

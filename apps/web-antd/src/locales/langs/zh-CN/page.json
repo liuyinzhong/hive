@@ -10,5 +10,12 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "dev": {
+    "analytics": "分析页",
+    "title": "开发管理"
+  },
+  "user": {
+    "title": "用户管理"
   }
 }

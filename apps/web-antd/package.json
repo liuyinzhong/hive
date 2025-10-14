@@ -26,8 +26,10 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@vben-core/composables": "workspace:*",
     "@vben/access": "workspace:*",
     "@vben/common-ui": "workspace:*",
+    "@vben-core/menu-ui": "workspace:*",
     "@vben/constants": "workspace:*",
     "@vben/hooks": "workspace:*",
     "@vben/icons": "workspace:*",
@@ -41,10 +43,23 @@
     "@vben/types": "workspace:*",
     "@vben/utils": "workspace:*",
     "@vueuse/core": "catalog:",
+    "aieditor": "catalog:",
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",
-    "vue-router": "catalog:"
+    "vue-router": "catalog:",
+    "vxe-pc-ui": "catalog:",
+    "vxe-table": "catalog:",
+    "signature_pad": "catalog:",
+    "json-bigint": "catalog:",
+    "@visactor/vtable": "catalog:",
+    "@visactor/vtable-gantt": "catalog:",
+    "@visactor/vtable-editors": "catalog:",
+    "@vue-flow/core": "catalog:",
+    "@faker-js/faker": "catalog:"
+  },
+  "devDependencies": {
+    "@types/json-bigint": "catalog:"
   }
 }

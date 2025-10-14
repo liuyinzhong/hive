@@ -20,6 +20,10 @@ interface BasicUserInfo {
    * 用户角色
    */
   roles?: string[];
+  /*
+  用户关联部门
+  */
+  depts?: string[];
   /**
    * 用户id
    */

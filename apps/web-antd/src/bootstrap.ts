@@ -8,6 +8,7 @@ import '@vben/styles';
 import '@vben/styles/antd';
 
 import { useTitle } from '@vueuse/core';
+import Antd from 'ant-design-vue';
 
 import { $t, setupI18n } from '#/locales';
 
@@ -56,6 +57,13 @@ async function bootstrap(namespace: string) {
   // 配置路由及路由守卫
   app.use(router);
 
+  // 全局引用antd
+  app.use(Antd);
+
+  // VxeUI.use(VxeUIPluginRenderAntd, {
+  //   // prefixCls: 'ant'
+  // });
+  // app.use(VxeUI).use(VxeUITable);
   // 配置Motion插件
   const { MotionPlugin } = await import('@vben/plugins/motion');
   app.use(MotionPlugin);

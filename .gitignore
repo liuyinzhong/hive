@@ -49,4 +49,6 @@ vite.config.ts.*
 *.sln
 *.sw?
 .history
+/apps/web-antd/dist-electron/
+/playground/dist-electron/
 .cursor
