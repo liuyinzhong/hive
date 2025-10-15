@@ -3909,7 +3909,7 @@
     "categories": [
       {
         "id": "FE30802A-6FC5-4B58-91E8-786C179B036D",
-        "defKey": "开发管理",
+        "defKey": "dev",
         "defName": "开发管理",
         "classifyType": "AUTO",
         "manualClassify": "[]",
@@ -3978,7 +3978,7 @@
       },
       {
         "id": "6D0325CC-32A6-4BA6-AB11-592CA8EEE722",
-        "defKey": "系统",
+        "defKey": "sys",
         "defName": "系统",
         "classifyType": "AUTO",
         "manualClassify": "[]",
@@ -4034,6 +4034,18 @@
           }
         ],
         "peerOrder": 2
+      },
+      {
+        "id": "F669648B-33A3-4C9C-A0D2-830B207D87E6",
+        "defKey": "tenants",
+        "defName": "租户",
+        "classifyType": "AUTO",
+        "manualClassify": "[]",
+        "bindSchema": 0,
+        "children": null,
+        "entityRefs": [],
+        "diagramRefs": [],
+        "peerOrder": 3
       }
     ],
     "flat": {
@@ -15142,7 +15154,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1759126775070,
+  "updateTime": 1760440530257,
   "signature": "bf4fd0c4ef93b4482d7b2dd755b08434",
   "branchId": "1111"
 }
