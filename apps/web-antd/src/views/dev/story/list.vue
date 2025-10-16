@@ -68,6 +68,10 @@ const gridOptions: VxeGridProps = {
     highlight: true,
     labelField: 'id',
   },
+  editConfig: {
+    trigger: 'click',
+    mode: 'cell',
+  },
   toolbarConfig: {
     // 是否显示搜索表单控制按钮
     // @ts-ignore 正式环境时有完整的类型声明
@@ -133,8 +137,14 @@ const gridOptions: VxeGridProps = {
     {
       field: 'userList',
       title: '参与人员',
-      cellRender: {
-        name: 'UserAvatarGroup',
+      editRender: {
+        name: 'UserSelect',
+        props: {
+          listField: 'userList',
+          labelField: 'realName',
+          valueField: 'userId',
+          avatarField: 'avatar',
+        },
       },
     },
     {

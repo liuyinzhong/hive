@@ -23,6 +23,7 @@ import DictSelect from '#/adapter/component/table/DictSelect';
 import DictTag from '#/adapter/component/table/DictTag';
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
 import UserAvatar from '#/adapter/component/table/UserAvatar';
+import UserSelect from './component/table/UserSelect';
 
 import { useVbenForm } from './form';
 
@@ -286,6 +287,7 @@ setupVbenVxeTable({
     vxeUI.renderer.add('UserAvatarGroup', UserAvatarGroup);
     vxeUI.renderer.add('UserAvatar', UserAvatar);
     vxeUI.renderer.add('DictSelect', DictSelect);
+    vxeUI.renderer.add('UserSelect', UserSelect);
     // vxeUI.renderer.add('VxeSelect', vxeUI.renderer.get('VxeSelect'));
     // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
     // vxeUI.formats.add

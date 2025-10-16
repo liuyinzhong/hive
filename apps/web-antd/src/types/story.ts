@@ -44,6 +44,7 @@ export interface StoryFace {
   /* 参与人员 */
   userList?: {
     userId: string;
-    userName: string;
+    realName: string;
+    avatar?: string;
   }[];
 }

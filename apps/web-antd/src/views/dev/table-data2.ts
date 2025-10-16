@@ -10,12 +10,14 @@ export const MOCK_API_StoryData: StoryFace[] = [
     pmLink: 'https://www.lddgo.net/string/random-data',
     userList: [
       {
-        userId: '0000',
-        userName: '刘哈哈',
+        userId: '001',
+        realName: '张三',
+        avatar: 'https://picsum.photos/30/30',
       },
       {
-        userId: '0000',
-        userName: '张三',
+        userId: '002',
+        realName: '李四',
+        avatar: 'https://picsum.photos/30/30',
       },
     ],
     version: '1.0.0',

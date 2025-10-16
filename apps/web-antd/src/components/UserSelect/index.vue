@@ -37,7 +37,7 @@ const options = ref([
   },
   {
     avatar: 'https://picsum.photos/30/30',
-    realName: '王五',
+    nickrealNameName: '王五',
     userId: '003',
   },
 ]);
