@@ -140,7 +140,6 @@ const gridOptions: VxeGridProps = {
       editRender: {
         name: 'UserSelect',
         props: {
-          listField: 'userList',
           labelField: 'realName',
           valueField: 'userId',
           avatarField: 'avatar',

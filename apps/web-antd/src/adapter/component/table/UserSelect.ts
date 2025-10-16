@@ -3,9 +3,9 @@ import { h } from 'vue';
 
 export default {
   renderTableEdit(_renderOpts: any, params: any) {
-    const { column, row } = params;
+    const { column, row, cell } = params;
     const { props, events } = _renderOpts;
-
+    debugger;
     let options = [
       {
         avatar: 'https://picsum.photos/30/30',
@@ -37,10 +37,22 @@ export default {
           width: '100%',
         },
         value:
-          row[props.listField].map((item: any) => item[props.valueField]) || [],
+          row[column.field]?.map((item: any) => item[props.valueField]) || [],
+        // 关键：将下拉菜单挂载到当前单元格元素内
+        getPopupContainer: () => {
+          // cell.$el 是当前编辑单元格的 DOM 元素
+          return params.$table.getCellElement(row, column.field);
+        },
+        // 补充：阻止下拉菜单的事件冒泡（避免被表格捕获）
+        onPopupScroll: (e: Event) => {
+          e.stopPropagation();
+        },
         onChange: (value: any) => {
           debugger;
           // row[column.valueField] = value;
+        },
+        change: (value: any) => {
+          debugger;
         },
       },
       // 构造选项列表
@@ -75,7 +87,7 @@ export default {
   renderTableCell(_renderOpts: any, params: any) {
     const { column, row } = params;
     const { props, events } = _renderOpts;
-    const userList = row?.[props.listField] || [];
+    const userList = row?.[column.field] || [];
 
     const avatars = userList.map((item: any, index: any) => {
       return h(
