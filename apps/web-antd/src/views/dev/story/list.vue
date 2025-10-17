@@ -64,6 +64,8 @@ const formOptions: VbenFormProps = {
 
 /** 表格配置 */
 const gridOptions: VxeGridProps = {
+  /* 不时auto的话，会把自定义的编辑单元格【下拉框给覆盖到】，因为表格高度小于下拉框宽度，下拉框不会完全展示出来 */
+  height: 'auto',
   checkboxConfig: {
     highlight: true,
     labelField: 'id',
@@ -127,22 +129,25 @@ const gridOptions: VxeGridProps = {
     {
       field: 'storyStatus',
       title: '需求状态',
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'STORY_STATUS',
         },
       },
     },
     {
-      field: 'userList',
+      field: 'userIds',
       title: '参与人员',
       editRender: {
         name: 'UserSelect',
         props: {
-          labelField: 'realName',
-          valueField: 'userId',
-          avatarField: 'avatar',
+          mode: 'multiple',
+        },
+        events: {
+          change: (val: any) => {
+            message.success(`${JSON.stringify(val)}`);
+          },
         },
       },
     },

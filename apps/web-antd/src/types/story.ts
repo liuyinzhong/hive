@@ -42,9 +42,5 @@ export interface StoryFace {
   /** 需求来源,字典,; */
   source?: string;
   /* 参与人员 */
-  userList?: {
-    userId: string;
-    realName: string;
-    avatar?: string;
-  }[];
+  userIds?: string[];
 }
