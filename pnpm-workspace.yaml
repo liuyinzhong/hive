@@ -48,7 +48,7 @@ catalog:
   '@types/lodash.get': ^4.4.9
   '@types/lodash.isequal': ^4.5.8
   '@types/lodash.set': ^4.3.9
-  '@types/node': ^22.18.11
+  '@types/node': ^24.9.2
   '@types/nprogress': ^0.2.3
   '@types/postcss-import': ^14.0.3
   '@types/qrcode': ^1.5.5
@@ -63,8 +63,8 @@ catalog:
   '@vue/reactivity': ^3.5.22
   '@vue/shared': ^3.5.22
   '@vue/test-utils': ^2.4.6
-  '@vueuse/core': ^13.9.0
-  '@vueuse/integrations': ^13.9.0
+  '@vueuse/core': ^13.4.0
+  '@vueuse/integrations': ^14.0.0
   '@vueuse/motion': ^3.0.3
   '@vue-flow/core': ^1.47.0
   ant-design-vue: ^4.2.6
