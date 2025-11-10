@@ -17,7 +17,9 @@ const props = defineProps({
   modelValue: String,
 });
 
-onMounted(() => {});
+onMounted(() => {
+  handleChange([options.value[0].value, options.value[0].children[0].value]);
+});
 onUnmounted(() => {});
 
 const options = ref<any>([
@@ -69,7 +71,13 @@ const options = ref<any>([
   },
 ]);
 
-const selectedValue = ref(props.modelValue || '');
+const selectedValue = ref(
+  props.modelValue || [
+      options.value[0].value,
+      options.value[0].children[0].value,
+    ] ||
+    '',
+);
 const selectRef = ref();
 
 const handleChange = (value: any) => {
