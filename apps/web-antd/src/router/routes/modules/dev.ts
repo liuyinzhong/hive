@@ -4,16 +4,6 @@ import { $t } from '#/locales';
 
 const routes: RouteRecordRaw[] = [
   {
-    name: 'devWorkspace',
-    path: '/dev/workspace',
-    component: () => import('#/views/dev/workspace/index.vue'),
-    meta: {
-      icon: 'lucide:code-xml',
-      title: '开发工作台',
-      order: 0,
-    },
-  },
-  {
     meta: {
       icon: 'lucide:code-xml',
       order: 1,
