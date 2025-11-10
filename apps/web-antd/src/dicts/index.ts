@@ -12,6 +12,8 @@ import {
   BUG_TYPE,
   BUG_SOURCE,
   BUG_ENV,
+  VERSION_TYPE,
+  RELEASE_STATUS,
 } from './data/index';
 
 export interface DictFace {
@@ -51,6 +53,8 @@ const dictionaryData: Record<string, DictFace[]> = {
   BUG_TYPE,
   BUG_SOURCE,
   BUG_ENV,
+  VERSION_TYPE,
+  RELEASE_STATUS,
 };
 
 /** 获取字典列表 */

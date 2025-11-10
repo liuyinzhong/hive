@@ -118,6 +118,8 @@ const moduleList = ref([
                 v-model:projectId="queryParams.projectId"
                 v-model:versionId="queryParams.versionId"
                 @change="changeProject"
+                :showAddProject="true"
+                :showAddVersion="true"
                 style="width: 200px"
               />
             </a-form-item>

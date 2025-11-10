@@ -3,8 +3,8 @@ import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { getDictList } from '#/dicts';
-import { h } from 'vue';
-
+import { changeVersionType } from '#/utils/versionExtendApi';
+import { z } from '#/adapter/form';
 defineOptions({
   name: 'VersionsAddFormModel',
 });
@@ -18,87 +18,63 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  wrapperClass: 'grid-cols-2',
-  fieldMappingTime: [
-    ['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD HH:mm:ss'],
-  ],
+  fieldMappingTime: [['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD']],
   schema: [
     {
-      component: 'Textarea',
-      fieldName: 'taskTitle',
-      label: '任务标题',
+      component: 'Select',
+      fieldName: 'releaseStatus',
+      label: '发布状态',
       rules: 'required',
-      formItemClass: 'col-span-2',
+      defaultValue: '0',
+      disabled: false,
+      componentProps: {
+        options: getDictList('RELEASE_STATUS'),
+      },
+    },
+    {
+      component: 'RadioGroup',
+      fieldName: 'versionType',
+      label: '更新类型',
+      rules: 'required',
+      componentProps: {
+        onChange: (e: any) => {
+          const oldVersion = '1.0.0';
+          const newVersion = changeVersionType(oldVersion, e.target.value);
+          formApi.setFieldValue('version', newVersion);
+        },
+        options: getDictList('VERSION_TYPE'),
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'version',
+      label: '版本号',
+      rules: z
+        .string()
+        .min(1, { message: '请输入版本号' })
+        .refine((value) => /^\d+\.\d+\.\d+$/.test(value), {
+          message: '格式：x.y.z，x/y/z 为非负整数',
+        }),
     },
     {
       component: 'ApiSelect',
-      fieldName: 'storyTitle',
-      label: '关联需求',
+      fieldName: 'projectId',
+      label: '关联项目',
       rules: 'required',
       componentProps: {
         api: () => getDictList('STORY_STATUS'),
         allowClear: true,
       },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'executeName',
-      label: '执行人',
-      rules: 'required',
-      componentProps: {
-        api: () => getDictList('STORY_STATUS'),
-        allowClear: true,
-      },
-    },
-    {
-      component: 'InputNumber',
-      fieldName: 'planHours',
-      label: '计划工时',
-      defaultValue: 0,
-    },
-    {
-      component: 'InputNumber',
-      fieldName: 'actualHours',
-      label: '实际工时',
-      defaultValue: 0,
     },
     {
       component: 'RangePicker',
       fieldName: 'timeArr',
-      label: '开始时间',
+      label: '起止时间',
       rules: 'required',
       componentProps: {
-        format: 'YYYY-MM-DD HH:mm:ss',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss',
+        format: 'YYYY-MM-DD',
+        valueFormat: 'YYYY-MM-DD',
       },
-    },
-
-    {
-      component: 'ApiSelect',
-      fieldName: 'taskType',
-      label: '任务类型',
-      rules: 'required',
-      componentProps: {
-        api: () => getDictList('STORY_STATUS'),
-        allowClear: true,
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'taskStatus',
-      label: '任务状态',
-      rules: 'required',
-      componentProps: {
-        api: () => getDictList('STORY_STATUS'),
-        allowClear: true,
-      },
-    },
-    {
-      component: 'AiEditor',
-      fieldName: 'taskRichText',
-      label: '内容',
-      formItemClass: 'col-span-2',
-      componentProps: {},
     },
   ],
   showDefaultActions: false,
@@ -131,11 +107,11 @@ function onSubmit(values: Record<string, any>) {
       duration: 2,
       key: 'is-form-submitting',
     });
-  }, 3000);
+  }, 1500);
 }
 </script>
 <template>
-  <Modal class="w-[800px]">
-    <Form />
+  <Modal class="w-[450px]">
+    <Form> </Form>
   </Modal>
 </template>

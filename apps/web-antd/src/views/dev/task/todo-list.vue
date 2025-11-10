@@ -13,8 +13,6 @@ import { faker } from '@faker-js/faker';
 import { Card, message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import batchFormModal from './batch-modal.vue';
-
 interface DataItem {
   title: string;
   icon: string;
@@ -239,19 +237,6 @@ const addParams = ref<TaskFace>({});
 const changeTaskTitle = (e: string) => {
   console.log(e);
 };
-
-// 批量添加任务
-const [BatchFormModal, BatchFormModalApi] = useVbenModal({
-  title: '批量添加任务',
-  // 连接抽离的组件
-  connectedComponent: batchFormModal,
-  destroyOnClose: true,
-});
-
-/** 打开弹窗 */
-function openModal() {
-  BatchFormModalApi.open();
-}
 </script>
 
 <template>
@@ -309,7 +294,6 @@ function openModal() {
             </template>
           </a-input-search>
         </a-input-group>
-        <a-button type="primary" @click="openModal">添加任务</a-button>
       </div>
 
       <br />
@@ -414,8 +398,6 @@ function openModal() {
         </template>
       </a-list>
     </Card>
-
-    <BatchFormModal />
   </Page>
 </template>
 

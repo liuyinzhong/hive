@@ -10,6 +10,7 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
 import { getExampleTableApi } from '../mock-api';
 import addFormModal from './add-modal.vue';
+import batchFormModal from './batch-modal.vue';
 
 interface RowType {
   category: string;
@@ -134,6 +135,18 @@ function openFormModal(row: any) {
 }
 
 // #endregion
+
+// #region 批量添加
+const [BatchFormModal, BatchFormModalApi] = useVbenModal({
+  connectedComponent: batchFormModal,
+  destroyOnClose: true,
+});
+
+/** 打开批量添加弹窗 */
+function openBatchFormModal() {
+  BatchFormModalApi.open();
+}
+// #endregion
 </script>
 
 <template>
@@ -141,8 +154,12 @@ function openFormModal(row: any) {
     <Grid>
       <template #toolbar-actions>
         <a-button type="primary" @click="openFormModal">添加任务</a-button>
+        <a-button type="primary" @click="openBatchFormModal">
+          批量添加任务
+        </a-button>
       </template>
     </Grid>
     <AddFormModal />
+    <BatchFormModal />
   </Page>
 </template>
