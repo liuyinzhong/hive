@@ -20,6 +20,7 @@ interface SelectEditorConfig {
   options: {
     label: string;
     value: string;
+    [key: string]: any;
   }[];
   /** 选项变化时的回调函数 */
   change: (rowData: any, option: any) => void;
