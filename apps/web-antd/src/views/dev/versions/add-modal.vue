@@ -6,7 +6,7 @@ import { getDictList } from '#/dicts';
 import { h } from 'vue';
 
 defineOptions({
-  name: 'VersionsAddFormModelDemo',
+  name: 'VersionsAddFormModel',
 });
 
 const [Form, formApi] = useVbenForm({
@@ -105,7 +105,7 @@ const [Form, formApi] = useVbenForm({
 });
 
 const [Modal, modalApi] = useVbenModal({
-  title: '添加任务',
+  title: '添加版本',
   fullscreenButton: false,
   onConfirm: async () => {
     await formApi.validateAndSubmitForm();

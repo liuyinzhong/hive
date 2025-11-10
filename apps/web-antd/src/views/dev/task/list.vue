@@ -9,7 +9,7 @@ import { message } from 'ant-design-vue';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
 import { getExampleTableApi } from '../mock-api';
-import FormModalDemo from './form-modal.vue';
+import addFormModal from './add-modal.vue';
 
 interface RowType {
   category: string;
@@ -123,14 +123,14 @@ const gridOptions: VxeGridProps<RowType> = {
 const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 
 // #region 单个添加
-const [FormModal, formModalApi] = useVbenModal({
-  connectedComponent: FormModalDemo,
+const [AddFormModal, AddFormModalApi] = useVbenModal({
+  connectedComponent: addFormModal,
   destroyOnClose: true,
 });
 
 /** 打开表单弹窗 */
 function openFormModal(row: any) {
-  formModalApi.setData(row).open();
+  AddFormModalApi.setData(row).open();
 }
 
 // #endregion
@@ -140,9 +140,9 @@ function openFormModal(row: any) {
   <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
-        <a-button type="primary" @click="openFormModal">打开弹窗</a-button>
+        <a-button type="primary" @click="openFormModal">添加任务</a-button>
       </template>
     </Grid>
-    <FormModal />
+    <AddFormModal />
   </Page>
 </template>

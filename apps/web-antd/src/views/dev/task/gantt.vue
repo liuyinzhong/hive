@@ -12,20 +12,32 @@ import * as VTable from '@visactor/vtable';
 import { Gantt } from '@visactor/vtable-gantt';
 import * as VTableGantt from '@visactor/vtable-gantt';
 
-import FormModalDemo from './form-modal.vue';
+import addTaskFormModal from './add-modal.vue';
+import addStoryFormModal from '#/views/dev/story/add-modal.vue';
 
 const { SCROLL, CLICK_TASK_BAR, MOVE_END_TASK_BAR, CHANGE_DATE_RANGE } =
   VTableGantt.TYPES.GANTT_EVENT_TYPE;
 const { CLICK_CELL, DBLCLICK_CELL } = VTable.ListTable.EVENT_TYPE;
-const [FormModal, formModalApi] = useVbenModal({
+const [AddTaskFormModal, AddTaskFormModalApi] = useVbenModal({
   // 连接抽离的组件
-  connectedComponent: FormModalDemo,
+  connectedComponent: addTaskFormModal,
   showConfirmButton: false,
 });
 
-/** 打开弹窗 */
+/** 打开任务弹窗 */
 function openFormModal(row: any) {
-  formModalApi.setData(row).open();
+  AddTaskFormModalApi.setData(row).open();
+}
+
+/** 打开需求弹窗 */
+const [AddStoryFormModal, AddStoryFormModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: addStoryFormModal,
+  showConfirmButton: false,
+});
+
+function openStoryFormModal(row: any) {
+  AddStoryFormModalApi.setData(row).open();
 }
 
 const records = [
@@ -273,6 +285,9 @@ nextTick(() => {
       if (args.field === 'taskTitle') {
         openFormModal(args.originData);
       }
+      if (args.field === 'storyTitle') {
+        openStoryFormModal(args.originData);
+      }
     },
   );
   ganttInstance.taskListTableInstance?.on(
@@ -292,6 +307,7 @@ nextTick(() => {
         style="position: relative"
       ></div>
     </div>
-    <FormModal />
+    <AddTaskFormModal />
+    <AddStoryFormModal />
   </Page>
 </template>

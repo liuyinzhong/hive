@@ -6,7 +6,7 @@ import { getDictList } from '#/dicts';
 import { h } from 'vue';
 
 defineOptions({
-  name: 'TaskAddFormModelDemo',
+  name: 'TaskAddFormModel',
 });
 
 const [Form, formApi] = useVbenForm({

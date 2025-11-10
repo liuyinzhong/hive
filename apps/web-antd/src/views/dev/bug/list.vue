@@ -8,11 +8,10 @@ import { message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
-import { getExampleTableApi } from '../mock-api';
-import FormModalDemo from './form-modal.vue';
+import addFormModal from './add-modal.vue';
 import { getDictList } from '#/dicts';
 import { getTestData } from './testdata';
-import ExtraTrackDrawer from './track-drawer.vue';
+import trackDrawer from './track-drawer.vue';
 
 const formOptions: VbenFormProps = {
   // 默认展开
@@ -221,14 +220,14 @@ const gridOptions: VxeGridProps = {
 const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 
 // #region 单个添加
-const [FormModal, formModalApi] = useVbenModal({
-  connectedComponent: FormModalDemo,
+const [AddFormModal, AddFormModalApi] = useVbenModal({
+  connectedComponent: addFormModal,
   destroyOnClose: true,
 });
 
 /** 打开表单弹窗 */
 function openFormModal(row: any) {
-  formModalApi.setData(row).open();
+  AddFormModalApi.setData(row).open();
 }
 
 // #endregion
@@ -236,7 +235,7 @@ function openFormModal(row: any) {
 // #region 抽屉组件
 const [TrackDrawer, TrackDrawerApi] = useVbenDrawer({
   // 连接抽离的组件
-  connectedComponent: ExtraTrackDrawer,
+  connectedComponent: trackDrawer,
 });
 
 /** 打开抽屉 */
@@ -268,7 +267,7 @@ function openDrawer(row: any) {
         <a-button type="primary" @click="openFormModal">新建缺陷</a-button>
       </template>
     </Grid>
-    <FormModal />
+    <AddFormModal />
     <TrackDrawer />
   </Page>
 </template>

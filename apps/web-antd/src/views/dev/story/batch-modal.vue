@@ -1,40 +1,39 @@
 <script lang="ts" setup>
-import type { TaskFace } from '#/types';
-
-import { ref } from 'vue';
-
-import { useVbenModal } from '@vben/common-ui';
-
+import type { StoryFace } from '#/types';
+import { onMounted, reactive, ref } from 'vue';
 import * as VTable from '@visactor/vtable';
 import { Button, message } from 'ant-design-vue';
-import dayjs from 'dayjs';
-
-import { DateEditor, InputEditor, SelectEditor } from '#/vtable';
 import { getDictList } from '#/dicts';
+import { VbenButton, VbenButtonGroup, useVbenModal } from '@vben/common-ui';
+
+import {
+  DateEditor,
+  InputEditor,
+  SelectEditor,
+  TextAreaEditor,
+  UploadFileEditor,
+  RichTextEditor,
+} from '#/vtable';
 
 defineOptions({
-  name: 'AddBatchTask',
+  name: 'StoryBatchFormModel',
 });
 
-const { CHANGE_CELL_VALUE, COPY_DATA, PASTED_DATA, DROPDOWN_MENU_CLICK } =
-  VTable.ListTable.EVENT_TYPE;
+const {
+  CHANGE_CELL_VALUE,
+  COPY_DATA,
+  PASTED_DATA,
+  DROPDOWN_MENU_CLICK,
+  DBLCLICK_CELL,
+} = VTable.ListTable.EVENT_TYPE;
 
 let ListTableApi: VTable.ListTable;
 
 // 初始化为 10个空对象
-const records = ref<TaskFace[]>();
-
-const [Modal, modalApi] = useVbenModal({
-  async onConfirm() {
-    modalApi.close();
-  },
-  onOpened() {
-    initTable();
-  },
-});
+const records = ref<StoryFace[]>();
 
 const addRow = (installIndex?: number) => {
-  ListTableApi.addRecord({} as TaskFace, installIndex);
+  ListTableApi.addRecord({} as StoryFace, installIndex);
 };
 
 const getRecords = () => {
@@ -43,67 +42,79 @@ const getRecords = () => {
 
 const columns: VTable.ColumnsDefine = [
   {
+    field: 'moduleTitle',
+    title: '关联模块',
+    width: 'auto',
+    editor: new SelectEditor({
+      options: getDictList('STORY_STATUS'),
+      change: (rowData: StoryFace, e: any) => {
+        rowData.moduleId = e.value;
+      },
+    }),
+  },
+  {
+    field: 'version',
+    title: '关联版本',
+    width: 'auto',
+    editor: new SelectEditor({
+      options: getDictList('STORY_STATUS'),
+      change: (rowData: StoryFace, e: any) => {
+        rowData.versionId = e.value;
+      },
+    }),
+  },
+  {
     field: 'storyTitle',
-    title: '关联需求',
-    width: 200,
-    editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {
-        rowData.storyId = e.value;
-      },
-    }),
-  },
-  {
-    field: 'taskTitle',
-    title: '任务标题',
-    width: 200,
+    title: '需求标题',
+    width: 300,
     editor: new InputEditor(),
   },
   {
-    field: 'executeName',
-    title: '执行人',
-    width: 100,
+    field: 'pmLink',
+    title: '原型链接',
+    width: 200,
+    editor: new TextAreaEditor(),
+  },
+
+  {
+    field: 'storyStatus',
+    title: '需求状态',
+    width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {
-        rowData.executeId = e.value;
-      },
+      change: (rowData: StoryFace, e: any) => {},
     }),
   },
   {
-    field: 'planHours',
-    title: '计划工时',
-    width: 'auto',
-    editor: new InputEditor(),
-  },
-  {
-    field: 'startTime',
-    title: '开始时间',
-    editor: new DateEditor(),
-    width: 'auto',
-  },
-  {
-    field: 'endTime',
-    title: '结束时间',
-    editor: new DateEditor(),
-    width: 'auto',
-  },
-  {
-    field: 'taskType',
-    title: '任务类型',
+    field: 'storyType',
+    title: '需求类别',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {},
+      options: getDictList('STORY_TYPE'),
+      change: (rowData: StoryFace, e: any) => {},
     }),
   },
   {
-    field: 'taskStatus',
-    title: '任务状态',
+    field: 'storyLevel',
+    title: '优先级',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {},
+      options: getDictList('STORY_LEVEL'),
+      change: (rowData: StoryFace, e: any) => {},
+    }),
+  },
+  {
+    field: 'storyRichText',
+    title: '需求描述',
+    width: 'auto',
+    editor: new RichTextEditor(),
+  },
+  {
+    field: 'files',
+    title: '需求附件',
+    width: 'auto',
+    editor: new UploadFileEditor({
+      maxCount: 10,
     }),
   },
 ];
@@ -118,8 +129,8 @@ const initTable = () => {
         contextMenuItems: ['复制', '粘贴', '清空单元格', '删除行', '新增行'],
       },
       widthMode: 'standard',
-      allowFrozenColCount: 2,
-      frozenColCount: 2,
+      allowFrozenColCount: 3,
+      frozenColCount: 3,
       autoWrapText: true,
       hover: {
         highlightMode: 'cross',
@@ -143,6 +154,9 @@ const initTable = () => {
 
   /* ListTableApi.on(CHANGE_CELL_VALUE, (params) => {
     console.log('编辑单元格数据', params);
+  }); */
+  /* ListTableApi.on(DBLCLICK_CELL, (params) => {
+    console.log('双击单元格', params);
   }); */
 
   /* ListTableApi.on(COPY_DATA, (params) => {
@@ -194,9 +208,18 @@ const initTable = () => {
     }
   });
 };
+
+const [Modal, modalApi] = useVbenModal({
+  onConfirm: async () => {
+    modalApi.close();
+  },
+  onOpened() {
+    initTable();
+  },
+});
 </script>
 <template>
-  <Modal class="w-[1030px]">
+  <Modal class="w-[1258px]">
     <div class="h-[600px] w-full">
       <div
         id="tableContainer"
@@ -205,9 +228,11 @@ const initTable = () => {
       ></div>
     </div>
 
-    <template #prepend-footer>
-      <Button @click="addRow()">添加行</Button>
-      <Button @click="getRecords">获取数据</Button>
+    <template #center-footer>
+      <VbenButtonGroup v-bind="{ gap: 10 }" :border="true">
+        <VbenButton @click="addRow()"> 添加行 </VbenButton>
+        <VbenButton @click="getRecords()"> 获取数据 </VbenButton>
+      </VbenButtonGroup>
     </template>
   </Modal>
 </template>

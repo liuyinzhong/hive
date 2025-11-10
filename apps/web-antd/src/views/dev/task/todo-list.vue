@@ -13,7 +13,7 @@ import { faker } from '@faker-js/faker';
 import { Card, message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import AddBatchTask from './add-batch.vue';
+import batchFormModal from './batch-modal.vue';
 
 interface DataItem {
   title: string;
@@ -241,16 +241,16 @@ const changeTaskTitle = (e: string) => {
 };
 
 // 批量添加任务
-const [AddBatchTaskModal, AddBatchTaskModalApi] = useVbenModal({
+const [BatchFormModal, BatchFormModalApi] = useVbenModal({
   title: '批量添加任务',
   // 连接抽离的组件
-  connectedComponent: AddBatchTask,
+  connectedComponent: batchFormModal,
   destroyOnClose: true,
 });
 
 /** 打开弹窗 */
 function openModal() {
-  AddBatchTaskModalApi.open();
+  BatchFormModalApi.open();
 }
 </script>
 
@@ -415,7 +415,7 @@ function openModal() {
       </a-list>
     </Card>
 
-    <AddBatchTaskModal />
+    <BatchFormModal />
   </Page>
 </template>
 

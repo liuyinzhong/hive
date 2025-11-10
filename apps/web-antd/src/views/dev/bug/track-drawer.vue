@@ -6,7 +6,7 @@ import { useVbenDrawer } from '@vben/common-ui';
 import { getDictList } from '#/dicts';
 
 defineOptions({
-  name: 'ExtraTrackDrawer',
+  name: 'BugTrackDrawer',
 });
 
 const [Drawer] = useVbenDrawer();

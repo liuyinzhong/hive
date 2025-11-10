@@ -5,7 +5,7 @@ import { useVbenForm } from '#/adapter/form';
 import { getDictList } from '#/dicts';
 
 defineOptions({
-  name: 'TaskAddFormModelDemo',
+  name: 'BugAddFormModel',
 });
 
 const [Form, formApi] = useVbenForm({

@@ -3,7 +3,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { VbenFormProps } from '#/adapter/form';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { Page, useVbenModal } from '@vben/common-ui';
-import FormModalDemo from './form-modal.vue';
+import addFormModal from './add-modal.vue';
 import { getDictList } from '#/dicts';
 
 //#region 表格搜索,配置
@@ -96,14 +96,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
 // #region 单个添加，编辑 表单弹窗
 
-const [FormModal, formModalApi] = useVbenModal({
-  connectedComponent: FormModalDemo,
+const [FormModal, FormModalApi] = useVbenModal({
+  connectedComponent: addFormModal,
   destroyOnClose: true,
 });
 
 /** 打开表单弹窗 */
 function openFormModal(row: any) {
-  formModalApi.setData(row).open();
+  FormModalApi.setData(row).open();
 }
 
 // #endregion

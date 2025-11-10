@@ -6,7 +6,7 @@ import { useVbenDrawer } from '@vben/common-ui';
 import { getDictList } from '#/dicts';
 
 defineOptions({
-  name: 'FormModelDemo',
+  name: 'StoryTrackDrawer',
 });
 
 const [Drawer] = useVbenDrawer();

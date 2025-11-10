@@ -17,9 +17,9 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getDictList } from '#/dicts';
 
 import { getExampleTableApi } from '../mock-api2';
-import ExtraDrawer from './drawer.vue';
-import ExtraAddStoryModal from './add-modal.vue';
-import ExtraAddBatchStoryModal from './add-batch.vue';
+import trackDrawer from './track-drawer.vue';
+import addFormModal from './add-modal.vue';
+import batchFormModal from './batch-modal.vue';
 
 // 跳转路由
 const router = useRouter();
@@ -216,46 +216,44 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
 // #region 单个添加需求
 
-const [AddStoryModal, AddStoryModalApi] = useVbenModal({
+const [AddFormModal, AddFormModalApi] = useVbenModal({
   title: '添加需求',
-  connectedComponent: ExtraAddStoryModal,
+  connectedComponent: addFormModal,
   destroyOnClose: true,
 });
 function openAddStoryModal(row: any) {
-  AddStoryModalApi.setData(row).open();
+  AddFormModalApi.setData(row).open();
 }
 
 // #endregion
 
 // #region 批量添加需求
 
-const [AddBatchStoryModal, addBatchStoryModalApi] = useVbenModal({
+const [BatchFormModal, BatchFormModalApi] = useVbenModal({
   title: '批量添加需求',
-  connectedComponent: ExtraAddBatchStoryModal,
+  connectedComponent: batchFormModal,
   destroyOnClose: true,
 });
 
 /** 打开批量添加弹窗 */
 function openAddBatchStoryModal() {
-  addBatchStoryModalApi.open();
+  BatchFormModalApi.open();
 }
 
 // #endregion
 
 // #region 抽屉组件
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [TrackDrawer, TrackDrawerApi] = useVbenDrawer({
   // 连接抽离的组件
-  connectedComponent: ExtraDrawer,
+  connectedComponent: trackDrawer,
 });
 
 /** 打开抽屉 */
 function openDrawer(row: any) {
-  drawerApi
-    .setData({
-      values: row,
-    })
-    .open();
+  TrackDrawerApi.setData({
+    values: row,
+  }).open();
 }
 // #endregion
 </script>
@@ -282,8 +280,8 @@ function openDrawer(row: any) {
         </a-button>
       </template>
     </Grid>
-    <AddStoryModal />
-    <Drawer />
-    <AddBatchStoryModal />
+    <AddFormModal />
+    <TrackDrawer />
+    <BatchFormModal />
   </Page>
 </template>
