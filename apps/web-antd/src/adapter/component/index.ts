@@ -435,7 +435,6 @@ async function initComponentAdapter() {
     TimePicker,
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload: withPreviewUpload(),
-    Upload,
     AiEditor,
     UserSelect: withDefaultPlaceholder(UserSelect, 'select'),
     ColorSelect: withDefaultPlaceholder(ColorSelect, 'select'),
