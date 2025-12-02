@@ -4,10 +4,10 @@
   "compilerOptions": {
     "moduleResolution": "bundler"
   },
-  "include": ["src"],
-  "exclude": ["node_modules"],
   "compilerOptions": {
     "noUnusedLocals": false,
     "noUnusedParameters": false
-  }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
