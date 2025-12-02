@@ -28,12 +28,12 @@ export const VERSION_STATUS: DictFace[] = [
   },
 ];
 
-/* 变更行为 */
-export const CHANGE_BEHAVIOR: DictFace[] = [
+/* 行为 */
+export const BEHAVIOR_TYPE: DictFace[] = [
   {
     label: '流转',
     value: '0',
-    type: 'CHANGE_BEHAVIOR',
+    type: 'BEHAVIOR_TYPE',
     remark: '',
     disabled: false,
     color: '',
@@ -41,7 +41,15 @@ export const CHANGE_BEHAVIOR: DictFace[] = [
   {
     label: '评论',
     value: '1',
-    type: 'CHANGE_BEHAVIOR',
+    type: 'BEHAVIOR_TYPE',
+    remark: '',
+    disabled: false,
+    color: '',
+  },
+  {
+    label: '创建',
+    value: '2',
+    type: 'BEHAVIOR_TYPE',
     remark: '',
     disabled: false,
     color: '',

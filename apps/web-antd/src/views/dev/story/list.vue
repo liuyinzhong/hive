@@ -4,12 +4,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { useRouter } from 'vue-router';
 
-import {
-  useVbenDrawer,
-  useVbenModal,
-  VbenCountToAnimator,
-  Page,
-} from '@vben/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
 
@@ -17,9 +12,9 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getDictList } from '#/dicts';
 
 import { getExampleTableApi } from '../mock-api2';
-import trackDrawer from './track-drawer.vue';
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
+import trackDrawer from './track-drawer.vue';
 
 // 跳转路由
 const router = useRouter();

@@ -3,7 +3,7 @@ import type { DictFace } from '../index';
 /* 缺陷状态 */
 export const BUG_STATUS: DictFace[] = [
   {
-    label: '待修复',
+    label: '待确认',
     value: '0',
     type: 'BUG_STATUS',
     remark: '',
@@ -11,20 +11,28 @@ export const BUG_STATUS: DictFace[] = [
     color: '',
   },
   {
-    label: '已修复',
+    label: '不予处理',
     value: '10',
     type: 'BUG_STATUS',
-    remark: '发布到测试环境后在流转',
+    remark: '要备注原因：比如：重复、非BUG、配置问题、无法重现 等等...',
     disabled: false,
-    color: 'success',
+    color: 'danger',
   },
   {
-    label: '无法重现',
+    label: '待修复',
     value: '20',
     type: 'BUG_STATUS',
     remark: '',
     disabled: false,
-    color: 'cyan',
+    color: '',
+  },
+  {
+    label: '已修复',
+    value: '30',
+    type: 'BUG_STATUS',
+    remark: '发布到测试环境后在流转',
+    disabled: false,
+    color: 'success',
   },
   {
     label: '已关闭',
@@ -66,50 +74,6 @@ export const BUG_LEVEL: DictFace[] = [
     label: 'P3-低优先级',
     value: '3',
     type: 'BUG_LEVEL',
-    remark: '',
-    disabled: false,
-    color: '',
-  },
-];
-
-/* 缺陷确认状态 */
-export const BUG_CONFIRM_STATUS: DictFace[] = [
-  {
-    label: '待确认',
-    value: '0',
-    type: 'TRIAGE_STATUS',
-    remark: '',
-    disabled: false,
-    color: '',
-  },
-  {
-    label: '已确认',
-    value: '10',
-    type: 'TRIAGE_STATUS',
-    remark: '',
-    disabled: false,
-    color: 'success',
-  },
-  {
-    label: '已拒绝',
-    value: '20',
-    type: 'TRIAGE_STATUS',
-    remark: '',
-    disabled: false,
-    color: 'error',
-  },
-  {
-    label: '重复',
-    value: '30',
-    type: 'TRIAGE_STATUS',
-    remark: '',
-    disabled: false,
-    color: '',
-  },
-  {
-    label: '本期不修复',
-    value: '40',
-    type: 'TRIAGE_STATUS',
     remark: '',
     disabled: false,
     color: '',

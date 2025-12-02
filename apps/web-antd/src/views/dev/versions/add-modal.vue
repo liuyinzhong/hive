@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
+
 import { message } from 'ant-design-vue';
-import { useVbenForm } from '#/adapter/form';
+
+import { useVbenForm, z } from '#/adapter/form';
 import { getDictList } from '#/dicts';
 import { changeVersionType } from '#/utils/versionExtendApi';
-import { z } from '#/adapter/form';
+
 defineOptions({
   name: 'VersionsAddFormModel',
 });
@@ -112,6 +114,6 @@ function onSubmit(values: Record<string, any>) {
 </script>
 <template>
   <Modal class="w-[450px]">
-    <Form> </Form>
+    <Form />
   </Modal>
 </template>

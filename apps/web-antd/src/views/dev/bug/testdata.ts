@@ -1,13 +1,14 @@
 import type { BugFace } from '#/types';
-import {
-  BUG_STATUS,
-  BUG_LEVEL,
-  BUG_CONFIRM_STATUS,
-  BUG_TYPE,
-  BUG_SOURCE,
-  BUG_ENV,
-} from '#/dicts/data/bug';
+
 import { faker } from '@faker-js/faker';
+
+import {
+  BUG_ENV,
+  BUG_LEVEL,
+  BUG_SOURCE,
+  BUG_STATUS,
+  BUG_TYPE,
+} from '#/dicts/data/bug';
 
 export const getTestData = (pageSize: number) => {
   const data: BugFace[] = [];
@@ -15,15 +16,12 @@ export const getTestData = (pageSize: number) => {
     data.push({
       bugId: 'xxx',
       bugTitle: 'bug1',
-      bugNum: 100001,
+      bugNum: 100_001,
       bugRichText: faker.lorem.sentence(),
       bugStatus: faker.helpers.arrayElement(
         BUG_STATUS.map((item) => item.value),
       ),
       bugLevel: faker.helpers.arrayElement(BUG_LEVEL.map((item) => item.value)),
-      bugConfirmStatus: faker.helpers.arrayElement(
-        BUG_CONFIRM_STATUS.map((item) => item.value),
-      ),
       bugEnv: faker.helpers.arrayElement(BUG_ENV.map((item) => item.value)),
       bugSource: faker.helpers.arrayElement(
         BUG_SOURCE.map((item) => item.value),

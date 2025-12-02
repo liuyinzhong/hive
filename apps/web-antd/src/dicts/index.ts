@@ -8,12 +8,13 @@ import {
   TASK_STATUS,
   BUG_STATUS,
   BUG_LEVEL,
-  BUG_CONFIRM_STATUS,
   BUG_TYPE,
   BUG_SOURCE,
   BUG_ENV,
   VERSION_TYPE,
   RELEASE_STATUS,
+  BEHAVIOR_TYPE,
+  CHANGE_TYPE,
 } from './data/index';
 
 export interface DictFace {
@@ -49,12 +50,13 @@ const dictionaryData: Record<string, DictFace[]> = {
   TASK_STATUS,
   BUG_STATUS,
   BUG_LEVEL,
-  BUG_CONFIRM_STATUS,
   BUG_TYPE,
   BUG_SOURCE,
   BUG_ENV,
   VERSION_TYPE,
   RELEASE_STATUS,
+  BEHAVIOR_TYPE,
+  CHANGE_TYPE,
 };
 
 /** 获取字典列表 */

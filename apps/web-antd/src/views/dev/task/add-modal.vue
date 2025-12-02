@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
+
 import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
 import { getDictList } from '#/dicts';
-import { h } from 'vue';
 
 defineOptions({
   name: 'TaskAddFormModel',

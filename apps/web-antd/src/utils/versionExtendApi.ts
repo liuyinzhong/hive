@@ -64,17 +64,21 @@ const incrementVersion = (
   const { major, minor, patch } = parts;
 
   switch (type) {
-    case '0':
+    case '0': {
       return { major: major + 1, minor: 0, patch: 0 };
-    case '10':
+    }
+    case '10': {
       return { major, minor: minor + 1, patch: 0 };
-    case '20':
+    }
+    case '20': {
       return { major, minor, patch: patch + 1 };
-    default:
+    }
+    default: {
       // 这里实际上不会执行，因为 TypeScript 会进行类型检查
       throw new Error(
         `不支持的更新类型：${type}，仅支持 版本升级/特性更新/修订补丁`,
       );
+    }
   }
 };
 
@@ -111,8 +115,8 @@ function compareVersion(v1: string, v2: string): number {
 
   // 逐段比较版本号
   for (let i = 0; i < len; i++) {
-    const num1 = parseInt(v1Parts[i]!, 10);
-    const num2 = parseInt(v2Parts[i]!, 10);
+    const num1 = Number.parseInt(v1Parts[i]!, 10);
+    const num2 = Number.parseInt(v2Parts[i]!, 10);
 
     if (num1 > num2) {
       return 1;

@@ -5,7 +5,7 @@ import type { TaskFace } from '#/types';
 
 import { onMounted, reactive, ref } from 'vue';
 
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page } from '@vben/common-ui';
 
 import { useSortable } from '@vben-core/composables';
 

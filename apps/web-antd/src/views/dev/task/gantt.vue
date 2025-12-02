@@ -12,8 +12,9 @@ import * as VTable from '@visactor/vtable';
 import { Gantt } from '@visactor/vtable-gantt';
 import * as VTableGantt from '@visactor/vtable-gantt';
 
-import addTaskFormModal from './add-modal.vue';
 import addStoryFormModal from '#/views/dev/story/add-modal.vue';
+
+import addTaskFormModal from './add-modal.vue';
 
 const { SCROLL, CLICK_TASK_BAR, MOVE_END_TASK_BAR, CHANGE_DATE_RANGE } =
   VTableGantt.TYPES.GANTT_EVENT_TYPE;

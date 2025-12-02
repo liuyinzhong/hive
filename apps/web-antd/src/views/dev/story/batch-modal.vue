@@ -1,18 +1,20 @@
 <script lang="ts" setup>
 import type { StoryFace } from '#/types';
-import { onMounted, reactive, ref } from 'vue';
-import * as VTable from '@visactor/vtable';
-import { Button, message } from 'ant-design-vue';
-import { getDictList } from '#/dicts';
-import { VbenButton, VbenButtonGroup, useVbenModal } from '@vben/common-ui';
 
+import { ref } from 'vue';
+
+import { useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
+
+import * as VTable from '@visactor/vtable';
+import { message } from 'ant-design-vue';
+
+import { getDictList } from '#/dicts';
 import {
-  DateEditor,
   InputEditor,
+  RichTextEditor,
   SelectEditor,
   TextAreaEditor,
   UploadFileEditor,
-  RichTextEditor,
 } from '#/vtable';
 
 defineOptions({

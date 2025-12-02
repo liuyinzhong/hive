@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
+
 import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
 import { getDictList } from '#/dicts';
 
@@ -26,7 +28,16 @@ const [Form, formApi] = useVbenForm({
       rules: 'required',
       formItemClass: 'col-span-2',
     },
-
+    {
+      component: 'Select',
+      fieldName: 'bugStatus',
+      label: '状态',
+      defaultValue: '0',
+      formItemClass: 'col-span-2',
+      componentProps: {
+        options: getDictList('BUG_STATUS'),
+      },
+    },
     {
       component: 'UserSelect',
       fieldName: 'fixUserId',
@@ -55,25 +66,7 @@ const [Form, formApi] = useVbenForm({
         options: [],
       },
     },
-    {
-      component: 'Select',
-      fieldName: 'bugStatus',
-      label: '状态',
-      defaultValue: '0',
-      componentProps: {
-        options: getDictList('BUG_STATUS'),
-      },
-    },
-    {
-      component: 'Select',
-      fieldName: 'confirmBugStatus',
-      label: '确认状态',
-      defaultValue: '0',
-      disabled: true,
-      componentProps: {
-        options: getDictList('BUG_CONFIRM_STATUS'),
-      },
-    },
+
     {
       component: 'Select',
       fieldName: 'bugLevel',

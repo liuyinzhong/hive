@@ -7,10 +7,9 @@ import { useVbenModal } from '@vben/common-ui';
 
 import * as VTable from '@visactor/vtable';
 import { Button, message } from 'ant-design-vue';
-import dayjs from 'dayjs';
 
-import { DateEditor, InputEditor, SelectEditor } from '#/vtable';
 import { getDictList } from '#/dicts';
+import { DateEditor, InputEditor, SelectEditor } from '#/vtable';
 
 defineOptions({
   name: 'TaskBatchFormModel',

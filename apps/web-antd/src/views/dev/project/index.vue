@@ -1,27 +1,14 @@
 <script lang="ts" setup>
-import type { VbenFormProps } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import { LucideSettings, LucidePencilLine, LucideEllipsis } from '@vben/icons';
-
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import {
-  useVbenDrawer,
-  useVbenModal,
-  VbenCountToAnimator,
-  Page,
-  JsonViewer,
-} from '@vben/common-ui';
+import { Page } from '@vben/common-ui';
 
-import { Card, message } from 'ant-design-vue';
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getDictList } from '#/dicts';
-import { getExampleTableApi } from '../mock-api2';
-import { ref, reactive, nextTick, defineComponent } from 'vue';
 import ProjectSelect from '#/components/dev/ProjectSelect/index.vue';
+import BugTable from '#/views/dev/bug/list.vue';
 import StoryTable from '#/views/dev/story/list.vue';
 import TaskTable from '#/views/dev/task/list.vue';
-import BugTable from '#/views/dev/bug/list.vue';
+
 // 跳转路由
 const router = useRouter();
 
@@ -66,7 +53,7 @@ const tableTypeList = ref([
   },
 ]);
 const changeTableType = (val: string) => {
-  console.log('切换tab:' + val);
+  console.log(`切换tab:${val}`);
 };
 // #endregion 切换tab
 
@@ -115,11 +102,11 @@ const moduleList = ref([
           <a-form :model="queryParams" layout="inline">
             <a-form-item label="项目" label-width="80px">
               <ProjectSelect
-                v-model:projectId="queryParams.projectId"
-                v-model:versionId="queryParams.versionId"
+                v-model:project-id="queryParams.projectId"
+                v-model:version-id="queryParams.versionId"
                 @change="changeProject"
-                :showAddProject="true"
-                :showAddVersion="true"
+                :show-add-project="true"
+                :show-add-version="true"
                 style="width: 200px"
               />
             </a-form-item>
