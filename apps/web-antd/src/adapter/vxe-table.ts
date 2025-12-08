@@ -16,15 +16,15 @@ import { get, isFunction, isString } from '@vben/utils';
 import { objectOmit } from '@vueuse/core';
 import { Button, Popconfirm, Switch, Tag } from 'ant-design-vue';
 
-import { $t } from '#/locales';
 import CellImage from '#/adapter/component/table/CellImage';
 import CellLink from '#/adapter/component/table/CellLink';
 import DictSelect from '#/adapter/component/table/DictSelect';
 import DictTag from '#/adapter/component/table/DictTag';
-import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
 import UserAvatar from '#/adapter/component/table/UserAvatar';
-import UserSelect from './component/table/UserSelect';
+import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
+import { $t } from '#/locales';
 
+import UserSelect from './component/table/UserSelect';
 import { useVbenForm } from './form';
 
 setupVbenVxeTable({
@@ -57,6 +57,15 @@ setupVbenVxeTable({
       } as VxeTableGridOptions,
     });
 
+    // 表格配置项可以用 cellRender: { name: 'CellImage' },
+    vxeUI.renderer.add('CellImage', CellImage);
+
+    // 表格配置项可以用 cellRender: { name: 'CellLink' },
+    vxeUI.renderer.add('CellLink', CellLink);
+
+    // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
+    // vxeUI.formats.add
+
     /**
      * 解决vxeTable在热更新时可能会出错的问题
      */
@@ -65,12 +74,6 @@ setupVbenVxeTable({
         vxeUI.renderer.delete(key);
       }
     });
-
-    // 表格配置项可以用 cellRender: { name: 'CellImage' },
-    vxeUI.renderer.add('CellImage', CellImage);
-
-    // 表格配置项可以用 cellRender: { name: 'CellLink' },
-    vxeUI.renderer.add('CellLink', CellLink);
 
     // 单元格渲染： Tag
     vxeUI.renderer.add('CellTag', {
@@ -288,9 +291,6 @@ setupVbenVxeTable({
     vxeUI.renderer.add('UserAvatar', UserAvatar);
     vxeUI.renderer.add('DictSelect', DictSelect);
     vxeUI.renderer.add('UserSelect', UserSelect);
-    // vxeUI.renderer.add('VxeSelect', vxeUI.renderer.get('VxeSelect'));
-    // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
-    // vxeUI.formats.add
   },
   useVbenForm,
 });
