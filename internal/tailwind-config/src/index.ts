@@ -9,9 +9,13 @@ import animate from 'tailwindcss-animate';
 
 import { enterAnimationPlugin } from './plugins/entry';
 
+debugger;
+
 // import defaultTheme from 'tailwindcss/defaultTheme';
 
-const { packages } = getPackagesSync(process.cwd());
+// 使用当前文件所在目录的上级目录作为查找起点，确保能找到项目的package.json
+const projectRoot = path.resolve(__dirname, '../../../');
+const { packages } = getPackagesSync(projectRoot);
 
 const tailwindPackages: string[] = [];
 
