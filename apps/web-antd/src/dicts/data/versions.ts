@@ -16,7 +16,7 @@ export const RELEASE_STATUS: DictFace[] = [
     type: 'RELEASE_STATUS',
     remark: '',
     disabled: false,
-    color: '',
+    color: 'processing',
   },
   {
     label: '待发版',

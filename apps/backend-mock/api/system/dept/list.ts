@@ -57,6 +57,5 @@ export default eventHandler(async (event) => {
   }
 
   const listData = structuredClone(mockData);
-
   return useResponseSuccess(listData);
 });

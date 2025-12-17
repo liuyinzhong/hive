@@ -1,4 +1,4 @@
-import { Button, Image } from 'ant-design-vue';
+import { Button } from 'ant-design-vue';
 import { h } from 'vue';
 export default {
   renderTableDefault(renderOpts: any, params: any) {
@@ -10,7 +10,7 @@ export default {
     } else {
       text = row[column.field];
     }
-
+    debugger;
     return h(
       Button,
       {

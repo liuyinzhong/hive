@@ -2,7 +2,7 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
-
+import { getVersionsList } from '#/api/dev/versions';
 import { useVbenForm } from '#/adapter/form';
 import { getDictList } from '#/dicts';
 
@@ -70,7 +70,11 @@ const [Form, formApi] = useVbenForm({
       fieldName: 'version',
       label: '迭代',
       componentProps: {
-        api: () => getDictList('STORY_TYPE'),
+        api: () => getVersionsList({ page: 1, pageSize: 100 }),
+        labelField: 'version',
+        valueField: 'versionId',
+        resultField: 'items',
+        autoSelect: 'first',
       },
     },
     {

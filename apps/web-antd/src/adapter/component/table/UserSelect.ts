@@ -81,7 +81,7 @@ export default {
 
   renderTableCell(_renderOpts: any, params: any) {
     const { column, row } = params;
-    const { props, events } = _renderOpts;
+    // const { props, events } = _renderOpts;
     const userIds = row?.[column.field] || [];
 
     const userList = options.filter((item: any) =>

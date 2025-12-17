@@ -1,19 +1,11 @@
 import { MOCK_API_StoryData } from './table-data2';
-
+import { sleep } from '#/utils/index';
 export namespace DemoTableApi {
   export interface PageFetchParams {
     [key: string]: any;
     page: number;
     pageSize: number;
   }
-}
-
-export function sleep(time = 1000) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
 }
 
 /**

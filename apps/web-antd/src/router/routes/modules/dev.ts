@@ -13,6 +13,16 @@ const routes: RouteRecordRaw[] = [
     path: '/dev',
     children: [
       {
+        name: 'projectHome',
+        path: '/dev/home',
+        component: () => import('#/views/dev/project/home.vue'),
+        meta: {
+          affixTab: false,
+          icon: 'lucide:album',
+          title: '项目集',
+        },
+      },
+      {
         name: 'project',
         path: '/dev/project',
         component: () => import('#/views/dev/project/index.vue'),

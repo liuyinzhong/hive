@@ -100,7 +100,7 @@ const formatVersion = (parts: VersionParts): string => {
  * console.log(compareVersion('2.0', '2.0.0')); // 0
  * console.log(compareVersion('1.0.1', '1.0.0')); // 1
  */
-function compareVersion(v1: string, v2: string): number {
+export function compareVersion(v1: string, v2: string): number {
   const v1Parts = v1.split('.');
   const v2Parts = v2.split('.');
   const len = Math.max(v1Parts.length, v2Parts.length);

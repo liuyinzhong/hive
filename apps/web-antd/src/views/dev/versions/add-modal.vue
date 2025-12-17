@@ -2,10 +2,12 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
-
+import type { SystemVersionApi } from '#/api/dev/versions';
 import { useVbenForm, z } from '#/adapter/form';
 import { getDictList } from '#/dicts';
 import { changeVersionType } from '#/utils/versionExtendApi';
+import { createVersion, getLastVersion } from '#/api/dev/versions';
+import { getProjectsList } from '#/api/dev/project';
 
 defineOptions({
   name: 'VersionsAddFormModel',
@@ -23,14 +25,28 @@ const [Form, formApi] = useVbenForm({
   fieldMappingTime: [['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD']],
   schema: [
     {
-      component: 'Select',
-      fieldName: 'releaseStatus',
-      label: '发布状态',
-      rules: 'required',
-      defaultValue: '0',
-      disabled: false,
+      component: 'Input',
+      fieldName: 'versionId',
+      dependencies: {
+        show() {
+          return false;
+        },
+        triggerFields: ['versionId'],
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'pordVersion',
+      label: '线上版本号',
       componentProps: {
-        options: getDictList('RELEASE_STATUS'),
+        readonly: true,
+        bordered: false,
+      },
+      dependencies: {
+        show(values) {
+          return !!values.pordVersion;
+        },
+        triggerFields: ['pordVersion'],
       },
     },
     {
@@ -46,6 +62,12 @@ const [Form, formApi] = useVbenForm({
         },
         options: getDictList('VERSION_TYPE'),
       },
+      dependencies: {
+        disabled(values) {
+          return !!values.versionId;
+        },
+        triggerFields: ['versionId'],
+      },
     },
     {
       component: 'Input',
@@ -57,6 +79,23 @@ const [Form, formApi] = useVbenForm({
         .refine((value) => /^\d+\.\d+\.\d+$/.test(value), {
           message: '格式：x.y.z，x/y/z 为非负整数',
         }),
+      dependencies: {
+        disabled(values) {
+          return !!values.versionId;
+        },
+        triggerFields: ['versionId'],
+      },
+    },
+    {
+      component: 'Select',
+      fieldName: 'releaseStatus',
+      label: '发布状态',
+      rules: 'required',
+      defaultValue: '0',
+      disabled: false,
+      componentProps: {
+        options: getDictList('RELEASE_STATUS'),
+      },
     },
     {
       component: 'ApiSelect',
@@ -64,15 +103,27 @@ const [Form, formApi] = useVbenForm({
       label: '关联项目',
       rules: 'required',
       componentProps: {
-        api: () => getDictList('STORY_STATUS'),
-        allowClear: true,
+        api: () => getProjectsList(),
+        labelField: 'projectTitle',
+        valueField: 'projectId',
+        autoSelect: 'first',
       },
+      dependencies: {
+        disabled(values) {
+          return !!values.versionId;
+        },
+        triggerFields: ['versionId'],
+      },
+    },
+    {
+      component: 'Textarea',
+      fieldName: 'remark',
+      label: '备注',
     },
     {
       component: 'RangePicker',
       fieldName: 'timeArr',
       label: '起止时间',
-      rules: 'required',
       componentProps: {
         format: 'YYYY-MM-DD',
         valueFormat: 'YYYY-MM-DD',
@@ -88,28 +139,44 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: async () => {
     await formApi.validateAndSubmitForm();
   },
-  onOpenChange(isOpen: boolean) {
+  async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      formApi.setValues(modalApi.getData());
+      formApi.resetForm();
+
+      const row: SystemVersionApi.SystemVersion = modalApi.getData();
+
+      if (!row.version) {
+        const lastVersion: SystemVersionApi.SystemVersion =
+          await getLastVersion('');
+
+        const newVersion = changeVersionType(lastVersion.version, '20');
+
+        row.version = newVersion;
+        row.versionType = '20';
+        row.pordVersion = lastVersion.version;
+      }
+      formApi.setValues(row);
     }
   },
 });
 
-function onSubmit(values: Record<string, any>) {
+async function onSubmit(values: Record<string, any>) {
   message.loading({
     content: '正在提交中...',
     duration: 0,
     key: 'is-form-submitting',
   });
   modalApi.lock();
-  setTimeout(() => {
-    modalApi.close();
-    message.success({
-      content: `提交成功：${JSON.stringify(values)}`,
-      duration: 2,
-      key: 'is-form-submitting',
-    });
-  }, 1500);
+
+  await createVersion(values);
+
+  modalApi.close();
+
+  message.success({
+    content: `提交成功`,
+    duration: 2,
+    key: 'is-form-submitting',
+  });
 }
 </script>
 <template>

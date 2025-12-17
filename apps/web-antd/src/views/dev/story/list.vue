@@ -92,7 +92,9 @@ const gridOptions: VxeGridProps = {
       cellRender: {
         name: 'CellLink',
         events: {
-          click: () => {},
+          click: (row: any) => {
+            debugger;
+          },
         },
       },
     },
