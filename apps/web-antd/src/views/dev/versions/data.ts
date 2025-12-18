@@ -9,7 +9,7 @@ import { changeVersionType } from '#/utils/versionExtendApi';
 import { z } from '#/adapter/form';
 
 /** 新增表单配置 */
-export function useFormSchema(formApi: any): VbenFormSchema[] {
+export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
@@ -42,11 +42,6 @@ export function useFormSchema(formApi: any): VbenFormSchema[] {
       label: '更新类型',
       rules: 'required',
       componentProps: {
-        onChange: (e: any) => {
-          const oldVersion = '1.0.0';
-          const newVersion = changeVersionType(oldVersion, e.target.value);
-          formApi.setFieldValue('version', newVersion);
-        },
         options: getDictList('VERSION_TYPE'),
       },
       dependencies: {
@@ -67,10 +62,19 @@ export function useFormSchema(formApi: any): VbenFormSchema[] {
           message: '格式：x.y.z，x/y/z 为非负整数',
         }),
       dependencies: {
+        triggerFields: ['versionId', 'versionType'],
         disabled(values) {
           return !!values.versionId;
         },
-        triggerFields: ['versionId'],
+        trigger: (values, formApi) => {
+          if (values.versionType) {
+            const newVersion = changeVersionType(
+              values.pordVersion,
+              values.versionType,
+            );
+            formApi.setFieldValue('version', newVersion);
+          }
+        },
       },
     },
     {

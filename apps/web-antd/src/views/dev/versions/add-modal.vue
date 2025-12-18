@@ -6,7 +6,6 @@ import { useVbenForm } from '#/adapter/form';
 import { changeVersionType } from '#/utils/versionExtendApi';
 import { createVersion, getLastVersion } from '#/api/dev/versions';
 import { useFormSchema } from './data';
-import { computed } from 'vue';
 
 defineOptions({
   name: 'VersionsAddFormModel',
@@ -22,7 +21,7 @@ const [Form, formApi] = useVbenForm({
     },
   },
   fieldMappingTime: [['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD']],
-  schema: useFormSchema(formApi),
+  schema: useFormSchema(),
   showDefaultActions: false,
 });
 

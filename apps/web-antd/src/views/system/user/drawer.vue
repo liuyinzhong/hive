@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useVbenDrawer, useVbenForm } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
+import { useFormSchema } from './data';
 
 defineOptions({
   name: 'FormModelDemo',
@@ -33,56 +34,11 @@ const [Form, formApi] = useVbenForm({
     },
   },
 
-  schema: [
-    {
-      component: 'Input',
-      fieldName: 'username',
-      label: '登录用户名',
-      disabled: true,
-    },
-    {
-      component: 'Input',
-      fieldName: 'realName',
-      label: '用户昵称',
-    },
-    {
-      component: 'Input',
-      fieldName: 'avatar',
-      label: '用户头像',
-    },
-    {
-      component: 'InputPassword',
-      fieldName: 'password',
-      label: '密码',
-    },
-    {
-      component: 'Select',
-      fieldName: 'depts',
-      label: '部门(多选)',
-      componentProps: {
-        mode: 'multiple',
-        options: [
-          {
-            label: '部门1',
-            value: '1',
-          },
-          {
-            label: '部门2',
-            value: '2',
-          },
-        ],
-      },
-    },
-    {
-      component: 'Textarea',
-      fieldName: 'desc',
-      label: '描述',
-    },
-  ],
+  schema: useFormSchema(),
 });
 </script>
 <template>
-  <Drawer title="组件抽离示例" class="w-[600px]">
+  <Drawer title="添加人员" class="w-[600px]">
     <Form />
   </Drawer>
 </template>

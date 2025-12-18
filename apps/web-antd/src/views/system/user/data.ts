@@ -3,9 +3,34 @@ import type { VbenFormSchema } from '#/adapter/form';
 import { $t } from '#/locales';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { SystemUserApi } from '#/api/system/user';
-/**
- * 获取编辑表单的字段配置。如果没有使用多语言，可以直接export一个数组常量
- */
+
+/** 新增表单配置 */
+export function useFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      fieldName: 'username',
+      label: '登录名',
+    },
+    {
+      component: 'Input',
+      fieldName: 'realName',
+      label: '真实姓名',
+    },
+    {
+      component: 'InputPassword',
+      fieldName: 'password',
+      label: '密码',
+    },
+    {
+      component: 'Textarea',
+      fieldName: 'desc',
+      label: '描述',
+    },
+  ];
+}
+
+/** 表格查询表单配置 */
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
