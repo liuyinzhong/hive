@@ -18,7 +18,6 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  fieldMappingTime: [['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD']],
   schema: [
     {
       component: 'Input',

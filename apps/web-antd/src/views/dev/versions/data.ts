@@ -4,10 +4,123 @@ import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
 import type { SystemVersionApi } from '#/api/dev/versions';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-/**
- * 获取编辑表单的字段配置。如果没有使用多语言，可以直接export一个数组常量
- */
-export function useSchema(): VbenFormSchema[] {
+import { getProjectsList } from '#/api/dev/project';
+import { changeVersionType } from '#/utils/versionExtendApi';
+import { z } from '#/adapter/form';
+
+/** 新增表单配置 */
+export function useFormSchema(formApi: any): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      fieldName: 'versionId',
+      dependencies: {
+        show() {
+          return false;
+        },
+        triggerFields: ['versionId'],
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'pordVersion',
+      label: '线上版本号',
+      componentProps: {
+        readonly: true,
+        bordered: false,
+      },
+      dependencies: {
+        show(values) {
+          return !!values.pordVersion;
+        },
+        triggerFields: ['pordVersion'],
+      },
+    },
+    {
+      component: 'RadioGroup',
+      fieldName: 'versionType',
+      label: '更新类型',
+      rules: 'required',
+      componentProps: {
+        onChange: (e: any) => {
+          const oldVersion = '1.0.0';
+          const newVersion = changeVersionType(oldVersion, e.target.value);
+          formApi.setFieldValue('version', newVersion);
+        },
+        options: getDictList('VERSION_TYPE'),
+      },
+      dependencies: {
+        disabled(values) {
+          return !!values.versionId;
+        },
+        triggerFields: ['versionId'],
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'version',
+      label: '版本号',
+      rules: z
+        .string()
+        .min(1, { message: '请输入版本号' })
+        .refine((value) => /^\d+\.\d+\.\d+$/.test(value), {
+          message: '格式：x.y.z，x/y/z 为非负整数',
+        }),
+      dependencies: {
+        disabled(values) {
+          return !!values.versionId;
+        },
+        triggerFields: ['versionId'],
+      },
+    },
+    {
+      component: 'Select',
+      fieldName: 'releaseStatus',
+      label: '发布状态',
+      rules: 'required',
+      defaultValue: '0',
+      disabled: false,
+      componentProps: {
+        options: getDictList('RELEASE_STATUS'),
+      },
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'projectId',
+      label: '关联项目',
+      rules: 'required',
+      componentProps: {
+        api: () => getProjectsList(),
+        labelField: 'projectTitle',
+        valueField: 'projectId',
+        autoSelect: 'first',
+      },
+      dependencies: {
+        disabled(values) {
+          return !!values.versionId;
+        },
+        triggerFields: ['versionId'],
+      },
+    },
+    {
+      component: 'Textarea',
+      fieldName: 'remark',
+      label: '备注',
+    },
+    {
+      component: 'RangePicker',
+      fieldName: 'timeArr',
+      label: '起止时间',
+      componentProps: {
+        format: 'YYYY-MM-DD',
+        valueFormat: 'YYYY-MM-DD',
+      },
+    },
+  ];
+}
+
+/** 表格查询表单配置 */
+export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',

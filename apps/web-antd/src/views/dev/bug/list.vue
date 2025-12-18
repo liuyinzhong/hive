@@ -114,7 +114,6 @@ const [Grid] = useVbenVxeGrid({
       {
         title: '修复人',
         width: 100,
-        showOverflow: true,
         cellRender: {
           name: 'UserAvatar',
           props: {
@@ -256,7 +255,7 @@ function openTracDrawer(rowInfo: any) {
 </script>
 
 <template>
-  <Page auto-content-height>
+  <Page>
     <Grid>
       <template #action="{ row }">
         <a-space :size="0">

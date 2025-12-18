@@ -13,6 +13,16 @@ const routes: RouteRecordRaw[] = [
     path: '/system',
     children: [
       {
+        path: '/user/list',
+        name: 'systemUser',
+        component: () => import('#/views/system/user/list.vue'),
+        meta: {
+          affixTab: false,
+          icon: 'lucide:user-pen',
+          title: '人员管理',
+        },
+      },
+      {
         path: '/system/role',
         name: 'SystemRole',
         meta: {

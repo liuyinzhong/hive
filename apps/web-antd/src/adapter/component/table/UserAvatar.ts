@@ -18,7 +18,7 @@ export default {
         },
       }),
       h(TypographyText, {
-        ellipsis: true,
+        ellipsis: { tooltip: true },
         content: name,
         style: { width: '60px' },
       }),

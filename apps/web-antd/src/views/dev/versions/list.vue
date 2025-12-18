@@ -12,20 +12,19 @@ import { message } from 'ant-design-vue';
 import { sleep } from '#/utils';
 import { $t } from '#/locales';
 
-import { useColumns, useSchema } from './data';
+import { useColumns, useGridFormSchema } from './data';
 import addFormModal from './add-modal.vue';
 
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    schema: useSchema(),
+    // 控制表单是否显示折叠按钮
+    showCollapseButton: false,
+    schema: useGridFormSchema(),
   },
   gridOptions: {
     border: true,
     height: 'auto',
-    pagerConfig: {
-      enabled: true,
-    },
     columns: useColumns(onActionClick),
     proxyConfig: {
       ajax: {

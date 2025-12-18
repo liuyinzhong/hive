@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import { useVbenModal } from '@vben/common-ui';
-
-import { message } from 'ant-design-vue';
 import type { SystemVersionApi } from '#/api/dev/versions';
-import { useVbenForm, z } from '#/adapter/form';
-import { getDictList } from '#/dicts';
+import { useVbenModal } from '@vben/common-ui';
+import { message } from 'ant-design-vue';
+import { useVbenForm } from '#/adapter/form';
 import { changeVersionType } from '#/utils/versionExtendApi';
 import { createVersion, getLastVersion } from '#/api/dev/versions';
-import { getProjectsList } from '#/api/dev/project';
+import { useFormSchema } from './data';
+import { computed } from 'vue';
 
 defineOptions({
   name: 'VersionsAddFormModel',
@@ -23,113 +22,7 @@ const [Form, formApi] = useVbenForm({
     },
   },
   fieldMappingTime: [['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD']],
-  schema: [
-    {
-      component: 'Input',
-      fieldName: 'versionId',
-      dependencies: {
-        show() {
-          return false;
-        },
-        triggerFields: ['versionId'],
-      },
-    },
-    {
-      component: 'Input',
-      fieldName: 'pordVersion',
-      label: '线上版本号',
-      componentProps: {
-        readonly: true,
-        bordered: false,
-      },
-      dependencies: {
-        show(values) {
-          return !!values.pordVersion;
-        },
-        triggerFields: ['pordVersion'],
-      },
-    },
-    {
-      component: 'RadioGroup',
-      fieldName: 'versionType',
-      label: '更新类型',
-      rules: 'required',
-      componentProps: {
-        onChange: (e: any) => {
-          const oldVersion = '1.0.0';
-          const newVersion = changeVersionType(oldVersion, e.target.value);
-          formApi.setFieldValue('version', newVersion);
-        },
-        options: getDictList('VERSION_TYPE'),
-      },
-      dependencies: {
-        disabled(values) {
-          return !!values.versionId;
-        },
-        triggerFields: ['versionId'],
-      },
-    },
-    {
-      component: 'Input',
-      fieldName: 'version',
-      label: '版本号',
-      rules: z
-        .string()
-        .min(1, { message: '请输入版本号' })
-        .refine((value) => /^\d+\.\d+\.\d+$/.test(value), {
-          message: '格式：x.y.z，x/y/z 为非负整数',
-        }),
-      dependencies: {
-        disabled(values) {
-          return !!values.versionId;
-        },
-        triggerFields: ['versionId'],
-      },
-    },
-    {
-      component: 'Select',
-      fieldName: 'releaseStatus',
-      label: '发布状态',
-      rules: 'required',
-      defaultValue: '0',
-      disabled: false,
-      componentProps: {
-        options: getDictList('RELEASE_STATUS'),
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'projectId',
-      label: '关联项目',
-      rules: 'required',
-      componentProps: {
-        api: () => getProjectsList(),
-        labelField: 'projectTitle',
-        valueField: 'projectId',
-        autoSelect: 'first',
-      },
-      dependencies: {
-        disabled(values) {
-          return !!values.versionId;
-        },
-        triggerFields: ['versionId'],
-      },
-    },
-    {
-      component: 'Textarea',
-      fieldName: 'remark',
-      label: '备注',
-    },
-    {
-      component: 'RangePicker',
-      fieldName: 'timeArr',
-      label: '起止时间',
-      componentProps: {
-        format: 'YYYY-MM-DD',
-        valueFormat: 'YYYY-MM-DD',
-      },
-    },
-  ],
+  schema: useFormSchema(formApi),
   showDefaultActions: false,
 });
 
