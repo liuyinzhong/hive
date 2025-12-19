@@ -45,8 +45,8 @@ const records = [
   {
     taskId: faker.string.uuid(),
     taskTitle: '任务项1',
-    startTime: '2025-08-24',
-    endTime: '2025-08-26',
+    startDate: '2025-08-24',
+    endDate: '2025-08-26',
     progress: 31,
     storyTitle: '需求1',
     executeName: '张三',
@@ -55,8 +55,8 @@ const records = [
   {
     taskId: faker.string.uuid(),
     taskTitle: '任务项1',
-    startTime: '2025-08-28',
-    endTime: '2025-08-28',
+    startDate: '2025-08-28',
+    endDate: '2025-08-28',
     progress: 100,
     storyTitle: '需求1',
     executeName: '张三',
@@ -65,8 +65,8 @@ const records = [
   {
     taskId: faker.string.uuid(),
     taskTitle: '任务项2',
-    startTime: '2025-08-25',
-    endTime: '2025-08-27',
+    startDate: '2025-08-25',
+    endDate: '2025-08-27',
     progress: 31,
     storyTitle: '需求1',
     executeName: '张三',
@@ -75,8 +75,8 @@ const records = [
   {
     taskId: faker.string.uuid(),
     taskTitle: '任务项2',
-    startTime: '2025-08-25',
-    endTime: '2025-08-27',
+    startDate: '2025-08-25',
+    endDate: '2025-08-27',
     progress: 100,
     storyTitle: '需求1',
     executeName: '王二',
@@ -116,12 +116,12 @@ const columns: any = [
   },
 
   {
-    field: 'startTime',
+    field: 'startDate',
     title: '开始时间',
     width: 'auto',
   },
   {
-    field: 'endTime',
+    field: 'endDate',
     title: '结束时间',
     width: 'auto',
   },
@@ -191,8 +191,8 @@ nextTick(() => {
         },
       },
       taskBar: {
-        startDateField: 'startTime',
-        endDateField: 'endTime',
+        startDateField: 'startDate',
+        endDateField: 'endDate',
         progressField: 'progress',
         moveable: (args) => {
           return args.taskRecord.progress !== 100;

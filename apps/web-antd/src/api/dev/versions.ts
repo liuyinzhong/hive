@@ -9,9 +9,10 @@ export namespace SystemVersionApi {
     remark?: string;
     creatorId: string;
     creatorName: string;
-    createTime: string;
-    endTime: string;
-    startTime: string;
+    createDate: string;
+    updateDate: string;
+    startDate: string;
+    endDate: string;
     projectId: string;
     releaseStatus: string;
     releaseDate: string;

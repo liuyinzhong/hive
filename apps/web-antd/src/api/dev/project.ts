@@ -5,7 +5,8 @@ export namespace SystemProjectApi {
     projectId: string;
     projectTitle: string;
     projectLogo: any;
-    createdTime?: string;
+    createDate?: string;
+    updateDate?: string;
     description: string;
   }
 }

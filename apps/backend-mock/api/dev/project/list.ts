@@ -22,7 +22,7 @@ function generateMockDataList(count: number) {
       projectTitle: faker.lorem.word(),
       projectLogo: 'https://picsum.photos/100/100',
       description: faker.lorem.word(),
-      createTime: formatterCN.format(
+      createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
     };

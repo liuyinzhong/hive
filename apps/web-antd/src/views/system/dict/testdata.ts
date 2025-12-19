@@ -50,7 +50,7 @@ export const getTestData = (
             maxLevel,
           )
         : [],
-      createTime: faker.date.recent().toLocaleString(),
+      createDate: faker.date.recent().toLocaleString(),
     });
   }
   return data;

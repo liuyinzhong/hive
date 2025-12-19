@@ -12,8 +12,8 @@ export namespace SystemUserApi {
     disabled: boolean;
     lastLoginIp: string;
     lastLoginDate: string;
-    createTime: string;
-    updateTime: string;
+    createDate: string;
+    updateDate: string;
   }
 }
 

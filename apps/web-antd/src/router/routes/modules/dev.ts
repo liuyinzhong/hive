@@ -23,6 +23,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'devVersions',
+        path: '/dev/versions',
+        component: () => import('#/views/dev/versions/list.vue'),
+        meta: {
+          affixTab: false,
+          icon: 'lucide:file-stack',
+          title: '迭代版本',
+        },
+      },
+      {
         name: 'project',
         path: '/dev/project',
         component: () => import('#/views/dev/project/index.vue'),
@@ -33,17 +43,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: 'bug',
-        path: '/dev/bug',
-        component: () => import('#/views/dev/bug/list.vue'),
+        name: 'devStory',
+        path: '/dev/story',
+        component: () => import('#/views/dev/story/list.vue'),
         meta: {
           affixTab: false,
-          icon: 'lucide:bug',
-          title: '缺陷管理',
-          badge: '10',
-          badgeVariants: 'destructive',
+          icon: 'lucide:film',
+          title: '需求管理',
         },
       },
+
       {
         name: 'task',
         path: '/dev/task',
@@ -73,23 +82,15 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: 'devStory',
-        path: '/dev/story',
-        component: () => import('#/views/dev/story/list.vue'),
+        name: 'bug',
+        path: '/dev/bug',
+        component: () => import('#/views/dev/bug/list.vue'),
         meta: {
           affixTab: false,
-          icon: 'lucide:film',
-          title: '需求管理',
-        },
-      },
-      {
-        name: 'devVersions',
-        path: '/dev/versions',
-        component: () => import('#/views/dev/versions/list.vue'),
-        meta: {
-          affixTab: false,
-          icon: 'lucide:file-stack',
-          title: '迭代版本',
+          icon: 'lucide:bug',
+          title: '缺陷管理',
+          badge: '10',
+          badgeVariants: 'destructive',
         },
       },
     ],

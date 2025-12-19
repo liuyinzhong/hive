@@ -32,7 +32,7 @@ export interface BugFace {
   /** 创建人名称,; */
   creatorName?: string;
   /** 创建时间,; */
-  createTime?: string;
+  createDate?: string;
   /** 浏览器信息 navigator.userAgent,; */
   bugUa?: string;
   /** 关联版本id,; */

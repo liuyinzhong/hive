@@ -73,7 +73,7 @@ const setActiveProjectId = (id: string) => {
                     status="processing"
                   />
                 </span>
-                <span>{{ item.createTime }}</span>
+                <span>{{ item.createDate }}</span>
               </div>
             </div>
           </a-card-grid>

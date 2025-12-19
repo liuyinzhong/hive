@@ -24,11 +24,11 @@ function generateMockDataList(count: number) {
       remark: faker.lorem.sentence(),
       creatorId: faker.string.uuid(),
       creatorName: faker.person.fullName(),
-      createTime: formatterCN.format(
+      createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
-      endTime: '',
-      startTime: '',
+      endDate: '',
+      startDate: '',
       projectId: faker.string.uuid(),
       releaseStatus: faker.helpers.arrayElement(['0', '10', '20', '30']),
       releaseDate: '',

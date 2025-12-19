@@ -20,7 +20,7 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  fieldMappingTime: [['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD']],
+  fieldMappingTime: [['timeArr', ['endDate', 'startDate'], 'YYYY-MM-DD']],
   schema: useFormSchema(),
   showDefaultActions: false,
 });

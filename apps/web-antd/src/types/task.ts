@@ -2,7 +2,7 @@ export interface TaskFace {
   /** 实际耗时（小时）,; */
   actualHours?: number;
   /** 创建时间,; */
-  createTime?: string;
+  createDate?: string;
   /** 创建人id,; */
   creatorId?: string;
   /** 创建人名称,; */
@@ -10,7 +10,7 @@ export interface TaskFace {
   /** 逻辑删除 0:正常  1:删除,; */
   delFlag?: number;
   /** 预计结束时间,; */
-  endTime?: string;
+  endDate?: string;
   /** 执行人id,; */
   executeId?: string;
   /** 执行人name,; */
@@ -22,7 +22,7 @@ export interface TaskFace {
   /** 计划工时（小时）,; */
   planHours?: number;
   /** 预计开始时间,; */
-  startTime?: string;
+  startDate?: string;
   /** 关联需求id,; */
   storyId?: string;
   /** 关联需求名称; */

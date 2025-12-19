@@ -15,8 +15,8 @@ export const MOCK_API_StoryData: StoryFace[] = [
       'https://his.sass.lnyiyao.com/upload/sass-patient-wx/saas/homeicon1.png',
     ],
 
-    createdTime: '2024-02-21 15:01:01',
-    updateTime: '2024-02-21 15:01:01',
+    createDate: '2024-02-21 15:01:01',
+    updateDate: '2024-02-21 15:01:01',
     storyType: '1',
     storyStatus: '0',
     storyLevel: '2',
@@ -36,8 +36,8 @@ export const MOCK_API_StoryData: StoryFace[] = [
       'https://his.sass.lnyiyao.com/upload/sass-patient-wx/saas/homeicon1.png',
     ],
 
-    createdTime: '2024-02-21 15:01:01',
-    updateTime: '2024-02-21 15:01:01',
+    createDate: '2024-02-21 15:01:01',
+    updateDate: '2024-02-21 15:01:01',
     storyType: '1',
     storyStatus: '0',
     storyLevel: '2',

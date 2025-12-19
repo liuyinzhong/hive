@@ -29,10 +29,10 @@ function generateMockDataList(count: number) {
       lastLoginDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
-      createTime: formatterCN.format(
+      createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
-      updateTime: formatterCN.format(
+      updateDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
     };

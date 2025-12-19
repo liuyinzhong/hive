@@ -23,7 +23,7 @@ const [Form, formApi] = useVbenForm({
   },
   wrapperClass: 'grid-cols-2',
   fieldMappingTime: [
-    ['timeArr', ['startTime', 'endTime'], 'YYYY-MM-DD HH:mm:ss'],
+    ['timeArr', ['endDate', 'startDate'], 'YYYY-MM-DD HH:mm:ss'],
   ],
   schema: [
     {

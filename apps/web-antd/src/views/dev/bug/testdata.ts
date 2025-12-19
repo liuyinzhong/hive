@@ -32,7 +32,7 @@ export const getTestData = (pageSize: number) => {
       fixUserName: faker.commerce.department(),
       creatorId: '001',
       creatorName: faker.commerce.department(),
-      createTime: '2023-01-01',
+      createDate: '2023-01-01',
       bugUa: 'chrome',
       versionId: '1',
       version: `1.${faker.number.int({ min: 0, max: 9 })}.${faker.number.int({ min: 0, max: 9 })}`,

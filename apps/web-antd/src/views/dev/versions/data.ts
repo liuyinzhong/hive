@@ -183,11 +183,11 @@ export function useColumns(
       },
     },
     {
-      field: 'startTime',
+      field: 'startDate',
       title: '预计开始时间',
     },
     {
-      field: 'endTime',
+      field: 'endDate',
       title: '预计结束时间',
     },
     {
@@ -198,10 +198,6 @@ export function useColumns(
       field: 'creatorName',
       title: '创建人',
     },
-    /* {
-      field: 'createTime',
-      title: '创建时间',
-    }, */
     {
       align: 'right',
       field: 'operation',

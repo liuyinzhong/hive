@@ -38,8 +38,8 @@ const data = reactive<Array<DataItem>>([
         module: '医生端',
         version: '1.0.0',
         executeName: '刘哈哈',
-        startTime: '2025-01-01',
-        endTime: '2025-02-01',
+        startDate: '2025-01-01',
+        endDate: '2025-02-01',
       },
       {
         taskId: faker.string.uuid(),
@@ -53,8 +53,8 @@ const data = reactive<Array<DataItem>>([
         module: '患者端',
         version: '1.0.0',
         executeName: '刘哈哈',
-        startTime: '2025-01-01',
-        endTime: '2025-02-01',
+        startDate: '2025-01-01',
+        endDate: '2025-02-01',
       },
       {
         taskId: faker.string.uuid(),
@@ -68,8 +68,8 @@ const data = reactive<Array<DataItem>>([
         module: '管理端',
         version: '1.0.0',
         executeName: '刘哈哈',
-        startTime: '2025-01-01',
-        endTime: '2025-02-01',
+        startDate: '2025-01-01',
+        endDate: '2025-02-01',
       },
     ],
   },
@@ -89,8 +89,8 @@ const data = reactive<Array<DataItem>>([
         module: 'EXE',
         version: '1.0.0',
         executeName: '刘哈哈',
-        startTime: '2025-01-01',
-        endTime: '2025-02-01',
+        startDate: '2025-01-01',
+        endDate: '2025-02-01',
       },
     ],
   },
@@ -110,8 +110,8 @@ const data = reactive<Array<DataItem>>([
         taskStatus: '0',
         taskNum: 10_004,
         executeName: '刘哈哈',
-        startTime: '2025-01-01',
-        endTime: '2025-02-01',
+        startDate: '2025-01-01',
+        endDate: '2025-02-01',
       },
       {
         taskId: faker.string.uuid(),
@@ -125,8 +125,8 @@ const data = reactive<Array<DataItem>>([
         taskStatus: '0',
         taskNum: 10_004,
         executeName: '刘哈哈',
-        startTime: '2025-01-01',
-        endTime: '2025-02-01',
+        startDate: '2025-01-01',
+        endDate: '2025-02-01',
       },
     ],
   },
@@ -211,7 +211,7 @@ const addTask = async () => {
     message.error('请输入任务标题');
     return;
   }
-  if (!addParams.value.endTime) {
+  if (!addParams.value.endDate) {
     message.error('请输入截止时间');
     return;
   }
@@ -266,7 +266,7 @@ const changeTaskTitle = (e: string) => {
             <a-select-option value="会议">会议</a-select-option>
           </a-select>
           <a-date-picker
-            v-model:value="addParams.endTime"
+            v-model:value="addParams.endDate"
             placeholder="截止时间"
             size="large"
           />
@@ -368,16 +368,16 @@ const changeTaskTitle = (e: string) => {
                             <a-tooltip>
                               <template #title>
                                 {{
-                                  dayjs(taskInfo.startTime).format('YYYY-MM-DD')
+                                  dayjs(taskInfo.startDate).format('YYYY-MM-DD')
                                 }}
                                 至
                                 {{
-                                  dayjs(taskInfo.endTime).format('YYYY-MM-DD')
+                                  dayjs(taskInfo.endDate).format('YYYY-MM-DD')
                                 }}
                                 工时:{{ taskInfo.actualHours }}小时
                               </template>
                               <span class="flex items-center">
-                                {{ dayjs(taskInfo.endTime).format('MM月DD号') }}
+                                {{ dayjs(taskInfo.endDate).format('MM月DD号') }}
                                 {{ taskInfo.actualHours || 0 }}
                                 <span class="icon-[lucide--hourglass]"></span>
                               </span>

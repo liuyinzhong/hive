@@ -37,7 +37,7 @@ export interface DictFace {
   /** 子字典 */
   children?: DictFace[];
   /** 创建时间 */
-  createTime?: string;
+  createDate?: string;
 }
 
 const dictionaryData: Record<string, DictFace[]> = {

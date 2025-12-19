@@ -68,8 +68,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'RangePicker',
-      fieldName: 'createTime',
-      label: $t('system.role.createTime'),
+      fieldName: 'createDate',
+      label: $t('system.role.createDate'),
     },
   ];
 }
@@ -104,8 +104,8 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
       title: $t('system.role.remark'),
     },
     {
-      field: 'createTime',
-      title: $t('system.role.createTime'),
+      field: 'createDate',
+      title: $t('system.role.createDate'),
       width: 200,
     },
     {

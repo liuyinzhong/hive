@@ -24,7 +24,7 @@ function generateMockDataList(count: number) {
       id: faker.string.uuid(),
       name: faker.commerce.product(),
       status: faker.helpers.arrayElement([0, 1]),
-      createTime: formatterCN.format(
+      createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
       permissions: faker.helpers.arrayElements(menuIds),
@@ -51,8 +51,8 @@ export default eventHandler(async (event) => {
     name,
     id,
     remark,
-    startTime,
-    endTime,
+    startDate,
+    endDate,
     status,
   } = getQuery(event);
   let listData = structuredClone(mockData);
@@ -71,11 +71,11 @@ export default eventHandler(async (event) => {
       item.remark?.toLowerCase()?.includes(String(remark).toLowerCase()),
     );
   }
-  if (startTime) {
-    listData = listData.filter((item) => item.createTime >= startTime);
+  if (startDate) {
+    listData = listData.filter((item) => item.createDate >= startDate);
   }
-  if (endTime) {
-    listData = listData.filter((item) => item.createTime <= endTime);
+  if (endDate) {
+    listData = listData.filter((item) => item.createDate <= endDate);
   }
   if (['0', '1'].includes(status as string)) {
     listData = listData.filter((item) => item.status === Number(status));

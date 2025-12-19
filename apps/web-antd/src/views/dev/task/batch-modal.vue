@@ -76,13 +76,13 @@ const columns: VTable.ColumnsDefine = [
     editor: new InputEditor(),
   },
   {
-    field: 'startTime',
+    field: 'startDate',
     title: '开始时间',
     editor: new DateEditor(),
     width: 'auto',
   },
   {
-    field: 'endTime',
+    field: 'endDate',
     title: '结束时间',
     editor: new DateEditor(),
     width: 'auto',

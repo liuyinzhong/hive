@@ -114,8 +114,8 @@ const [Grid, gridApi] = useVbenVxeGrid({
         cellRender: { name: 'CellTag' },
       },
       {
-        field: 'createTime',
-        title: $t('system.dept.createTime'),
+        field: 'createDate',
+        title: $t('system.dept.createDate'),
       },
       {
         align: 'right',

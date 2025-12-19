@@ -28,9 +28,9 @@ export interface StoryFace {
   /** 需求优先级,; */
   storyLevel?: string;
   /** 需求最后修改时间,; */
-  updateTime?: string;
+  updateDate?: string;
   /** 需求创建时间,; */
-  createdTime?: string;
+  createDate?: string;
   /** 需求关联版本表id,; */
   versionId?: string;
   /** 需求关联版本名称,; */
