@@ -31,10 +31,18 @@ setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
     vxeUI.setConfig({
       grid: {
-        align: 'center',
-        border: false,
+        align: 'left',
+        height: 'auto',
+        border: true,
         columnConfig: {
           resizable: true,
+        },
+        toolbarConfig: {
+          // 是否显示搜索表单控制按钮
+          // @ts-ignore 正式环境时有完整的类型声明
+          search: true,
+          zoom: true,
+          custom: true,
         },
         minHeight: 180,
         formConfig: {
@@ -48,13 +56,22 @@ setupVbenVxeTable({
             total: 'total',
             list: '',
           },
-          showActiveMsg: true,
+          showActionMsg: true,
           showResponseMsg: false,
         },
         round: true,
         showOverflow: true,
         size: 'small',
       } as VxeTableGridOptions,
+    });
+
+    /**
+     * 解决vxeTable在热更新时可能会出错的问题
+     */
+    vxeUI.renderer.forEach((_item, key) => {
+      if (key.startsWith('Cell')) {
+        vxeUI.renderer.delete(key);
+      }
     });
 
     // 表格配置项可以用 cellRender: { name: 'CellImage' },
@@ -65,15 +82,6 @@ setupVbenVxeTable({
 
     // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
     // vxeUI.formats.add
-
-    /**
-     * 解决vxeTable在热更新时可能会出错的问题
-     */
-    vxeUI.renderer.forEach((_item, key) => {
-      if (key.startsWith('Cell')) {
-        vxeUI.renderer.delete(key);
-      }
-    });
 
     // 单元格渲染： Tag
     vxeUI.renderer.add('CellTag', {

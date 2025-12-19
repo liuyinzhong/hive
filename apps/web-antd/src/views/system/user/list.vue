@@ -46,21 +46,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    checkboxConfig: {
-      highlight: true,
-      labelField: 'userId',
-    },
-    toolbarConfig: {
-      // 是否显示搜索表单控制按钮
-      // @ts-ignore 正式环境时有完整的类型声明
-      search: true,
-      zoom: true,
-      custom: true,
-    },
-    height: 'auto',
-    border: true,
     columns: useColumns(onActionClick),
-    keepSource: true,
     proxyConfig: {
       ajax: {
         query: async ({ page }, formValues) => {

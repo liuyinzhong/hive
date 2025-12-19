@@ -10,7 +10,6 @@ export default {
     } else {
       text = row[column.field];
     }
-    debugger;
     return h(
       Button,
       {

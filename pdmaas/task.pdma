@@ -7223,44 +7223,6 @@
             "origin": "UI"
           },
           {
-            "id": "D2B38D48-1BFF-41E9-964E-D3509F9EBE0B",
-            "defKey": "creator_name",
-            "defName": "创建人姓名",
-            "intro": "",
-            "baseDataType": "VARCHAR",
-            "bizDomainType": "",
-            "dbDataType": "VARCHAR",
-            "dataLen": 12,
-            "numScale": "",
-            "primaryKey": 0,
-            "notNull": 1,
-            "autoIncrement": 0,
-            "defaultValue": "",
-            "stndDictId": "",
-            "stndFieldId": "",
-            "attr1": "",
-            "attr2": "",
-            "attr3": "",
-            "attr4": "",
-            "attr5": "",
-            "attr6": "",
-            "attr7": "",
-            "attr8": "",
-            "attr9": "",
-            "attr10": "",
-            "attr11": "",
-            "attr12": "",
-            "attr13": "",
-            "attr14": "",
-            "attr15": "",
-            "attr16": "",
-            "attr17": "",
-            "attr18": "",
-            "attr19": "",
-            "attr20": "",
-            "origin": "UI"
-          },
-          {
             "id": "45163EB7-E45A-44A7-B3AE-60627A913A58",
             "defKey": "creator_id",
             "defName": "创建人id",
@@ -13015,12 +12977,12 @@
           },
           {
             "position": {
-              "x": -1010,
-              "y": 840
+              "x": -1040,
+              "y": 850
             },
             "size": {
               "width": 500,
-              "height": 310
+              "height": 330
             },
             "view": "react-shape-view",
             "attrs": {
@@ -14008,75 +13970,6 @@
             "target": {
               "cell": "bf8bfc3f-70dc-464d-a10b-c4b768147045",
               "port": "4D457B85-02EE-4FAA-AAF5-F4650E95ED83_out"
-            }
-          },
-          {
-            "position": {
-              "x": -1470,
-              "y": 540.0000000000006
-            },
-            "size": {
-              "width": 160,
-              "height": 60
-            },
-            "shape": "text",
-            "attrs": {
-              "body": {},
-              "foreignObject": {
-                "refWidth": "100%",
-                "refHeight": "100%"
-              },
-              "text": {
-                "textAnchor": "middle",
-                "textVerticalAnchor": "middle",
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": "根据类型决定关联哪个表"
-              }
-            },
-            "id": "12a04f4b-01e6-4a66-9b9f-e5ca1280eac6",
-            "cellType": "text",
-            "tools": {
-              "items": [
-                "edit-node",
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
-            },
-            "zIndex": 10
-          },
-          {
-            "position": {
-              "x": -850,
-              "y": 1080
-            },
-            "size": {
-              "width": 160,
-              "height": 60
-            },
-            "shape": "text",
-            "attrs": {
-              "text": {
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": "根据类型决定关联哪个表"
-              }
-            },
-            "id": "747C9D04-8F9A-48E5-A02A-7BEC7C47FA41",
-            "cellType": "text",
-            "zIndex": 10,
-            "tools": {
-              "items": [
-                "edit-node",
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
             }
           },
           {
@@ -16896,7 +16789,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1766113500234,
-  "signature": "060ad0c1aefd2c3cca48a5e1d4105176",
+  "updateTime": 1766139423075,
+  "signature": "c7f65ad1059b9d5a8ccd81117d2355a3",
   "branchId": "1111"
 }

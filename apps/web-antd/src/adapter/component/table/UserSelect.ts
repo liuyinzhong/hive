@@ -48,6 +48,7 @@ export default {
           // return document.body;
         },
         onChange: (value: any) => {
+          debugger;
           row[column.field] = value;
           events.change(value);
         },

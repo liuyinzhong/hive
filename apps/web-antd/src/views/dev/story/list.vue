@@ -1,215 +1,53 @@
 <script lang="ts" setup>
-import type { VbenFormProps } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type {
+  VxeTableGridOptions,
+  OnActionClickParams,
+} from '#/adapter/vxe-table';
 
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 
-import { message } from 'ant-design-vue';
-
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getDictList } from '#/dicts';
 
-import { getExampleTableApi } from '../mock-api2';
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
 import trackDrawer from './track-drawer.vue';
+import { getStoryList, type SystemStoryApi } from '#/api/dev/story';
+import { useGridFormSchema, useColumns } from './data';
+import { message } from 'ant-design-vue';
+import { sleep } from '#/utils';
 
 // 跳转路由
 const router = useRouter();
 
-// #region 表格搜索,配置
-const querySearch = () => {
-  gridApi.formApi.resetForm();
-};
-/** 搜索表单配置 */
-const formOptions: VbenFormProps = {
-  handleSubmit: querySearch,
-  handleReset: querySearch,
-  // 控制表单是否显示折叠按钮
-  showCollapseButton: true,
-  submitButtonOptions: {},
-  // 是否在字段值改变时提交表单
-  submitOnChange: false,
-  // 按下回车时是否提交表单
-  submitOnEnter: true,
-  // 默认展开
-  collapsed: false,
-  schema: [
-    {
-      component: 'Input',
-      defaultValue: '',
-      fieldName: 'storyTitle',
-      label: '需求名称',
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
-      componentProps: {
-        allowClear: true,
-        filterOption: true,
-        showSearch: true,
-        api: () => getDictList('STORY_STATUS'),
-      },
-    },
-  ],
-};
-
-/** 表格配置 */
-const gridOptions: VxeGridProps = {
-  /* 不时auto的话，会把自定义的编辑单元格【下拉框给覆盖到】，因为表格高度小于下拉框宽度，下拉框不会完全展示出来 */
-  height: 'auto',
-  checkboxConfig: {
-    highlight: true,
-    labelField: 'id',
-  },
-  editConfig: {
-    trigger: 'click',
-    mode: 'cell',
-  },
-  toolbarConfig: {
-    // 是否显示搜索表单控制按钮
-    // @ts-ignore 正式环境时有完整的类型声明
-    search: true,
-    refresh: true,
-    import: true,
-    export: true,
-    print: true,
-    zoom: true,
-    custom: true,
-  },
-
-  columns: [
-    { type: 'checkbox', title: 'id', width: 80, headerAlign: 'left' },
-    { field: 'storyTitle', align: 'left', title: '需求名称', width: 200 },
-    {
-      field: 'pmLink',
-      align: 'left',
-      title: '原型链接',
-      width: 200,
-      cellRender: {
-        name: 'CellLink',
-        events: {
-          click: (row: any) => {
-            debugger;
-          },
-        },
-      },
-    },
-    {
-      field: 'step',
-      title: '需求阶段',
-      cellRender: {
-        name: 'CellLink',
-        props: {
-          text: '阶段',
-        },
-        events: {
-          click: (row: any) => {
-            openDrawer(row);
-          },
-        },
-      },
-    },
-    {
-      field: 'storyType',
-      title: '需求类别',
-      cellRender: {
-        name: 'DictTag',
-        props: {
-          type: 'STORE_TYPE',
-        },
-      },
-    },
-    {
-      field: 'storyStatus',
-      title: '需求状态',
-      editRender: {
-        name: 'DictSelect',
-        props: {
-          type: 'STORY_STATUS',
-        },
-      },
-    },
-    {
-      field: 'userIds',
-      title: '参与人员',
-      editRender: {
-        name: 'UserSelect',
-        props: {
-          mode: 'multiple',
-        },
-        events: {
-          change: (val: any) => {
-            message.success(`${JSON.stringify(val)}`);
-          },
-        },
-      },
-    },
-    {
-      field: 'version',
-      title: '迭代',
-      cellRender: {
-        name: 'CellLink',
-        events: {
-          click: () => {},
-        },
-      },
-    },
-    {
-      field: 'storyLevel',
-      title: '优先级',
-      cellRender: {
-        name: 'DictTag',
-        props: {
-          type: 'STORE_LEVEL',
-        },
-      },
-    },
-    {
-      field: 'moduleTitle',
-      title: '项目模块',
-    },
-    {
-      field: 'action',
-      fixed: 'right',
-      slots: { default: 'action' },
-      title: '操作',
-      width: 130,
-    },
-  ],
-  keepSource: true,
-  proxyConfig: {
-    ajax: {
-      query: async ({ page }, formValues) => {
-        message.success(`Query params: ${JSON.stringify(formValues)}`);
-        return await getExampleTableApi({
-          page: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
-      },
-    },
-  },
-  printConfig: {},
-  importConfig: {
-    types: ['csv', 'xls', 'xlsx'],
-  },
-  exportConfig: {
-    types: ['csv', 'xls', 'xlsx'],
-  },
-};
-
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
-  formOptions,
-  gridOptions,
+  formOptions: {
+    // 控制表单是否显示折叠按钮
+    showCollapseButton: false,
+    schema: useGridFormSchema(),
+  },
+  gridOptions: {
+    editConfig: {
+      trigger: 'click',
+      mode: 'cell',
+    },
+    columns: useColumns(onActionClick),
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues) => {
+          return await getStoryList({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        },
+      },
+    },
+  } as VxeTableGridOptions<SystemStoryApi.SystemStory>,
   gridEvents: {},
 });
-
-// #endregion
 
 // #region 单个添加需求
 
@@ -218,8 +56,55 @@ const [AddFormModal, AddFormModalApi] = useVbenModal({
   connectedComponent: addFormModal,
   destroyOnClose: true,
 });
-function openAddStoryModal(row: any) {
+
+/**
+ * 表格操作按钮的回调函数
+ */
+function onActionClick({
+  code,
+  row,
+}: OnActionClickParams<SystemStoryApi.SystemStory>) {
+  switch (code) {
+    case 'delete': {
+      onDelete(row);
+      break;
+    }
+    case 'edit': {
+      onEdit(row);
+      break;
+    }
+    case 'addTask': {
+      // openAddTaskModal(row);
+      break;
+    }
+  }
+}
+
+function onCreate() {
+  AddFormModalApi.setData(null).open();
+}
+
+function onEdit(row: SystemStoryApi.SystemStory) {
   AddFormModalApi.setData(row).open();
+}
+
+async function onDelete(row: SystemStoryApi.SystemStory) {
+  const hideLoading = message.loading({
+    content: '正在删除',
+    duration: 0,
+    key: 'action_process_msg',
+  });
+
+  await sleep(1000);
+
+  message.success({
+    content: '删除成功',
+    key: 'action_process_msg',
+  });
+
+  await sleep(1000);
+  hideLoading();
+  gridApi.query();
 }
 
 // #endregion
@@ -257,19 +142,9 @@ function openDrawer(row: any) {
 
 <template>
   <Page auto-content-height>
-    <Grid @toolbar-click="querySearch">
-      <template #action="{ row }">
-        <a-space :size="0">
-          <a-button type="link" @click="openAddStoryModal(row)" size="small">
-            编辑
-          </a-button>
-          <a-button type="link" @click="openAddStoryModal(row)" size="small">
-            添加任务
-          </a-button>
-        </a-space>
-      </template>
+    <Grid>
       <template #toolbar-actions>
-        <a-button class="mr-2" type="primary" @click="openAddStoryModal({})">
+        <a-button class="mr-2" type="primary" @click="onCreate()">
           新建
         </a-button>
         <a-button class="mr-2" type="primary" @click="openAddBatchStoryModal">

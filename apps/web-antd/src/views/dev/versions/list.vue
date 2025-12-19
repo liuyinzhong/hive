@@ -23,8 +23,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    border: true,
-    height: 'auto',
     columns: useColumns(onActionClick),
     proxyConfig: {
       ajax: {
