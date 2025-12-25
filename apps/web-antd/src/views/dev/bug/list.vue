@@ -255,7 +255,7 @@ function openTracDrawer(rowInfo: any) {
 </script>
 
 <template>
-  <Page>
+  <Page autoContentHeight>
     <Grid>
       <template #action="{ row }">
         <a-space :size="0">

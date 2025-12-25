@@ -94,7 +94,7 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
         attrs: { beforeChange: onStatusChange },
         name: onStatusChange ? 'CellSwitch' : 'CellTag',
       },
-      field: 'status',
+      field: 'disabled',
       title: $t('system.role.status'),
       width: 100,
     },

@@ -23,7 +23,7 @@ function generateMockDataList(count: number) {
     const dataItem: Record<string, any> = {
       id: faker.string.uuid(),
       name: faker.commerce.product(),
-      status: faker.helpers.arrayElement([0, 1]),
+      disabled: faker.helpers.arrayElement([0, 1]),
       createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),

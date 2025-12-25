@@ -16,7 +16,7 @@ export default {
         size: 'small',
         type: 'link',
         onClick: () => {
-          events.click(row);
+          events?.click?.(row);
         },
       },
       { default: () => text },

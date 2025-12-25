@@ -50,7 +50,13 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  const { page = 1, pageSize = 20, username, realName } = getQuery(event);
+  const {
+    page = 1,
+    pageSize = 20,
+    username,
+    realName,
+    disabled,
+  } = getQuery(event);
 
   let listData = structuredClone(mockData);
   if (username) {
@@ -58,6 +64,9 @@ export default eventHandler(async (event) => {
   }
   if (realName) {
     listData = listData.filter((item) => item.realName.includes(realName));
+  }
+  if (['0', '1'].includes(disabled as string)) {
+    listData = listData.filter((item) => item.disabled === Number(disabled));
   }
 
   /* 分页响应 */

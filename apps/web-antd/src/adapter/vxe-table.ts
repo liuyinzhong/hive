@@ -119,9 +119,9 @@ setupVbenVxeTable({
         const loadingKey = `__loading_${column.field}`;
         const finallyProps = {
           checkedChildren: $t('common.enabled'),
-          checkedValue: 1,
+          checkedValue: 0,
           unCheckedChildren: $t('common.disabled'),
-          unCheckedValue: 0,
+          unCheckedValue: 1,
           ...props,
           checked: row[column.field],
           loading: row[loadingKey] ?? false,

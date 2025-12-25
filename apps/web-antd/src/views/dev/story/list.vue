@@ -12,7 +12,8 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
-import trackDrawer from './track-drawer.vue';
+import nextModal from './next-modal.vue';
+import detailDrawer from './detail-drawer.vue';
 import { getStoryList, type SystemStoryApi } from '#/api/dev/story';
 import { useGridFormSchema, useColumns } from './data';
 import { message } from 'ant-design-vue';
@@ -46,20 +47,24 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
   } as VxeTableGridOptions<SystemStoryApi.SystemStory>,
-  gridEvents: {},
+  gridEvents: {
+    cellClick: ({ column, row }: any) => {
+      if (column.field === 'storyTitle') {
+        DetailDrawerApi.setData(row).open();
+      }
+    },
+  },
 });
 
 // #region 单个添加需求
-
 const [AddFormModal, AddFormModalApi] = useVbenModal({
   title: '添加需求',
   connectedComponent: addFormModal,
   destroyOnClose: true,
 });
+// #endregion
 
-/**
- * 表格操作按钮的回调函数
- */
+// #region 表格操作按钮的回调函数
 function onActionClick({
   code,
   row,
@@ -74,7 +79,10 @@ function onActionClick({
       break;
     }
     case 'addTask': {
-      // openAddTaskModal(row);
+      break;
+    }
+    case 'next': {
+      openNextModal(row);
       break;
     }
   }
@@ -106,8 +114,7 @@ async function onDelete(row: SystemStoryApi.SystemStory) {
   hideLoading();
   gridApi.query();
 }
-
-// #endregion
+//#endregion
 
 // #region 批量添加需求
 
@@ -124,19 +131,24 @@ function openAddBatchStoryModal() {
 
 // #endregion
 
-// #region 抽屉组件
-
-const [TrackDrawer, TrackDrawerApi] = useVbenDrawer({
-  // 连接抽离的组件
-  connectedComponent: trackDrawer,
+// #region 流转弹窗
+const [NextModal, NextModalApi] = useVbenModal({
+  title: '流转需求',
+  connectedComponent: nextModal,
+  destroyOnClose: true,
 });
 
-/** 打开抽屉 */
-function openDrawer(row: any) {
-  TrackDrawerApi.setData({
-    values: row,
-  }).open();
+/** 打开流转弹窗 */
+function openNextModal(row: any) {
+  NextModalApi.setData(row).open();
 }
+// #endregion
+
+// #region 详情抽屉
+const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
+  connectedComponent: detailDrawer,
+  destroyOnClose: true,
+});
 // #endregion
 </script>
 
@@ -153,7 +165,8 @@ function openDrawer(row: any) {
       </template>
     </Grid>
     <AddFormModal />
-    <TrackDrawer />
     <BatchFormModal />
+    <NextModal />
+    <DetailDrawer />
   </Page>
 </template>

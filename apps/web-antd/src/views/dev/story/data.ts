@@ -6,6 +6,7 @@ import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { message } from 'ant-design-vue';
 import { getVersionsList } from '#/api/dev/versions';
+import { getUsersList } from '#/api/system/user';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -15,43 +16,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyTitle',
       label: '需求名称',
       rules: 'required',
-    },
-    {
-      component: 'Input',
-      fieldName: 'pmLink',
-      label: '需求链接',
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
-      rules: 'required',
-      defaultValue: '20',
-      componentProps: {
-        api: () => getDictList('STORY_STATUS'),
-        allowClear: true,
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'storyType',
-      label: '需求类别',
-      defaultValue: '0',
-      componentProps: {
-        api: () => getDictList('STORY_TYPE'),
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'userList',
-      label: '参与人员',
-      componentProps: {
-        allowClear: true,
-        filterOption: true,
-        showSearch: true,
-        multiple: true,
-        api: () => getDictList('STORY_TYPE'),
-      },
+      formItemClass: 'col-span-3',
     },
     {
       component: 'ApiSelect',
@@ -67,9 +32,51 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
+      fieldName: 'userList',
+      label: '参与人员',
+      componentProps: {
+        allowClear: true,
+        filterOption: true,
+        showSearch: true,
+        multiple: true,
+        api: () => getUsersList({ page: 1, pageSize: 100, disabled: 0 }),
+        labelField: 'realName',
+        valueField: 'userId',
+        resultField: 'items',
+        autoSelect: 'first',
+      },
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'storyStatus',
+      label: '需求状态',
+      rules: 'required',
+      defaultValue: '0',
+      componentProps: {
+        api: () => getDictList('STORY_STATUS'),
+        allowClear: true,
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'pmLink',
+      label: '原型链接',
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'storyType',
+      label: '需求类别',
+      defaultValue: '0',
+      componentProps: {
+        api: () => getDictList('STORY_TYPE'),
+      },
+    },
+
+    {
+      component: 'ApiSelect',
       fieldName: 'storyLevel',
       label: '优先级',
-      defaultValue: '1',
+      defaultValue: '0',
       rules: 'required',
       componentProps: {
         api: () => getDictList('STORY_LEVEL'),
@@ -118,8 +125,8 @@ export function useColumns(
   return [
     {
       field: 'storyNum',
-      title: '需求编号',
-      width: 100,
+      title: '编号',
+      width: 60,
       formatter: ({ row }) => '#' + row.storyNum,
     },
     {
@@ -135,8 +142,16 @@ export function useColumns(
         name: 'CellTag',
       },
     },
-    { field: 'storyTitle', title: '需求名称', width: 200 },
     {
+      field: 'storyTitle',
+      title: '需求名称',
+      minWidth: 200,
+      cellRender: {
+        name: 'CellLink',
+      },
+    },
+    {
+      visible: false,
       field: 'pmLink',
       title: '原型链接',
       width: 200,
@@ -150,6 +165,7 @@ export function useColumns(
       },
     },
     {
+      visible: false,
       field: 'storyRemark',
       title: '备注',
       width: 100,
@@ -243,6 +259,35 @@ export function useColumns(
           },
         ],
       },
+    },
+  ];
+}
+
+/** 流转表单配置 */
+export function useNextFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      fieldName: 'storyId',
+      label: '需求id',
+      dependencies: {
+        triggerFields: ['storyId'],
+        show: false,
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'storyStatus',
+      label: '需求状态',
+      dependencies: {
+        triggerFields: ['storyId'],
+        show: false,
+      },
+    },
+    {
+      component: 'AiEditor',
+      fieldName: 'commentRichText',
+      label: '',
     },
   ];
 }

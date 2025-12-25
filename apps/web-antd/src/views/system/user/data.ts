@@ -38,6 +38,30 @@ export function useGridFormSchema(): VbenFormSchema[] {
       defaultValue: '',
       fieldName: 'username',
       label: '登录名',
+      componentProps: {
+        allowClear: true,
+      },
+    },
+    {
+      component: 'Input',
+      defaultValue: '',
+      fieldName: 'realName',
+      label: '真实姓名',
+      componentProps: {
+        allowClear: true,
+      },
+    },
+    {
+      component: 'Select',
+      fieldName: 'disabled',
+      label: '状态',
+      componentProps: {
+        allowClear: true,
+        options: [
+          { label: $t('common.enabled'), value: 0 },
+          { label: $t('common.disabled'), value: 1 },
+        ],
+      },
     },
   ];
 }

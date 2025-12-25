@@ -95,6 +95,9 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
       componentProps: {
         api: () => getProjectsList(),
+        allowClear: true,
+        filterOption: true,
+        showSearch: true,
         labelField: 'projectTitle',
         valueField: 'projectId',
         autoSelect: 'first',
