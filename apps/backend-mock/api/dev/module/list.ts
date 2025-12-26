@@ -3,6 +3,8 @@ import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
+import { mockProjectData } from '../project/list';
+
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -13,15 +15,23 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
+let projectIds = mockProjectData.map((item) => item.projectId);
+
 function generateMockDataList(count: number) {
   const dataList = [];
 
   for (let i = 0; i < count; i++) {
     const dataItem: Record<string, any> = {
-      projectId: faker.string.uuid(),
-      projectTitle: faker.lorem.word(),
-      projectLogo: 'https://picsum.photos/100/100',
-      description: faker.lorem.word(),
+      moduleId: faker.string.uuid(),
+      moduleTitle: faker.lorem.word(),
+      pid: null,
+      projectId: faker.helpers.arrayElement(projectIds),
+      sort: i,
+      creatorId: faker.lorem.word(),
+      creatorName: faker.person.fullName(),
+      updateDate: formatterCN.format(
+        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
+      ),
       createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
@@ -32,7 +42,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockProjectData = generateMockDataList(8);
+export const mockData = generateMockDataList(20);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -40,7 +50,13 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  let listData = structuredClone(mockProjectData);
+  let listData = structuredClone(mockData);
+
+  const { projectId } = getQuery(event);
+
+  if (projectId) {
+    listData = listData.filter((item) => item.projectId === projectId);
+  }
 
   /* 分页响应 */
   // return usePageResponseSuccess(page as string, pageSize as string, listData);

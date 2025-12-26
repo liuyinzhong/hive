@@ -1,10 +1,5 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
-
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
 import type { SystemRoleApi } from '#/api';
 
 import { Page, useVbenDrawer } from '@vben/common-ui';
@@ -12,8 +7,13 @@ import { Plus } from '@vben/icons';
 
 import { Button, message, Modal } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteRole, getRoleList, updateRole } from '#/api';
+import {
+  useVbenVxeGrid,
+  type VxeGridProps,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
+import { deleteRole, getRoleList, updateRole } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';

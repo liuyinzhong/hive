@@ -1,17 +1,15 @@
 <script lang="ts" setup>
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-import type { SystemDeptApi } from '#/api/system/dept';
-
 import { Page, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteDept, getDeptList } from '#/api/system/dept';
+import {
+  useVbenVxeGrid,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
+import { deleteDept, getDeptList, type SystemDeptApi } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useColumns } from './data';

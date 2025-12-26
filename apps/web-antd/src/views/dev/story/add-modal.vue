@@ -3,7 +3,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { useFormSchema } from './data';
-import { createStory } from '#/api/dev/story';
+import { createStory } from '#/api/dev';
 
 defineOptions({
   name: 'StoryAddFormModel',

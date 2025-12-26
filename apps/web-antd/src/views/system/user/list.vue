@@ -1,26 +1,18 @@
 <script lang="ts" setup>
-import type { VbenFormProps } from '#/adapter/form';
-import type {
-  VxeGridProps,
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-
-import type { SystemUserApi } from '#/api/system/user';
 import { useUserStore } from '@vben/stores';
 
-import { getUsersList } from '#/api/system/user';
+import { getUsersList, type SystemUserApi } from '#/api/system';
 
-import {
-  useVbenDrawer,
-  useVbenModal,
-  VbenCountToAnimator,
-  Page,
-} from '@vben/common-ui';
+import { useVbenDrawer, Page } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import {
+  useVbenVxeGrid,
+  type OnActionClickParams,
+  type VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+
 import { sleep } from '#/utils';
 import ExtraDrawer from './drawer.vue';
 import { useRouter, useRoute } from 'vue-router';

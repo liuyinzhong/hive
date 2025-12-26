@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-
 import { Page, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 import { Button, message } from 'ant-design-vue';
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+
+import {
+  useVbenVxeGrid,
+  type VxeGridProps,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
 import { $t } from '#/locales';
 import type { DictFace } from '#/dicts';
 import { getTestData } from './testdata';

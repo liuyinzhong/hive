@@ -2,9 +2,8 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
-import type { SystemVersionApi } from '#/api/dev/versions';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getProjectsList } from '#/api/dev/project';
+import { getProjectsList, type SystemVersionApi } from '#/api/dev';
 import { changeVersionType } from '#/utils/versionExtendApi';
 import { z } from '#/adapter/form';
 

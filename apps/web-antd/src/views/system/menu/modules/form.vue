@@ -22,7 +22,7 @@ import {
   isMenuPathExists,
   SystemMenuApi,
   updateMenu,
-} from '#/api/system/menu';
+} from '#/api/system';
 import { $t } from '#/locales';
 import { componentKeys } from '#/router/routes';
 

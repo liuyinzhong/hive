@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { SystemDeptApi } from '#/api/system/dept';
-
 import { computed, ref } from 'vue';
 
 import { useVbenModal, z } from '@vben/common-ui';
@@ -8,7 +6,6 @@ import { useVbenModal, z } from '@vben/common-ui';
 import { Button } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { createDept, updateDept } from '#/api/system/dept';
 import { $t } from '#/locales';
 import type { DictFace } from '#/dicts';
 

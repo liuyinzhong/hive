@@ -1,16 +1,74 @@
 <script lang="ts" setup>
 import addFormModal from './add-modal.vue';
+import addModuleModal from './add-moduleModal.vue';
 import { EllipsisText } from '@vben/common-ui';
-import { AnalysisChartCard, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
+import { onMounted, reactive, ref, h } from 'vue';
+import { useColumns } from './data';
+import {
+  useVbenVxeGrid,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
+import {
+  type SystemModuleApi,
+  type SystemProjectApi,
+  getProjectsList,
+  getModulesList,
+} from '#/api/dev';
 
-import { getProjectsList } from '#/api/dev/project';
-import { onMounted, reactive, ref } from 'vue';
-import type { SystemProjectApi } from '#/api/dev/project';
-
-const [AddProjectModal, AddProjectModalApi] = useVbenModal({
-  title: '新增项目',
-  connectedComponent: addFormModal,
+// #region 表格分页
+const [Grid, gridApi] = useVbenVxeGrid({
+  showSearchForm: false,
+  formOptions: {},
+  gridOptions: {
+    pagerConfig: {
+      enabled: false,
+    },
+    rowConfig: {
+      drag: true,
+    },
+    toolbarConfig: {
+      enabled: false,
+    },
+    height: 600,
+    columns: useColumns(onActionClick),
+    proxyConfig: {
+      autoLoad: false,
+      ajax: {
+        query: async ({ page }, formValues) => {
+          return await getModulesList({
+            projectId: activeProjectId.value,
+          });
+        },
+      },
+    },
+  } as VxeTableGridOptions<SystemModuleApi.SystemModule>,
+  gridEvents: {
+    rowDragstart: (e: any) => {},
+    rowDragend: ({ oldRow, _index }: any) => {
+      console.log(
+        '排序后' + oldRow.moduleTitle + '在' + _index.newIndex + '位',
+      );
+    },
+  },
 });
+
+function onActionClick({
+  code,
+  row,
+}: OnActionClickParams<SystemModuleApi.SystemModule>) {
+  switch (code) {
+    case 'delete': {
+      break;
+    }
+    case 'edit': {
+      openAddModuleModal(row);
+      break;
+    }
+  }
+}
+//#endregion
 
 const items = ref<SystemProjectApi.SystemProject[]>([]);
 
@@ -19,6 +77,7 @@ onMounted(async () => {
   items.value = res || [];
   if (items.value.length > 0) {
     activeProjectId.value = items.value[0]?.projectId || '';
+    gridApi.query();
   }
 });
 
@@ -26,20 +85,46 @@ let activeProjectId = ref<any>('');
 
 const setActiveProjectId = (id: string) => {
   activeProjectId.value = id;
+  gridApi.query();
 };
+
+//#region 弹窗
+
+const [AddProjectModal, AddProjectModalApi] = useVbenModal({
+  title: '新增项目',
+  connectedComponent: addFormModal,
+  destroyOnClose: true,
+});
+
+function createProject() {
+  AddProjectModalApi.open();
+}
+
+function editProject(row: any) {
+  AddProjectModalApi.setData(row).open();
+}
+
+const [AddModuleModal, AddModuleModalApi] = useVbenModal({
+  title: '新增模块',
+  connectedComponent: addModuleModal,
+  destroyOnClose: true,
+});
+
+function openAddModuleModal(row: any) {
+  AddModuleModalApi.setData(row).open();
+}
+//#endregion
 </script>
 
 <template>
-  <div class="p-5">
-    <div class="mt-5 flex flex-col lg:flex-row">
-      <div class="mr-4 w-full lg:w-3/5">
-        <div></div>
-
+  <Page auto-content-height>
+    <a-row :gutter="24">
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="16">
         <a-card>
           <template #title>
             <div class="flex items-center justify-between">
               <span class="ml-2 text-lg font-medium">项目</span>
-              <a-button type="primary" @click="AddProjectModalApi.open()">
+              <a-button type="primary" @click="createProject">
                 创建项目
               </a-button>
             </div>
@@ -73,16 +158,31 @@ const setActiveProjectId = (id: string) => {
                     status="processing"
                   />
                 </span>
-                <span>{{ item.createDate }}</span>
+                <span>
+                  <a-button type="link" size="small" @click="editProject(item)">
+                    <span class="icon-[lucide--pencil-line]"></span>
+                  </a-button>
+
+                  <a-button
+                    type="link"
+                    size="small"
+                    @click="openAddModuleModal(item)"
+                  >
+                    <span class="icon-[lucide--git-branch-plus]"></span>
+                  </a-button>
+                </span>
               </div>
             </div>
           </a-card-grid>
         </a-card>
-      </div>
-      <div class="w-full lg:w-2/5">
-        <AnalysisChartCard class="mt-5" title="数据"> </AnalysisChartCard>
-      </div>
-    </div>
+      </a-col>
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
+        <a-card title="模块">
+          <Grid />
+        </a-card>
+      </a-col>
+    </a-row>
     <AddProjectModal />
-  </div>
+    <AddModuleModal />
+  </Page>
 </template>

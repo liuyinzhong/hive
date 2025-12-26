@@ -2,22 +2,18 @@
 import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
-import { createProject } from '#/api/dev';
-import { useFormProjectSchema } from './data';
-
-import { filesToUrlString, urlStringToFiles } from '#/utils';
+import { createModule } from '#/api/dev';
+import { useFormModuleSchema } from './data';
 defineOptions({
-  name: 'AddProjectModal',
+  name: 'AddModuleModal',
 });
 
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
-  schema: useFormProjectSchema(),
+  schema: useFormModuleSchema(),
   showDefaultActions: false,
 });
-
 const [Modal, modalApi] = useVbenModal({
-  title: '添加项目',
   fullscreenButton: false,
   onConfirm: async () => {
     await formApi.validateAndSubmitForm();
@@ -25,9 +21,10 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
       let data = modalApi.getData();
-      data.projectLogo = urlStringToFiles(data.projectLogo);
       formApi.setValues(data);
-      modalApi.setState({ title: data.projectId ? '编辑项目' : '添加项目' });
+      modalApi.setState({ title: data.moduleId ? '编辑模块' : '添加模块' });
+    } else {
+      formApi.resetForm();
     }
   },
 });
@@ -40,12 +37,7 @@ async function onSubmit(values: Record<string, any>) {
   });
   modalApi.lock();
 
-  // 处理项目logo文件数组
-  if (values.projectLogo?.length) {
-    values.projectLogo = filesToUrlString(values.projectLogo);
-  }
-
-  await createProject(values);
+  await createModule(values);
 
   modalApi.close();
 

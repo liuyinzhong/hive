@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-import type { SystemVersionApi } from '#/api/dev/versions';
 import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { changeVersionType } from '#/utils/versionExtendApi';
-import { createVersion, getLastVersion } from '#/api/dev/versions';
+import {
+  createVersion,
+  getLastVersion,
+  type SystemVersionApi,
+} from '#/api/dev';
 import { useFormSchema } from './data';
 
 defineOptions({

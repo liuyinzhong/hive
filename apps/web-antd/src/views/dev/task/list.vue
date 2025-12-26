@@ -1,12 +1,16 @@
 <script lang="ts" setup>
 import type { VbenFormProps } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import {
+  useVbenVxeGrid,
+  type VxeGridProps,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
 
 import { getExampleTableApi } from '../mock-api';
 import addFormModal from './add-modal.vue';

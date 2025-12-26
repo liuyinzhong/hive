@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         name: 'projectHome',
-        path: '/dev/home',
+        path: '/dev/project/home',
         component: () => import('#/views/dev/project/home.vue'),
         meta: {
           affixTab: false,
@@ -24,7 +24,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'devVersions',
-        path: '/dev/versions',
+        path: '/dev/versions/list',
         component: () => import('#/views/dev/versions/list.vue'),
         meta: {
           affixTab: false,
@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'project',
-        path: '/dev/project',
+        path: '/dev/project/index',
         component: () => import('#/views/dev/project/index.vue'),
         meta: {
           affixTab: false,
@@ -44,7 +44,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'devStory',
-        path: '/dev/story',
+        path: '/dev/story/list',
         component: () => import('#/views/dev/story/list.vue'),
         meta: {
           affixTab: false,
@@ -55,7 +55,7 @@ const routes: RouteRecordRaw[] = [
 
       {
         name: 'task',
-        path: '/dev/task',
+        path: '/dev/task/list',
         component: () => import('#/views/dev/task/list.vue'),
         meta: {
           affixTab: false,
@@ -83,7 +83,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'bug',
-        path: '/dev/bug',
+        path: '/dev/bug/list',
         component: () => import('#/views/dev/bug/list.vue'),
         meta: {
           affixTab: false,

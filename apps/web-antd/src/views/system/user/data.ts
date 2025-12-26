@@ -2,7 +2,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import { $t } from '#/locales';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import type { SystemUserApi } from '#/api/system/user';
+import type { SystemUserApi } from '#/api/system';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {

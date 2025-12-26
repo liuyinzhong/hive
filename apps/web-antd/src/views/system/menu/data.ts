@@ -1,5 +1,5 @@
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemMenuApi } from '#/api/system/menu';
+import type { SystemMenuApi } from '#/api/system';
 
 import { $t } from '#/locales';
 

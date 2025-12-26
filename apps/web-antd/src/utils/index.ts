@@ -13,6 +13,7 @@ export function sleep(ms: number) {
  * @returns 逗号分隔的字符串
  */
 export function filesToUrlString(fileList: any) {
+  if (!fileList?.length) return '';
   return fileList
     .filter((file: any) => file.status == 'done')
     .map((file: any) => file.response?.url || file.url)
@@ -25,6 +26,10 @@ export function filesToUrlString(fileList: any) {
  * @returns 文件数组
  */
 export function urlStringToFiles(urlString: string) {
+  if (!urlString) return [];
+
+  if (Array.isArray(urlString)) return urlString;
+
   return urlString.split(',').map((a) => {
     return {
       name: getFileNameFromUrl(a),

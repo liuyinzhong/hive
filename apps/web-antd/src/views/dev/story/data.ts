@@ -1,12 +1,11 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import type { SystemStoryApi } from '#/api/dev/story';
 import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { message } from 'ant-design-vue';
-import { getVersionsList } from '#/api/dev/versions';
-import { getUsersList } from '#/api/system/user';
+import { getVersionsList, type SystemStoryApi } from '#/api/dev';
+import { getUsersList } from '#/api/system';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -127,6 +126,7 @@ export function useColumns(
       field: 'storyNum',
       title: '编号',
       width: 60,
+      dragSort: true,
       formatter: ({ row }) => '#' + row.storyNum,
     },
     {

@@ -1,9 +1,4 @@
 <script lang="ts" setup>
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { IconifyIcon, Plus } from '@vben/icons';
 import { $t } from '@vben/locales';
@@ -12,8 +7,13 @@ import { MenuBadge } from '@vben-core/menu-ui';
 
 import { Button, message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteMenu, getMenuList, SystemMenuApi } from '#/api/system/menu';
+import {
+  useVbenVxeGrid,
+  type VxeGridProps,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
+import { deleteMenu, getMenuList, SystemMenuApi } from '#/api/system';
 
 import { useColumns } from './data';
 import Form from './modules/form.vue';

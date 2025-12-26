@@ -1,20 +1,19 @@
 <script lang="ts" setup>
-import type {
-  VxeTableGridOptions,
-  OnActionClickParams,
-} from '#/adapter/vxe-table';
-
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import {
+  useVbenVxeGrid,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
 import nextModal from './next-modal.vue';
 import detailDrawer from './detail-drawer.vue';
-import { getStoryList, type SystemStoryApi } from '#/api/dev/story';
+import { getStoryList, type SystemStoryApi } from '#/api/dev';
 import { useGridFormSchema, useColumns } from './data';
 import { message } from 'ant-design-vue';
 import { sleep } from '#/utils';
@@ -33,6 +32,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
     editConfig: {
       trigger: 'click',
       mode: 'cell',
+    },
+    rowConfig: {
+      drag: true,
     },
     columns: useColumns(onActionClick),
     proxyConfig: {

@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
+import {
+  useVbenVxeGrid,
+  type OnActionClickParams,
+  type VxeTableGridOptions,
 } from '#/adapter/vxe-table';
-import type { SystemVersionApi } from '#/api/dev/versions';
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { Page } from '@vben/common-ui';
-import { getVersionsList } from '#/api/dev/versions';
+import { getVersionsList, type SystemVersionApi } from '#/api/dev';
 import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { sleep } from '#/utils';
