@@ -1,108 +1,102 @@
-import { AvatarGroup, Avatar, Select, SelectOption } from 'ant-design-vue';
-import { h } from 'vue';
-let options = [
-  {
-    avatar: 'https://picsum.photos/30/30',
-    realName: '张三',
-    userId: '001',
-  },
-  {
-    avatar: 'https://picsum.photos/30/30',
-    realName: '李四',
-    userId: '002',
-  },
-  {
-    avatar: 'https://picsum.photos/30/30',
-    realName: '王五',
-    userId: '003',
-  },
-];
+import { Avatar, Select, SelectOption } from 'ant-design-vue';
+import { h, ref } from 'vue';
+import { getUserListAll, type SystemUserApi } from '#/api/system';
+
+import UserAvatarGroup from './UserAvatarGroup';
+
+// 使用 ref 来存储用户列表数据
+const userListRef = ref<SystemUserApi.SystemUser[]>([]);
+
+// 加载用户列表数据的函数
+async function loadUserList() {
+  try {
+    const data = await getUserListAll();
+    userListRef.value = data || [];
+  } catch (error) {
+    console.error('获取用户列表失败:', error);
+  }
+}
+
+// 立即调用加载函数，确保在渲染前开始加载数据
+loadUserList();
 
 export default {
   renderTableEdit(_renderOpts: any, params: any) {
     const { column, row } = params;
     const { props, events } = _renderOpts;
+    const userIds =
+      row?.[column.field].map(
+        (item: SystemUserApi.SystemUser) => item.userId,
+      ) || [];
 
     return h(
-      Select,
+      'div',
       {
-        ...props,
-        allowClear: true,
-        filterOption: (input: string, option: any) => {
-          return (
-            option.realName.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          );
-        },
-        showSearch: true,
-        defaultOpen: true,
-        dropdownMatchSelectWidth: false,
-        maxTagCount: 0,
-        style: {
-          width: '100%',
-        },
-        value: row[column.field] || [],
-        // 关键：将下拉菜单挂载到当前单元格元素内
-        getPopupContainer: () => {
-          // cell.$el 是当前编辑单元格的 DOM 元素
-          return params.$table.getCellElement(row, column.field);
-          // return document.body;
-        },
-        onChange: (value: any) => {
-          debugger;
-          row[column.field] = value;
-          events.change(value);
-        },
+        style: {},
       },
-      // 构造选项列表
-      options.map((item: any) =>
-        h(
-          SelectOption,
-          {
-            value: item.userId,
-            key: item.userId,
-            realName: item.realName,
+      h(
+        Select,
+        {
+          ...props,
+          allowClear: true,
+          filterOption: (input: string, option: any) => {
+            return (
+              option.realName.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            );
           },
-          // 选项内部内容：头像和用户名
-          () =>
-            h('div', { class: 'flex items-center' }, [
-              h(
-                Avatar,
-                {
-                  src: item.avatar || undefined,
-                  size: 'small',
-                },
-                () => item.realName.charAt(0),
-              ),
-              h('span', { style: { marginLeft: '5px' } }, item.realName),
-            ]),
+          showSearch: true,
+          defaultOpen: true,
+          dropdownMatchSelectWidth: false,
+          maxTagCount: 0,
+          dropdownMenuStyle: {},
+          style: {
+            width: '100%',
+          },
+          value: userIds || [],
+          // 关键：将下拉菜单挂载到当前单元格元素内
+          getPopupContainer: () => {
+            // cell.$el 是当前编辑单元格的 DOM 元素
+            return params.$table.getCellElement(row, column.field);
+            // return document.body;
+          },
+          onChange: (value: any) => {
+            row[column.field] = userListRef.value.filter((item) =>
+              value.includes(item.userId),
+            );
+            events.change(value);
+          },
+        },
+        // 构造选项列表
+        userListRef.value.map((item: SystemUserApi.SystemUser) =>
+          h(
+            SelectOption,
+            {
+              value: item.userId,
+              key: item.userId,
+              realName: item.realName,
+              avatar: item.avatar,
+              userId: item.userId,
+            },
+            // 选项内部内容：头像和用户名
+            () =>
+              h('div', { class: 'flex items-center' }, [
+                h(
+                  Avatar,
+                  {
+                    src: item.avatar || undefined,
+                    size: 'small',
+                  },
+                  () => item.realName.charAt(0),
+                ),
+                h('span', { style: { marginLeft: '5px' } }, item.realName),
+              ]),
+          ),
         ),
       ),
     );
   },
 
   renderTableCell(_renderOpts: any, params: any) {
-    const { column, row } = params;
-    // const { props, events } = _renderOpts;
-    const userIds = row?.[column.field] || [];
-
-    const userList = options.filter((item: any) =>
-      userIds.includes(item.userId),
-    );
-
-    const avatars = userList.map((item: any, index: any) => {
-      return h(
-        Avatar,
-        {
-          key: index,
-          src: item.avatar || undefined,
-          style: { backgroundColor: '#f56a00' },
-        },
-        {
-          default: () => item.realName.charAt(0), // 默认插槽内容
-        },
-      );
-    });
-
-    return h(AvatarGroup, {}, { default: () => avatars });
+    return UserAvatarGroup.renderTableDefault(_renderOpts, params);
   },
 };

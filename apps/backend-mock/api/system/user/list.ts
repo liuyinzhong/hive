@@ -42,7 +42,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockData = generateMockDataList(10);
+export const mockUserData = generateMockDataList(100);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -58,7 +58,7 @@ export default eventHandler(async (event) => {
     disabled,
   } = getQuery(event);
 
-  let listData = structuredClone(mockData);
+  let listData = structuredClone(mockUserData);
   if (username) {
     listData = listData.filter((item) => item.username.includes(username));
   }

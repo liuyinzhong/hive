@@ -8,7 +8,7 @@ export namespace SystemUserApi {
     username: string;
     realName: string;
     desc: string;
-    password: string;
+    password?: string;
     disabled: boolean;
     lastLoginIp: string;
     lastLoginDate: string;
@@ -29,4 +29,10 @@ async function getUsersList(params: Recordable<any>) {
   );
 }
 
-export { getUsersList };
+async function getUserListAll() {
+  return requestClient.get<Array<SystemUserApi.SystemUser>>(
+    '/system/user/listAll',
+  );
+}
+
+export { getUsersList, getUserListAll };

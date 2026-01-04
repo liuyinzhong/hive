@@ -55,6 +55,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
         DetailDrawerApi.setData(row).open();
       }
     },
+    rowDragstart: (e: any) => {},
+    rowDragend: ({ oldRow, _index }: any) => {
+      console.log(
+        '排序后' + oldRow.moduleTitle + '在' + _index.newIndex + '位',
+      );
+    },
   },
 });
 

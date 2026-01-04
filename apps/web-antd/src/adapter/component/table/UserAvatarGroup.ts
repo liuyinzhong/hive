@@ -1,4 +1,4 @@
-import { AvatarGroup, Avatar } from 'ant-design-vue';
+import { AvatarGroup, Avatar, Tooltip } from 'ant-design-vue';
 import { h } from 'vue';
 
 export default {
@@ -7,20 +7,38 @@ export default {
     const userList = row?.userList || [];
     const avatars = userList.map((item: any, index: any) => {
       return h(
-        Avatar,
+        Tooltip,
         {
           key: index,
-          style: { backgroundColor: '#f56a00' },
-          onClick: () => {
-            debugger;
-          },
+          title: item.realName,
         },
         {
-          default: () => item.userName, // 默认插槽内容
+          default: () =>
+            h(
+              Avatar,
+              {
+                src: item.avatar || undefined,
+                style: { backgroundColor: '#ccc' },
+                onClick: () => {
+                  // debugger;
+                },
+              },
+              {
+                default: () => item.realName.charAt(0), // 默认插槽内容
+              },
+            ),
         },
       );
     });
 
-    return h(AvatarGroup, {}, { default: () => avatars });
+    return h(
+      AvatarGroup,
+      {
+        maxCount: 3,
+        // 超过maxCount的头像显示的样式 背景为当前主题的颜色
+        maxStyle: { color: '#f56a00', backgroundColor: '#fde3cf' },
+      },
+      { default: () => avatars },
+    );
   },
 };

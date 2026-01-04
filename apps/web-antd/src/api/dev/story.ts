@@ -1,5 +1,12 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+
+interface userListFace {
+  userId: string;
+  realName: string;
+  avatar?: string;
+}
+
 export namespace SystemStoryApi {
   export interface SystemStory {
     [key: string]: any;
@@ -21,6 +28,7 @@ export namespace SystemStoryApi {
     source?: string;
     createDate?: string;
     updateDate?: string;
+    userList?: userListFace[];
   }
 }
 

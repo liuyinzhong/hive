@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+import { mockUserData } from '~/api/system/user/list';
 
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
@@ -67,6 +68,17 @@ function generateMockDataList(count: number) {
       ),
       createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
+      ),
+      /* 关联用户列表，使用 faker 随机 1~5个值 */
+      userList: faker.helpers.arrayElements(
+        mockUserData
+          .filter((item) => item.disabled === 0)
+          .map((item) => ({
+            userId: item.userId,
+            avatar: item.avatar,
+            realName: item.realName,
+          })),
+        faker.number.int({ min: 1, max: 5 }),
       ),
     };
     dataList.push(dataItem);

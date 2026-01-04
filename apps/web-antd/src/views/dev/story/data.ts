@@ -5,7 +5,7 @@ import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { message } from 'ant-design-vue';
 import { getVersionsList, type SystemStoryApi } from '#/api/dev';
-import { getUsersList } from '#/api/system';
+import { getUserListAll } from '#/api/system';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -38,7 +38,7 @@ export function useFormSchema(): VbenFormSchema[] {
         filterOption: true,
         showSearch: true,
         multiple: true,
-        api: () => getUsersList({ page: 1, pageSize: 100, disabled: 0 }),
+        api: () => getUserListAll(),
         labelField: 'realName',
         valueField: 'userId',
         resultField: 'items',
@@ -126,7 +126,7 @@ export function useColumns(
       field: 'storyNum',
       title: '编号',
       width: 60,
-      dragSort: true,
+      dragSort: false,
       formatter: ({ row }) => '#' + row.storyNum,
     },
     {
@@ -148,6 +148,23 @@ export function useColumns(
       minWidth: 200,
       cellRender: {
         name: 'CellLink',
+      },
+    },
+    {
+      width: 120,
+      field: 'userList',
+      showOverflow: true,
+      title: '参与人员',
+      editRender: {
+        name: 'UserSelect',
+        props: {
+          mode: 'multiple',
+        },
+        events: {
+          change: (val: any) => {
+            message.success(`${JSON.stringify(val)}`);
+          },
+        },
       },
     },
     {
@@ -192,23 +209,6 @@ export function useColumns(
         },
       },
     },
-    {
-      width: 100,
-      field: 'userIds',
-      title: '参与人员',
-      editRender: {
-        name: 'UserSelect',
-        props: {
-          mode: 'multiple',
-        },
-        events: {
-          change: (val: any) => {
-            message.success(`${JSON.stringify(val)}`);
-          },
-        },
-      },
-    },
-
     {
       width: 100,
       field: 'storyLevel',
