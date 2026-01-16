@@ -19,7 +19,7 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      fieldName: 'version',
+      fieldName: 'versionId',
       label: '迭代',
       componentProps: {
         api: () => getVersionsList({ page: 1, pageSize: 100 }),
@@ -29,7 +29,7 @@ export function useFormSchema(): VbenFormSchema[] {
         autoSelect: 'first',
       },
     },
-    {
+    /* {
       component: 'ApiSelect',
       fieldName: 'userList',
       label: '参与人员',
@@ -44,7 +44,7 @@ export function useFormSchema(): VbenFormSchema[] {
         resultField: 'items',
         autoSelect: 'first',
       },
-    },
+    }, */
     {
       component: 'ApiSelect',
       fieldName: 'storyStatus',
