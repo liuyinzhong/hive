@@ -15,10 +15,6 @@ export interface StoryFace {
   creatorId?: string;
   /** 需求描述,富文本格式,; */
   storyRichText?: string;
-  /** 原型链接,; */
-  pmLink?: string;
-  /** 需求备注,; */
-  storyRemark?: string;
   /** 需求附件URL地址,逗号分隔,; */
   files?: string[];
   /** 需求类别,; */

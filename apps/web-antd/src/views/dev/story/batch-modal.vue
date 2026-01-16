@@ -71,12 +71,6 @@ const columns: VTable.ColumnsDefine = [
     width: 300,
     editor: new InputEditor(),
   },
-  {
-    field: 'pmLink',
-    title: '原型链接',
-    width: 200,
-    editor: new TextAreaEditor(),
-  },
 
   {
     field: 'storyStatus',

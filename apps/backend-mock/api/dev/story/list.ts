@@ -26,8 +26,6 @@ function generateMockDataList(count: number) {
       creatorName: faker.person.fullName(),
       creatorId: faker.string.uuid(),
       storyRichText: faker.lorem.paragraph(),
-      pmLink: faker.internet.url(),
-      storyRemark: faker.lorem.word(),
       files: '',
       storyType: faker.helpers.arrayElement([
         '0',

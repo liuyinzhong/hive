@@ -17,8 +17,6 @@ export namespace SystemStoryApi {
     creatorName?: string;
     creatorId?: string;
     storyRichText?: string;
-    pmLink?: string;
-    storyRemark?: string;
     files?: string;
     storyType?: string;
     storyStatus?: string;

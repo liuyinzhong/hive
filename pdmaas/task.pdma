@@ -3972,11 +3972,6 @@
             "refObjectId": "8D9887C7-209B-4F89-87F0-AE5F59A47348",
             "refObjectType": "P",
             "orderValue": 1
-          },
-          {
-            "refObjectId": "069A4893-62EA-4469-90D3-87EFE9449316",
-            "refObjectType": "MER",
-            "orderValue": 2
           }
         ],
         "peerOrder": 1
@@ -4156,11 +4151,6 @@
           "refObjectId": "DE53153A-B1BB-4CA1-A6EE-65DC11797ECA",
           "refObjectType": "P",
           "orderValue": 2
-        },
-        {
-          "refObjectId": "069A4893-62EA-4469-90D3-87EFE9449316",
-          "refObjectType": "MER",
-          "orderValue": 3
         }
       ]
     },
@@ -7306,44 +7296,6 @@
             "baseDataType": "LONGTEXT",
             "bizDomainType": "",
             "dbDataType": "LONGTEXT",
-            "dataLen": "",
-            "numScale": "",
-            "primaryKey": 0,
-            "notNull": 0,
-            "autoIncrement": 0,
-            "defaultValue": "",
-            "stndDictId": "",
-            "stndFieldId": "",
-            "attr1": "",
-            "attr2": "",
-            "attr3": "",
-            "attr4": "",
-            "attr5": "",
-            "attr6": "",
-            "attr7": "",
-            "attr8": "",
-            "attr9": "",
-            "attr10": "",
-            "attr11": "",
-            "attr12": "",
-            "attr13": "",
-            "attr14": "",
-            "attr15": "",
-            "attr16": "",
-            "attr17": "",
-            "attr18": "",
-            "attr19": "",
-            "attr20": "",
-            "origin": "UI"
-          },
-          {
-            "id": "05A43DFD-8973-4981-BACD-9DDB43574FC7",
-            "defKey": "pm_link",
-            "defName": "原型连接",
-            "intro": "",
-            "baseDataType": "TEXT",
-            "bizDomainType": "",
-            "dbDataType": "TEXT",
             "dataLen": "",
             "numScale": "",
             "primaryKey": 0,
@@ -16809,25 +16761,12 @@
             }
           }
         ]
-      },
-      {
-        "id": "069A4893-62EA-4469-90D3-87EFE9449316",
-        "type": "MER",
-        "defKey": "BUG生命周期",
-        "defName": "BUG",
-        "entityRelationRank": "F",
-        "props": {},
-        "cellsData": [
-          {
-            "code": "graph LR\r\n    A[提交BUG] --> B[确认状态: 待确认<br>BUG状态: null]\r\n    B --> C{确认决策}\r\n\r\n    C -->|确认有效| D[确认状态: 已确认<br>BUG状态: 待修复]\r\n    C -->|确认为无效| E[确认状态: 已拒绝/重复<br>BUG状态: 已关闭]\r\n\r\n    D --> F[开发修复: BUG状态: 已修复]\r\n    F --> G{测试验证}\r\n    G -->|验证通过| H[BUG状态: 已关闭]\r\n    G -->|验证失败| I[BUG状态: 待修复]\r\n\r\n    subgraph 循环阶段记录已修复次数\r\n        I -.->|修复完毕| J(BUG状态:已修复)\r\n    end\r\n\r\n    H -->|End| Z([生命周期结束])\r\n    J -.->|验证失败| I"
-          }
-        ]
       }
     ],
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1767766058026,
-  "signature": "c021288b06970ca1da1717f486835193",
+  "updateTime": 1768543310655,
+  "signature": "9472f49ed7e514ae8e9be3e6c6c42b58",
   "branchId": "1111"
 }

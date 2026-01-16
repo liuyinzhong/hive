@@ -57,11 +57,6 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'Input',
-      fieldName: 'pmLink',
-      label: '原型链接',
-    },
-    {
       component: 'ApiSelect',
       fieldName: 'storyType',
       label: '需求类别',
@@ -167,26 +162,7 @@ export function useColumns(
         },
       },
     },
-    {
-      visible: false,
-      field: 'pmLink',
-      title: '原型链接',
-      width: 200,
-      cellRender: {
-        name: 'CellLink',
-        events: {
-          click: (row: any) => {
-            debugger;
-          },
-        },
-      },
-    },
-    {
-      visible: false,
-      field: 'storyRemark',
-      title: '备注',
-      width: 100,
-    },
+
     {
       field: 'storyType',
       title: '需求类别',
