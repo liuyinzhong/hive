@@ -35,6 +35,10 @@ export interface StoryFace {
   moduleId?: string;
   /** 需求关联模块名称,; */
   moduleTitle?: string;
+  /** 需求关联项目表id,; */
+  projectId?: string;
+  /** 需求关联项目名称,; */
+  projectTitle?: string;
   /** 需求来源,字典,; */
   source?: string;
   /* 参与人员 */

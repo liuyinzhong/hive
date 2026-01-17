@@ -3,6 +3,8 @@ import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
+import { mockProjectData } from '../project/list';
+
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -12,6 +14,8 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   minute: '2-digit',
   second: '2-digit',
 });
+
+let projectIds = mockProjectData.map((item) => item.projectId);
 
 function generateMockDataList(count: number) {
   const dataList = [];
@@ -29,7 +33,7 @@ function generateMockDataList(count: number) {
       ),
       endDate: '',
       startDate: '',
-      projectId: faker.string.uuid(),
+      projectId: faker.helpers.arrayElement(projectIds),
       releaseStatus: faker.helpers.arrayElement(['0', '10', '20', '30']),
       releaseDate: '',
       changeLogRichText: faker.lorem.paragraph(),
@@ -41,7 +45,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockData = generateMockDataList(100);
+export const mockData = generateMockDataList(20);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -49,7 +53,13 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  const { page = 1, pageSize = 20, version, releaseStatus } = getQuery(event);
+  const {
+    page = 1,
+    pageSize = 20,
+    version,
+    releaseStatus,
+    projectId,
+  } = getQuery(event);
 
   let listData = structuredClone(mockData);
   if (version) {
@@ -57,6 +67,9 @@ export default eventHandler(async (event) => {
   }
   if (releaseStatus) {
     listData = listData.filter((item) => item.releaseStatus === releaseStatus);
+  }
+  if (projectId) {
+    listData = listData.filter((item) => item.projectId === projectId);
   }
 
   /* 以 version 排序,使用compareVersion */

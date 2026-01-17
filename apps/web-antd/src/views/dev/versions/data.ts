@@ -129,10 +129,21 @@ export function useFormSchema(): VbenFormSchema[] {
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
+      component: 'ApiSelect',
+      fieldName: 'projectId',
+      label: '项目',
+      componentProps: {
+        api: () => getProjectsList(),
+        labelField: 'projectTitle',
+        valueField: 'projectId',
+        allowClear: true,
+      },
+    },
+    {
       component: 'Input',
       defaultValue: '',
       fieldName: 'version',
-      label: '版本号',
+      label: '迭代版本',
     },
     {
       component: 'ApiSelect',
@@ -158,7 +169,7 @@ export function useColumns(
   return [
     {
       field: 'version',
-      title: '版本号',
+      title: '迭代版本',
     },
     {
       field: 'remark',

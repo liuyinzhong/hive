@@ -3,7 +3,7 @@ import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 import { mockUserData } from '~/api/system/user/list';
-
+import { mockProjectData } from '../project/list';
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -13,6 +13,8 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   minute: '2-digit',
   second: '2-digit',
 });
+
+let projectIds = mockProjectData.map((item) => item.projectId);
 
 function generateMockDataList(count: number) {
   const dataList = [];
@@ -51,6 +53,7 @@ function generateMockDataList(count: number) {
       storyLevel: faker.helpers.arrayElement(['0', '1', '2']),
       versionId: faker.string.uuid(),
       version: '1.0.0',
+      projectId: faker.helpers.arrayElement(projectIds),
       moduleId: faker.string.uuid(),
       moduleTitle: faker.helpers.arrayElement([
         '医生端',

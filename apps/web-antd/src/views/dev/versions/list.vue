@@ -17,6 +17,7 @@ import addFormModal from './add-modal.vue';
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),

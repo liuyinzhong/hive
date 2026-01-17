@@ -23,7 +23,14 @@ function generateMockDataList(count: number) {
   for (let i = 0; i < count; i++) {
     const dataItem: Record<string, any> = {
       moduleId: faker.string.uuid(),
-      moduleTitle: faker.lorem.word(),
+      moduleTitle: faker.helpers.arrayElement([
+        '医生端',
+        '患者端',
+        'EXE端',
+        '商户管理端',
+        '平台管理端',
+        '药店端',
+      ]),
       pid: null,
       projectId: faker.helpers.arrayElement(projectIds),
       sort: i,

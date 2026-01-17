@@ -17,6 +17,13 @@ import {
   UploadFileEditor,
 } from '#/vtable';
 
+import {
+  getVersionsList,
+  getModulesList,
+  getProjectsList,
+  type SystemStoryApi,
+} from '#/api/dev';
+
 defineOptions({
   name: 'StoryBatchFormModel',
 });
@@ -44,24 +51,52 @@ const getRecords = () => {
 
 const columns: VTable.ColumnsDefine = [
   {
+    field: 'projectId',
+    title: '关联项目',
+    width: 'auto',
+    /* fieldFormat: (e: any) => {
+      return e.projectTitle;
+    }, */
+
+    editor: new SelectEditor({
+      api: () => getProjectsList(),
+      labelField: 'projectTitle',
+      valueField: 'projectId',
+      resultField: '',
+      change: (rowData: StoryFace, e: any) => {
+        // rowData.projectId = e.value;
+        // rowData.projectTitle = e.label;
+      },
+    }),
+  },
+  {
     field: 'moduleTitle',
     title: '关联模块',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
+      api: () => getModulesList({ projectId: '' }),
+      labelField: 'moduleTitle',
+      valueField: 'moduleId',
+      resultField: '',
       change: (rowData: StoryFace, e: any) => {
         rowData.moduleId = e.value;
+        rowData.moduleTitle = e.label;
       },
     }),
   },
   {
     field: 'version',
-    title: '关联版本',
+    title: '迭代版本',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
+      api: () => getVersionsList({ projectId: '' }),
+      labelField: 'versionName',
+      valueField: 'versionId',
+      resultField: '',
       change: (rowData: StoryFace, e: any) => {
-        rowData.versionId = e.value;
+        debugger;
+        // rowData.versionId = e.value;
+        // rowData.version = e.label;
       },
     }),
   },
@@ -121,12 +156,16 @@ const initTable = () => {
     {
       records: records.value,
       columns,
+      formatCopyValue: (e: any) => {
+        debugger;
+        return '';
+      },
       menu: {
         contextMenuItems: ['复制', '粘贴', '清空单元格', '删除行', '新增行'],
       },
       widthMode: 'standard',
-      allowFrozenColCount: 3,
-      frozenColCount: 3,
+      allowFrozenColCount: 0,
+      frozenColCount: 0,
       autoWrapText: true,
       hover: {
         highlightMode: 'cross',

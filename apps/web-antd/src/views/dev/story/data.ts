@@ -4,8 +4,14 @@ import type { OnActionClickFn } from '#/adapter/vxe-table';
 import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { message } from 'ant-design-vue';
-import { getVersionsList, type SystemStoryApi } from '#/api/dev';
+import {
+  getVersionsList,
+  getModulesList,
+  getProjectsList,
+  type SystemStoryApi,
+} from '#/api/dev';
 import { getUserListAll } from '#/api/system';
+import { upload_file } from '#/api/examples/upload';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -19,32 +25,73 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      fieldName: 'versionId',
-      label: '迭代',
+      fieldName: 'projectId',
+      label: '项目',
+      rules: 'required',
       componentProps: {
-        api: () => getVersionsList({ page: 1, pageSize: 100 }),
-        labelField: 'version',
-        valueField: 'versionId',
-        resultField: 'items',
+        api: () => getProjectsList(),
+        labelField: 'projectTitle',
+        valueField: 'projectId',
         autoSelect: 'first',
+        allowClear: true,
       },
     },
-    /* {
+    {
+      component: 'ApiSelect',
+      fieldName: 'versionId',
+      label: '迭代版本',
+      rules: 'required',
+      componentProps: {},
+      dependencies: {
+        triggerFields: ['projectId'],
+        componentProps: async (ctx) => {
+          ctx.versionId = undefined;
+          const res: any = await getVersionsList({ projectId: ctx.projectId });
+          return {
+            options: res.items,
+            fieldNames: {
+              label: 'version',
+              value: 'versionId',
+            },
+          };
+        },
+      },
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'moduleId',
+      label: '关联模块',
+      rules: 'required',
+      componentProps: {},
+      dependencies: {
+        triggerFields: ['projectId'],
+        componentProps: async (ctx) => {
+          ctx.moduleId = undefined;
+          const res: any = await getModulesList({ projectId: ctx.projectId });
+          return {
+            options: res,
+            fieldNames: {
+              label: 'moduleTitle',
+              value: 'moduleId',
+            },
+          };
+        },
+      },
+    },
+    {
       component: 'ApiSelect',
       fieldName: 'userList',
       label: '参与人员',
       componentProps: {
         allowClear: true,
-        filterOption: true,
-        showSearch: true,
-        multiple: true,
+        mode: 'multiple',
+        maxTagCount: 1,
         api: () => getUserListAll(),
         labelField: 'realName',
         valueField: 'userId',
         resultField: 'items',
-        autoSelect: 'first',
       },
-    }, */
+    },
     {
       component: 'ApiSelect',
       fieldName: 'storyStatus',
@@ -53,13 +100,13 @@ export function useFormSchema(): VbenFormSchema[] {
       defaultValue: '0',
       componentProps: {
         api: () => getDictList('STORY_STATUS'),
-        allowClear: true,
       },
     },
     {
       component: 'ApiSelect',
       fieldName: 'storyType',
       label: '需求类别',
+      rules: 'required',
       defaultValue: '0',
       componentProps: {
         api: () => getDictList('STORY_TYPE'),
@@ -77,6 +124,33 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      component: 'ApiSelect',
+      fieldName: 'source',
+      label: '需求来源',
+      defaultValue: '0',
+      rules: 'required',
+      componentProps: {
+        api: () => getDictList('STORY_SOURCE'),
+      },
+    },
+    {
+      component: 'Upload',
+      fieldName: 'files',
+      label: '附件',
+      formItemClass: 'col-span-3',
+      componentProps: {
+        // 更多属性见：https://ant.design/components/upload-cn
+        // 自动携带认证信息
+        customRequest: upload_file,
+        disabled: false,
+        maxCount: 10,
+        multiple: true,
+        showUploadList: true,
+        // 上传列表的内建样式，支持四种基本样式 text, picture, picture-card 和 picture-circle
+        listType: 'text',
+      },
+    },
+    {
       component: 'AiEditor',
       fieldName: 'storyRichText',
       label: '内容',
@@ -89,6 +163,19 @@ export function useFormSchema(): VbenFormSchema[] {
 /** 表格查询表单配置 */
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
+    {
+      component: 'ApiSelect',
+      fieldName: 'projectId',
+      label: '项目',
+      rules: 'required',
+      componentProps: {
+        api: () => getProjectsList(),
+        labelField: 'projectTitle',
+        valueField: 'projectId',
+        autoSelect: 'first',
+        allowClear: true,
+      },
+    },
     {
       component: 'Input',
       defaultValue: '',
@@ -127,7 +214,7 @@ export function useColumns(
     {
       width: 100,
       field: 'version',
-      title: '迭代',
+      title: '迭代版本',
     },
     {
       width: 100,

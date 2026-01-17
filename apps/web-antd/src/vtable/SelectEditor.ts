@@ -17,13 +17,13 @@ import { Select } from 'ant-design-vue';
  */
 interface SelectEditorConfig {
   /** 下拉选项数组 */
-  options: {
-    label: string;
-    value: string;
-    [key: string]: any;
-  }[];
+  options?: any[];
   /** 选项变化时的回调函数 */
-  change: (rowData: any, option: any) => void;
+  change?: (rowData: any, option: any) => void;
+  api?: any;
+  labelField?: string;
+  valueField?: string;
+  resultField?: string;
 }
 
 /**
@@ -47,8 +47,6 @@ export class SelectEditor implements IEditor {
   options: any[] = [];
   /** 表格当前行数据对象 */
   rowData: any = {};
-  /** 当前选中的显示文本 */
-  selectedLabel: string = '';
   /** 当前选中的完整选项对象 */
   selectedOption: any = {};
   /** Select 组件实例 */
@@ -64,9 +62,9 @@ export class SelectEditor implements IEditor {
    * @param editorConfig 编辑器配置选项
    */
   constructor(editorConfig?: SelectEditorConfig) {
-    this.editorConfig = editorConfig || { options: [], change: () => {} };
-    this.options = this.editorConfig.options;
-    this.changeCallback = this.editorConfig.change;
+    this.editorConfig = editorConfig || {};
+    this.options = this.editorConfig.options || [];
+    this.changeCallback = this.editorConfig.change || (() => {});
   }
 
   /**
@@ -94,8 +92,8 @@ export class SelectEditor implements IEditor {
    * 在 onEnd 调用后由 VTable 调用获取最终值
    * @returns 当前选中的显示文本
    */
-  getValue(): string {
-    return this.selectedLabel;
+  getValue(): any {
+    return this.selectedOption[this.editorConfig.valueField || ''] || {};
   }
 
   /**
@@ -116,9 +114,6 @@ export class SelectEditor implements IEditor {
    * 执行清理操作并触发回调
    */
   onEnd() {
-    // 触发用户定义的变化回调
-    this.changeCallback(this.rowData, this.selectedOption);
-
     // 清理Vue应用
     this.cleanupVueApp();
 
@@ -135,16 +130,22 @@ export class SelectEditor implements IEditor {
    * 初始化编辑器UI并挂载到指定容器
    * @param context 编辑上下文信息
    */
-  onStart(context: EditContext) {
+  async onStart(context: EditContext) {
     const { container, value, referencePosition, endEdit, table, col, row } =
       context;
 
     // 初始化基本属性
     this.container = container;
     this.successCallback = endEdit;
-    this.selectedLabel = value || '';
+    this.selectedOption =
+      this.options.find(
+        (item) => item[this.editorConfig.valueField as string] === value || '',
+      ) || {};
     this.rowData = table.records[row - 1] || {};
     this.field = table.options.columns[col]?.field || '';
+
+    // 处理选项数据
+    await this.processOptions();
 
     // 创建编辑器容器
     this.createWrapperElement();
@@ -154,6 +155,52 @@ export class SelectEditor implements IEditor {
 
     // 调整编辑器位置
     this.adjustEditorPosition(referencePosition?.rect);
+  }
+
+  /**
+   * 处理选项数据
+   * 如果配置了api，则从api获取数据，否则使用本地options
+   */
+  private async processOptions() {
+    // 如果配置了api，则从api获取数据
+    if (this.editorConfig.api) {
+      try {
+        const data = await this.editorConfig.api();
+        // 根据resultField提取列表数据
+        let listData = data;
+        if (this.editorConfig.resultField) {
+          listData = data[this.editorConfig.resultField] || [];
+        }
+        // 转换数据格式
+        this.options = this.transformOptions(listData);
+      } catch (error) {
+        console.error('获取选项数据失败:', error);
+        this.options = [];
+      }
+    } else {
+      // 使用本地配置的options
+      this.options = this.editorConfig.options || [];
+    }
+  }
+
+  /**
+   * 转换选项数据格式
+   * 将api返回的数据转换为标准的label-value格式
+   * @param data api返回的原始数据
+   * @returns 转换后的选项数组
+   */
+  private transformOptions(data: any[]): any[] {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    let labelKey = this.editorConfig.labelField as string;
+    let valueKey = this.editorConfig.valueField as string;
+
+    return data.map((item) => ({
+      [labelKey]: item[labelKey],
+      [valueKey]: item[valueKey],
+    }));
   }
 
   /**
@@ -173,13 +220,14 @@ export class SelectEditor implements IEditor {
 
     // 空值验证通过
     if (!newValue) {
-      this.changeCallback(this.rowData, { label: '', value: '' });
+      this.changeCallback(this.rowData, {});
       return true;
     }
 
     // 查找匹配的选项
     const activeOption = this.options.find(
-      (option: any) => option.label === newValue,
+      (option: any) =>
+        option[this.editorConfig.valueField as string] === newValue,
     );
 
     // 未找到匹配选项则验证失败
@@ -232,13 +280,15 @@ export class SelectEditor implements IEditor {
     this.app = createApp({
       components: { Select },
       setup() {
-        // 查找当前选中的选项
-        const activeOption = that.options.find(
-          (item: any) => item.label === that.selectedLabel,
-        );
+        const fieldNames = {
+          label: that.editorConfig.labelField,
+          value: that.editorConfig.valueField,
+        };
 
         // 响应式数据
-        const selectValue = ref(activeOption?.value || '');
+        const selectValue = ref(
+          that.selectedOption[that.editorConfig.valueField as string] || '',
+        );
         const options = ref(that.options);
 
         /**
@@ -253,12 +303,17 @@ export class SelectEditor implements IEditor {
          * @param option 选中的完整选项对象
          */
         const handleSelectChange = (value: string, option: any) => {
-          that.selectedLabel = option?.label || '';
-          that.selectedOption = option || { label: '', value: '' };
-          that.successCallback?.(that.selectedLabel);
+          that.selectedOption = option || {};
+          that.successCallback?.(that.selectedOption);
         };
 
-        return { selectValue, options, getPopupContainer, handleSelectChange };
+        return {
+          selectValue,
+          options,
+          getPopupContainer,
+          handleSelectChange,
+          fieldNames,
+        };
       },
       template: `
         <div class="select-editor-container">
@@ -272,6 +327,7 @@ export class SelectEditor implements IEditor {
             :bordered="false"
             :autofocus="true"
             :defaultOpen="true"
+            :fieldNames="fieldNames"
             @change="handleSelectChange"
             style="width: 100%;"
           />
