@@ -7,6 +7,7 @@ import { useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
 
 import * as VTable from '@visactor/vtable';
 import { message } from 'ant-design-vue';
+import { upload_file } from '#/api/examples/upload';
 
 import { getDictList } from '#/dicts';
 import {
@@ -60,7 +61,7 @@ const columns: VTable.ColumnsDefine = [
       valueField: 'projectId',
       resultField: '',
       change: (rowData: StoryFace, e: any) => {
-        rowData.projectId = e.projectId;
+        rowData.projectId = e.projectId || '';
       },
     }),
   },
@@ -69,13 +70,12 @@ const columns: VTable.ColumnsDefine = [
     title: '关联模块',
     width: 'auto',
     editor: new SelectEditor({
-      api: () => getModulesList({ projectId: '' }),
+      api: (e: any) => getModulesList({ projectId: e.projectId || '' }),
       labelField: 'moduleTitle',
       valueField: 'moduleId',
       resultField: '',
       change: (rowData: StoryFace, e: any) => {
-        rowData.moduleId = e.value;
-        rowData.moduleTitle = e.label;
+        rowData.moduleId = e.moduleId || '';
       },
     }),
   },
@@ -84,13 +84,12 @@ const columns: VTable.ColumnsDefine = [
     title: '迭代版本',
     width: 'auto',
     editor: new SelectEditor({
-      api: () => getVersionsList({ projectId: '' }),
-      labelField: 'versionName',
+      api: (e: any) => getVersionsList({ projectId: e.projectId || '' }),
+      labelField: 'version',
       valueField: 'versionId',
-      resultField: '',
+      resultField: 'items',
       change: (rowData: StoryFace, e: any) => {
-        debugger;
-        // rowData.versionId = e.value;
+        rowData.versionId = e.versionId || '';
         // rowData.version = e.label;
       },
     }),
@@ -103,30 +102,36 @@ const columns: VTable.ColumnsDefine = [
   },
 
   {
-    field: 'storyStatus',
+    field: 'storyStatusTitle',
     title: '需求状态',
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_STATUS'),
-      change: (rowData: StoryFace, e: any) => {},
+      change: (rowData: StoryFace, e: any) => {
+        rowData.storyStatus = e.value || '';
+      },
     }),
   },
   {
-    field: 'storyType',
+    field: 'storyTypeTitle',
     title: '需求类别',
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_TYPE'),
-      change: (rowData: StoryFace, e: any) => {},
+      change: (rowData: StoryFace, e: any) => {
+        rowData.storyType = e.value || '';
+      },
     }),
   },
   {
-    field: 'storyLevel',
+    field: 'storyLevelTitle',
     title: '优先级',
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_LEVEL'),
-      change: (rowData: StoryFace, e: any) => {},
+      change: (rowData: StoryFace, e: any) => {
+        rowData.storyLevel = e.value || '';
+      },
     }),
   },
   {
@@ -182,9 +187,15 @@ const initTable = () => {
     addRow();
   }
 
-  /* ListTableApi.on(CHANGE_CELL_VALUE, (params) => {
+  ListTableApi.on(CHANGE_CELL_VALUE, (params) => {
     console.log('编辑单元格数据', params);
-  }); */
+    if (params.col == 0 || params.col == 1) {
+      const data = ListTableApi.getRecordByCell(params.col, params.row);
+      ListTableApi.changeCellValue(params.col + 1, params.row, '');
+      const editor: any = ListTableApi.getEditor(params.col + 1, params.row);
+      editor?.changeCallback(data, {});
+    }
+  });
   /* ListTableApi.on(DBLCLICK_CELL, (params) => {
     console.log('双击单元格', params);
   }); */
@@ -216,16 +227,10 @@ const initTable = () => {
         const _list: any = ListTableApi.getSelectedCellInfos();
         _list.forEach((cells: any[]) => {
           cells.forEach((item: any) => {
-            const columnConfig = columns[item.col];
-
             const data = ListTableApi.getRecordByCell(item.col, item.row);
-            // @ts-ignore
-            columnConfig?.editor?.changeCallback?.(data, {
-              label: '',
-              value: '',
-            });
-            data[item.field as string] = '';
-            ListTableApi.updateRecords([data], [item.row - 1]);
+            ListTableApi.changeCellValue(item.col, item.row, '');
+            const editor: any = ListTableApi.getEditor(item.col, item.row);
+            editor && editor.changeCallback && editor.changeCallback(data, {});
           });
         });
 

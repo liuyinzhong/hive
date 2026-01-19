@@ -11,6 +11,7 @@ import {
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
+import batchFormModalV2 from './batch-modalV2.vue';
 import nextModal from './next-modal.vue';
 import detailDrawer from './detail-drawer.vue';
 import { getStoryList, type SystemStoryApi } from '#/api/dev';
@@ -159,6 +160,21 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
   destroyOnClose: true,
 });
 // #endregion
+
+// #region 批量添加需求V2
+
+const [BatchFormModalV2, BatchFormModalV2Api] = useVbenModal({
+  title: '批量添加需求V2',
+  connectedComponent: batchFormModalV2,
+  destroyOnClose: true,
+});
+
+/** 打开批量添加弹窗V2 */
+function openAddBatchStoryModalV2() {
+  BatchFormModalV2Api.open();
+}
+
+// #endregion
 </script>
 
 <template>
@@ -171,10 +187,15 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
         <a-button class="mr-2" type="primary" @click="openAddBatchStoryModal">
           批量新建
         </a-button>
+
+        <a-button class="mr-2" type="primary" @click="openAddBatchStoryModalV2">
+          批量新建V2
+        </a-button>
       </template>
     </Grid>
     <AddFormModal />
     <BatchFormModal />
+    <BatchFormModalV2 />
     <NextModal />
     <DetailDrawer />
   </Page>

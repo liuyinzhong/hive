@@ -62,6 +62,14 @@ export class SelectEditor implements IEditor {
    * @param editorConfig 编辑器配置选项
    */
   constructor(editorConfig?: SelectEditorConfig) {
+    if (editorConfig) {
+      editorConfig.labelField = editorConfig.labelField || 'label';
+      editorConfig.valueField = editorConfig.valueField || 'value';
+      editorConfig.resultField = editorConfig.resultField || '';
+      editorConfig.api = editorConfig.api || {};
+      editorConfig.change = editorConfig.change || (() => {});
+    }
+
     this.editorConfig = editorConfig || {};
     this.options = this.editorConfig.options || [];
     this.changeCallback = this.editorConfig.change || (() => {});
@@ -93,7 +101,7 @@ export class SelectEditor implements IEditor {
    * @returns 当前选中的显示文本
    */
   getValue(): any {
-    return this.selectedOption[this.editorConfig.labelField || ''] || {};
+    return this.selectedOption[this.editorConfig.labelField || ''] || '';
   }
 
   /**
@@ -145,7 +153,9 @@ export class SelectEditor implements IEditor {
     this.field = table.options.columns[col]?.field || '';
 
     // 处理选项数据
-    await this.processOptions();
+    if (this.options.length === 0) {
+      await this.processOptions(this.rowData);
+    }
 
     // 创建编辑器容器
     this.createWrapperElement();
@@ -161,11 +171,11 @@ export class SelectEditor implements IEditor {
    * 处理选项数据
    * 如果配置了api，则从api获取数据，否则使用本地options
    */
-  private async processOptions() {
+  private async processOptions(rowData: any) {
     // 如果配置了api，则从api获取数据
     if (this.editorConfig.api) {
       try {
-        const data = await this.editorConfig.api();
+        const data = await this.editorConfig.api(rowData);
         // 根据resultField提取列表数据
         let listData = data;
         if (this.editorConfig.resultField) {
@@ -219,7 +229,7 @@ export class SelectEditor implements IEditor {
     }
 
     // 空值验证通过
-    if (!newValue) {
+    if (!newValue || JSON.stringify(newValue) === '{}') {
       this.changeCallback(this.rowData, {});
       return true;
     }
@@ -304,12 +314,19 @@ export class SelectEditor implements IEditor {
           that.selectedOption = option || {};
           that.successCallback?.(that.selectedOption);
         };
+        const dropdownVisibleChange = (visible: boolean) => {
+          if (!visible) {
+            that.selectedOption = {};
+            that.successCallback?.(that.selectedOption);
+          }
+        };
 
         return {
           selectValue,
           options,
           getPopupContainer,
           handleSelectChange,
+          dropdownVisibleChange,
           fieldNames,
         };
       },
@@ -327,6 +344,7 @@ export class SelectEditor implements IEditor {
             :defaultOpen="true"
             :fieldNames="fieldNames"
             @change="handleSelectChange"
+            @dropdownVisibleChange="dropdownVisibleChange"
             style="width: 100%;"
           />
         </div>

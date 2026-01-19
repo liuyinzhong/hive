@@ -37,13 +37,6 @@ setupVbenVxeTable({
         columnConfig: {
           resizable: true,
         },
-        toolbarConfig: {
-          // 是否显示搜索表单控制按钮
-          // @ts-ignore 正式环境时有完整的类型声明
-          search: true,
-          zoom: true,
-          custom: true,
-        },
         minHeight: 180,
         formConfig: {
           // 全局禁用vxe-table的表单配置，使用formOptions

@@ -19,7 +19,8 @@ import { createApp, onMounted, ref } from 'vue';
 
 import { UploadDragger } from 'ant-design-vue';
 import { useVbenDrawer } from '@vben/common-ui';
-
+import { upload_file } from '#/api/examples/upload';
+import { filesToUrlString, urlStringToFiles } from '#/utils';
 /**
  * 选择编辑器配置接口
  */
@@ -90,7 +91,7 @@ export class UploadFileEditor implements IEditor {
    * @returns 当前选中的显示文本
    */
   getValue(): string {
-    return (this.fileUrls || []).map((item) => item.uid).join(',');
+    return filesToUrlString(this.fileUrls || []);
   }
 
   /**
@@ -112,8 +113,6 @@ export class UploadFileEditor implements IEditor {
    * 执行清理操作并触发回调
    */
   onEnd() {
-    this.fileUrls = [];
-
     // 清理Vue应用
     this.cleanupVueApp();
 
@@ -138,15 +137,7 @@ export class UploadFileEditor implements IEditor {
     this.container = container;
     this.successCallback = endEdit;
     if (value) {
-      let _list = value.split(',');
-      _list.forEach((item: any) => {
-        (this.fileUrls ||= []).push({
-          uid: '-1',
-          name: item.split('/').pop(),
-          status: 'done',
-          url: item,
-        });
-      });
+      this.fileUrls = urlStringToFiles(value);
     } else {
       this.fileUrls = [];
     }
@@ -286,6 +277,7 @@ export class UploadFileEditor implements IEditor {
           handleChange,
           headers,
           maxCount: that.editorConfig.maxCount,
+          uploadFile: upload_file,
           beforeUpload,
           Drawer,
         };
@@ -298,7 +290,7 @@ export class UploadFileEditor implements IEditor {
               name="file"
               :max-count="maxCount"
               :headers="headers"
-              action=""
+              :custom-request="uploadFile"
               :multiple="true"
               :before-upload="beforeUpload"
               @change="handleChange"

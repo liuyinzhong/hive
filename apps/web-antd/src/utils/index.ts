@@ -25,7 +25,7 @@ export function filesToUrlString(fileList: any) {
  * @param urlString 逗号分隔的字符串
  * @returns 文件数组
  */
-export function urlStringToFiles(urlString: string) {
+export function urlStringToFiles(urlString: string): any {
   if (!urlString) return [];
 
   if (Array.isArray(urlString)) return urlString;
