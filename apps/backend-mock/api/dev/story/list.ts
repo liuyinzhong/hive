@@ -108,7 +108,27 @@ export default eventHandler(async (event) => {
 
   let listData = structuredClone(mockData);
 
-  const { page = 1, pageSize = 20 } = getQuery(event);
+  const {
+    page = 1,
+    pageSize = 20,
+    projectId,
+    versionId,
+    storyTitle,
+    storyStatus,
+  } = getQuery(event);
+
+  if (projectId) {
+    listData = listData.filter((item) => item.projectId === projectId);
+  }
+  if (versionId) {
+    listData = listData.filter((item) => item.versionId === versionId);
+  }
+  if (storyTitle) {
+    listData = listData.filter((item) => item.storyTitle.includes(storyTitle));
+  }
+  if (storyStatus) {
+    listData = listData.filter((item) => item.storyStatus === storyStatus);
+  }
 
   /* 分页响应 */
   return usePageResponseSuccess(page as string, pageSize as string, listData);

@@ -175,13 +175,34 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'projectId',
       label: '项目',
-      rules: 'required',
       componentProps: {
         api: () => getProjectsList(),
         labelField: 'projectTitle',
         valueField: 'projectId',
-        autoSelect: 'first',
         allowClear: true,
+      },
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'versionId',
+      label: '迭代版本',
+      componentProps: {},
+      dependencies: {
+        triggerFields: ['projectId'],
+        componentProps: async (ctx, e) => {
+          e.resetField('versionId');
+          if (!ctx.projectId) {
+            return {};
+          }
+          return {
+            key: 'versionId_' + ctx.projectId,
+            api: () => getVersionsList({ projectId: ctx.projectId }),
+            labelField: 'version',
+            valueField: 'versionId',
+            resultField: 'items',
+            allowClear: true,
+          };
+        },
       },
     },
     {
