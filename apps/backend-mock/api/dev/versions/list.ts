@@ -45,7 +45,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockData = generateMockDataList(20);
+export const mockVersionData = generateMockDataList(20);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -61,7 +61,7 @@ export default eventHandler(async (event) => {
     projectId,
   } = getQuery(event);
 
-  let listData = structuredClone(mockData);
+  let listData = structuredClone(mockVersionData);
   if (version) {
     listData = listData.filter((item) => item.version === version);
   }

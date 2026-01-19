@@ -24,7 +24,7 @@ export default {
                 },
               },
               {
-                default: () => item.realName.charAt(0), // 默认插槽内容
+                default: () => item.realName?.charAt(0), // 默认插槽内容
               },
             ),
         },

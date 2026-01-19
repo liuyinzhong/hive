@@ -44,15 +44,19 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {},
       dependencies: {
         triggerFields: ['projectId'],
-        componentProps: async (ctx) => {
-          ctx.versionId = undefined;
-          const res: any = await getVersionsList({ projectId: ctx.projectId });
+        componentProps: async (ctx, e) => {
+          e.resetField('versionId');
+          if (!ctx.projectId) {
+            return {};
+          }
           return {
-            options: res.items,
-            fieldNames: {
-              label: 'version',
-              value: 'versionId',
-            },
+            key: 'versionId_' + ctx.projectId,
+            api: () => getVersionsList({ projectId: ctx.projectId }),
+            labelField: 'version',
+            valueField: 'versionId',
+            resultField: 'items',
+            autoSelect: 'first',
+            allowClear: true,
           };
         },
       },
@@ -65,15 +69,19 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {},
       dependencies: {
         triggerFields: ['projectId'],
-        componentProps: async (ctx) => {
-          ctx.moduleId = undefined;
-          const res: any = await getModulesList({ projectId: ctx.projectId });
+        componentProps: async (ctx, e) => {
+          e.resetField('moduleId');
+          if (!ctx.projectId) {
+            return {};
+          }
           return {
-            options: res,
-            fieldNames: {
-              label: 'moduleTitle',
-              value: 'moduleId',
-            },
+            key: 'moduleId_' + ctx.projectId,
+            api: () => getModulesList({ projectId: ctx.projectId }),
+            labelField: 'moduleTitle',
+            valueField: 'moduleId',
+            resultField: '',
+            autoSelect: 'first',
+            allowClear: true,
           };
         },
       },
@@ -210,6 +218,11 @@ export function useColumns(
       width: 60,
       dragSort: false,
       formatter: ({ row }) => '#' + row.storyNum,
+    },
+    {
+      field: 'projectTitle',
+      title: '项目',
+      width: 60,
     },
     {
       width: 100,

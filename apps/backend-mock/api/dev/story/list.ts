@@ -4,6 +4,8 @@ import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 import { mockUserData } from '~/api/system/user/list';
 import { mockProjectData } from '../project/list';
+import { mockModuleData } from '../module/list';
+import { mockVersionData } from '../versions/list';
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -20,6 +22,19 @@ function generateMockDataList(count: number) {
   const dataList = [];
 
   for (let i = 0; i < count; i++) {
+    let projectId = faker.helpers.arrayElement(projectIds);
+
+    let projectInfo: any = mockProjectData.find(
+      (item) => item.projectId === projectId,
+    );
+
+    let versionInfo: any = mockVersionData.find(
+      (item) => item.projectId === projectId,
+    );
+    let moduleInfo: any = mockModuleData.find(
+      (item) => item.projectId === projectId,
+    );
+
     const dataItem: Record<string, any> = {
       storyId: faker.string.uuid(),
       pid: null,
@@ -28,7 +43,8 @@ function generateMockDataList(count: number) {
       creatorName: faker.person.fullName(),
       creatorId: faker.string.uuid(),
       storyRichText: faker.lorem.paragraph(),
-      files: '',
+      files:
+        'https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp',
       storyType: faker.helpers.arrayElement([
         '0',
         '1',
@@ -51,18 +67,12 @@ function generateMockDataList(count: number) {
         '99',
       ]),
       storyLevel: faker.helpers.arrayElement(['0', '1', '2']),
-      versionId: faker.string.uuid(),
-      version: '1.0.0',
-      projectId: faker.helpers.arrayElement(projectIds),
-      moduleId: faker.string.uuid(),
-      moduleTitle: faker.helpers.arrayElement([
-        '医生端',
-        '患者端',
-        'EXE端',
-        '商户管理端',
-        '平台管理端',
-        '药店端',
-      ]),
+      versionId: versionInfo.versionId,
+      version: versionInfo.version,
+      projectId: projectInfo.projectId,
+      projectTitle: projectInfo.projectTitle,
+      moduleId: moduleInfo?.moduleId || null,
+      moduleTitle: moduleInfo?.moduleTitle || null,
       source: faker.helpers.arrayElement(['0', '1']),
       updateDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
@@ -88,7 +98,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockData = generateMockDataList(20);
+export const mockData = generateMockDataList(100);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

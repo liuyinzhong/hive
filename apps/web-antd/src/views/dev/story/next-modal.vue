@@ -40,6 +40,9 @@ const [Modal, modalApi] = useVbenModal({
       current.value = stepsItems.findIndex(
         (item: any) => item.value === storyStatus,
       );
+      stepsItems.forEach((item: any, index: number) => {
+        item.disabled = index < current.value ? true : false;
+      });
     }
   },
 });

@@ -4,6 +4,7 @@ import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { useFormSchema } from './data';
 import { createStory } from '#/api/dev';
+import { filesToUrlString, urlStringToFiles, deepClone } from '#/utils';
 
 defineOptions({
   name: 'StoryAddFormModel',
@@ -11,6 +12,9 @@ defineOptions({
 
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
+  handleValuesChange(_values, fieldsChanged) {
+    // message.info(`表单以下字段发生变化：${fieldsChanged.join('，')}`);
+  },
   // 所有表单项共用，可单独在表单内覆盖
   commonConfig: {
     // 所有表单项
@@ -31,7 +35,10 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      formApi.setValues(modalApi.getData());
+      let data = deepClone(modalApi.getData());
+      data.files = urlStringToFiles(data.files || '');
+      data.userList = (data.userList ||= []).map((item: any) => item.userId);
+      formApi.setValues(data);
     }
   },
 });
@@ -44,6 +51,7 @@ async function onSubmit(values: Record<string, any>) {
   });
   modalApi.lock();
 
+  values.files = filesToUrlString(values.files || []);
   await createStory(values);
 
   modalApi.close();

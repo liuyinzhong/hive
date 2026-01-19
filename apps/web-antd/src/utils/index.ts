@@ -53,3 +53,12 @@ export function getFileNameFromUrl(url: string): string {
   // 提取最后一个/后的部分作为文件名
   return pureUrl.split('/').pop() || '';
 }
+
+/**
+ * @description 深拷贝对象
+ * @param obj 要拷贝的对象
+ * @returns 深拷贝后的对象
+ */
+export function deepClone<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}

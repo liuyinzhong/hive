@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-import { mockData } from './list';
+import { mockVersionData } from './list';
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -10,7 +10,7 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  let listData = structuredClone(mockData);
+  let listData = structuredClone(mockVersionData);
 
   listData.sort((a, b) => compareVersion(b.version, a.version));
 

@@ -49,7 +49,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockData = generateMockDataList(20);
+export const mockModuleData = generateMockDataList(20);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -57,7 +57,7 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  let listData = structuredClone(mockData);
+  let listData = structuredClone(mockModuleData);
 
   const { projectId } = getQuery(event);
 
