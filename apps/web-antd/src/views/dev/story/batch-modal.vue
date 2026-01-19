@@ -51,13 +51,9 @@ const getRecords = () => {
 
 const columns: VTable.ColumnsDefine = [
   {
-    field: 'projectId',
+    field: 'projectTitle',
     title: '关联项目',
     width: 'auto',
-    /* fieldFormat: (e: any) => {
-      return e.projectTitle;
-    }, */
-
     editor: new SelectEditor({
       api: () => getProjectsList(),
       labelField: 'projectTitle',
@@ -156,10 +152,10 @@ const initTable = () => {
     {
       records: records.value,
       columns,
-      formatCopyValue: (e: any) => {
+      /* formatCopyValue: (e: any) => {
         debugger;
-        return '';
-      },
+        return e;
+      }, */
       menu: {
         contextMenuItems: ['复制', '粘贴', '清空单元格', '删除行', '新增行'],
       },

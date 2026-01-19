@@ -93,7 +93,7 @@ export class SelectEditor implements IEditor {
    * @returns 当前选中的显示文本
    */
   getValue(): any {
-    return this.selectedOption[this.editorConfig.valueField || ''] || {};
+    return this.selectedOption[this.editorConfig.labelField || ''] || {};
   }
 
   /**
@@ -223,11 +223,10 @@ export class SelectEditor implements IEditor {
       this.changeCallback(this.rowData, {});
       return true;
     }
-
     // 查找匹配的选项
     const activeOption = this.options.find(
       (option: any) =>
-        option[this.editorConfig.valueField as string] === newValue,
+        option[this.editorConfig.labelField as string] === newValue,
     );
 
     // 未找到匹配选项则验证失败
@@ -238,7 +237,8 @@ export class SelectEditor implements IEditor {
     // 更新选中选项并触发回调
     this.selectedOption = activeOption;
     this.changeCallback(this.rowData, this.selectedOption);
-
+    this.rowData[this.editorConfig.valueField as string] =
+      this.selectedOption[this.editorConfig.valueField as string];
     return true;
   }
 
