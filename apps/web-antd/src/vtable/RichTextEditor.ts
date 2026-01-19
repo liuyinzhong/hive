@@ -222,14 +222,17 @@ export class RichTextEditor implements IEditor {
           }, 0);
         });
 
+        const defaultHtml = ``;
+
         return {
           htmlValue,
           Drawer,
+          defaultHtml,
         };
       },
       template: `
         <component :is="Drawer">
-          <AiEditor v-model="htmlValue" />
+          <AiEditor v-model="htmlValue" :defaultHtml="defaultHtml" />
         </component>
       `,
     });

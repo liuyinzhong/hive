@@ -17,8 +17,9 @@ const divRef = ref();
 
 let aiEditor: AiEditor | null = null;
 
-const { modelValue } = defineProps({
+const { modelValue, defaultHtml } = defineProps({
   modelValue: String, // 双向绑定的值
+  defaultHtml: String, // 默认的 html 内容
 });
 onMounted(() => {
   aiEditor = new AiEditor({
@@ -90,6 +91,8 @@ onMounted(() => {
       emit('update:text', aiEditor.getText());
     },
   });
+
+  aiEditor.setContent(defaultHtml || '');
 });
 
 onUnmounted(() => {
