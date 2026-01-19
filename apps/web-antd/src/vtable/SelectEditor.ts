@@ -139,7 +139,7 @@ export class SelectEditor implements IEditor {
     this.successCallback = endEdit;
     this.selectedOption =
       this.options.find(
-        (item) => item[this.editorConfig.valueField as string] === value || '',
+        (item) => item[this.editorConfig.labelField as string] === value || '',
       ) || {};
     this.rowData = table.records[row - 1] || {};
     this.field = table.options.columns[col]?.field || '';
@@ -237,8 +237,6 @@ export class SelectEditor implements IEditor {
     // 更新选中选项并触发回调
     this.selectedOption = activeOption;
     this.changeCallback(this.rowData, this.selectedOption);
-    this.rowData[this.editorConfig.valueField as string] =
-      this.selectedOption[this.editorConfig.valueField as string];
     return true;
   }
 

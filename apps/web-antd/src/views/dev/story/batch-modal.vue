@@ -60,8 +60,7 @@ const columns: VTable.ColumnsDefine = [
       valueField: 'projectId',
       resultField: '',
       change: (rowData: StoryFace, e: any) => {
-        // rowData.projectId = e.value;
-        // rowData.projectTitle = e.label;
+        rowData.projectId = e.projectId;
       },
     }),
   },
