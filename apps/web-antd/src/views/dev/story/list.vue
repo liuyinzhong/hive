@@ -52,11 +52,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions<SystemStoryApi.SystemStory>,
   gridEvents: {
-    cellClick: ({ column, row }: any) => {
+    /* cellClick: ({ column, row }: any) => {
       if (column.field === 'storyTitle') {
         DetailDrawerApi.setData(row).open();
       }
-    },
+    }, */
     rowDragstart: (e: any) => {},
     rowDragend: ({ oldRow, _index }: any) => {
       console.log(
@@ -93,6 +93,10 @@ function onActionClick({
     }
     case 'next': {
       openNextModal(row);
+      break;
+    }
+    case 'storyTitle': {
+      DetailDrawerApi.setData(row).open();
       break;
     }
   }

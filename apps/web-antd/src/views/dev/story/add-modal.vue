@@ -38,6 +38,9 @@ const [Modal, modalApi] = useVbenModal({
       let data = deepClone(modalApi.getData());
       data.files = urlStringToFiles(data.files || '');
       data.userList = (data.userList ||= []).map((item: any) => item.userId);
+      if (data.storyId) {
+        modalApi.setState({ title: '编辑需求' });
+      }
       formApi.setValues(data);
     }
   },

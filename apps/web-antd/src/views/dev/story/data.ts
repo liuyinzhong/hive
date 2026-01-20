@@ -264,6 +264,11 @@ export function useColumns(
       minWidth: 200,
       cellRender: {
         name: 'CellLink',
+        events: {
+          click: (val: any) => {
+            onActionClick && onActionClick({ code: 'storyTitle', row: val });
+          },
+        },
       },
     },
     {
@@ -330,7 +335,7 @@ export function useColumns(
     },
 
     {
-      width: 250,
+      width: 160,
       field: 'operation',
       fixed: 'right',
       title: $t('system.dept.operation'),
@@ -342,17 +347,27 @@ export function useColumns(
         },
         name: 'CellOperation',
         options: [
-          'edit', // 默认的编辑按钮
+          {
+            code: 'edit', // 默认的编辑按钮
+            icon: 'lucide:edit',
+            text: '',
+            title: '编辑',
+          },
           {
             code: 'delete', // 默认的删除按钮
+            icon: 'lucide:trash-2',
+            text: '',
+            title: '删除',
           },
           {
             code: 'addTask',
-            text: '添加任务',
+            icon: 'lucide:clipboard-clock',
+            title: '添加任务',
           },
           {
             code: 'next',
-            text: '流转',
+            icon: 'lucide:arrow-right-from-line',
+            title: '流转',
           },
         ],
       },
