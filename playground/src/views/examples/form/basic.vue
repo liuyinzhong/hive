@@ -20,6 +20,7 @@ const keyword = ref('');
 const fetching = ref(false);
 // 模拟远程获取数据
 function fetchRemoteOptions({ keyword = '选项' }: Record<string, any>) {
+  debugger;
   fetching.value = true;
   return new Promise((resolve) => {
     setTimeout(() => {

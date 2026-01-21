@@ -49,7 +49,7 @@ const records = [
     endDate: '2025-08-26',
     progress: 31,
     storyTitle: '需求1',
-    executeName: '张三',
+    userName: '张三',
     avatarUrl: 'https://picsum.photos/200/300',
   },
   {
@@ -59,7 +59,7 @@ const records = [
     endDate: '2025-08-28',
     progress: 100,
     storyTitle: '需求1',
-    executeName: '张三',
+    userName: '张三',
     avatarUrl: 'https://picsum.photos/200/300',
   },
   {
@@ -69,7 +69,7 @@ const records = [
     endDate: '2025-08-27',
     progress: 31,
     storyTitle: '需求1',
-    executeName: '张三',
+    userName: '张三',
     avatarUrl: 'https://picsum.photos/200/300',
   },
   {
@@ -79,7 +79,7 @@ const records = [
     endDate: '2025-08-27',
     progress: 100,
     storyTitle: '需求1',
-    executeName: '王二',
+    userName: '王二',
     planHours: 10,
     actualHours: 10,
     avatarUrl: 'https://picsum.photos/200/300',
@@ -99,7 +99,7 @@ const columns: any = [
     },
   },
   {
-    field: 'executeName',
+    field: 'userName',
     title: '执行人',
     width: 100,
     mergeCell: true,

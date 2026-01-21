@@ -1,5 +1,3 @@
-import type { BugFace } from '#/types';
-
 import { faker } from '@faker-js/faker';
 
 import {
@@ -11,7 +9,7 @@ import {
 } from '#/dicts/data/bug';
 
 export const getTestData = (pageSize: number) => {
-  const data: BugFace[] = [];
+  const data: any[] = [];
   for (let i = 0; i < pageSize; i++) {
     data.push({
       bugId: 'xxx',

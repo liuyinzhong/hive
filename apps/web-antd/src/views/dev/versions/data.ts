@@ -3,7 +3,11 @@ import type { VbenFormSchema } from '#/adapter/form';
 import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getProjectsList, type SystemVersionApi } from '#/api/dev';
+import {
+  getLastVersion,
+  getProjectsList,
+  type SystemVersionApi,
+} from '#/api/dev';
 import { changeVersionType } from '#/utils/versionExtendApi';
 import { z } from '#/adapter/form';
 
@@ -21,6 +25,26 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      component: 'ApiSelect',
+      fieldName: 'projectId',
+      label: '项目',
+      rules: 'required',
+      componentProps: () => {
+        return {
+          api: () => getProjectsList(),
+          labelField: 'projectTitle',
+          valueField: 'projectId',
+          autoSelect: 'first',
+        };
+      },
+      dependencies: {
+        triggerFields: ['versionId'],
+        disabled(ctx, e) {
+          return ctx.versionId ? true : false;
+        },
+      },
+    },
+    {
       component: 'Input',
       fieldName: 'pordVersion',
       label: '线上版本号',
@@ -29,10 +53,20 @@ export function useFormSchema(): VbenFormSchema[] {
         bordered: false,
       },
       dependencies: {
-        show(values) {
-          return !!values.pordVersion;
+        triggerFields: ['projectId'],
+        show(ctx, e) {
+          return ctx.versionId ? false : true;
         },
-        triggerFields: ['pordVersion'],
+        componentProps: async (ctx, e) => {
+          if (!ctx.projectId) {
+            return {};
+          }
+          const lastVersion: any = await getLastVersion({
+            projectId: ctx.projectId,
+          });
+          e.setFieldValue('pordVersion', lastVersion.version);
+          return {};
+        },
       },
     },
     {
@@ -43,11 +77,22 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         options: getDictList('VERSION_TYPE'),
       },
+      defaultValue: '20',
       dependencies: {
-        disabled(values) {
-          return !!values.versionId;
+        triggerFields: ['versionId', 'pordVersion'],
+        componentProps: (ctx, e) => {
+          if (!ctx.pordVersion) {
+            return {};
+          }
+          e.setFieldValue(
+            'version',
+            changeVersionType(ctx.pordVersion, ctx.versionType),
+          );
+          return {};
         },
-        triggerFields: ['versionId'],
+        disabled(ctx, e) {
+          return ctx.versionId ? true : false;
+        },
       },
     },
     {
@@ -62,17 +107,19 @@ export function useFormSchema(): VbenFormSchema[] {
         }),
       dependencies: {
         triggerFields: ['versionId', 'versionType'],
-        disabled(values) {
-          return !!values.versionId;
+        disabled(ctx, e) {
+          return ctx.versionId ? true : false;
         },
-        trigger: (values, formApi) => {
-          if (values.versionType) {
-            const newVersion = changeVersionType(
-              values.pordVersion,
-              values.versionType,
-            );
-            formApi.setFieldValue('version', newVersion);
+        componentProps: (ctx, e) => {
+          if (!ctx.pordVersion) {
+            return {};
           }
+          const newVersion = changeVersionType(
+            ctx.pordVersion,
+            ctx.versionType,
+          );
+          e.setFieldValue('version', newVersion);
+          return {};
         },
       },
     },
@@ -87,27 +134,7 @@ export function useFormSchema(): VbenFormSchema[] {
         options: getDictList('RELEASE_STATUS'),
       },
     },
-    {
-      component: 'ApiSelect',
-      fieldName: 'projectId',
-      label: '关联项目',
-      rules: 'required',
-      componentProps: {
-        api: () => getProjectsList(),
-        allowClear: true,
-        filterOption: true,
-        showSearch: true,
-        labelField: 'projectTitle',
-        valueField: 'projectId',
-        autoSelect: 'first',
-      },
-      dependencies: {
-        disabled(values) {
-          return !!values.versionId;
-        },
-        triggerFields: ['versionId'],
-      },
-    },
+
     {
       component: 'Textarea',
       fieldName: 'remark',
@@ -227,7 +254,10 @@ export function useColumns(
         },
         name: 'CellOperation',
         options: [
-          'edit', // 默认的编辑按钮
+          {
+            code: 'edit', // 默认的编辑按钮
+            text: '编辑',
+          },
           {
             code: 'delete', // 默认的删除按钮
           },

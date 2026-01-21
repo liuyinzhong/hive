@@ -5750,47 +5750,9 @@
             "origin": "UI"
           },
           {
-            "id": "E3E72018-EF2D-4010-B03A-1D680092A149",
-            "defKey": "creator_name",
-            "defName": "创建人名称",
-            "intro": "",
-            "baseDataType": "VARCHAR",
-            "bizDomainType": "",
-            "dbDataType": "VARCHAR",
-            "dataLen": 12,
-            "numScale": "",
-            "primaryKey": 0,
-            "notNull": 1,
-            "autoIncrement": 0,
-            "defaultValue": "",
-            "stndDictId": "",
-            "stndFieldId": "",
-            "attr1": "",
-            "attr2": "",
-            "attr3": "",
-            "attr4": "",
-            "attr5": "",
-            "attr6": "",
-            "attr7": "",
-            "attr8": "",
-            "attr9": "",
-            "attr10": "",
-            "attr11": "",
-            "attr12": "",
-            "attr13": "",
-            "attr14": "",
-            "attr15": "",
-            "attr16": "",
-            "attr17": "",
-            "attr18": "",
-            "attr19": "",
-            "attr20": "",
-            "origin": "UI"
-          },
-          {
             "id": "E3DAAA25-A42F-4558-A6F2-D3CF9297F5BA",
-            "defKey": "execute_id",
-            "defName": "执行人id",
+            "defKey": "user_id",
+            "defName": "执行用户id",
             "intro": "",
             "baseDataType": "CHAR",
             "bizDomainType": "",
@@ -5798,7 +5760,7 @@
             "dataLen": 36,
             "numScale": "",
             "primaryKey": 0,
-            "notNull": 0,
+            "notNull": 1,
             "autoIncrement": 0,
             "defaultValue": "",
             "stndDictId": "",
@@ -14895,6 +14857,61 @@
               "cell": "188c12db-a86b-4871-ad7c-0e8a9f421d32",
               "port": "4366D45A-F797-4712-9BB2-29DDB74763D0_in"
             }
+          },
+          {
+            "shape": "edge",
+            "attrs": {
+              "line": {
+                "stroke": "rgb(122, 167, 250)",
+                "targetMarker": {
+                  "name": "er-n",
+                  "strokeWidth": 1
+                },
+                "fill-opacity": 1,
+                "stroke-width": 1,
+                "stroke-opacity": 0.78695652173913,
+                "stroke-dasharray": "0",
+                "sourceMarker": {
+                  "name": "er-1",
+                  "strokeWidth": 1
+                }
+              },
+              "text": {
+                "textAnchor": "middle",
+                "textVerticalAnchor": "middle",
+                "fill": "#000000",
+                "fontSize": 14,
+                "font-weight": "normal",
+                "font-style": "normal",
+                "text-decoration": "none"
+              }
+            },
+            "id": "B96F7345-346E-4F17-9116-6DDED50ED502",
+            "connector": {
+              "name": "rounded"
+            },
+            "router": {
+              "name": "manhattan",
+              "args": {
+                "padding": 30,
+                "excludeShapes": [
+                  "group"
+                ]
+              }
+            },
+            "cellType": "edge",
+            "zIndex": 0,
+            "tools": {
+              "items": []
+            },
+            "source": {
+              "cell": "355d50be-a9ae-486c-90b4-a47d1c307e82",
+              "port": "22C6757A-950E-4311-9666-209A50C461F9_out"
+            },
+            "target": {
+              "cell": "e7149f44-073d-4e99-bec5-4415487dd0eb",
+              "port": "E3E72018-EF2D-4010-B03A-1D680092A149_in"
+            }
           }
         ]
       },
@@ -17045,7 +17062,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1768622753368,
-  "signature": "9a76b9a1d6432ba5af9ed1d848d1a135",
+  "updateTime": 1768893074718,
+  "signature": "b4f023e94ab76fd291746e8447c17d20",
   "branchId": "1111"
 }

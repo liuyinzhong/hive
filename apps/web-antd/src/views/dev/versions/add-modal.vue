@@ -37,20 +37,13 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
       formApi.resetForm();
-
-      const row: SystemVersionApi.SystemVersion = modalApi.getData();
-
-      if (!row.version) {
-        const lastVersion: SystemVersionApi.SystemVersion =
-          await getLastVersion('');
-
-        const newVersion = changeVersionType(lastVersion.version, '20');
-
-        row.version = newVersion;
-        row.versionType = '20';
-        row.pordVersion = lastVersion.version;
+      let data = modalApi.getData();
+      if (data.versionId) {
+        modalApi.setState({
+          title: '编辑版本',
+        });
       }
-      formApi.setValues(row);
+      formApi.setValues(data);
     }
   },
 });

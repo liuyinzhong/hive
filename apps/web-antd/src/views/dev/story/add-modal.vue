@@ -56,7 +56,6 @@ async function onSubmit(values: Record<string, any>) {
 
   values.files = filesToUrlString(values.files || []);
   await createStory(values);
-
   modalApi.close();
   message.success({
     content: `提交成功`,

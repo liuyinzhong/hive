@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { StoryFace } from '#/types';
-
 import { ref } from 'vue';
 
 import { useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
@@ -40,10 +38,10 @@ const {
 let ListTableApi: VTable.ListTable;
 
 // 初始化为 10个空对象
-const records = ref<StoryFace[]>();
+const records = ref<SystemStoryApi.SystemStory[]>();
 
 const addRow = (installIndex?: number) => {
-  ListTableApi.addRecord({} as StoryFace, installIndex);
+  ListTableApi.addRecord({} as SystemStoryApi.SystemStory, installIndex);
 };
 
 const getRecords = () => {
@@ -60,7 +58,7 @@ const columns: VTable.ColumnsDefine = [
       labelField: 'projectTitle',
       valueField: 'projectId',
       resultField: '',
-      change: (rowData: StoryFace, e: any) => {
+      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.projectId = e.projectId || '';
       },
     }),
@@ -74,7 +72,7 @@ const columns: VTable.ColumnsDefine = [
       labelField: 'moduleTitle',
       valueField: 'moduleId',
       resultField: '',
-      change: (rowData: StoryFace, e: any) => {
+      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.moduleId = e.moduleId || '';
       },
     }),
@@ -88,7 +86,7 @@ const columns: VTable.ColumnsDefine = [
       labelField: 'version',
       valueField: 'versionId',
       resultField: 'items',
-      change: (rowData: StoryFace, e: any) => {
+      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.versionId = e.versionId || '';
         // rowData.version = e.label;
       },
@@ -107,7 +105,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_STATUS'),
-      change: (rowData: StoryFace, e: any) => {
+      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.storyStatus = e.value || '';
       },
     }),
@@ -118,7 +116,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_TYPE'),
-      change: (rowData: StoryFace, e: any) => {
+      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.storyType = e.value || '';
       },
     }),
@@ -129,7 +127,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_LEVEL'),
-      change: (rowData: StoryFace, e: any) => {
+      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.storyLevel = e.value || '';
       },
     }),

@@ -37,7 +37,7 @@ async function createVersion(
   return requestClient.post('/dev/versions', data);
 }
 
-async function getLastVersion(params: string) {
+async function getLastVersion(params: any) {
   return requestClient.get<SystemVersionApi.SystemVersion>(
     '/dev/versions/getLastVersion',
     { params },

@@ -6,6 +6,7 @@ import { mockUserData } from '~/api/system/user/list';
 import { mockProjectData } from '../project/list';
 import { mockModuleData } from '../module/list';
 import { mockVersionData } from '../versions/list';
+import { mockStoryData } from '../story/list';
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -16,14 +17,23 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
-let projectIds = mockModuleData.map((item) => item.projectId);
+let projectIds = mockProjectData.map((item) => item.projectId);
+let storyIds = mockStoryData.map((item) => item.storyId);
+let userIds = mockUserData.map((item) => item.userId);
 
 function generateMockDataList(count: number) {
   const dataList = [];
 
   for (let i = 0; i < count; i++) {
-    let projectId = faker.helpers.arrayElement(projectIds);
+    let userId = faker.helpers.arrayElement(userIds);
+    let userInfo: any =
+      mockUserData.find((item) => item.userId === userId) || {};
 
+    let storyId = faker.helpers.arrayElement(storyIds);
+    let storyInfo: any =
+      mockStoryData.find((item) => item.storyId === storyId) || {};
+
+    let projectId = faker.helpers.arrayElement(projectIds);
     let projectInfo: any =
       mockProjectData.find((item) => item.projectId === projectId) || {};
 
@@ -33,17 +43,21 @@ function generateMockDataList(count: number) {
       mockModuleData.find((item) => item.projectId === projectId) || {};
 
     const dataItem: Record<string, any> = {
-      storyId: faker.string.uuid(),
+      taskId: faker.string.uuid(),
       pid: null,
-      storyTitle: faker.lorem.sentence(),
-      storyNum: i,
-      creatorName: faker.person.fullName(),
-      creatorId: faker.string.uuid(),
-      storyRichText: faker.lorem.paragraph(),
-      files:
-        'https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp',
-      storyType: faker.helpers.arrayElement([
-        '0',
+      storyId: storyInfo.storyId,
+      storyTitle: storyInfo.storyTitle,
+      moduleId: moduleInfo?.moduleId || null,
+      moduleTitle: moduleInfo?.moduleTitle || null,
+      versionId: versionInfo.versionId,
+      version: versionInfo.version,
+      projectId: projectInfo.projectId,
+      projectTitle: projectInfo.projectTitle,
+      taskTitle: faker.lorem.sentence(),
+      taskNum: i,
+      taskRichText: faker.lorem.paragraph(),
+      taskStatus: faker.helpers.arrayElement(['0', '10', '99']),
+      taskType: faker.helpers.arrayElement([
         '1',
         '2',
         '3',
@@ -54,40 +68,28 @@ function generateMockDataList(count: number) {
         '8',
         '9',
         '10',
+        '11',
+        '12',
+        '13',
+        '14',
+        '15',
       ]),
-      storyStatus: faker.helpers.arrayElement([
-        '0',
-        '10',
-        '20',
-        '30',
-        '31',
-        '99',
-      ]),
-      storyLevel: faker.helpers.arrayElement(['0', '1', '2']),
-      versionId: versionInfo.versionId,
-      version: versionInfo.version,
-      projectId: projectInfo.projectId,
-      projectTitle: projectInfo.projectTitle,
-      moduleId: moduleInfo?.moduleId || null,
-      moduleTitle: moduleInfo?.moduleTitle || null,
-      source: faker.helpers.arrayElement(['0', '1']),
-      updateDate: formatterCN.format(
+      planHours: faker.number.int({ min: 1, max: 10 }),
+      actualHours: faker.number.int({ min: 1, max: 10 }),
+      endDate: formatterCN.format(
+        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
+      ),
+      startDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
       createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
-      /* 关联用户列表，使用 faker 随机 1~5个值 */
-      userList: faker.helpers.arrayElements(
-        mockUserData
-          .filter((item) => item.disabled === 0)
-          .map((item) => ({
-            userId: item.userId,
-            avatar: item.avatar,
-            realName: item.realName,
-          })),
-        faker.number.int({ min: 1, max: 5 }),
-      ),
+      creatorId: userInfo.userId,
+      creatorName: userInfo.realName,
+      userId: userInfo.userId,
+      userName: userInfo.realName,
+      avatar: userInfo.avatar,
     };
     dataList.push(dataItem);
   }
@@ -95,7 +97,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockStoryData = generateMockDataList(100);
+export const mockTaskData = generateMockDataList(100);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -103,24 +105,16 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  let listData = structuredClone(mockStoryData);
+  let listData = structuredClone(mockTaskData);
 
   const {
     page = 1,
     pageSize = 20,
     projectId,
     versionId,
-    storyStatus,
-    keyword,
+    taskTitle,
+    taskStatus,
   } = getQuery(event);
-
-  if (keyword) {
-    listData = listData.filter(
-      (item) =>
-        item.storyTitle.indexOf(keyword) > -1 ||
-        item.storyNum.toString().indexOf(keyword) > -1,
-    );
-  }
 
   if (projectId) {
     listData = listData.filter((item) => item.projectId === projectId);
@@ -128,8 +122,11 @@ export default eventHandler(async (event) => {
   if (versionId) {
     listData = listData.filter((item) => item.versionId === versionId);
   }
-  if (storyStatus) {
-    listData = listData.filter((item) => item.storyStatus === storyStatus);
+  if (taskTitle) {
+    listData = listData.filter((item) => item.taskTitle.includes(taskTitle));
+  }
+  if (taskStatus) {
+    listData = listData.filter((item) => item.taskStatus === taskStatus);
   }
 
   /* 分页响应 */

@@ -22,6 +22,7 @@ import DictSelect from '#/adapter/component/table/DictSelect';
 import DictTag from '#/adapter/component/table/DictTag';
 import UserAvatar from '#/adapter/component/table/UserAvatar';
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
+import CellProgress from '#/adapter/component/table/CellProgress';
 import { $t } from '#/locales';
 
 import UserSelect from './component/table/UserSelect';
@@ -292,6 +293,7 @@ setupVbenVxeTable({
     vxeUI.renderer.add('UserAvatar', UserAvatar);
     vxeUI.renderer.add('DictSelect', DictSelect);
     vxeUI.renderer.add('UserSelect', UserSelect);
+    vxeUI.renderer.add('CellProgress', CellProgress);
   },
   useVbenForm,
 });

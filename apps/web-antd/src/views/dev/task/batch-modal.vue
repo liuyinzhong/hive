@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { TaskFace } from '#/types';
+import type { SystemTaskApi } from '#/api/dev';
 
 import { ref } from 'vue';
 
@@ -21,7 +21,7 @@ const { CHANGE_CELL_VALUE, COPY_DATA, PASTED_DATA, DROPDOWN_MENU_CLICK } =
 let ListTableApi: VTable.ListTable;
 
 // 初始化为 10个空对象
-const records = ref<TaskFace[]>();
+const records = ref<SystemTaskApi.SystemTask[]>();
 
 const [Modal, modalApi] = useVbenModal({
   async onConfirm() {
@@ -33,7 +33,7 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 const addRow = (installIndex?: number) => {
-  ListTableApi.addRecord({} as TaskFace, installIndex);
+  ListTableApi.addRecord({} as SystemTaskApi.SystemTask, installIndex);
 };
 
 const getRecords = () => {
@@ -47,7 +47,7 @@ const columns: VTable.ColumnsDefine = [
     width: 200,
     editor: new SelectEditor({
       options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {
+      change: (rowData: SystemTaskApi.SystemTask, e: any) => {
         rowData.storyId = e.value;
       },
     }),
@@ -59,13 +59,13 @@ const columns: VTable.ColumnsDefine = [
     editor: new InputEditor(),
   },
   {
-    field: 'executeName',
+    field: 'userName',
     title: '执行人',
     width: 100,
     editor: new SelectEditor({
       options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {
-        rowData.executeId = e.value;
+      change: (rowData: SystemTaskApi.SystemTask, e: any) => {
+        rowData.userId = e.value;
       },
     }),
   },
@@ -93,7 +93,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {},
+      change: (rowData: SystemTaskApi.SystemTask, e: any) => {},
     }),
   },
   {
@@ -102,7 +102,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getDictList('STORY_STATUS'),
-      change: (rowData: TaskFace, e: any) => {},
+      change: (rowData: SystemTaskApi.SystemTask, e: any) => {},
     }),
   },
 ];

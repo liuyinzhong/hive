@@ -31,6 +31,13 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
+    toolbarConfig: {
+      zoom: true,
+      custom: true,
+      refresh: true,
+      export: true,
+    },
+    exportConfig: {},
     editConfig: {
       trigger: 'click',
       mode: 'cell',

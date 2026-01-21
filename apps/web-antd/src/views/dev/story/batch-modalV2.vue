@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { StoryFace } from '#/types';
-
 import { ref } from 'vue';
 
 import { useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';

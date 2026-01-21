@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { Sortable } from '@vben-core/composables';
 
-import type { TaskFace } from '#/types';
+import type { SystemTaskApi } from '#/api/dev';
 
 import { onMounted, reactive, ref } from 'vue';
 
@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 interface DataItem {
   title: string;
   icon: string;
-  children: TaskFace[];
+  children: SystemTaskApi.SystemTask[];
 }
 
 // 待办事项数据
@@ -30,14 +30,14 @@ const data = reactive<Array<DataItem>>([
         taskTitle:
           '你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001你好我好0001',
         taskStatus: '0',
-        taskNum: 10_001,
+        taskNum: '',
         taskType: '0',
         planHours: 10,
         actualHours: 10,
         storyTitle: '添加一个字段xxxxxxx',
         module: '医生端',
         version: '1.0.0',
-        executeName: '刘哈哈',
+        userName: '刘哈哈',
         startDate: '2025-01-01',
         endDate: '2025-02-01',
       },
@@ -45,14 +45,14 @@ const data = reactive<Array<DataItem>>([
         taskId: faker.string.uuid(),
         taskTitle: '你好我好0005',
         taskStatus: '0',
-        taskNum: 10_005,
+        taskNum: '',
         taskType: '0',
         planHours: 10,
         actualHours: 10,
         storyTitle: '添加一个字段xxxxxxx',
         module: '患者端',
         version: '1.0.0',
-        executeName: '刘哈哈',
+        userName: '刘哈哈',
         startDate: '2025-01-01',
         endDate: '2025-02-01',
       },
@@ -60,14 +60,14 @@ const data = reactive<Array<DataItem>>([
         taskId: faker.string.uuid(),
         taskTitle: '你好我好0002',
         taskStatus: '0',
-        taskNum: 10_002,
+        taskNum: '',
         taskType: '0',
         planHours: 10,
         actualHours: 10,
         storyTitle: '添加一个字段xxxxxxx',
         module: '管理端',
         version: '1.0.0',
-        executeName: '刘哈哈',
+        userName: '刘哈哈',
         startDate: '2025-01-01',
         endDate: '2025-02-01',
       },
@@ -81,14 +81,14 @@ const data = reactive<Array<DataItem>>([
         taskId: faker.string.uuid(),
         taskTitle: '你好我好0003',
         taskStatus: '0',
-        taskNum: 10_003,
+        taskNum: '',
         taskType: '0',
         planHours: 10,
         actualHours: 10,
         storyTitle: '添加一个字段xxxxxxx',
         module: 'EXE',
         version: '1.0.0',
-        executeName: '刘哈哈',
+        userName: '刘哈哈',
         startDate: '2025-01-01',
         endDate: '2025-02-01',
       },
@@ -108,8 +108,8 @@ const data = reactive<Array<DataItem>>([
         version: '1.0.0',
         taskTitle: '你好我好0004',
         taskStatus: '0',
-        taskNum: 10_004,
-        executeName: '刘哈哈',
+        taskNum: '',
+        userName: '刘哈哈',
         startDate: '2025-01-01',
         endDate: '2025-02-01',
       },
@@ -123,8 +123,8 @@ const data = reactive<Array<DataItem>>([
         version: '1.0.1',
         taskTitle: '你好我好0004',
         taskStatus: '0',
-        taskNum: 10_004,
-        executeName: '刘哈哈',
+        taskNum: '',
+        userName: '刘哈哈',
         startDate: '2025-01-01',
         endDate: '2025-02-01',
       },
@@ -186,7 +186,10 @@ const sortableOptions: Sortable.Options = {
     const taskIndexById = fromList.children.findIndex(
       (task) => task.taskId === taskId,
     );
-    const task = fromList.children.splice(taskIndexById, 1)[0] as TaskFace;
+    const task = fromList.children.splice(
+      taskIndexById,
+      1,
+    )[0] as SystemTaskApi.SystemTask;
     toList.children.push(task);
     event.item.remove();
   },
@@ -215,12 +218,12 @@ const addTask = async () => {
     message.error('请输入截止时间');
     return;
   }
-  if (!addParams.value.executeName) {
+  if (!addParams.value.userName) {
     message.error('请输入执行人');
     return;
   }
 
-  const newTask: TaskFace = {
+  const newTask: SystemTaskApi.SystemTask = {
     taskId: faker.string.uuid(),
     ...addParams.value,
   };
@@ -232,7 +235,7 @@ onMounted(() => {
   initSortable();
 });
 
-const addParams = ref<TaskFace>({});
+const addParams = ref<SystemTaskApi.SystemTask>({});
 
 const changeTaskTitle = (e: string) => {
   console.log(e);
@@ -256,7 +259,7 @@ const changeTaskTitle = (e: string) => {
           </a-select>
 
           <a-select
-            v-model:value="addParams.executeName"
+            v-model:value="addParams.userName"
             style="width: 110px"
             placeholder="执行人"
           >

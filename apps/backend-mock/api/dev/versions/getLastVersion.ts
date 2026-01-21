@@ -12,6 +12,12 @@ export default eventHandler(async (event) => {
 
   let listData = structuredClone(mockVersionData);
 
+  const { page = 1, pageSize = 20, projectId } = getQuery(event);
+
+  if (projectId) {
+    listData = listData.filter((item) => item.projectId === projectId);
+  }
+
   listData.sort((a, b) => compareVersion(b.version, a.version));
 
   /* 全量响应 */

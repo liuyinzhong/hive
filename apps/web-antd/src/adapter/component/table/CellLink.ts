@@ -1,4 +1,4 @@
-import { Button } from 'ant-design-vue';
+import { Button, TypographyParagraph } from 'ant-design-vue';
 import { h } from 'vue';
 export default {
   renderTableDefault(renderOpts: any, params: any) {

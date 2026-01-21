@@ -2,14 +2,16 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import { getDictList } from '#/dicts';
+import { useDebounceFn } from '@vueuse/core';
 import { $t } from '#/locales';
 import { message } from 'ant-design-vue';
+import { ref, nextTick } from 'vue';
 import {
   getVersionsList,
   getModulesList,
   getProjectsList,
-  type SystemStoryApi,
-  getLastVersion,
+  type SystemTaskApi,
+  getStoryList,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
 import { upload_file } from '#/api/examples/upload';
@@ -19,8 +21,8 @@ export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Textarea',
-      fieldName: 'storyTitle',
-      label: '需求名称',
+      fieldName: 'taskTitle',
+      label: '任务标题',
       rules: 'required',
       formItemClass: 'col-span-3',
     },
@@ -47,10 +49,6 @@ export function useFormSchema(): VbenFormSchema[] {
         if (!ctx.projectId) {
           return {};
         }
-        getLastVersion(ctx.projectId).then((res) => {
-          debugger;
-          e.setFieldValue('versionId', res?.versionId || undefined);
-        });
         return {
           key: 'versionId_' + ctx.projectId,
           api: () => getVersionsList({ projectId: ctx.projectId }),
@@ -87,7 +85,8 @@ export function useFormSchema(): VbenFormSchema[] {
         };
       },
       dependencies: {
-        triggerFields: ['projectId'],
+        triggerFields: ['projectId', 'storyId'],
+        disabled: (ctx) => (ctx.storyId ? true : false),
         componentProps: (ctx, e) => {
           e.setFieldValue('moduleId', undefined);
           return {};
@@ -96,22 +95,86 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      fieldName: 'userList',
-      label: '参与人员',
+      fieldName: 'storyId',
+      label: '关联需求',
+      formItemClass: 'col-span-3',
+      componentProps: (ctx, e) => {
+        if (!ctx.versionId) {
+          return {};
+        }
+
+        return {
+          api: () =>
+            getStoryList({
+              versionId: ctx.versionId,
+              keyword: keyword.value || undefined,
+            }),
+          allowClear: true,
+          showSearch: true,
+          filterOption: false,
+          labelField: 'storyTitle',
+          valueField: 'storyId',
+          resultField: 'items',
+          onSelect: (value: any, option: any) => {
+            keyword.value = '';
+            nextTick(() => {
+              e.setFieldValue('moduleId', option.moduleId || undefined);
+            });
+          },
+          onSearch: useDebounceFn((value: string) => {
+            keyword.value = value;
+          }, 700),
+          params: {
+            keyword: keyword.value || undefined,
+            versionId: ctx.versionId || undefined,
+          },
+        };
+      },
+      dependencies: {
+        triggerFields: ['versionId'],
+        componentProps: (ctx, e) => {
+          e.setFieldValue('storyId', undefined);
+          return {};
+        },
+      },
+    },
+
+    {
+      component: 'ApiSelect',
+      fieldName: 'userId',
+      label: '执行人员',
+      rules: 'required',
       componentProps: {
-        allowClear: true,
-        mode: 'multiple',
-        maxTagCount: 1,
         api: () => getUserListAll(),
         labelField: 'realName',
         valueField: 'userId',
         resultField: 'items',
       },
     },
+
+    {
+      component: 'InputNumber',
+      fieldName: 'planHours',
+      label: '计划工时',
+      defaultValue: 0,
+      rules: 'required',
+      componentProps: {
+        min: 0,
+        precision: 2,
+        addonAfter: '小时',
+      },
+    },
+    /* {
+      component: 'InputNumber',
+      fieldName: 'actualHours',
+      label: '实际工时',
+      defaultValue: 0,
+    }, */
+
     {
       component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
+      fieldName: 'taskStatus',
+      label: '任务状态',
       rules: 'required',
       defaultValue: '0',
       componentProps: {
@@ -120,55 +183,28 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      fieldName: 'storyType',
-      label: '需求类别',
+      fieldName: 'taskType',
+      label: '任务类型',
       rules: 'required',
       defaultValue: '0',
       componentProps: {
-        api: () => getDictList('STORY_TYPE'),
+        api: () => getDictList('STORY_STATUS'),
       },
     },
-
     {
-      component: 'ApiSelect',
-      fieldName: 'storyLevel',
-      label: '优先级',
-      defaultValue: '0',
+      component: 'RangePicker',
+      fieldName: 'timeArr',
+      label: '开始时间',
       rules: 'required',
+      formItemClass: 'col-span-2',
       componentProps: {
-        api: () => getDictList('STORY_LEVEL'),
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'source',
-      label: '需求来源',
-      defaultValue: '0',
-      rules: 'required',
-      componentProps: {
-        api: () => getDictList('STORY_SOURCE'),
-      },
-    },
-    {
-      component: 'Upload',
-      fieldName: 'files',
-      label: '附件',
-      formItemClass: 'col-span-3',
-      componentProps: {
-        // 更多属性见：https://ant.design/components/upload-cn
-        // 自动携带认证信息
-        customRequest: upload_file,
-        disabled: false,
-        maxCount: 10,
-        multiple: true,
-        showUploadList: true,
-        // 上传列表的内建样式，支持四种基本样式 text, picture, picture-card 和 picture-circle
-        listType: 'text',
+        format: 'YYYY-MM-DD HH:mm:ss',
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
       },
     },
     {
       component: 'AiEditor',
-      fieldName: 'storyRichText',
+      fieldName: 'taskRichText',
       label: '内容',
       formItemClass: 'col-span-3',
       componentProps: {},
@@ -183,14 +219,11 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'projectId',
       label: '项目',
-      componentProps: () => {
-        return {
-          api: () => getProjectsList(),
-          labelField: 'projectTitle',
-          valueField: 'projectId',
-          autoSelect: '',
-          allowClear: true,
-        };
+      componentProps: {
+        api: () => getProjectsList(),
+        labelField: 'projectTitle',
+        valueField: 'projectId',
+        allowClear: true,
       },
     },
     {
@@ -207,7 +240,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
           labelField: 'version',
           valueField: 'versionId',
           resultField: 'items',
-          autoSelect: '',
           allowClear: true,
         };
       },
@@ -220,49 +252,23 @@ export function useGridFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'ApiSelect',
-      fieldName: 'moduleId',
-      label: '关联模块',
-      componentProps: (ctx, e) => {
-        if (!ctx.projectId) {
-          return {};
-        }
-        return {
-          key: 'moduleId_' + ctx.projectId,
-          api: () => getModulesList({ projectId: ctx.projectId }),
-          labelField: 'moduleTitle',
-          valueField: 'moduleId',
-          resultField: '',
-          autoSelect: '',
-          allowClear: true,
-        };
-      },
-      dependencies: {
-        triggerFields: ['projectId'],
-        componentProps: (ctx, e) => {
-          e.setFieldValue('moduleId', undefined);
-          return {};
-        },
-      },
-    },
-    {
       component: 'Input',
       defaultValue: '',
-      fieldName: 'keyword',
-      label: '需求名称',
+      fieldName: 'taskTitle',
+      label: '任务名称',
       componentProps: {
         allowClear: true,
       },
     },
     {
       component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
+      fieldName: 'taskStatus',
+      label: '任务状态',
       componentProps: {
         allowClear: true,
         filterOption: true,
         showSearch: true,
-        api: () => getDictList('STORY_STATUS'),
+        api: () => getDictList('TASK_STATUS'),
       },
     },
   ];
@@ -273,15 +279,15 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemStoryApi.SystemStory>,
-): VxeTableGridOptions<SystemStoryApi.SystemStory>['columns'] {
+  onActionClick?: OnActionClickFn<SystemTaskApi.SystemTask>,
+): VxeTableGridOptions<SystemTaskApi.SystemTask>['columns'] {
   return [
     {
-      field: 'storyNum',
+      field: 'taskNum',
       title: '编号',
       width: 60,
       dragSort: false,
-      formatter: ({ row }) => '#' + row.storyNum,
+      formatter: ({ row }) => '#' + row.taskNum,
     },
     {
       field: 'projectTitle',
@@ -305,81 +311,76 @@ export function useColumns(
       },
     },
     {
-      field: 'storyTitle',
-      title: '需求名称',
+      field: 'taskTitle',
+      title: '任务名称',
       minWidth: 200,
       cellRender: {
         name: 'CellLink',
         events: {
           click: (val: any) => {
-            onActionClick && onActionClick({ code: 'storyTitle', row: val });
+            onActionClick && onActionClick({ code: 'taskTitle', row: val });
           },
         },
       },
     },
     {
       width: 120,
-      field: 'userList',
+      field: 'userName',
       showOverflow: true,
-      title: '参与人员',
-      editRender: {
-        name: 'UserSelect',
+      title: '执行人员',
+      cellRender: {
+        name: 'UserAvatar',
         props: {
-          mode: 'multiple',
-        },
-        events: {
-          change: (val: any) => {
-            message.success(`${JSON.stringify(val)}`);
-          },
+          avatarField: 'avatar',
+          nameField: 'userName',
         },
       },
     },
-
     {
-      field: 'storyType',
-      title: '需求类别',
+      field: 'taskType',
+      title: '任务类别',
       width: 100,
       cellRender: {
         name: 'DictTag',
         props: {
-          type: 'STORY_TYPE',
+          type: 'TASK_TYPE',
         },
       },
     },
     {
-      field: 'storyStatus',
-      title: '需求状态',
+      field: 'actualHours',
+      title: '任务进度',
+      align: 'center',
+      width: 100,
+      cellRender: {
+        name: 'CellProgress',
+        props: {
+          totalNumField: 'planHours',
+          currentNumField: 'actualHours',
+        },
+      },
+    },
+    {
+      field: 'taskStatus',
+      title: '任务状态',
       width: 100,
       editRender: {
         name: 'DictSelect',
         props: {
-          type: 'STORY_STATUS',
+          type: 'TASK_STATUS',
         },
       },
     },
     {
-      width: 60,
-      field: 'storyLevel',
-      title: '优先级',
-      cellRender: {
-        name: 'DictTag',
-        props: {
-          type: 'STORY_LEVEL',
-        },
-      },
-    },
-    {
+      field: 'startDate',
+      title: '开始时间',
       width: 100,
-      field: 'source',
-      title: '需求来源',
-      cellRender: {
-        name: 'DictTag',
-        props: {
-          type: 'STORY_SOURCE',
-        },
-      },
     },
-
+    {
+      field: 'endDate',
+      title: '结束时间',
+      width: 100,
+    },
     {
       width: 160,
       field: 'operation',
@@ -387,8 +388,8 @@ export function useColumns(
       title: $t('system.dept.operation'),
       cellRender: {
         attrs: {
-          nameField: 'storyNum',
-          nameTitle: '需求',
+          nameField: 'taskNum',
+          nameTitle: '任务',
           onClick: onActionClick,
         },
         name: 'CellOperation',
@@ -406,11 +407,6 @@ export function useColumns(
             title: '删除',
           },
           {
-            code: 'addTask',
-            icon: 'lucide:clipboard-clock',
-            title: '添加任务',
-          },
-          {
             code: 'next',
             icon: 'lucide:arrow-right-from-line',
             title: '流转',
@@ -426,19 +422,19 @@ export function useNextFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'storyId',
-      label: '需求id',
+      fieldName: 'taskId',
+      label: '任务id',
       dependencies: {
-        triggerFields: ['storyId'],
+        triggerFields: ['taskId'],
         show: false,
       },
     },
     {
       component: 'Input',
-      fieldName: 'storyStatus',
-      label: '需求状态',
+      fieldName: 'taskStatus',
+      label: '任务状态',
       dependencies: {
-        triggerFields: ['storyId'],
+        triggerFields: ['taskId'],
         show: false,
       },
     },
@@ -449,3 +445,4 @@ export function useNextFormSchema(): VbenFormSchema[] {
     },
   ];
 }
+const keyword = ref('');
