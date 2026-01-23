@@ -35,7 +35,7 @@ export default {
       },
       onChange: (value: any) => {
         row[column.field] = value;
-        events.change(value);
+        events.change(value, row);
       },
     });
   },

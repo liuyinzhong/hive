@@ -16,28 +16,38 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   minute: '2-digit',
   second: '2-digit',
 });
-
-let projectIds = mockModuleData.map((item) => item.projectId);
-
 function generateMockDataList(count: number) {
   const dataList = [];
 
   for (let i = 0; i < count; i++) {
-    let projectId = faker.helpers.arrayElement(projectIds);
+    /* 随机从项目表中取一个项目 */
+    let projectInfo: any = faker.helpers.arrayElement(mockProjectData);
 
-    let projectInfo: any =
-      mockProjectData.find((item) => item.projectId === projectId) || {};
+    /* 从版本表中取当前项目的版本 */
+    let versionList: any = mockVersionData.filter(
+      (item) => item.projectId === projectInfo.projectId,
+    );
+    /* 随机从版本表中取一个版本 */
+    let versionInfo: any = {};
+    if (versionList.length) {
+      versionInfo = faker.helpers.arrayElement(versionList);
+    }
 
-    let versionInfo: any =
-      mockVersionData.find((item) => item.projectId === projectId) || {};
-    let moduleInfo: any =
-      mockModuleData.find((item) => item.projectId === projectId) || {};
+    /* 从模块表中取当前项目的模块 */
+    let moduleList: any = mockModuleData.filter(
+      (item) => item.projectId === projectInfo.projectId,
+    );
+    /* 随机从模块表中取一个模块 */
+    let moduleInfo: any = {};
+    if (moduleList.length) {
+      moduleInfo = faker.helpers.arrayElement(moduleList);
+    }
 
     const dataItem: Record<string, any> = {
       storyId: faker.string.uuid(),
       pid: null,
       storyTitle: faker.lorem.sentence(),
-      storyNum: i,
+      storyNum: 1000 + i,
       creatorName: faker.person.fullName(),
       creatorId: faker.string.uuid(),
       storyRichText: faker.lorem.paragraph(),
@@ -65,10 +75,10 @@ function generateMockDataList(count: number) {
         '99',
       ]),
       storyLevel: faker.helpers.arrayElement(['0', '1', '2']),
-      versionId: versionInfo.versionId,
-      version: versionInfo.version,
-      projectId: projectInfo.projectId,
-      projectTitle: projectInfo.projectTitle,
+      versionId: versionInfo?.versionId || null,
+      version: versionInfo?.version || null,
+      projectId: projectInfo?.projectId || null,
+      projectTitle: projectInfo?.projectTitle || null,
       moduleId: moduleInfo?.moduleId || null,
       moduleTitle: moduleInfo?.moduleTitle || null,
       source: faker.helpers.arrayElement(['0', '1']),

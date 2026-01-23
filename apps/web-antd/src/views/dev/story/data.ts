@@ -304,11 +304,14 @@ export function useColumns(
       },
     },
     {
+      field: 'storyStatus',
+      title: '需求状态',
       width: 100,
-      field: 'moduleTitle',
-      title: '项目模块',
       cellRender: {
-        name: 'CellTag',
+        name: 'DictTag',
+        props: {
+          type: 'STORY_STATUS',
+        },
       },
     },
     {
@@ -335,43 +338,66 @@ export function useColumns(
           mode: 'multiple',
         },
         events: {
-          change: (val: any) => {
-            message.success(`${JSON.stringify(val)}`);
+          change: (val: any, row: SystemStoryApi.SystemStory) => {
+            let params = {
+              storyId: row.storyId,
+              userIds: val,
+            };
+            console.log(params);
+            message.success(`控制台已输出`);
           },
         },
       },
     },
 
     {
-      field: 'storyType',
-      title: '需求类别',
       width: 100,
+      field: 'moduleTitle',
+      title: '项目模块',
       cellRender: {
-        name: 'DictTag',
-        props: {
-          type: 'STORY_TYPE',
-        },
+        name: 'CellTag',
       },
     },
     {
-      field: 'storyStatus',
-      title: '需求状态',
+      field: 'storyType',
+      title: '需求类别',
       width: 100,
       editRender: {
         name: 'DictSelect',
         props: {
-          type: 'STORY_STATUS',
+          type: 'STORY_TYPE',
+        },
+        events: {
+          change: (val: any, row: SystemStoryApi.SystemStory) => {
+            let params = {
+              storyId: row.storyId,
+              storyType: val,
+            };
+            console.log(params);
+            message.success(`控制台已输出`);
+          },
         },
       },
     },
+
     {
-      width: 60,
+      width: 80,
       field: 'storyLevel',
       title: '优先级',
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'STORY_LEVEL',
+        },
+        events: {
+          change: (val: any, row: SystemStoryApi.SystemStory) => {
+            let params = {
+              storyId: row.storyId,
+              storyLevel: val,
+            };
+            console.log(params);
+            message.success(`控制台已输出`);
+          },
         },
       },
     },
@@ -379,48 +405,78 @@ export function useColumns(
       width: 100,
       field: 'source',
       title: '需求来源',
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'STORY_SOURCE',
+        },
+        events: {
+          change: (val: any, row: SystemStoryApi.SystemStory) => {
+            let params = {
+              storyId: row.storyId,
+              source: val,
+            };
+            console.log(params);
+            message.success(`控制台已输出`);
+          },
         },
       },
     },
 
     {
-      width: 160,
+      width: 200,
       field: 'operation',
       fixed: 'right',
       title: $t('system.dept.operation'),
       cellRender: {
         attrs: {
-          nameField: 'storyNum',
+          nameField: 'storyTitle',
           nameTitle: '需求',
           onClick: onActionClick,
         },
         name: 'CellOperation',
         options: [
           {
+            code: 'addTask',
+            icon: 'lucide:badge-plus',
+            tips: '添加任务按钮',
+            disabled: (row: SystemStoryApi.SystemStory) => {
+              if (row.versionId) {
+                return false;
+              } else {
+                return true;
+              }
+            },
+          },
+
+          {
+            code: 'addBug',
+            icon: 'lucide:bug',
+            tips: '添加缺陷按钮',
+            disabled: (row: SystemStoryApi.SystemStory) => {
+              if (row.versionId) {
+                return false;
+              } else {
+                return true;
+              }
+            },
+          },
+          {
+            code: 'next',
+            icon: 'lucide:redo-dot',
+            tips: '流转按钮',
+          },
+          {
             code: 'edit', // 默认的编辑按钮
-            icon: 'lucide:edit',
+            icon: 'lucide:pencil-line',
             text: '',
-            title: '编辑',
+            tips: '编辑按钮',
           },
           {
             code: 'delete', // 默认的删除按钮
             icon: 'lucide:trash-2',
             text: '',
-            title: '删除',
-          },
-          {
-            code: 'addTask',
-            icon: 'lucide:clipboard-clock',
-            title: '添加任务',
-          },
-          {
-            code: 'next',
-            icon: 'lucide:arrow-right-from-line',
-            title: '流转',
+            tips: '删除按钮',
           },
         ],
       },

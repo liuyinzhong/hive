@@ -41,6 +41,11 @@ function generateMockDataList(count: number) {
       changeLogRichText: faker.lorem.paragraph(),
       changeLog: faker.lorem.paragraph(),
     };
+    // 版本号不能重复
+    if (dataList.some((item) => item.version === dataItem.version)) {
+      i--;
+      continue;
+    }
     dataList.push(dataItem);
   }
 

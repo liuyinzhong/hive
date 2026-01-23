@@ -63,7 +63,7 @@ export default {
             row[column.field] = userListRef.value.filter((item) =>
               value.includes(item.userId),
             );
-            events.change(value);
+            events.change(value, row);
           },
         },
         // 构造选项列表

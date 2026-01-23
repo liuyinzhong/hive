@@ -4,8 +4,9 @@ import type { OnActionClickFn } from '#/adapter/vxe-table';
 import { getDictList } from '#/dicts';
 import { useDebounceFn } from '@vueuse/core';
 import { $t } from '#/locales';
-import { message } from 'ant-design-vue';
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, h } from 'vue';
+import { Tag, Flex, TypographyText } from 'ant-design-vue';
+import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
 import {
   getVersionsList,
   getModulesList,
@@ -17,6 +18,8 @@ import { getUserListAll } from '#/api/system';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
+  const keyword = ref('');
+
   return [
     {
       component: 'Input',
@@ -85,8 +88,7 @@ export function useFormSchema(): VbenFormSchema[] {
           labelField: 'version',
           valueField: 'versionId',
           resultField: 'items',
-          // autoSelect: false,
-          autoSelect: 'first',
+          autoSelect: false,
         };
       },
       dependencies: {
@@ -129,20 +131,42 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyId',
       label: '关联需求',
       formItemClass: 'col-span-3',
+      renderComponentContent: () => {
+        return {
+          option: (optionItem: any) => {
+            let userList = UserAvatarGroup.renderTableDefault(
+              { name: 'UserAvatarGroup', props: { size: 'small' } },
+              { row: optionItem },
+            );
+            return h(Flex, { gap: 10 }, [
+              h(Tag, {}, '#' + optionItem.storyNum || ''),
+              h(TypographyText, { ellipsis: true }, optionItem.label || ''),
+              userList,
+            ]);
+          },
+        };
+      },
       componentProps: (value, formApi) => {
         if (!value.versionId) {
           return {};
         }
 
         return {
-          api: () =>
-            getStoryList({
-              versionId: value.versionId,
-              projectId: value.projectId,
-              keyword: keyword.value || undefined,
-              includeId: value.storyId || undefined,
-            }),
-          key: 'storyId_' + value.projectId,
+          api: (_params: any) => getStoryList({ ..._params }),
+          /* 当params 中有值变化时，会重新触发api属性 */
+          params: {
+            keyword: keyword.value || undefined,
+            versionId: value.versionId || undefined,
+            projectId: value.projectId || undefined,
+            includeId:
+              value.openModalSource === 'storyListAddTaskBtn'
+                ? value.storyId
+                : undefined,
+          },
+          /* getPopupContainer: (e: any) => {
+            return e.parentNode.parentNode.parentNode as HTMLElement;
+          }, */
+          placeholder: '请输入需求标题、需求编号',
           allowClear: true,
           showSearch: true,
           filterOption: false,
@@ -159,14 +183,10 @@ export function useFormSchema(): VbenFormSchema[] {
           onSearch: useDebounceFn((value: string) => {
             keyword.value = value;
           }, 700),
-          params: {
-            keyword: keyword.value || undefined,
-            versionId: value.versionId || undefined,
-          },
         };
       },
       dependencies: {
-        triggerFields: ['versionId', 'projectId'],
+        triggerFields: ['versionId'],
         disabled: (value) => {
           return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
         },
@@ -365,14 +385,14 @@ export function useColumns(
     },
     {
       width: 120,
-      field: 'userName',
+      field: 'realName',
       showOverflow: true,
       title: '执行人员',
       cellRender: {
         name: 'UserAvatar',
         props: {
           avatarField: 'avatar',
-          nameField: 'userName',
+          nameField: 'realName',
         },
       },
     },
@@ -422,34 +442,34 @@ export function useColumns(
       width: 100,
     },
     {
-      width: 160,
+      width: 120,
       field: 'operation',
       fixed: 'right',
       title: $t('system.dept.operation'),
       cellRender: {
         attrs: {
-          nameField: 'taskNum',
+          nameField: 'taskTitle',
           nameTitle: '任务',
           onClick: onActionClick,
         },
         name: 'CellOperation',
         options: [
           {
+            code: 'next',
+            icon: 'lucide:redo-dot',
+            tips: '流转按钮',
+          },
+          {
             code: 'edit', // 默认的编辑按钮
-            icon: 'lucide:edit',
+            icon: 'lucide:pencil-line',
             text: '',
-            title: '编辑',
+            tips: '编辑按钮',
           },
           {
             code: 'delete', // 默认的删除按钮
             icon: 'lucide:trash-2',
             text: '',
-            title: '删除',
-          },
-          {
-            code: 'next',
-            icon: 'lucide:arrow-right-from-line',
-            title: '流转',
+            tips: '删除按钮',
           },
         ],
       },
@@ -485,4 +505,3 @@ export function useNextFormSchema(): VbenFormSchema[] {
     },
   ];
 }
-const keyword = ref('');
