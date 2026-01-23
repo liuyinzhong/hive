@@ -420,12 +420,13 @@ export function useColumns(
         },
       },
     },
+
     {
       field: 'taskStatus',
       title: '任务状态',
       width: 100,
-      editRender: {
-        name: 'DictSelect',
+      cellRender: {
+        name: 'DictTag',
         props: {
           type: 'TASK_STATUS',
         },
