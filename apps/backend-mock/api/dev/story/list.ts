@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+import { uniqueByKey } from '~/utils/arrayExtendApi';
 import { mockUserData } from '~/api/system/user/list';
 import { mockProjectData } from '../project/list';
 import { mockModuleData } from '../module/list';
@@ -95,15 +96,13 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockStoryData = generateMockDataList(100);
+export const mockStoryData = generateMockDataList(10000);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
   if (!userinfo) {
     return unAuthorizedResponse(event);
   }
-
-  let listData = structuredClone(mockStoryData);
 
   const {
     page = 1,
@@ -112,7 +111,10 @@ export default eventHandler(async (event) => {
     versionId,
     storyStatus,
     keyword,
+    includeId,
   } = getQuery(event);
+
+  let listData = structuredClone(mockStoryData);
 
   if (keyword) {
     listData = listData.filter(
@@ -132,8 +134,21 @@ export default eventHandler(async (event) => {
     listData = listData.filter((item) => item.storyStatus === storyStatus);
   }
 
+  let defaultObj: any = {};
+  if (includeId) {
+    defaultObj = listData.find((item) => item.storyId === includeId) || {};
+  }
+
+  if (JSON.stringify(defaultObj) !== '{}') {
+    listData.unshift(defaultObj);
+  }
+
   /* 分页响应 */
-  return usePageResponseSuccess(page as string, pageSize as string, listData);
+  return usePageResponseSuccess(
+    page as string,
+    pageSize as string,
+    uniqueByKey(listData, 'storyId'),
+  );
 
   /* 全量响应 */
   // return useResponseSuccess(listData);

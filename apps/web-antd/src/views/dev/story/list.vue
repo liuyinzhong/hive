@@ -14,6 +14,9 @@ import batchFormModal from './batch-modal.vue';
 import batchFormModalV2 from './batch-modalV2.vue';
 import nextModal from './next-modal.vue';
 import detailDrawer from './detail-drawer.vue';
+
+import addTaskModal from '#/views/dev/task/add-modal.vue';
+
 import { getStoryList, type SystemStoryApi } from '#/api/dev';
 import { useGridFormSchema, useColumns } from './data';
 import { message } from 'ant-design-vue';
@@ -96,6 +99,15 @@ function onActionClick({
       break;
     }
     case 'addTask': {
+      let defaultData = {
+        storyId: row.storyId,
+        projectId: row.projectId,
+        versionId: row.versionId,
+        moduleId: row.moduleId,
+        openModalSource: 'storyListAddTaskBtn',
+      };
+
+      AddTaskModalApi.setData(defaultData).open();
       break;
     }
     case 'next': {
@@ -186,6 +198,14 @@ function openAddBatchStoryModalV2() {
 }
 
 // #endregion
+
+// #region 任务添加弹窗
+const [AddTaskModal, AddTaskModalApi] = useVbenModal({
+  title: '添加任务',
+  connectedComponent: addTaskModal,
+  destroyOnClose: true,
+});
+// #endregion
 </script>
 
 <template>
@@ -209,5 +229,6 @@ function openAddBatchStoryModalV2() {
     <BatchFormModalV2 />
     <NextModal />
     <DetailDrawer />
+    <AddTaskModal />
   </Page>
 </template>

@@ -82,7 +82,12 @@ const columns: VTable.ColumnsDefine = [
     title: '迭代版本',
     width: 'auto',
     editor: new SelectEditor({
-      api: (e: any) => getVersionsList({ projectId: e.projectId || '' }),
+      api: (e: any) =>
+        getVersionsList({
+          projectId: e.projectId || '',
+          page: 1,
+          pageSize: 100,
+        }),
       labelField: 'version',
       valueField: 'versionId',
       resultField: 'items',

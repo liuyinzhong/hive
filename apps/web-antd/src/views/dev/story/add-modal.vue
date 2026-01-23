@@ -13,7 +13,10 @@ defineOptions({
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   handleValuesChange(_values, fieldsChanged) {
-    // message.info(`表单以下字段发生变化：${fieldsChanged.join('，')}`);
+    if (fieldsChanged.includes('projectId')) {
+      formApi.setFieldValue('versionId', undefined);
+      formApi.setFieldValue('moduleId', undefined);
+    }
   },
   // 所有表单项共用，可单独在表单内覆盖
   commonConfig: {

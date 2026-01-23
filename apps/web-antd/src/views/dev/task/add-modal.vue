@@ -13,6 +13,13 @@ defineOptions({
 
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
+  handleValuesChange(_values, fieldsChanged) {
+    if (fieldsChanged.includes('projectId') && !_values.openModalSource) {
+      formApi.setFieldValue('versionId', undefined);
+      formApi.setFieldValue('moduleId', undefined);
+      formApi.setFieldValue('storyId', undefined);
+    }
+  },
   // 所有表单项共用，可单独在表单内覆盖
   commonConfig: {
     // 所有表单项
@@ -36,7 +43,17 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      formApi.setValues(modalApi.getData());
+      let data = modalApi.getData();
+      if (data.taskId) {
+        modalApi.setState({
+          title: '编辑任务',
+        });
+      }
+
+      // 设置表单值, 默认会过滤不在schema中定义的field,
+      // 可通过filterFields形参关闭过滤 为false的话可以配合 hide属性
+      // 可通过 shouldValidate 来控制是否立马校验一次表单值
+      formApi.setValues(data);
     }
   },
 });
@@ -48,6 +65,7 @@ async function onSubmit(values: Record<string, any>) {
     key: 'is-form-submitting',
   });
   modalApi.lock();
+  debugger;
   await createTask(values);
   modalApi.close();
   message.success({

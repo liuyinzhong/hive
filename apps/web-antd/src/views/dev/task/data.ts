@@ -14,11 +14,31 @@ import {
   getStoryList,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
-import { upload_file } from '#/api/examples/upload';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
   return [
+    {
+      component: 'Input',
+      fieldName: 'taskId',
+      label: '任务主键id',
+      dependencies: {
+        triggerFields: ['taskId'],
+        show() {
+          return false;
+        },
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'openModalSource',
+      dependencies: {
+        triggerFields: ['openModalSource'],
+        show() {
+          return false;
+        },
+      },
+    },
     {
       component: 'Textarea',
       fieldName: 'taskTitle',
@@ -31,7 +51,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'projectId',
       label: '项目',
       rules: 'required',
-      componentProps: () => {
+      componentProps: (value: any, formApi: any) => {
         return {
           api: () => getProjectsList(),
           labelField: 'projectTitle',
@@ -39,30 +59,40 @@ export function useFormSchema(): VbenFormSchema[] {
           autoSelect: 'first',
         };
       },
+      dependencies: {
+        triggerFields: ['projectId'],
+        disabled: (value) => {
+          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
+        },
+      },
     },
     {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
       rules: 'required',
-      componentProps: (ctx, e) => {
-        if (!ctx.projectId) {
+      componentProps: (value: any, formApi: any) => {
+        if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + ctx.projectId,
-          api: () => getVersionsList({ projectId: ctx.projectId }),
+          key: 'versionId_' + value.projectId,
+          api: () =>
+            getVersionsList({
+              projectId: value.projectId,
+              includeId: value.versionId || undefined,
+            }),
           labelField: 'version',
           valueField: 'versionId',
           resultField: 'items',
+          // autoSelect: false,
           autoSelect: 'first',
         };
       },
       dependencies: {
         triggerFields: ['projectId'],
-        componentProps: (ctx, e) => {
-          e.setFieldValue('versionId', undefined);
-          return {};
+        disabled: (value) => {
+          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
         },
       },
     },
@@ -71,13 +101,13 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'moduleId',
       label: '关联模块',
       rules: 'required',
-      componentProps: (ctx, e) => {
-        if (!ctx.projectId) {
+      componentProps: (value, formApi) => {
+        if (!value.projectId) {
           return {};
         }
         return {
-          key: 'moduleId_' + ctx.projectId,
-          api: () => getModulesList({ projectId: ctx.projectId }),
+          key: 'moduleId_' + value.projectId,
+          api: () => getModulesList({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
           resultField: '',
@@ -86,10 +116,11 @@ export function useFormSchema(): VbenFormSchema[] {
       },
       dependencies: {
         triggerFields: ['projectId', 'storyId'],
-        disabled: (ctx) => (ctx.storyId ? true : false),
-        componentProps: (ctx, e) => {
-          e.setFieldValue('moduleId', undefined);
-          return {};
+        disabled: (value) => {
+          return (
+            Boolean(value.storyId) ||
+            value.openModalSource === 'storyListAddTaskBtn'
+          );
         },
       },
     },
@@ -98,27 +129,31 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyId',
       label: '关联需求',
       formItemClass: 'col-span-3',
-      componentProps: (ctx, e) => {
-        if (!ctx.versionId) {
+      componentProps: (value, formApi) => {
+        if (!value.versionId) {
           return {};
         }
 
         return {
           api: () =>
             getStoryList({
-              versionId: ctx.versionId,
+              versionId: value.versionId,
+              projectId: value.projectId,
               keyword: keyword.value || undefined,
+              includeId: value.storyId || undefined,
             }),
+          key: 'storyId_' + value.projectId,
           allowClear: true,
           showSearch: true,
           filterOption: false,
           labelField: 'storyTitle',
           valueField: 'storyId',
           resultField: 'items',
+          autoSelect: false,
           onSelect: (value: any, option: any) => {
             keyword.value = '';
             nextTick(() => {
-              e.setFieldValue('moduleId', option.moduleId || undefined);
+              formApi.setFieldValue('moduleId', option.moduleId || undefined);
             });
           },
           onSearch: useDebounceFn((value: string) => {
@@ -126,15 +161,14 @@ export function useFormSchema(): VbenFormSchema[] {
           }, 700),
           params: {
             keyword: keyword.value || undefined,
-            versionId: ctx.versionId || undefined,
+            versionId: value.versionId || undefined,
           },
         };
       },
       dependencies: {
-        triggerFields: ['versionId'],
-        componentProps: (ctx, e) => {
-          e.setFieldValue('storyId', undefined);
-          return {};
+        triggerFields: ['versionId', 'projectId'],
+        disabled: (value) => {
+          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
         },
       },
     },
@@ -151,19 +185,18 @@ export function useFormSchema(): VbenFormSchema[] {
         resultField: 'items',
       },
     },
-
     {
-      component: 'InputNumber',
-      fieldName: 'planHours',
-      label: '计划工时',
-      defaultValue: 0,
+      component: 'RangePicker',
+      fieldName: 'timeArr',
+      label: '开始时间',
       rules: 'required',
+      formItemClass: 'col-span-2',
       componentProps: {
-        min: 0,
-        precision: 2,
-        addonAfter: '小时',
+        format: 'YYYY-MM-DD HH:mm:ss',
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
       },
     },
+
     /* {
       component: 'InputNumber',
       fieldName: 'actualHours',
@@ -178,7 +211,19 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
       defaultValue: '0',
       componentProps: {
-        api: () => getDictList('STORY_STATUS'),
+        api: () => getDictList('TASK_STATUS'),
+      },
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'planHours',
+      label: '计划工时',
+      defaultValue: 0,
+      rules: 'required',
+      componentProps: {
+        min: 0,
+        precision: 2,
+        addonAfter: '小时',
       },
     },
     {
@@ -188,20 +233,10 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
       defaultValue: '0',
       componentProps: {
-        api: () => getDictList('STORY_STATUS'),
+        api: () => getDictList('TASK_TYPE'),
       },
     },
-    {
-      component: 'RangePicker',
-      fieldName: 'timeArr',
-      label: '开始时间',
-      rules: 'required',
-      formItemClass: 'col-span-2',
-      componentProps: {
-        format: 'YYYY-MM-DD HH:mm:ss',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss',
-      },
-    },
+
     {
       component: 'AiEditor',
       fieldName: 'taskRichText',
@@ -230,13 +265,18 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
-      componentProps: (ctx, e) => {
-        if (!ctx.projectId) {
+      componentProps: (value, formApi) => {
+        if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + ctx.projectId,
-          api: () => getVersionsList({ projectId: ctx.projectId }),
+          key: 'versionId_' + value.projectId,
+          api: () =>
+            getVersionsList({
+              projectId: value.projectId,
+              page: 1,
+              pageSize: 100,
+            }),
           labelField: 'version',
           valueField: 'versionId',
           resultField: 'items',
@@ -245,8 +285,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
       },
       dependencies: {
         triggerFields: ['projectId'],
-        componentProps: (ctx, e) => {
-          e.setFieldValue('versionId', undefined);
+        componentProps: (value, formApi) => {
+          formApi.setFieldValue('versionId', undefined);
           return {};
         },
       },

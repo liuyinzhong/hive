@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-
+import { uniqueByKey } from '~/utils/arrayExtendApi';
 import { mockProjectData } from '../project/list';
 
 import { mockModuleData } from '../module/list';
@@ -61,25 +61,43 @@ export default eventHandler(async (event) => {
     version,
     releaseStatus,
     projectId,
+    includeId,
   } = getQuery(event);
 
   let listData = structuredClone(mockVersionData);
+
+  if (projectId) {
+    listData = listData.filter((item) => item.projectId === projectId);
+  }
+
   if (version) {
     listData = listData.filter((item) => item.version === version);
   }
   if (releaseStatus) {
     listData = listData.filter((item) => item.releaseStatus === releaseStatus);
   }
-  if (projectId) {
-    listData = listData.filter((item) => item.projectId === projectId);
-  }
 
   /* 以 version 排序,使用compareVersion */
   listData.sort((a, b) => compareVersion(b.version, a.version));
 
-  /* 分页响应 */
-  return usePageResponseSuccess(page as string, pageSize as string, listData);
+  let defaultObj: any = {};
+  if (includeId) {
+    defaultObj = listData.find((item) => item.versionId === includeId) || {};
+  }
 
-  /* 全量响应 */
-  // return useResponseSuccess(listData);
+  if (JSON.stringify(defaultObj) !== '{}') {
+    listData.unshift(defaultObj);
+  }
+
+  if (page && pageSize) {
+    /* 分页响应 */
+    return usePageResponseSuccess(
+      page as string,
+      pageSize as string,
+      uniqueByKey(listData, 'versionId'),
+    );
+  } else {
+    /* 全量响应 */
+    return useResponseSuccess(uniqueByKey(listData, 'versionId'));
+  }
 });

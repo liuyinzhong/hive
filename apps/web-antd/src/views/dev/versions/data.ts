@@ -17,11 +17,12 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'versionId',
+      label: '版本主键id',
       dependencies: {
+        triggerFields: ['versionId'],
         show() {
           return false;
         },
-        triggerFields: ['versionId'],
       },
     },
     {
@@ -39,32 +40,29 @@ export function useFormSchema(): VbenFormSchema[] {
       },
       dependencies: {
         triggerFields: ['versionId'],
-        disabled(ctx, e) {
-          return ctx.versionId ? true : false;
+        disabled(value, formApi) {
+          return value.versionId ? true : false;
         },
       },
     },
     {
       component: 'Input',
-      fieldName: 'pordVersion',
-      label: '线上版本号',
+      fieldName: 'firstVersion',
+      label: '最新版本号',
       componentProps: {
         readonly: true,
         bordered: false,
       },
       dependencies: {
         triggerFields: ['projectId'],
-        show(ctx, e) {
-          return ctx.versionId ? false : true;
-        },
-        componentProps: async (ctx, e) => {
-          if (!ctx.projectId) {
+        componentProps: async (value, formApi) => {
+          if (!value.projectId) {
             return {};
           }
           const lastVersion: any = await getLastVersion({
-            projectId: ctx.projectId,
+            projectId: value.projectId,
           });
-          e.setFieldValue('pordVersion', lastVersion.version);
+          formApi.setFieldValue('firstVersion', lastVersion.version);
           return {};
         },
       },
@@ -79,19 +77,16 @@ export function useFormSchema(): VbenFormSchema[] {
       },
       defaultValue: '20',
       dependencies: {
-        triggerFields: ['versionId', 'pordVersion'],
-        componentProps: (ctx, e) => {
-          if (!ctx.pordVersion) {
+        triggerFields: ['versionId', 'firstVersion'],
+        componentProps: (value, formApi) => {
+          if (!value.firstVersion) {
             return {};
           }
-          e.setFieldValue(
+          formApi.setFieldValue(
             'version',
-            changeVersionType(ctx.pordVersion, ctx.versionType),
+            changeVersionType(value.firstVersion, value.versionType),
           );
           return {};
-        },
-        disabled(ctx, e) {
-          return ctx.versionId ? true : false;
         },
       },
     },
@@ -107,18 +102,15 @@ export function useFormSchema(): VbenFormSchema[] {
         }),
       dependencies: {
         triggerFields: ['versionId', 'versionType'],
-        disabled(ctx, e) {
-          return ctx.versionId ? true : false;
-        },
-        componentProps: (ctx, e) => {
-          if (!ctx.pordVersion) {
+        componentProps: (value, formApi) => {
+          if (!value.firstVersion) {
             return {};
           }
           const newVersion = changeVersionType(
-            ctx.pordVersion,
-            ctx.versionType,
+            value.firstVersion,
+            value.versionType,
           );
-          e.setFieldValue('version', newVersion);
+          formApi.setFieldValue('version', newVersion);
           return {};
         },
       },
