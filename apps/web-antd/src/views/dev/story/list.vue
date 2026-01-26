@@ -45,9 +45,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       trigger: 'click',
       mode: 'cell',
     },
-    rowConfig: {
-      drag: true,
-    },
     proxyConfig: {
       ajax: {
         query: async ({ page }, formValues) => {
@@ -60,19 +57,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
   } as VxeTableGridOptions<SystemStoryApi.SystemStory>,
-  gridEvents: {
-    /* cellClick: ({ column, row }: any) => {
-      if (column.field === 'storyTitle') {
-        DetailDrawerApi.setData(row).open();
-      }
-    }, */
-    rowDragstart: (e: any) => {},
-    rowDragend: ({ oldRow, _index }: any) => {
-      console.log(
-        '排序后' + oldRow.moduleTitle + '在' + _index.newIndex + '位',
-      );
-    },
-  },
+  gridEvents: {},
 });
 
 // #region 单个添加需求

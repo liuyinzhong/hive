@@ -3,26 +3,33 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import { getDictList } from '#/dicts';
 import { $t } from '#/locales';
-import { message } from 'ant-design-vue';
 import {
   getVersionsList,
   getModulesList,
   getProjectsList,
+  getStoryList,
   type SystemStoryApi,
   getLastVersion,
+  type SystemBugApi,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
 import { upload_file } from '#/api/examples/upload';
+import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
+import UserAvatar from '#/adapter/component/table/UserAvatar';
+import { h, nextTick, ref } from 'vue';
+import { useDebounceFn } from '@vueuse/core';
+import { Tag, Flex, TypographyText } from 'ant-design-vue';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
+  const keyword = ref('');
   return [
     {
       component: 'Input',
-      fieldName: 'storyId',
-      label: '需求主键id',
+      fieldName: 'bugId',
+      label: '缺陷主键id',
       dependencies: {
-        triggerFields: ['storyId'],
+        triggerFields: ['bugId'],
         show() {
           return false;
         },
@@ -30,8 +37,8 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Textarea',
-      fieldName: 'storyTitle',
-      label: '需求标题',
+      fieldName: 'bugTitle',
+      label: '缺陷标题',
       rules: 'required',
       formItemClass: 'col-span-3',
     },
@@ -100,75 +107,158 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      fieldName: 'userList',
-      label: '参与人员',
+      fieldName: 'storyId',
+      label: '关联需求',
+      formItemClass: 'col-span-3',
+      renderComponentContent: () => {
+        return {
+          option: (optionItem: any) => {
+            let userList = UserAvatarGroup.renderTableDefault(
+              { name: 'UserAvatarGroup', props: { size: 'small' } },
+              { row: optionItem },
+            );
+            return h(Flex, { gap: 10 }, [
+              h(Tag, {}, '#' + optionItem.storyNum || ''),
+              h(TypographyText, { ellipsis: true }, optionItem.label || ''),
+              userList,
+            ]);
+          },
+        };
+      },
+      componentProps: (value, formApi) => {
+        if (!value.versionId) {
+          return {};
+        }
+
+        return {
+          api: (_params: any) => getStoryList({ ..._params }),
+          /* 当params 中有值变化时，会重新触发api属性 */
+          params: {
+            keyword: keyword.value || undefined,
+            versionId: value.versionId || undefined,
+            projectId: value.projectId || undefined,
+            includeId:
+              value.openModalSource === 'storyListAddTaskBtn'
+                ? value.storyId
+                : undefined,
+          },
+          placeholder: '请输入需求标题、需求编号',
+          allowClear: true,
+          showSearch: true,
+          filterOption: false,
+          labelField: 'storyTitle',
+          valueField: 'storyId',
+          resultField: 'items',
+          autoSelect: false,
+          onSelect: (value: any, option: any) => {
+            keyword.value = '';
+            nextTick(() => {
+              formApi.setFieldValue('moduleId', option.moduleId || undefined);
+            });
+          },
+          onSearch: useDebounceFn((value: string) => {
+            keyword.value = value;
+          }, 700),
+        };
+      },
+      dependencies: {
+        triggerFields: ['versionId'],
+        disabled: (value) => {
+          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
+        },
+      },
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'userId',
+      label: '修复人',
+      rules: 'required',
+      renderComponentContent: () => {
+        return {
+          option: (optionItem: any) => {
+            let avatar = UserAvatar.renderTableDefault(
+              {
+                name: 'UserAvatar',
+                props: {
+                  avatarField: 'avatar',
+                  nameField: 'label',
+                  size: 'small',
+                },
+              },
+              { row: optionItem },
+            );
+            return h(avatar);
+          },
+        };
+      },
       componentProps: {
-        allowClear: true,
-        mode: 'multiple',
-        maxTagCount: 1,
         api: () => getUserListAll(),
         labelField: 'realName',
         valueField: 'userId',
         resultField: 'items',
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
-      defaultValue: '0',
-      componentProps: {
-        api: () => getDictList('STORY_STATUS'),
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'storyType',
-      label: '需求类别',
-      rules: 'required',
-      componentProps: {
-        api: () => getDictList('STORY_TYPE'),
+        showSearch: true,
+        allowClear: true,
+        filterOption: true,
+        optionFilterProp: 'label',
       },
     },
 
     {
-      component: 'ApiSelect',
-      fieldName: 'storyLevel',
-      label: '优先级',
-      defaultValue: '0',
+      component: 'Select',
+      fieldName: 'bugLevel',
+      label: '级别',
+      defaultValue: '3',
       componentProps: {
-        api: () => getDictList('STORY_LEVEL'),
+        options: getDictList('BUG_LEVEL'),
       },
     },
     {
-      component: 'ApiSelect',
-      fieldName: 'source',
-      label: '需求来源',
-      defaultValue: '0',
+      component: 'Select',
+      fieldName: 'bugEnv',
+      label: '环境',
+      defaultValue: 'TEST',
       componentProps: {
-        api: () => getDictList('STORY_SOURCE'),
+        options: getDictList('BUG_ENV'),
       },
     },
     {
-      component: 'Upload',
-      fieldName: 'files',
-      label: '附件',
+      component: 'Select',
+      fieldName: 'bugStatus',
+      label: '缺陷状态',
+      defaultValue: '0',
+      componentProps: {
+        options: getDictList('BUG_STATUS'),
+      },
+    },
+    {
+      component: 'Select',
+      fieldName: 'bugSource',
+      label: '来源',
+      defaultValue: '0',
+      componentProps: {
+        options: getDictList('BUG_SOURCE'),
+      },
+    },
+    {
+      component: 'Select',
+      fieldName: 'bugType',
+      label: '缺陷类别',
+      defaultValue: '0',
+      componentProps: {
+        options: getDictList('BUG_TYPE'),
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'bugUa',
+      label: '浏览器信息',
+      disabled: true,
+      defaultValue: navigator.userAgent,
       formItemClass: 'col-span-3',
-      componentProps: {
-        // 更多属性见：https://ant.design/components/upload-cn
-        // 自动携带认证信息
-        customRequest: upload_file,
-        disabled: false,
-        maxCount: 10,
-        multiple: true,
-        showUploadList: true,
-        // 上传列表的内建样式，支持四种基本样式 text, picture, picture-card 和 picture-circle
-        listType: 'text',
-      },
     },
     {
       component: 'AiEditor',
-      fieldName: 'storyRichText',
+      fieldName: 'bugRichText',
       label: '内容',
       formItemClass: 'col-span-3',
       componentProps: {},
@@ -248,25 +338,19 @@ export function useGridFormSchema(): VbenFormSchema[] {
         },
       },
     },
+
     {
-      component: 'Input',
-      defaultValue: '',
-      fieldName: 'keyword',
-      label: '需求名称',
+      component: 'Select',
+      fieldName: 'bugStatus',
+      label: '状态',
       componentProps: {
-        allowClear: true,
+        options: getDictList('BUG_STATUS'),
       },
     },
     {
-      component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
-      componentProps: {
-        allowClear: true,
-        filterOption: true,
-        showSearch: true,
-        api: () => getDictList('STORY_STATUS'),
-      },
+      component: 'Input',
+      fieldName: 'bugTitle',
+      label: '标题',
     },
   ];
 }
@@ -276,145 +360,106 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemStoryApi.SystemStory>,
-): VxeTableGridOptions<SystemStoryApi.SystemStory>['columns'] {
+  onActionClick?: OnActionClickFn<SystemBugApi.SystemBug>,
+): VxeTableGridOptions<SystemBugApi.SystemBug>['columns'] {
   return [
     {
-      field: 'storyNum',
       title: '编号',
-      width: 60,
-      dragSort: false,
-      formatter: ({ row }) => '#' + row.storyNum,
-    },
-    {
-      field: 'projectTitle',
-      title: '项目',
-      width: 60,
-    },
-    {
-      width: 80,
-      field: 'version',
-      title: '迭代版本',
-      cellRender: {
-        name: 'CellTag',
+      field: 'bugNum',
+      width: 65,
+      formatter: (row: any) => {
+        return `#${row.cellValue}`;
       },
     },
     {
-      field: 'storyStatus',
-      title: '需求状态',
+      width: 80,
+      align: 'center',
+      title: '关联版本',
+      field: 'version',
+    },
+    {
+      width: 100,
+      title: '关联模块',
+      field: 'moduleTitle',
+    },
+    {
+      title: '修复人',
+      width: 100,
+      cellRender: {
+        name: 'UserAvatar',
+        props: {
+          avatarField: 'avatar',
+          nameField: 'realName',
+        },
+      },
+    },
+    {
+      title: '标题',
+      field: 'bugTitle',
+      minWidth: 200,
+      maxWidth: 400,
+      showOverflow: true,
+      cellRender: {
+        name: 'CellLink',
+        events: {
+          click: (e: any) => {},
+        },
+      },
+    },
+
+    {
+      title: '状态',
+      field: 'bugStatus',
       width: 100,
       cellRender: {
         name: 'DictTag',
         props: {
-          type: 'STORY_STATUS',
-        },
-      },
-    },
-    {
-      field: 'storyTitle',
-      title: '需求名称',
-      minWidth: 200,
-      cellRender: {
-        name: 'CellLink',
-        events: {
-          click: (val: any) => {
-            onActionClick && onActionClick({ code: 'storyTitle', row: val });
-          },
-        },
-      },
-    },
-    {
-      width: 120,
-      field: 'userList',
-      showOverflow: true,
-      title: '参与人员',
-      editRender: {
-        name: 'UserSelect',
-        props: {
-          mode: 'multiple',
-        },
-        events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
-            let params = {
-              storyId: row.storyId,
-              userIds: val,
-            };
-            console.log(params);
-            message.success(`控制台已输出`);
-          },
+          type: 'BUG_STATUS',
         },
       },
     },
 
     {
+      title: '级别',
+      field: 'bugLevel',
       width: 100,
-      field: 'moduleTitle',
-      title: '项目模块',
       cellRender: {
-        name: 'CellTag',
+        name: 'DictTag',
+        props: {
+          type: 'BUG_LEVEL',
+        },
       },
     },
     {
-      field: 'storyType',
-      title: '需求类别',
+      title: '环境',
+      field: 'bugEnv',
       width: 100,
-      editRender: {
-        name: 'DictSelect',
+      cellRender: {
+        name: 'DictTag',
         props: {
-          type: 'STORY_TYPE',
-        },
-        events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
-            let params = {
-              storyId: row.storyId,
-              storyType: val,
-            };
-            console.log(params);
-            message.success(`控制台已输出`);
-          },
-        },
-      },
-    },
-
-    {
-      width: 80,
-      field: 'storyLevel',
-      title: '优先级',
-      editRender: {
-        name: 'DictSelect',
-        props: {
-          type: 'STORY_LEVEL',
-        },
-        events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
-            let params = {
-              storyId: row.storyId,
-              storyLevel: val,
-            };
-            console.log(params);
-            message.success(`控制台已输出`);
-          },
+          type: 'BUG_ENV',
         },
       },
     },
     {
+      title: '缺陷类别',
+      field: 'bugType',
       width: 100,
-      field: 'source',
-      title: '需求来源',
-      editRender: {
-        name: 'DictSelect',
+      cellRender: {
+        name: 'DictTag',
         props: {
-          type: 'STORY_SOURCE',
+          type: 'BUG_TYPE',
         },
-        events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
-            let params = {
-              storyId: row.storyId,
-              source: val,
-            };
-            console.log(params);
-            message.success(`控制台已输出`);
-          },
+      },
+    },
+    {
+      title: '来源',
+      field: 'bugSource',
+      width: 100,
+      cellRender: {
+        name: 'DictTag',
+        props: {
+          type: 'BUG_SOURCE',
         },
       },
     },
@@ -426,37 +471,12 @@ export function useColumns(
       title: $t('system.dept.operation'),
       cellRender: {
         attrs: {
-          nameField: 'storyTitle',
-          nameTitle: '需求',
+          nameField: 'bugTitle',
+          nameTitle: '缺陷',
           onClick: onActionClick,
         },
         name: 'CellOperation',
         options: [
-          {
-            code: 'addTask',
-            icon: 'lucide:badge-plus',
-            tips: '添加任务按钮',
-            disabled: (row: SystemStoryApi.SystemStory) => {
-              if (row.versionId) {
-                return false;
-              } else {
-                return true;
-              }
-            },
-          },
-
-          {
-            code: 'addBug',
-            icon: 'lucide:bug',
-            tips: '添加缺陷按钮',
-            disabled: (row: SystemStoryApi.SystemStory) => {
-              if (row.versionId) {
-                return false;
-              } else {
-                return true;
-              }
-            },
-          },
           {
             code: 'next',
             icon: 'lucide:redo-dot',
@@ -482,29 +502,5 @@ export function useColumns(
 
 /** 流转表单配置 */
 export function useNextFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      component: 'Input',
-      fieldName: 'storyId',
-      label: '需求id',
-      dependencies: {
-        triggerFields: ['storyId'],
-        show: false,
-      },
-    },
-    {
-      component: 'Input',
-      fieldName: 'storyStatus',
-      label: '需求状态',
-      dependencies: {
-        triggerFields: ['storyId'],
-        show: false,
-      },
-    },
-    {
-      component: 'AiEditor',
-      fieldName: 'commentRichText',
-      label: '',
-    },
-  ];
+  return [];
 }

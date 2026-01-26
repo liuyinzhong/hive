@@ -1,0 +1,71 @@
+import { requestClient } from '#/api/request';
+import type { Recordable } from '@vben/types';
+export namespace SystemBugApi {
+  export interface SystemBug {
+    [key: string]: any;
+    /** bugID,UUID格式 */
+    bugId?: string;
+    /** bug名称 */
+    bugTitle?: string;
+    /** bug编号 */
+    bugNum?: number;
+    /** bug描述,富文本格式 */
+    bugRichText?: string;
+    /** bug状态 */
+    bugStatus?: string;
+    /** bug级别 */
+    bugLevel?: string;
+    /** bug确认状态 */
+    bugConfirmStatus?: string;
+    /** bug环境 */
+    bugEnv?: string;
+    /** bug来源 */
+    bugSource?: string;
+    /** bug类别 */
+    bugType?: string;
+    /** 浏览器信息 navigator.userAgent */
+    bugUa?: string;
+    /** 修复人id */
+    userId?: string;
+    /** 修复人姓名 */
+    realName?: string;
+    /** 修复人头像 */
+    avatar?: string;
+    /** 创建人姓名 */
+    creatorName?: string;
+    /** 创建人id */
+    creatorId?: string;
+    /** 关联版本id */
+    versionId?: string;
+    /** 关联版本名称 */
+    version?: string;
+    /** 关联模块id */
+    moduleId?: string;
+    /** 关联模块名称 */
+    moduleTitle?: string;
+    /** 关联项目id */
+    projectId?: string;
+    /** 关联项目名称 */
+    projectTitle?: string;
+    /** 关联需求id */
+    storyId?: string;
+    /** 关联需求名称 */
+    storyTitle?: string;
+    /** 创建时间 (在TS中通常使用字符串格式的时间，也可根据实际情况用Date) */
+    createDate?: string | Date;
+    /** 修改时间 (在TS中通常使用字符串格式的时间，也可根据实际情况用Date) */
+    updateDate?: string | Date;
+  }
+}
+
+async function getBugList(params: Recordable<any>) {
+  return requestClient.get<Array<SystemBugApi.SystemBug>>('/dev/bug/list', {
+    params,
+  });
+}
+
+async function createBug(data: Omit<SystemBugApi.SystemBug, 'bugId'>) {
+  return requestClient.post('/dev/bug', data);
+}
+
+export { getBugList, createBug };

@@ -36,9 +36,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       trigger: 'click',
       mode: 'cell',
     },
-    rowConfig: {
-      drag: true,
-    },
     columns: useColumns(onActionClick),
     proxyConfig: {
       ajax: {
@@ -52,14 +49,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
   } as VxeTableGridOptions<SystemTaskApi.SystemTask>,
-  gridEvents: {
-    rowDragstart: (e: any) => {},
-    rowDragend: ({ oldRow, _index }: any) => {
-      console.log(
-        '排序后' + oldRow.moduleTitle + '在' + _index.newIndex + '位',
-      );
-    },
-  },
+  gridEvents: {},
 });
 
 // #region 表格操作按钮的回调函数

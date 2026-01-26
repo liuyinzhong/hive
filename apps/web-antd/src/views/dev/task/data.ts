@@ -7,6 +7,8 @@ import { $t } from '#/locales';
 import { ref, nextTick, h } from 'vue';
 import { Tag, Flex, TypographyText } from 'ant-design-vue';
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
+import UserAvatar from '#/adapter/component/table/UserAvatar';
+
 import {
   getVersionsList,
   getModulesList,
@@ -163,9 +165,6 @@ export function useFormSchema(): VbenFormSchema[] {
                 ? value.storyId
                 : undefined,
           },
-          /* getPopupContainer: (e: any) => {
-            return e.parentNode.parentNode.parentNode as HTMLElement;
-          }, */
           placeholder: '请输入需求标题、需求编号',
           allowClear: true,
           showSearch: true,
@@ -196,13 +195,35 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'ApiSelect',
       fieldName: 'userId',
-      label: '执行人员',
+      label: '执行人',
       rules: 'required',
+      renderComponentContent: () => {
+        return {
+          option: (optionItem: any) => {
+            let avatar = UserAvatar.renderTableDefault(
+              {
+                name: 'UserAvatar',
+                props: {
+                  avatarField: 'avatar',
+                  nameField: 'label',
+                  size: 'small',
+                },
+              },
+              { row: optionItem },
+            );
+            return h(avatar);
+          },
+        };
+      },
       componentProps: {
         api: () => getUserListAll(),
         labelField: 'realName',
         valueField: 'userId',
         resultField: 'items',
+        showSearch: true,
+        allowClear: true,
+        filterOption: true,
+        optionFilterProp: 'label',
       },
     },
     {
@@ -228,7 +249,6 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'taskStatus',
       label: '任务状态',
-      rules: 'required',
       defaultValue: '0',
       componentProps: {
         api: () => getDictList('TASK_STATUS'),
@@ -249,8 +269,7 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'ApiSelect',
       fieldName: 'taskType',
-      label: '任务类型',
-      rules: 'required',
+      label: '任务类别',
       defaultValue: '0',
       componentProps: {
         api: () => getDictList('TASK_TYPE'),
@@ -387,7 +406,7 @@ export function useColumns(
       width: 120,
       field: 'realName',
       showOverflow: true,
-      title: '执行人员',
+      title: '执行人',
       cellRender: {
         name: 'UserAvatar',
         props: {

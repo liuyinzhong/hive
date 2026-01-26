@@ -1,226 +1,112 @@
 <script lang="ts" setup>
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getDictList } from '#/dicts';
+import {
+  useVbenVxeGrid,
+  type VxeTableGridOptions,
+  type OnActionClickParams,
+} from '#/adapter/vxe-table';
 
 import addFormModal from './add-modal.vue';
 import nextModal from './next-modal.vue';
-import { getTestData } from './testdata';
+import { getBugList, type SystemBugApi } from '#/api/dev';
 import trackDrawer from './track-drawer.vue';
+import { useGridFormSchema, useColumns } from './data';
+import { message } from 'ant-design-vue';
+import { sleep } from '#/utils';
 
-const [Grid] = useVbenVxeGrid({
+const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    // 默认展开
-    wrapperClass: 'grid-cols-4',
-    commonConfig: {
-      componentProps: {
-        allowClear: true,
-      },
-    },
-    collapsed: true,
-    schema: [
-      {
-        component: 'Select',
-        fieldName: 'bugStatus',
-        label: '状态',
-        componentProps: {
-          options: getDictList('BUG_STATUS'),
-        },
-      },
-      {
-        component: 'Input',
-        fieldName: 'bugTitle',
-        label: '标题',
-      },
-      {
-        component: 'Input',
-        fieldName: 'bugNum',
-        label: '编号',
-      },
-
-      {
-        component: 'Select',
-        fieldName: 'bugLevel',
-        label: '级别',
-        componentProps: {
-          options: getDictList('BUG_LEVEL'),
-        },
-      },
-      {
-        component: 'Select',
-        fieldName: 'bugType',
-        label: '类型',
-        componentProps: {
-          options: getDictList('BUG_TYPE'),
-        },
-      },
-      {
-        component: 'Select',
-        fieldName: 'bugEnv',
-        label: '环境',
-        componentProps: {
-          options: getDictList('BUG_ENV'),
-        },
-      },
-      {
-        component: 'Select',
-        fieldName: 'bugSource',
-        label: '来源',
-        componentProps: {
-          options: getDictList('BUG_SOURCE'),
-        },
-      },
-    ],
-    // 是否在字段值改变时提交表单
-    submitOnChange: false,
-    // 按下回车时是否提交表单
-    submitOnEnter: true,
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-5',
+    // 控制表单是否显示折叠按钮
+    showCollapseButton: false,
+    schema: useGridFormSchema(),
   },
   gridOptions: {
-    data: getTestData(5),
-    align: 'left',
+    columns: useColumns(onActionClick),
     toolbarConfig: {
-      // 是否显示搜索表单控制按钮
-      // @ts-ignore 正式环境时有完整的类型声明
-      search: true,
-      refresh: true,
-      import: false,
-      export: false,
-      print: false,
       zoom: true,
       custom: true,
+      refresh: true,
+      export: true,
     },
-    columns: [
-      {
-        title: '编号',
-        field: 'bugNum',
-        width: 65,
-        formatter: (row: any) => {
-          return `#${row.cellValue}`;
+    exportConfig: {},
+    editConfig: {
+      trigger: 'click',
+      mode: 'cell',
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues) => {
+          return await getBugList({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
         },
       },
-      {
-        width: 80,
-        align: 'center',
-        title: '关联版本',
-        field: 'version',
-      },
-      {
-        width: 100,
-        title: '关联模块',
-        field: 'moduleTitle',
-      },
-      {
-        title: '修复人',
-        width: 100,
-        cellRender: {
-          name: 'UserAvatar',
-          props: {
-            avatarField: 'avatar',
-            nameField: 'fixUserName',
-          },
-        },
-      },
-      {
-        title: '标题',
-        field: 'bugTitle',
-        minWidth: 200,
-        maxWidth: 400,
-        showOverflow: true,
-        cellRender: {
-          name: 'CellLink',
-          events: {
-            click: (e: any) => {},
-          },
-        },
-      },
-
-      {
-        title: '状态',
-        field: 'bugStatus',
-        width: 100,
-        cellRender: {
-          name: 'DictTag',
-          props: {
-            type: 'BUG_STATUS',
-          },
-        },
-      },
-
-      {
-        title: '级别',
-        field: 'bugLevel',
-        width: 100,
-        cellRender: {
-          name: 'DictTag',
-          props: {
-            type: 'BUG_LEVEL',
-          },
-        },
-      },
-      {
-        title: '环境',
-        field: 'bugEnv',
-        width: 100,
-        cellRender: {
-          name: 'DictTag',
-          props: {
-            type: 'BUG_ENV',
-          },
-        },
-      },
-      {
-        title: '类型',
-        field: 'bugType',
-        width: 100,
-        cellRender: {
-          name: 'DictTag',
-          props: {
-            type: 'BUG_TYPE',
-          },
-        },
-      },
-      {
-        title: '来源',
-        field: 'bugSource',
-        width: 100,
-        cellRender: {
-          name: 'DictTag',
-          props: {
-            type: 'BUG_SOURCE',
-          },
-        },
-      },
-
-      {
-        field: 'action',
-        fixed: 'right',
-        align: 'center',
-        slots: { default: 'action' },
-        title: '操作',
-        width: 150,
-      },
-    ],
-    keepSource: true,
-    pagerConfig: {},
-    proxyConfig: {},
+    } as VxeTableGridOptions<SystemBugApi.SystemBug>,
   },
-  gridEvents: {
-    cellClick: openTracDrawer,
-  },
+  gridEvents: {},
 });
+
+// #region 表格操作按钮的回调函数
+function onActionClick({
+  code,
+  row,
+}: OnActionClickParams<SystemBugApi.SystemBug>) {
+  switch (code) {
+    case 'delete': {
+      onDelete(row);
+      break;
+    }
+    case 'edit': {
+      onEdit(row);
+      break;
+    }
+    case 'addTask': {
+      break;
+    }
+    case 'next': {
+      openNextModal(row);
+      break;
+    }
+  }
+}
+
+function onCreate() {
+  AddFormModalApi.setData(null).open();
+}
+
+function onEdit(row: SystemBugApi.SystemBug) {
+  AddFormModalApi.setData(row).open();
+}
+
+async function onDelete(row: SystemBugApi.SystemBug) {
+  const hideLoading = message.loading({
+    content: '正在删除',
+    duration: 0,
+    key: 'action_process_msg',
+  });
+
+  await sleep(1000);
+
+  message.success({
+    content: '删除成功',
+    key: 'action_process_msg',
+  });
+
+  await sleep(1000);
+  hideLoading();
+  gridApi.query();
+}
+//#endregion
 
 // #region 单个添加
 const [AddFormModal, AddFormModalApi] = useVbenModal({
   connectedComponent: addFormModal,
   destroyOnClose: true,
 });
-
-/** 打开表单弹窗 */
-function openFormModal(row: any) {
-  AddFormModalApi.setData(row).open();
-}
 
 // #endregion
 
@@ -262,13 +148,13 @@ function openTracDrawer(rowInfo: any) {
           <a-button type="link" size="small" @click="openNextModal(row)">
             流转
           </a-button>
-          <a-button type="link" size="small" @click="openFormModal(row)">
+          <a-button type="link" size="small" @click="onEdit(row)">
             编辑
           </a-button>
         </a-space>
       </template>
       <template #toolbar-actions>
-        <a-button type="primary" @click="openFormModal">新建缺陷</a-button>
+        <a-button type="primary" @click="onCreate">新建缺陷</a-button>
       </template>
     </Grid>
     <AddFormModal />

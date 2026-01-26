@@ -1,5 +1,5 @@
 import type { DictFace } from '../index';
-/* 任务类型 */
+/* 任务类别 */
 export const TASK_TYPE: DictFace[] = [
   {
     label: '开发任务',

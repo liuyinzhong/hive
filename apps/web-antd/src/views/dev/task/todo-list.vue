@@ -250,7 +250,7 @@ const changeTaskTitle = (e: string) => {
           <a-select
             v-model:value="addParams.taskType"
             style="width: 110px"
-            placeholder="任务类型"
+            placeholder="任务类别"
           >
             <a-select-option value="开发">开发</a-select-option>
             <a-select-option value="优化">优化</a-select-option>

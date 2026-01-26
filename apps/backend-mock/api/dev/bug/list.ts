@@ -102,6 +102,7 @@ function generateMockDataList(count: number) {
       bugUa: faker.internet.userAgent(),
 
       userId: userInfo.userId,
+      avatar: userInfo.avatar,
       realName: userInfo.realName,
       creatorName: userInfo.realName,
       creatorId: userInfo.userId,
