@@ -8,7 +8,7 @@ import {
   getProjectsList,
   type SystemVersionApi,
 } from '#/api/dev';
-import { changeVersionType } from '#/utils/versionExtendApi';
+import { changeVersionType } from '#/utils/versionUtils';
 import { z } from '#/adapter/form';
 
 /** 新增表单配置 */

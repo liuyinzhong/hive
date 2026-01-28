@@ -2,7 +2,6 @@
 import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
-import { changeVersionType } from '#/utils/versionExtendApi';
 import { createVersion } from '#/api/dev';
 import { useFormSchema } from './data';
 

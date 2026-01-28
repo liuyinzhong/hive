@@ -36,6 +36,16 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      component: 'Input',
+      fieldName: 'openModalSource',
+      dependencies: {
+        triggerFields: ['openModalSource'],
+        show() {
+          return false;
+        },
+      },
+    },
+    {
       component: 'Textarea',
       fieldName: 'bugTitle',
       label: '缺陷标题',
@@ -55,13 +65,19 @@ export function useFormSchema(): VbenFormSchema[] {
           autoSelect: 'first',
         };
       },
+      dependencies: {
+        triggerFields: ['projectId'],
+        disabled: (value) => {
+          return value.openModalSource === 'storyListAddBtn' ? true : false;
+        },
+      },
     },
     {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
       rules: 'required',
-      componentProps: (value, formApi) => {
+      componentProps: (value: any, formApi: any) => {
         if (!value.projectId) {
           return {};
         }
@@ -75,12 +91,14 @@ export function useFormSchema(): VbenFormSchema[] {
           labelField: 'version',
           valueField: 'versionId',
           resultField: 'items',
-          // autoSelect: false,
-          autoSelect: 'first',
+          autoSelect: false,
         };
       },
       dependencies: {
         triggerFields: ['projectId'],
+        disabled: (value) => {
+          return value.openModalSource === 'storyListAddBtn' ? true : false;
+        },
       },
     },
     {
@@ -102,7 +120,13 @@ export function useFormSchema(): VbenFormSchema[] {
         };
       },
       dependencies: {
-        triggerFields: ['projectId'],
+        triggerFields: ['projectId', 'storyId'],
+        disabled: (value) => {
+          return (
+            Boolean(value.storyId) ||
+            value.openModalSource === 'storyListAddBtn'
+          );
+        },
       },
     },
     {
@@ -137,10 +161,7 @@ export function useFormSchema(): VbenFormSchema[] {
             keyword: keyword.value || undefined,
             versionId: value.versionId || undefined,
             projectId: value.projectId || undefined,
-            includeId:
-              value.openModalSource === 'storyListAddTaskBtn'
-                ? value.storyId
-                : undefined,
+            includeId: value.storyId,
           },
           placeholder: '请输入需求标题、需求编号',
           allowClear: true,
@@ -164,7 +185,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['versionId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn' ? true : false;
         },
       },
     },
@@ -372,19 +393,43 @@ export function useColumns(
       },
     },
     {
+      field: 'projectTitle',
+      title: '项目',
+      width: 60,
+    },
+    {
       width: 80,
-      align: 'center',
-      title: '关联版本',
       field: 'version',
+      title: '迭代版本',
+      cellRender: {
+        name: 'CellTag',
+      },
     },
     {
       width: 100,
-      title: '关联模块',
       field: 'moduleTitle',
+      title: '项目模块',
+      cellRender: {
+        name: 'CellTag',
+      },
     },
     {
+      field: 'bugTitle',
+      title: '缺陷标题',
+      minWidth: 200,
+      cellRender: {
+        name: 'CellLink',
+        events: {
+          click: (val: any) => {
+            onActionClick && onActionClick({ code: 'bugTitle', row: val });
+          },
+        },
+      },
+    },
+    {
+      width: 120,
+      showOverflow: true,
       title: '修复人',
-      width: 100,
       cellRender: {
         name: 'UserAvatar',
         props: {
@@ -393,22 +438,9 @@ export function useColumns(
         },
       },
     },
-    {
-      title: '标题',
-      field: 'bugTitle',
-      minWidth: 200,
-      maxWidth: 400,
-      showOverflow: true,
-      cellRender: {
-        name: 'CellLink',
-        events: {
-          click: (e: any) => {},
-        },
-      },
-    },
 
     {
-      title: '状态',
+      title: '缺陷状态',
       field: 'bugStatus',
       width: 100,
       cellRender: {
@@ -465,7 +497,7 @@ export function useColumns(
     },
 
     {
-      width: 200,
+      width: 160,
       field: 'operation',
       fixed: 'right',
       title: $t('system.dept.operation'),
@@ -477,6 +509,11 @@ export function useColumns(
         },
         name: 'CellOperation',
         options: [
+          {
+            code: 'track',
+            icon: 'lucide:history',
+            tips: '轨迹按钮',
+          },
           {
             code: 'next',
             icon: 'lucide:redo-dot',

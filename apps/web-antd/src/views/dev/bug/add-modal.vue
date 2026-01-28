@@ -12,9 +12,14 @@ defineOptions({
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   handleValuesChange(_values, fieldsChanged) {
-    if (fieldsChanged.includes('projectId')) {
+    if (
+      fieldsChanged.includes('projectId') &&
+      !_values.openModalSource &&
+      !_values.bugId
+    ) {
       formApi.setFieldValue('versionId', undefined);
       formApi.setFieldValue('moduleId', undefined);
+      formApi.setFieldValue('storyId', undefined);
     }
   },
   // 所有表单项共用，可单独在表单内覆盖

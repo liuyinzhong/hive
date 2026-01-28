@@ -153,9 +153,11 @@ export class SelectEditor implements IEditor {
     this.field = table.options.columns[col]?.field || '';
 
     // 处理选项数据
-    if (this.options.length === 0) {
+    /* if (this.options.length === 0) {
       await this.processOptions(this.rowData);
-    }
+    } */
+
+    await this.processOptions(this.rowData);
 
     // 创建编辑器容器
     this.createWrapperElement();

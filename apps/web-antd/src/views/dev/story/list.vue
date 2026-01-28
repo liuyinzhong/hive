@@ -15,6 +15,7 @@ import nextModal from './next-modal.vue';
 import detailDrawer from './detail-drawer.vue';
 
 import addTaskModal from '#/views/dev/task/add-modal.vue';
+import addBugModal from '#/views/dev/bug/add-modal.vue';
 
 import { getStoryList, type SystemStoryApi } from '#/api/dev';
 import { useGridFormSchema, useColumns } from './data';
@@ -88,10 +89,22 @@ function onActionClick({
         projectId: row.projectId,
         versionId: row.versionId,
         moduleId: row.moduleId,
-        openModalSource: 'storyListAddTaskBtn',
+        openModalSource: 'storyListAddBtn',
       };
 
       AddTaskModalApi.setData(defaultData).open();
+      break;
+    }
+    case 'addBug': {
+      let defaultData = {
+        storyId: row.storyId,
+        projectId: row.projectId,
+        versionId: row.versionId,
+        moduleId: row.moduleId,
+        openModalSource: 'storyListAddBtn',
+      };
+
+      AddBugModalApi.setData(defaultData).open();
       break;
     }
     case 'next': {
@@ -175,6 +188,14 @@ const [AddTaskModal, AddTaskModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 // #endregion
+
+// #region 缺陷添加弹窗
+const [AddBugModal, AddBugModalApi] = useVbenModal({
+  title: '添加缺陷',
+  connectedComponent: addBugModal,
+  destroyOnClose: true,
+});
+// #endregion
 </script>
 
 <template>
@@ -194,5 +215,6 @@ const [AddTaskModal, AddTaskModalApi] = useVbenModal({
     <NextModal />
     <DetailDrawer />
     <AddTaskModal />
+    <AddBugModal />
   </Page>
 </template>

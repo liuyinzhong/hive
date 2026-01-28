@@ -14,7 +14,11 @@ defineOptions({
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   handleValuesChange(_values, fieldsChanged) {
-    if (fieldsChanged.includes('projectId') && !_values.openModalSource) {
+    if (
+      fieldsChanged.includes('projectId') &&
+      !_values.openModalSource &&
+      !_values.taskId
+    ) {
       formApi.setFieldValue('versionId', undefined);
       formApi.setFieldValue('moduleId', undefined);
       formApi.setFieldValue('storyId', undefined);

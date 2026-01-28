@@ -67,7 +67,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['projectId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn' ? true : false;
         },
       },
     },
@@ -96,7 +96,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['projectId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn' ? true : false;
         },
       },
     },
@@ -123,7 +123,7 @@ export function useFormSchema(): VbenFormSchema[] {
         disabled: (value) => {
           return (
             Boolean(value.storyId) ||
-            value.openModalSource === 'storyListAddTaskBtn'
+            value.openModalSource === 'storyListAddBtn'
           );
         },
       },
@@ -160,10 +160,7 @@ export function useFormSchema(): VbenFormSchema[] {
             keyword: keyword.value || undefined,
             versionId: value.versionId || undefined,
             projectId: value.projectId || undefined,
-            includeId:
-              value.openModalSource === 'storyListAddTaskBtn'
-                ? value.storyId
-                : undefined,
+            includeId: value.storyId,
           },
           placeholder: '请输入需求标题、需求编号',
           allowClear: true,
@@ -187,7 +184,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['versionId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddTaskBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn' ? true : false;
         },
       },
     },
@@ -334,7 +331,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'Input',
       defaultValue: '',
       fieldName: 'taskTitle',
-      label: '任务名称',
+      label: '任务标题',
       componentProps: {
         allowClear: true,
       },
@@ -391,7 +388,7 @@ export function useColumns(
     },
     {
       field: 'taskTitle',
-      title: '任务名称',
+      title: '任务标题',
       minWidth: 200,
       cellRender: {
         name: 'CellLink',
@@ -404,7 +401,6 @@ export function useColumns(
     },
     {
       width: 120,
-      field: 'realName',
       showOverflow: true,
       title: '执行人',
       cellRender: {
@@ -416,13 +412,13 @@ export function useColumns(
       },
     },
     {
-      field: 'taskType',
-      title: '任务类别',
+      field: 'taskStatus',
+      title: '任务状态',
       width: 100,
       cellRender: {
         name: 'DictTag',
         props: {
-          type: 'TASK_TYPE',
+          type: 'TASK_STATUS',
         },
       },
     },
@@ -439,15 +435,14 @@ export function useColumns(
         },
       },
     },
-
     {
-      field: 'taskStatus',
-      title: '任务状态',
+      field: 'taskType',
+      title: '任务类别',
       width: 100,
       cellRender: {
         name: 'DictTag',
         props: {
-          type: 'TASK_STATUS',
+          type: 'TASK_TYPE',
         },
       },
     },

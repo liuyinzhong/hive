@@ -3,7 +3,7 @@ import type { MousePointerCellEvent } from '@visactor/vtable';
 
 import { nextTick } from 'vue';
 
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModal, useVbenDrawer } from '@vben/common-ui';
 // 偏好设置
 import { preferences } from '@vben/preferences';
 
@@ -12,79 +12,24 @@ import * as VTable from '@visactor/vtable';
 import { Gantt } from '@visactor/vtable-gantt';
 import * as VTableGantt from '@visactor/vtable-gantt';
 
-import addStoryFormModal from '#/views/dev/story/add-modal.vue';
+import storyDetailDrawerComponent from '#/views/dev/story/detail-drawer.vue';
+import taskDetailDrawerComponent from '#/views/dev/task/detail-drawer.vue';
 
-import addTaskFormModal from './add-modal.vue';
+import { getTaskList, type SystemTaskApi } from '#/api/dev';
 
 const { SCROLL, CLICK_TASK_BAR, MOVE_END_TASK_BAR, CHANGE_DATE_RANGE } =
   VTableGantt.TYPES.GANTT_EVENT_TYPE;
 const { CLICK_CELL, DBLCLICK_CELL } = VTable.ListTable.EVENT_TYPE;
-const [AddTaskFormModal, AddTaskFormModalApi] = useVbenModal({
-  // 连接抽离的组件
-  connectedComponent: addTaskFormModal,
-  showConfirmButton: false,
+
+const [TaskDetailDrawer, TaskDetailDrawerApi] = useVbenDrawer({
+  connectedComponent: taskDetailDrawerComponent,
+  destroyOnClose: true,
 });
 
-/** 打开任务弹窗 */
-function openFormModal(row: any) {
-  AddTaskFormModalApi.setData(row).open();
-}
-
-/** 打开需求弹窗 */
-const [AddStoryFormModal, AddStoryFormModalApi] = useVbenModal({
-  // 连接抽离的组件
-  connectedComponent: addStoryFormModal,
-  showConfirmButton: false,
+const [StoryDetailDrawer, StoryDetailDrawerApi] = useVbenDrawer({
+  connectedComponent: storyDetailDrawerComponent,
+  destroyOnClose: true,
 });
-
-function openStoryFormModal(row: any) {
-  AddStoryFormModalApi.setData(row).open();
-}
-
-const records = [
-  {
-    taskId: faker.string.uuid(),
-    taskTitle: '任务项1',
-    startDate: '2025-08-24',
-    endDate: '2025-08-26',
-    progress: 31,
-    storyTitle: '需求1',
-    userName: '张三',
-    avatarUrl: 'https://picsum.photos/200/300',
-  },
-  {
-    taskId: faker.string.uuid(),
-    taskTitle: '任务项1',
-    startDate: '2025-08-28',
-    endDate: '2025-08-28',
-    progress: 100,
-    storyTitle: '需求1',
-    userName: '张三',
-    avatarUrl: 'https://picsum.photos/200/300',
-  },
-  {
-    taskId: faker.string.uuid(),
-    taskTitle: '任务项2',
-    startDate: '2025-08-25',
-    endDate: '2025-08-27',
-    progress: 31,
-    storyTitle: '需求1',
-    userName: '张三',
-    avatarUrl: 'https://picsum.photos/200/300',
-  },
-  {
-    taskId: faker.string.uuid(),
-    taskTitle: '任务项2',
-    startDate: '2025-08-25',
-    endDate: '2025-08-27',
-    progress: 100,
-    storyTitle: '需求1',
-    userName: '王二',
-    planHours: 10,
-    actualHours: 10,
-    avatarUrl: 'https://picsum.photos/200/300',
-  },
-];
 
 const columns: any = [
   {
@@ -99,7 +44,7 @@ const columns: any = [
     },
   },
   {
-    field: 'userName',
+    field: 'realName',
     title: '执行人',
     width: 100,
     mergeCell: true,
@@ -107,7 +52,7 @@ const columns: any = [
   {
     field: 'taskTitle',
     title: '任务项',
-    width: 'auto',
+    width: 100,
     style: {
       color: preferences.theme.colorPrimary,
       textDecoration: 'underline',
@@ -127,12 +72,13 @@ const columns: any = [
   },
 ];
 
-nextTick(() => {
+nextTick(async () => {
+  let TaskData: any = await getTaskList({});
   const ganttInstance = new Gantt(
     document.querySelector('#tableContainer') as HTMLDivElement,
     {
       overscrollBehavior: 'none',
-      records,
+      records: TaskData.items,
       taskKeyField: 'taskId',
       minDate: '2025-08-1',
       maxDate: '2025-09-1',
@@ -284,10 +230,10 @@ nextTick(() => {
     (args: MousePointerCellEvent) => {
       console.log('左侧任务信息-单元格单击事件', args);
       if (args.field === 'taskTitle') {
-        openFormModal(args.originData);
+        TaskDetailDrawerApi.setData(args.originData).open();
       }
       if (args.field === 'storyTitle') {
-        openStoryFormModal(args.originData);
+        StoryDetailDrawerApi.setData(args.originData).open();
       }
     },
   );
@@ -308,7 +254,7 @@ nextTick(() => {
         style="position: relative"
       ></div>
     </div>
-    <AddTaskFormModal />
-    <AddStoryFormModal />
+    <TaskDetailDrawer />
+    <StoryDetailDrawer />
   </Page>
 </template>

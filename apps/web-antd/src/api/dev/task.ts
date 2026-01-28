@@ -17,8 +17,8 @@ export namespace SystemTaskApi {
     taskTitle?: string;
     taskNum?: string;
     taskRichText?: string;
-    taskStatus?: string;
-    taskType?: string;
+    taskStatus?: number;
+    taskType?: number;
     planHours?: number;
     actualHours?: number;
     endDate?: string;
@@ -33,7 +33,10 @@ export namespace SystemTaskApi {
 }
 
 async function getTaskList(params: Recordable<any>) {
-  return requestClient.get<Array<SystemTaskApi.SystemTask>>('/dev/task/list', {
+  return requestClient.get<{
+    items: Array<SystemTaskApi.SystemTask>;
+    total: number;
+  }>('/dev/task/list', {
     params,
   });
 }

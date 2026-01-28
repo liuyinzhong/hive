@@ -12,9 +12,6 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   year: 'numeric',
   month: '2-digit',
   day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
 });
 
 function generateMockDataList(count: number) {
@@ -94,13 +91,13 @@ function generateMockDataList(count: number) {
       planHours: faker.number.int({ min: 1, max: 10 }),
       actualHours: faker.number.int({ min: 1, max: 10 }),
       endDate: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
+        faker.date.between({ from: '2025-08-01', to: '2025-09-01' }),
       ),
       startDate: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
+        faker.date.between({ from: '2025-08-01', to: '2025-09-01' }),
       ),
       createDate: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
+        faker.date.between({ from: '2025-08-01', to: '2025-09-01' }),
       ),
       creatorId: userInfo.userId,
       creatorName: userInfo.realName,
@@ -114,7 +111,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockTaskData = generateMockDataList(10000);
+export const mockTaskData = generateMockDataList(100);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

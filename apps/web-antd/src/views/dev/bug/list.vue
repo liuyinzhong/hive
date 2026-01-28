@@ -8,6 +8,7 @@ import {
 } from '#/adapter/vxe-table';
 
 import addFormModal from './add-modal.vue';
+import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
 import { getBugList, type SystemBugApi } from '#/api/dev';
 import trackDrawer from './track-drawer.vue';
@@ -68,7 +69,15 @@ function onActionClick({
       break;
     }
     case 'next': {
-      openNextModal(row);
+      NextModalApi.setData(row).open();
+      break;
+    }
+    case 'bugTitle': {
+      DetailDrawerApi.setData(row).open();
+      break;
+    }
+    case 'track': {
+      TrackDrawerApi.setData(row).open();
       break;
     }
   }
@@ -111,48 +120,29 @@ const [AddFormModal, AddFormModalApi] = useVbenModal({
 // #endregion
 
 // #region 流转弹窗
-
 const [NextModal, NextModalApi] = useVbenModal({
   connectedComponent: nextModal,
   destroyOnClose: true,
 });
-
-/** 打开流转弹窗 */
-function openNextModal(row: any) {
-  NextModalApi.setData(row).open();
-}
-
 // #endregion
 
-// #region 抽屉组件
-
-/** 打开轨迹抽屉 */
+// #region 打开轨迹抽屉
 const [TrackDrawer, TrackDrawerApi] = useVbenDrawer({
   connectedComponent: trackDrawer,
 });
-function openTracDrawer(rowInfo: any) {
-  if (rowInfo.column.field !== 'bugTitle') {
-    return;
-  }
-  TrackDrawerApi.setData(rowInfo.row).open();
-}
+// #endregion
 
+// #region 打开详情抽屉
+const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
+  connectedComponent: detailDrawer,
+  destroyOnClose: true,
+});
 // #endregion
 </script>
 
 <template>
   <Page autoContentHeight>
     <Grid>
-      <template #action="{ row }">
-        <a-space :size="0">
-          <a-button type="link" size="small" @click="openNextModal(row)">
-            流转
-          </a-button>
-          <a-button type="link" size="small" @click="onEdit(row)">
-            编辑
-          </a-button>
-        </a-space>
-      </template>
       <template #toolbar-actions>
         <a-button type="primary" @click="onCreate">新建缺陷</a-button>
       </template>
@@ -160,5 +150,6 @@ function openTracDrawer(rowInfo: any) {
     <AddFormModal />
     <TrackDrawer />
     <NextModal />
+    <DetailDrawer />
   </Page>
 </template>
