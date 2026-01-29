@@ -29,6 +29,7 @@ const forward = useForwardPropsEmits(props, emit);
 const {
   handleScrollAt,
   handleWheel,
+  // @ts-expect-error unused
   scrollbarRef,
   scrollDirection,
   scrollIsAtLeft,
