@@ -33,7 +33,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     proxyConfig: {
       ajax: {
-        query: async (_params) => {
+        query: async (_params: any) => {
           return await getMenuList();
         },
       },
@@ -52,7 +52,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       rowField: 'id',
       transform: false,
     },
-  } as VxeTableGridOptions,
+  } as any,
 });
 
 function onActionClick({

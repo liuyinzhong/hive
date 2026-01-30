@@ -1,66 +1,9 @@
-import {
-  VERSION_STATUS,
-  STORY_STATUS,
-  STORY_SOURCE,
-  STORY_LEVEL,
-  STORY_TYPE,
-  TASK_TYPE,
-  TASK_STATUS,
-  BUG_STATUS,
-  BUG_LEVEL,
-  BUG_TYPE,
-  BUG_SOURCE,
-  BUG_ENV,
-  VERSION_TYPE,
-  RELEASE_STATUS,
-  BEHAVIOR_TYPE,
-  CHANGE_TYPE,
-} from './data/index';
+import { type SystemDictApi } from '#/api/system';
 
-export interface DictFace {
-  /** 字典id,; */
-  id?: string | number;
-  /** 字典父id,; */
-  pid?: string | number | null;
-  /** 字典标题,; */
-  label: string;
-  /** 字典值,; */
-  value: string;
-  /** 字典类型,; */
-  type?: string;
-  /** 禁用状态 */
-  disabled?: any;
-  /** 备注,; */
-  remark?: string;
-  /** 颜色 */
-  color?: string;
-  /** 子字典 */
-  children?: DictFace[];
-  /** 创建时间 */
-  createDate?: string;
-}
-
-const dictionaryData: Record<string, DictFace[]> = {
-  VERSION_STATUS,
-  STORY_STATUS,
-  STORY_SOURCE,
-  STORY_LEVEL,
-  STORY_TYPE,
-  TASK_TYPE,
-  TASK_STATUS,
-  BUG_STATUS,
-  BUG_LEVEL,
-  BUG_TYPE,
-  BUG_SOURCE,
-  BUG_ENV,
-  VERSION_TYPE,
-  RELEASE_STATUS,
-  BEHAVIOR_TYPE,
-  CHANGE_TYPE,
-};
+const dictionaryData: Record<string, SystemDictApi.SystemDict[]> = {};
 
 /** 获取字典列表 */
-export const getDictList = (type: string): DictFace[] => {
+export const getDictList = (type: string): SystemDictApi.SystemDict[] => {
   const list = dictionaryData[type];
   return list || [];
 };

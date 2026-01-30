@@ -16,6 +16,7 @@ import {
   getProjectsList,
   getModulesList,
 } from '#/api/dev';
+import type { Recordable } from '@vben/types';
 
 // #region 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -36,14 +37,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       autoLoad: false,
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getModulesList({
             projectId: activeProjectId.value,
           });
         },
       },
     },
-  } as VxeTableGridOptions<SystemModuleApi.SystemModule>,
+  } as any,
   gridEvents: {
     rowDragstart: (e: any) => {},
     rowDragend: ({ oldRow, _index }: any) => {

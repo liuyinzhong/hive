@@ -16,10 +16,11 @@ import nextModal from './next-modal.vue';
 import batchFormModal from './batch-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import { sleep } from '#/utils';
+import type { Recordable } from '@vben/types';
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-5',
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),
@@ -39,7 +40,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     columns: useColumns(onActionClick),
     proxyConfig: {
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getTaskList({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -48,7 +49,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
         },
       },
     },
-  } as VxeTableGridOptions<SystemTaskApi.SystemTask>,
+  } as any,
   gridEvents: {},
 });
 

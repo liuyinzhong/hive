@@ -26,9 +26,10 @@ const [FormDrawer, formDrawerApi] = useVbenDrawer({
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     fieldMappingTime: [['createDate', ['startDate', 'endDate']]],
     schema: useGridFormSchema(),
-    submitOnChange: true,
+    submitOnChange: false,
   },
   gridOptions: {
     columns: useColumns(onActionClick, onStatusChange),
@@ -36,7 +37,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     keepSource: true,
     proxyConfig: {
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getRoleList({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -50,13 +51,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
 
     toolbarConfig: {
-      custom: true,
-      export: false,
-      refresh: true,
-      search: true,
       zoom: true,
+      custom: true,
+      refresh: true,
     },
-  } as VxeTableGridOptions<SystemRoleApi.SystemRole>,
+  } as any,
 });
 
 function onActionClick(e: OnActionClickParams<SystemRoleApi.SystemRole>) {
@@ -152,7 +151,7 @@ function onCreate() {
 <template>
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
-    <Grid :table-title="$t('system.role.list')">
+    <Grid>
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">
           <Plus class="size-5" />

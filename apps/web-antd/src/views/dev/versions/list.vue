@@ -13,6 +13,7 @@ import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
 import addFormModal from './add-modal.vue';
+import type { Recordable } from '@vben/types';
 
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -26,7 +27,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     columns: useColumns(onActionClick),
     proxyConfig: {
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getVersionsList({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -35,7 +36,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
         },
       },
     },
-  } as VxeTableGridOptions<SystemVersionApi.SystemVersion>,
+  } as any,
   gridEvents: {},
 });
 

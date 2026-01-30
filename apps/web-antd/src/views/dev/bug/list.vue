@@ -15,10 +15,10 @@ import trackDrawer from './track-drawer.vue';
 import { useGridFormSchema, useColumns } from './data';
 import { message } from 'ant-design-vue';
 import { sleep } from '#/utils';
-
+import type { Recordable } from '@vben/types';
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-5',
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),
@@ -38,7 +38,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     proxyConfig: {
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getBugList({
             page: page.currentPage,
             pageSize: page.pageSize,

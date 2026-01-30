@@ -5,7 +5,8 @@ import { getUsersList, type SystemUserApi } from '#/api/system';
 
 import { useVbenDrawer, Page } from '@vben/common-ui';
 
-import { message } from 'ant-design-vue';
+import { message, Button } from 'ant-design-vue';
+import { Plus } from '@vben/icons';
 
 import {
   useVbenVxeGrid,
@@ -18,6 +19,7 @@ import ExtraDrawer from './drawer.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useRefresh } from '@vben/hooks';
 import { useGridFormSchema, useColumns } from './data';
+import type { Recordable } from '@vben/types';
 
 const userStore = useUserStore();
 
@@ -33,15 +35,21 @@ const router = useRouter();
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),
   },
   gridOptions: {
     columns: useColumns(onActionClick),
+    toolbarConfig: {
+      zoom: true,
+      custom: true,
+      refresh: true,
+    },
     proxyConfig: {
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getUsersList({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -50,7 +58,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
         },
       },
     },
-  } as VxeTableGridOptions<SystemUserApi.SystemUser>,
+  } as any,
   gridEvents: {},
 });
 
@@ -113,8 +121,11 @@ async function onDelete(row: SystemUserApi.SystemUser) {
 <template>
   <Page auto-content-height>
     <Grid>
-      <template #toolbar-actions>
-        <a-button type="primary" @click="onCreate">新建</a-button>
+      <template #toolbar-tools>
+        <Button type="primary" @click="onCreate">
+          <Plus class="size-5" />
+          新建
+        </Button>
       </template>
     </Grid>
     <Drawer />

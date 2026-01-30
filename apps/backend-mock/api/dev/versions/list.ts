@@ -36,7 +36,7 @@ function generateMockDataList(count: number) {
       endDate: '',
       startDate: '',
       projectId: faker.helpers.arrayElement(projectIds),
-      releaseStatus: faker.helpers.arrayElement(['0', '10', '20', '30']),
+      releaseStatus: faker.helpers.arrayElement(['0', '10', '20', '30', '40']),
       releaseDate: '',
       changeLogRichText: faker.lorem.paragraph(),
       changeLog: faker.lorem.paragraph(),

@@ -100,7 +100,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     proxyConfig: {
       ajax: {
-        query: async (_params) => {
+        query: async (_params: any) => {
           return await getDeptList();
         },
       },
@@ -116,7 +116,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       rowField: 'id',
       transform: false,
     },
-  } as VxeTableGridOptions,
+  } as any,
 });
 
 /**
@@ -129,7 +129,7 @@ function refreshGrid() {
 <template>
   <Page auto-content-height>
     <FormModal @success="refreshGrid" />
-    <Grid table-title="部门列表">
+    <Grid>
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">
           <Plus class="size-5" />
