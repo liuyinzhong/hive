@@ -263,7 +263,7 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'Select',
       fieldName: 'bugType',
-      label: '缺陷类别',
+      label: '缺陷类型',
       defaultValue: 0,
       componentProps: {
         options: getLocalDictList('BUG_TYPE'),
@@ -474,7 +474,7 @@ export function useColumns(
       },
     },
     {
-      title: '缺陷类别',
+      title: '缺陷类型',
       field: 'bugType',
       width: 100,
       cellRender: {

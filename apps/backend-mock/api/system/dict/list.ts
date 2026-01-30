@@ -68,7 +68,7 @@ function generateMockDataList() {
     {
       id: 'cbe5a248-f1dd-4d69-af54-72c1937f4645',
       pid: null,
-      label: '变更类别',
+      label: '变更类型',
       value: null,
       type: 'CHANGE_TYPE',
       remark: null,
@@ -296,7 +296,7 @@ function generateMockDataList() {
     {
       id: 'eadd47c2-3b4b-4702-98f8-d643dd73acb0',
       pid: null,
-      label: '需求类别',
+      label: '需求类型',
       value: null,
       type: 'STORY_TYPE',
       remark: null,
@@ -440,7 +440,7 @@ function generateMockDataList() {
     {
       id: '60d6e9c9-b70a-4c50-8066-53e91961b089',
       pid: null,
-      label: '任务类别',
+      label: '任务类型',
       value: null,
       type: 'TASK_TYPE',
       remark: null,
@@ -980,7 +980,7 @@ function generateMockDataList() {
     {
       id: '8ec2bcc7-5e92-4480-85bf-85fd267f6061',
       pid: null,
-      label: 'BUG类别',
+      label: 'BUG类型',
       value: null,
       type: 'BUG_TYPE',
       remark: null,
@@ -1280,7 +1280,7 @@ function generateMockDataList() {
     {
       id: '30747bd1-46e6-4c7e-a6ed-60046662b354',
       pid: null,
-      label: '更新类别',
+      label: '更新类型',
       value: null,
       type: 'VERSION_TYPE',
       remark: null,

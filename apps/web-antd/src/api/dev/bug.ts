@@ -21,7 +21,7 @@ export namespace SystemBugApi {
     bugEnv?: string;
     /** bug来源 */
     bugSource?: string;
-    /** bug类别 */
+    /** bug类型 */
     bugType?: string;
     /** 浏览器信息 navigator.userAgent */
     bugUa?: string;

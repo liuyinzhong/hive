@@ -124,7 +124,7 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'ApiSelect',
       fieldName: 'storyType',
-      label: '需求类别',
+      label: '需求类型',
       rules: 'required',
       defaultValue: 0,
       componentProps: {
@@ -357,7 +357,7 @@ export function useColumns(
     },
     {
       field: 'storyType',
-      title: '需求类别',
+      title: '需求类型',
       width: 100,
       editRender: {
         name: 'DictSelect',

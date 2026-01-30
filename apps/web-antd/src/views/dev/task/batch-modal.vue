@@ -89,7 +89,7 @@ const columns: VTable.ColumnsDefine = [
   },
   {
     field: 'taskType',
-    title: '任务类别',
+    title: '任务类型',
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),

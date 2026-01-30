@@ -117,7 +117,7 @@ const columns: VTable.ColumnsDefine = [
   },
   {
     field: 'storyTypeTitle',
-    title: '需求类别',
+    title: '需求类型',
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_TYPE'),

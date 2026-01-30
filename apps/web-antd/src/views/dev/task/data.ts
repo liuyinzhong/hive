@@ -266,7 +266,7 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'ApiSelect',
       fieldName: 'taskType',
-      label: '任务类别',
+      label: '任务类型',
       defaultValue: 0,
       componentProps: {
         api: () => getLocalDictList('TASK_TYPE'),
@@ -437,7 +437,7 @@ export function useColumns(
     },
     {
       field: 'taskType',
-      title: '任务类别',
+      title: '任务类型',
       width: 100,
       cellRender: {
         name: 'DictTag',

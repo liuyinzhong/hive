@@ -5790,7 +5790,7 @@
           {
             "id": "41B5346E-2EB5-4BE1-BD0C-DA4DE0E3B945",
             "defKey": "task_type",
-            "defName": "任务类别,字典",
+            "defName": "任务类型,字典",
             "intro": "",
             "baseDataType": "VARCHAR",
             "bizDomainType": "",
@@ -7472,7 +7472,7 @@
           {
             "id": "5904FC3B-E2F9-428A-B9EF-D75DEF343803",
             "defKey": "story_type",
-            "defName": "需求类别",
+            "defName": "需求类型",
             "intro": "",
             "baseDataType": "VARCHAR",
             "bizDomainType": "",
@@ -8482,7 +8482,7 @@
           {
             "id": "885218DC-48FA-4AFD-8F5A-3BEDF934ADC4",
             "defKey": "bug_type",
-            "defName": "bug类别",
+            "defName": "bug类型",
             "intro": "",
             "baseDataType": "VARCHAR",
             "bizDomainType": "",
