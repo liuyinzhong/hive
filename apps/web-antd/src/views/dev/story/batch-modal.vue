@@ -7,7 +7,7 @@ import * as VTable from '@visactor/vtable';
 import { message } from 'ant-design-vue';
 import { upload_file } from '#/api/examples/upload';
 
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 import {
   InputEditor,
   RichTextEditor,
@@ -109,7 +109,7 @@ const columns: VTable.ColumnsDefine = [
     title: '需求状态',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
+      options: getLocalDictList('STORY_STATUS'),
       change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.storyStatus = e.value || '';
       },
@@ -120,7 +120,7 @@ const columns: VTable.ColumnsDefine = [
     title: '需求类别',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_TYPE'),
+      options: getLocalDictList('STORY_TYPE'),
       change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.storyType = e.value || '';
       },
@@ -131,7 +131,7 @@ const columns: VTable.ColumnsDefine = [
     title: '优先级',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_LEVEL'),
+      options: getLocalDictList('STORY_LEVEL'),
       change: (rowData: SystemStoryApi.SystemStory, e: any) => {
         rowData.storyLevel = e.value || '';
       },

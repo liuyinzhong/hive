@@ -9,7 +9,7 @@ import {
   type OnActionClickParams,
 } from '#/adapter/vxe-table';
 import { $t } from '#/locales';
-import { getDictList, type SystemDictApi } from '#/api/system';
+import { getDictListApi, type SystemDictApi } from '#/api/system';
 import { useColumns, useGridFormSchema } from './data';
 
 import addFormModal from './add-modal.vue';
@@ -46,7 +46,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getDictList({
+          return await getDictListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,

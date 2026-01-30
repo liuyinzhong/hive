@@ -1,6 +1,6 @@
 import { Select } from 'ant-design-vue';
 import { h } from 'vue';
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 
 import DictTag from './DictTag';
 
@@ -9,7 +9,7 @@ export default {
     const { column, row } = params;
     const { props, events } = _renderOpts;
 
-    let options = getDictList(props.type);
+    let options = getLocalDictList(props.type);
 
     options = [...(props.before || []), ...options, ...(props.after || [])];
 

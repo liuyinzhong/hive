@@ -5,9 +5,9 @@ import { ref } from 'vue';
 
 import { VueFlow } from '@vue-flow/core';
 
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 
-const dictList = getDictList('STORY_STATUS');
+const dictList = getLocalDictList('STORY_STATUS');
 
 const nodes = ref<Node[]>(
   dictList.map((item, index) => ({

@@ -1,6 +1,6 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import {
@@ -73,9 +73,9 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '更新类型',
       rules: 'required',
       componentProps: {
-        options: getDictList('VERSION_TYPE'),
+        options: getLocalDictList('VERSION_TYPE'),
       },
-      defaultValue: '20',
+      defaultValue: 20,
       dependencies: {
         triggerFields: ['versionId', 'firstVersion'],
         componentProps: (value, formApi) => {
@@ -120,10 +120,10 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'releaseStatus',
       label: '发布状态',
       rules: 'required',
-      defaultValue: '0',
+      defaultValue: 0,
       disabled: false,
       componentProps: {
-        options: getDictList('RELEASE_STATUS'),
+        options: getLocalDictList('RELEASE_STATUS'),
       },
     },
 
@@ -172,7 +172,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         filterOption: true,
         showSearch: true,
-        api: () => getDictList('RELEASE_STATUS'),
+        api: () => getLocalDictList('RELEASE_STATUS'),
       },
     },
   ];

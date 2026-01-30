@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import type { VbenFormProps } from '#/adapter/form';
 import { Page, useVbenModal, useVbenDrawer } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
+import { message, Button } from 'ant-design-vue';
+import { Plus } from '@vben/icons';
 import { getTaskList, type SystemTaskApi } from '#/api/dev';
 import detailDrawer from './detail-drawer.vue';
 import {
@@ -151,10 +152,12 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
   <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
-        <a-button type="primary" @click="onCreate">添加任务</a-button>
-        <a-button type="primary" @click="openBatchFormModal">
+        <Button class="mr-2" type="primary" @click="onCreate()">
+          <Plus class="size-5" />新建任务
+        </Button>
+        <Button type="primary" @click="openBatchFormModal">
           批量添加任务
-        </a-button>
+        </Button>
       </template>
     </Grid>
     <AddFormModal />

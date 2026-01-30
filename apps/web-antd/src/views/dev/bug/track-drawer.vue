@@ -6,7 +6,7 @@ import { useVbenDrawer } from '@vben/common-ui';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
-import { getDictList, getDictText } from '#/dicts';
+import { getLocalDictList, getLocalDictText } from '#/dicts';
 
 defineOptions({
   name: 'BugTrackDrawer',
@@ -53,7 +53,7 @@ const items = ref([
   },
 ]);
 
-const dictList = getDictList('BUG_STATUS');
+const dictList = getLocalDictList('BUG_STATUS');
 
 // 预览状态管理
 const previewVisible = ref(false);
@@ -104,8 +104,8 @@ const handlePreviewClose = (visible: any) => {
       >
         <p>{{ item.operationTime }}</p>
         <span>{{ item.operatorName }}</span>
-        <span>{{ getDictText('BEHAVIOR_TYPE', item.behaviorType) }}</span>
-        <span>{{ getDictText('CHANGE_TYPE', item.fkType) }}</span>
+        <span>{{ getLocalDictText('BEHAVIOR_TYPE', item.behaviorType) }}</span>
+        <span>{{ getLocalDictText('CHANGE_TYPE', item.fkType) }}</span>
         <div @click="handleRichTextClick" v-html="item.changeRichText"></div>
       </a-timeline-item>
     </a-timeline>

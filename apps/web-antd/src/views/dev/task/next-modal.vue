@@ -4,13 +4,13 @@ import { useVbenModal } from '@vben/common-ui';
 import { useVbenForm } from '#/adapter/form';
 import { useNextFormSchema } from './data';
 import { message } from 'ant-design-vue';
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 
 defineOptions({
   name: 'TaskNextModal',
 });
 
-const stepsItems: any = getDictList('TASK_STATUS').map((item: any) => ({
+const stepsItems: any = getLocalDictList('TASK_STATUS').map((item: any) => ({
   title: item.label,
   description: item.remark,
   value: item.value,

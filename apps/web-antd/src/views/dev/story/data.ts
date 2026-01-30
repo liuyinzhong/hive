@@ -1,7 +1,7 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { message } from 'ant-design-vue';
 import {
@@ -116,9 +116,9 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyStatus',
       label: '需求状态',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        api: () => getDictList('STORY_STATUS'),
+        api: () => getLocalDictList('STORY_STATUS'),
       },
     },
     {
@@ -126,8 +126,9 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyType',
       label: '需求类别',
       rules: 'required',
+      defaultValue: 0,
       componentProps: {
-        api: () => getDictList('STORY_TYPE'),
+        api: () => getLocalDictList('STORY_TYPE'),
       },
     },
 
@@ -135,18 +136,18 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyLevel',
       label: '优先级',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        api: () => getDictList('STORY_LEVEL'),
+        api: () => getLocalDictList('STORY_LEVEL'),
       },
     },
     {
       component: 'ApiSelect',
       fieldName: 'source',
       label: '需求来源',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        api: () => getDictList('STORY_SOURCE'),
+        api: () => getLocalDictList('STORY_SOURCE'),
       },
     },
     {
@@ -265,7 +266,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         filterOption: true,
         showSearch: true,
-        api: () => getDictList('STORY_STATUS'),
+        api: () => getLocalDictList('STORY_STATUS'),
       },
     },
   ];

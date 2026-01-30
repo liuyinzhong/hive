@@ -54,7 +54,9 @@ function generateMockDataList(count: number) {
     }
 
     /* 随机从用户表中取一个用户 */
-    let userInfo: any = faker.helpers.arrayElement(mockUserData);
+    let userInfo: any = faker.helpers.arrayElement(
+      mockUserData.filter((item) => item.disabled === 0),
+    );
 
     const dataItem: Record<string, any> = {
       taskId: faker.string.uuid(),
@@ -70,23 +72,9 @@ function generateMockDataList(count: number) {
       taskTitle: faker.lorem.sentence(),
       taskNum: 1000 + i,
       taskRichText: faker.lorem.paragraph(),
-      taskStatus: faker.helpers.arrayElement(['0', '10', '99']),
+      taskStatus: faker.helpers.arrayElement([0, 10, 99]),
       taskType: faker.helpers.arrayElement([
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14',
-        '15',
+        10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150,
       ]),
       planHours: faker.number.int({ min: 1, max: 10 }),
       actualHours: faker.number.int({ min: 1, max: 10 }),

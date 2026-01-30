@@ -59,46 +59,25 @@ function generateMockDataList(count: number) {
       storyInfo = faker.helpers.arrayElement(storyList);
     }
 
-    let userInfo = faker.helpers.arrayElement(mockUserData);
+    let userInfo = faker.helpers.arrayElement(
+      mockUserData.filter((item) => item.disabled === 0),
+    );
 
     const dataItem: Record<string, any> = {
       bugId: faker.string.uuid(),
       bugTitle: faker.lorem.sentence(),
       bugNum: 1000 + i,
       bugRichText: faker.lorem.paragraph(),
-      bugStatus: faker.helpers.arrayElement(['0', '10', '20', '30', '99']),
-      bugLevel: faker.helpers.arrayElement(['0', '1', '2', '3', '4']),
+      bugStatus: faker.helpers.arrayElement([0, 10, 20, 30, 99]),
+      bugLevel: faker.helpers.arrayElement([0, 10, 20, 30, 40]),
       bugConfirmStatus: faker.helpers.arrayElement([0, 1]),
-      bugEnv: faker.helpers.arrayElement(['0', '1', '2']),
       bugSource: faker.helpers.arrayElement([
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
+        0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,
       ]),
       bugType: faker.helpers.arrayElement([
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
+        0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110,
       ]),
+      bugEnv: faker.helpers.arrayElement([0, 10, 20]),
       bugUa: faker.internet.userAgent(),
 
       userId: userInfo.userId,

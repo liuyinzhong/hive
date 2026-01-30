@@ -19,7 +19,8 @@ import addBugModal from '#/views/dev/bug/add-modal.vue';
 
 import { getStoryList, type SystemStoryApi } from '#/api/dev';
 import { useGridFormSchema, useColumns } from './data';
-import { message } from 'ant-design-vue';
+import { message, Button } from 'ant-design-vue';
+import { Plus } from '@vben/icons';
 import { sleep } from '#/utils';
 import type { Recordable } from '@vben/types';
 // 跳转路由
@@ -202,12 +203,12 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
   <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
-        <a-button class="mr-2" type="primary" @click="onCreate()">
-          新建
-        </a-button>
-        <a-button class="mr-2" type="primary" @click="openAddBatchStoryModal">
+        <Button class="mr-2" type="primary" @click="onCreate()">
+          <Plus class="size-5" />新建需求
+        </Button>
+        <Button class="mr-2" type="primary" @click="openAddBatchStoryModal">
           批量新建
-        </a-button>
+        </Button>
       </template>
     </Grid>
     <AddFormModal />

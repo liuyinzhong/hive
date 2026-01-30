@@ -29,10 +29,19 @@ export namespace SystemDictApi {
 /**
  * 获取字典列表数据
  */
-async function getDictList(params: Recordable<any>) {
+async function getDictListApi(params: Recordable<any>) {
   return requestClient.get<Array<SystemDictApi.SystemDict>>(
     '/system/dict/list',
     { params },
+  );
+}
+
+/**
+ * 获取字典全量数据
+ */
+async function getDictListAll() {
+  return requestClient.get<Array<SystemDictApi.SystemDict>>(
+    '/system/dict/listAll',
   );
 }
 
@@ -46,4 +55,4 @@ async function createDict(
   return requestClient.post('/system/dict', data);
 }
 
-export { createDict, getDictList };
+export { createDict, getDictListApi, getDictListAll };

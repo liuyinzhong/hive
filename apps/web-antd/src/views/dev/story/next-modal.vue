@@ -4,13 +4,13 @@ import { useVbenModal } from '@vben/common-ui';
 import { useVbenForm } from '#/adapter/form';
 import { useNextFormSchema } from './data';
 import { message } from 'ant-design-vue';
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 
 defineOptions({
   name: 'StoryNextModal',
 });
 
-const stepsItems: any = getDictList('STORY_STATUS').map((item: any) => ({
+const stepsItems: any = getLocalDictList('STORY_STATUS').map((item: any) => ({
   title: item.label,
   description: item.remark,
   value: item.value,
@@ -34,9 +34,10 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      formApi.setValues(modalApi.getData());
+      let data = modalApi.getData();
 
-      let storyStatus = modalApi.getData().storyStatus;
+      formApi.setValues(data);
+      let storyStatus = data.storyStatus;
       current.value = stepsItems.findIndex(
         (item: any) => item.value === storyStatus,
       );

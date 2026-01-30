@@ -1,7 +1,7 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 import { useDebounceFn } from '@vueuse/core';
 import { $t } from '#/locales';
 import { ref, nextTick, h } from 'vue';
@@ -246,9 +246,9 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'taskStatus',
       label: '任务状态',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        api: () => getDictList('TASK_STATUS'),
+        api: () => getLocalDictList('TASK_STATUS'),
       },
     },
     {
@@ -267,9 +267,9 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'taskType',
       label: '任务类别',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        api: () => getDictList('TASK_TYPE'),
+        api: () => getLocalDictList('TASK_TYPE'),
       },
     },
 
@@ -344,7 +344,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         filterOption: true,
         showSearch: true,
-        api: () => getDictList('TASK_STATUS'),
+        api: () => getLocalDictList('TASK_STATUS'),
       },
     },
   ];

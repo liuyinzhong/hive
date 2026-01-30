@@ -1,7 +1,7 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import {
   getVersionsList,
@@ -228,45 +228,45 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Select',
       fieldName: 'bugLevel',
       label: '级别',
-      defaultValue: '3',
+      defaultValue: 30,
       componentProps: {
-        options: getDictList('BUG_LEVEL'),
+        options: getLocalDictList('BUG_LEVEL'),
       },
     },
     {
       component: 'Select',
       fieldName: 'bugEnv',
       label: '环境',
-      defaultValue: 'TEST',
+      defaultValue: 0,
       componentProps: {
-        options: getDictList('BUG_ENV'),
+        options: getLocalDictList('BUG_ENV'),
       },
     },
     {
       component: 'Select',
       fieldName: 'bugStatus',
       label: '缺陷状态',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        options: getDictList('BUG_STATUS'),
+        options: getLocalDictList('BUG_STATUS'),
       },
     },
     {
       component: 'Select',
       fieldName: 'bugSource',
       label: '来源',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        options: getDictList('BUG_SOURCE'),
+        options: getLocalDictList('BUG_SOURCE'),
       },
     },
     {
       component: 'Select',
       fieldName: 'bugType',
       label: '缺陷类别',
-      defaultValue: '0',
+      defaultValue: 0,
       componentProps: {
-        options: getDictList('BUG_TYPE'),
+        options: getLocalDictList('BUG_TYPE'),
       },
     },
     {
@@ -365,7 +365,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'bugStatus',
       label: '状态',
       componentProps: {
-        options: getDictList('BUG_STATUS'),
+        options: getLocalDictList('BUG_STATUS'),
       },
     },
     {

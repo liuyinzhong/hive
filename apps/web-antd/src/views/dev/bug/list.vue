@@ -13,7 +13,8 @@ import nextModal from './next-modal.vue';
 import { getBugList, type SystemBugApi } from '#/api/dev';
 import trackDrawer from './track-drawer.vue';
 import { useGridFormSchema, useColumns } from './data';
-import { message } from 'ant-design-vue';
+import { message, Button } from 'ant-design-vue';
+import { Plus } from '@vben/icons';
 import { sleep } from '#/utils';
 import type { Recordable } from '@vben/types';
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -144,7 +145,9 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
   <Page autoContentHeight>
     <Grid>
       <template #toolbar-actions>
-        <a-button type="primary" @click="onCreate">新建缺陷</a-button>
+        <Button class="mr-2" type="primary" @click="onCreate()">
+          <Plus class="size-5" />新建缺陷
+        </Button>
       </template>
     </Grid>
     <AddFormModal />

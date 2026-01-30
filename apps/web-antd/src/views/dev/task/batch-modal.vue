@@ -8,7 +8,7 @@ import { useVbenModal } from '@vben/common-ui';
 import * as VTable from '@visactor/vtable';
 import { Button, message } from 'ant-design-vue';
 
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 import { DateEditor, InputEditor, SelectEditor } from '#/vtable';
 
 defineOptions({
@@ -46,7 +46,7 @@ const columns: VTable.ColumnsDefine = [
     title: '关联需求',
     width: 200,
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
+      options: getLocalDictList('STORY_STATUS'),
       change: (rowData: SystemTaskApi.SystemTask, e: any) => {
         rowData.storyId = e.value;
       },
@@ -63,7 +63,7 @@ const columns: VTable.ColumnsDefine = [
     title: '执行人',
     width: 100,
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
+      options: getLocalDictList('STORY_STATUS'),
       change: (rowData: SystemTaskApi.SystemTask, e: any) => {
         rowData.userId = e.value;
       },
@@ -92,7 +92,7 @@ const columns: VTable.ColumnsDefine = [
     title: '任务类别',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
+      options: getLocalDictList('STORY_STATUS'),
       change: (rowData: SystemTaskApi.SystemTask, e: any) => {},
     }),
   },
@@ -101,7 +101,7 @@ const columns: VTable.ColumnsDefine = [
     title: '任务状态',
     width: 'auto',
     editor: new SelectEditor({
-      options: getDictList('STORY_STATUS'),
+      options: getLocalDictList('STORY_STATUS'),
       change: (rowData: SystemTaskApi.SystemTask, e: any) => {},
     }),
   },

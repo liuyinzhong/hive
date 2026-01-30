@@ -5,7 +5,7 @@ import { useVbenModal } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
 
-import { getDictList } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 
 defineOptions({
   name: 'BugNextModal',
@@ -13,7 +13,7 @@ defineOptions({
 
 const params = ref<any>({});
 
-const dictList = getDictList('BUG_STATUS');
+const dictList = getLocalDictList('BUG_STATUS');
 const current = ref(0);
 
 const [Modal, modalApi] = useVbenModal({
@@ -57,8 +57,6 @@ function onSubmit() {
 <template>
   <Modal class="w-[600px]">
     <!-- <div>默认当前缺陷状态的下一个阶段</div> -->
-    <div>{{ current }}</div>
-
     <a-row :gutter="24">
       <a-col :span="12">
         <a-steps
