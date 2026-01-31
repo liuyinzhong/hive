@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
-
+import { useVbenForm } from '#/adapter/form';
+import { useNextFormSchema } from './data';
 import { message } from 'ant-design-vue';
 
 import { getLocalDictList } from '#/dicts';
@@ -13,26 +14,38 @@ defineOptions({
 
 const params = ref<any>({});
 
-const dictList = getLocalDictList('BUG_STATUS');
+const stepsItems: any = getLocalDictList('BUG_STATUS').map((item: any) => ({
+  title: item.label,
+  description: item.remark,
+  value: item.value,
+}));
 const current = ref(0);
+const changeCurrent = (index: number) => {
+  current.value = index;
+  formApi.setFieldValue('storyStatus', stepsItems[index].value);
+};
+
+const [Form, formApi] = useVbenForm({
+  handleSubmit: onSubmit,
+  schema: useNextFormSchema(),
+  showDefaultActions: false,
+});
 
 const [Modal, modalApi] = useVbenModal({
   title: '流转缺陷',
   onConfirm: async () => {
-    onSubmit();
+    await formApi.validateAndSubmitForm();
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const obj = modalApi.getData();
-      params.value = {
-        /* changeRichText: obj.changeRichText || "",
-        fkId: obj.id,
-        fkType: 'bug',
-        behaviorType:"0",
-        extendJson:JSON.stringify(obj) */
-        id: obj.id,
-        bugStatus: 10,
-      };
+      let data = modalApi.getData();
+
+      formApi.setValues(data);
+
+      /* 设置当前步骤 */
+      current.value = stepsItems.findIndex(
+        (item: any) => item.value === data.bugStatus,
+      );
     }
   },
 });
@@ -55,32 +68,18 @@ function onSubmit() {
 }
 </script>
 <template>
-  <Modal class="w-[600px]">
-    <!-- <div>默认当前缺陷状态的下一个阶段</div> -->
+  <Modal class="w-[1000px]">
     <a-row :gutter="24">
-      <a-col :span="12">
+      <a-col :span="6">
         <a-steps
           v-model:current="current"
           direction="vertical"
-          :items="
-            dictList.map((item) => ({
-              title: item.label,
-              description: item.remark,
-            }))
-          "
+          @change="changeCurrent"
+          :items="stepsItems"
         />
       </a-col>
-      <a-col :span="12">
-        <a-form
-          :model="params"
-          :label-col="{ span: 8 }"
-          :wrapper-col="{ span: 16 }"
-          autocomplete="off"
-        >
-          <a-form-item label="备注" prop="remark">
-            <a-input v-model="params.remark" />
-          </a-form-item>
-        </a-form>
+      <a-col :span="18">
+        <Form />
       </a-col>
     </a-row>
   </Modal>

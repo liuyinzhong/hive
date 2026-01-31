@@ -5,7 +5,7 @@ export namespace SystemVersionApi {
     [key: string]: any;
     versionId: string;
     version: string;
-    versionType: any;
+    versionType: number;
     remark?: string;
     creatorId: string;
     creatorName: string;

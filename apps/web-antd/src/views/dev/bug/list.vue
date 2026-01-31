@@ -11,7 +11,6 @@ import addFormModal from './add-modal.vue';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
 import { getBugList, type SystemBugApi } from '#/api/dev';
-import trackDrawer from './track-drawer.vue';
 import { useGridFormSchema, useColumns } from './data';
 import { message, Button } from 'ant-design-vue';
 import { Plus } from '@vben/icons';
@@ -77,10 +76,6 @@ function onActionClick({
       DetailDrawerApi.setData(row).open();
       break;
     }
-    case 'track': {
-      TrackDrawerApi.setData(row).open();
-      break;
-    }
   }
 }
 
@@ -127,12 +122,6 @@ const [NextModal, NextModalApi] = useVbenModal({
 });
 // #endregion
 
-// #region 打开轨迹抽屉
-const [TrackDrawer, TrackDrawerApi] = useVbenDrawer({
-  connectedComponent: trackDrawer,
-});
-// #endregion
-
 // #region 打开详情抽屉
 const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
   connectedComponent: detailDrawer,
@@ -151,7 +140,6 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
       </template>
     </Grid>
     <AddFormModal />
-    <TrackDrawer />
     <NextModal />
     <DetailDrawer />
   </Page>

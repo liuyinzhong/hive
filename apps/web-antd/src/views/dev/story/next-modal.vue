@@ -37,10 +37,13 @@ const [Modal, modalApi] = useVbenModal({
       let data = modalApi.getData();
 
       formApi.setValues(data);
-      let storyStatus = data.storyStatus;
+
+      /* 设置当前步骤 */
       current.value = stepsItems.findIndex(
-        (item: any) => item.value === storyStatus,
+        (item: any) => item.value === data.storyStatus,
       );
+
+      /* 禁用已完成的步骤 */
       stepsItems.forEach((item: any, index: number) => {
         item.disabled = index < current.value ? true : false;
       });

@@ -70,7 +70,6 @@ function generateMockDataList(count: number) {
       bugRichText: faker.lorem.paragraph(),
       bugStatus: faker.helpers.arrayElement([0, 10, 20, 30, 99]),
       bugLevel: faker.helpers.arrayElement([0, 10, 20, 30, 40]),
-      bugConfirmStatus: faker.helpers.arrayElement([0, 1]),
       bugSource: faker.helpers.arrayElement([
         0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,
       ]),

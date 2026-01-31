@@ -15,7 +15,7 @@ export namespace SystemTaskApi {
     projectId?: string;
     projectTitle?: string;
     taskTitle?: string;
-    taskNum?: string;
+    taskNum?: number;
     taskRichText?: string;
     taskStatus?: number;
     taskType?: number;

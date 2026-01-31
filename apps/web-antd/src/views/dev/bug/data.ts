@@ -8,12 +8,9 @@ import {
   getModulesList,
   getProjectsList,
   getStoryList,
-  type SystemStoryApi,
-  getLastVersion,
   type SystemBugApi,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
-import { upload_file } from '#/api/examples/upload';
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
 import UserAvatar from '#/adapter/component/table/UserAvatar';
 import { h, nextTick, ref } from 'vue';
@@ -497,7 +494,7 @@ export function useColumns(
     },
 
     {
-      width: 160,
+      width: 120,
       field: 'operation',
       fixed: 'right',
       title: $t('system.dept.operation'),
@@ -509,11 +506,6 @@ export function useColumns(
         },
         name: 'CellOperation',
         options: [
-          {
-            code: 'track',
-            icon: 'lucide:history',
-            tips: '轨迹按钮',
-          },
           {
             code: 'next',
             icon: 'lucide:redo-dot',
@@ -539,5 +531,29 @@ export function useColumns(
 
 /** 流转表单配置 */
 export function useNextFormSchema(): VbenFormSchema[] {
-  return [];
+  return [
+    {
+      component: 'Input',
+      fieldName: 'bugId',
+      label: '缺陷id',
+      dependencies: {
+        triggerFields: ['bugId'],
+        show: false,
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'bugStatus',
+      label: '缺陷状态',
+      dependencies: {
+        triggerFields: ['bugId'],
+        show: false,
+      },
+    },
+    {
+      component: 'AiEditor',
+      fieldName: 'commentRichText',
+      label: '',
+    },
+  ];
 }

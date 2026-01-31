@@ -12,17 +12,15 @@ export namespace SystemBugApi {
     /** bug描述,富文本格式 */
     bugRichText?: string;
     /** bug状态 */
-    bugStatus?: string;
+    bugStatus?: number;
     /** bug级别 */
-    bugLevel?: string;
-    /** bug确认状态 */
-    bugConfirmStatus?: string;
+    bugLevel?: number;
     /** bug环境 */
-    bugEnv?: string;
+    bugEnv?: number;
     /** bug来源 */
-    bugSource?: string;
+    bugSource?: number;
     /** bug类型 */
-    bugType?: string;
+    bugType?: number;
     /** 浏览器信息 navigator.userAgent */
     bugUa?: string;
     /** 修复人id */
