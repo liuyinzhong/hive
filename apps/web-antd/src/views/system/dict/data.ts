@@ -9,13 +9,25 @@ export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
+      fieldName: 'id',
+      label: '字典表主键id',
+      disabled: true,
+      dependencies: {
+        show(values) {
+          return false;
+        },
+        triggerFields: ['id'],
+      },
+    },
+    {
+      component: 'Input',
       fieldName: 'pid',
       label: '父级',
       disabled: true,
       formItemClass: 'col-span-2 md:col-span-2',
       dependencies: {
         show(values) {
-          return !!values.pid;
+          return false;
         },
         triggerFields: ['pid'],
       },
@@ -28,7 +40,10 @@ export function useFormSchema(): VbenFormSchema[] {
       defaultValue: '',
       dependencies: {
         disabled(values) {
-          return !!values.pid;
+          if (values.id || values.pid) {
+            return true;
+          }
+          return false;
         },
         rules(values) {
           if (!values.pid) {
@@ -36,7 +51,7 @@ export function useFormSchema(): VbenFormSchema[] {
           }
           return null;
         },
-        triggerFields: ['pid'],
+        triggerFields: ['pid', 'id'],
       },
     },
     {
@@ -54,6 +69,7 @@ export function useFormSchema(): VbenFormSchema[] {
       defaultValue: '',
       dependencies: {
         show(values) {
+          /* 只有当有父级时才显示 */
           return !!values.pid;
         },
         triggerFields: ['pid'],

@@ -71,7 +71,7 @@ function onEdit(row: SystemDictApi.SystemDict) {
  * @param row
  */
 function onAppend(row: SystemDictApi.SystemDict) {
-  formModalApi.setData({ pid: row.id }).open();
+  formModalApi.setData({ pid: row.id, type: row.type }).open();
 }
 
 /**

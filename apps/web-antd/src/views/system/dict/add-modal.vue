@@ -12,11 +12,6 @@ import { useFormSchema } from './data';
 
 const emit = defineEmits(['success']);
 const formData = ref<SystemDictApi.SystemDict>();
-const getTitle = computed(() => {
-  return formData.value?.id
-    ? $t('ui.actionTitle.edit', [$t('system.dict.name')])
-    : $t('ui.actionTitle.create', [$t('system.dict.name')]);
-});
 
 const [Form, formApi] = useVbenForm({
   layout: 'vertical',
@@ -48,21 +43,17 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = modalApi.getData<SystemDictApi.SystemDict>();
-      if (data) {
-        if (data.pid == 0) {
-          data.pid = undefined;
-        }
-        formData.value = data;
-        formApi.setValues(formData.value);
-      }
+      const data = modalApi.getData<SystemDictApi.SystemDict>() || {};
+      formData.value = data;
+      formApi.setValues(data);
+      modalApi.setState({ title: data.id ? '编辑字典' : '添加字典' });
     }
   },
 });
 </script>
 
 <template>
-  <Modal :title="getTitle">
+  <Modal>
     <Form class="mx-4" />
     <template #prepend-footer>
       <div class="flex-auto">
