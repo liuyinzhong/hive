@@ -29,9 +29,10 @@ async function getUsersList(params: Recordable<any>) {
   );
 }
 
-async function getUserListAll() {
+async function getUserListAll(params?: Recordable<any>) {
   return requestClient.get<Array<SystemUserApi.SystemUser>>(
     '/system/user/listAll',
+    { params },
   );
 }
 

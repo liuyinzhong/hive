@@ -52,6 +52,17 @@ const routes: RouteRecordRaw[] = [
           title: '需求管理',
         },
       },
+      {
+        name: 'devStoryDetail',
+        path: '/dev/story/detail/:storyNum',
+        component: () => import('#/views/dev/story/detail.vue'),
+        meta: {
+          title: '需求详情',
+          hideInMenu: true,
+          maxNumOfOpenTab: 3,
+          activePath: '/dev/story/list',
+        },
+      },
 
       {
         name: 'task',

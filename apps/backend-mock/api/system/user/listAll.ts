@@ -14,6 +14,12 @@ export default eventHandler(async (event) => {
     mockUserData.filter((item) => item.disabled === 0),
   );
 
+  const { realName } = getQuery(event);
+
+  if (realName) {
+    listData = listData.filter((item) => item.realName.includes(realName));
+  }
+
   /* 全量响应 */
   return useResponseSuccess(listData);
 });

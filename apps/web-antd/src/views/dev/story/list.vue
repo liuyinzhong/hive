@@ -113,6 +113,9 @@ function onActionClick({
       break;
     }
     case 'storyTitle': {
+      /*  router.push({
+        path: `/dev/story/detail/${row.storyNum}`,
+      }); */
       DetailDrawerApi.setData(row).open();
       break;
     }

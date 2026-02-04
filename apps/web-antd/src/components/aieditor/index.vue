@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aiEditorBox">
     <div ref="divRef" style="height: 600px"></div>
   </div>
 </template>
@@ -9,6 +9,7 @@ import { AiEditor } from 'aieditor';
 import 'aieditor/dist/style.css';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { usePreferences } from '@vben/preferences';
+import { getUserListAll, type SystemUserApi } from '#/api/system';
 
 const emit = defineEmits(['update:modelValue', 'update:text']); // 用于触发 v-model 更新
 
@@ -24,6 +25,7 @@ const { modelValue, defaultHtml } = defineProps({
 onMounted(() => {
   aiEditor = new AiEditor({
     element: divRef.value as Element,
+    onMentionQuery: _getUserListAll,
     placeholder: '点击输入内容...', // 使用传入的占位符
     theme: isDark.value ? 'dark' : 'light',
     /* 编辑的内容 */
@@ -108,4 +110,27 @@ watch(
     }
   },
 );
+
+/* 获取用户列表 */
+const _getUserListAll = async (query: string) => {
+  let a = await getUserListAll({ realName: query });
+  // return a;
+  return a.map((item) => ({
+    label: item.realName,
+    id: item.userId,
+    avatar: item.avatar,
+  }));
+};
 </script>
+
+<style>
+.aiEditorBox .tippy-box {
+  background-color: transparent !important;
+}
+
+.aiEditorBox .tippy-box .tippy-content {
+  max-height: 200px;
+  padding: 5px;
+  overflow-y: auto;
+}
+</style>

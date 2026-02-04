@@ -41,4 +41,10 @@ async function createStory(data: Omit<SystemStoryApi.SystemStory, 'storyId'>) {
   return requestClient.post('/dev/story', data);
 }
 
-export { getStoryList, createStory };
+async function getStoryDetail(storyNum: number) {
+  return requestClient.get<SystemStoryApi.SystemStory>('/dev/story/get', {
+    params: { storyNum },
+  });
+}
+
+export { getStoryList, createStory, getStoryDetail };

@@ -1,0 +1,24 @@
+{
+  "versions": [
+    {
+      "versionNumber": "1.0.0",
+      "versionTag": "init",
+      "changeLog": "初始化",
+      "versionId": "44699D65-6354-4CF3-B30D-69FD07C3FDFD",
+      "createdAt": "2026-02-03 17:05:47",
+      "author": "Admin",
+      "fileName": "1.0.0.json",
+      "fileSize": 1246232,
+      "fileHash": "603d79af0a667b41cd96cf504acb4417",
+      "changeDetails": "",
+      "fileData": {
+        "dbDialect": "MySQL",
+        "incrementSqlScript": "",
+        "conceptTotalCount": 1,
+        "logicTotalCount": 0,
+        "physicTotalCount": 17,
+        "diagramTotalCount": 2
+      }
+    }
+  ]
+}
