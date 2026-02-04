@@ -131,13 +131,8 @@ const _getUserListAll = async (query: string) => {
 </script>
 
 <style>
-.aiEditorBox .tippy-box {
-  background-color: transparent !important;
-}
-
 .aiEditorBox .tippy-box .tippy-content {
   max-height: 200px;
-  padding: 5px;
   overflow-y: auto;
 }
 </style>

@@ -436,7 +436,7 @@ export function useColumns(
           {
             code: 'addTask',
             icon: 'lucide:badge-plus',
-            tips: '添加任务按钮',
+            tips: '添加任务',
             disabled: (row: DevStoryApi.DevStoryFace) => {
               if (row.versionId) {
                 return false;
@@ -449,7 +449,7 @@ export function useColumns(
           {
             code: 'addBug',
             icon: 'lucide:bug',
-            tips: '添加缺陷按钮',
+            tips: '添加缺陷',
             disabled: (row: DevStoryApi.DevStoryFace) => {
               if (row.versionId) {
                 return false;

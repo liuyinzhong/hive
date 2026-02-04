@@ -22,7 +22,7 @@ let userList = UserAvatarGroup.renderTableDefault(
 <template>
   <a-descriptions :column="1" bordered size="small">
     <a-descriptions-item label="关联版本">
-      {{ storyInfo.version || '-' }}
+      <a-tag>{{ storyInfo.version || '-' }}</a-tag>
     </a-descriptions-item>
     <a-descriptions-item label="关联项目">
       {{ storyInfo.projectTitle || '-' }}

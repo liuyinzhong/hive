@@ -12,6 +12,7 @@ import { useSortable } from '@vben-core/composables';
 import { Card, message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import addTaskModal from '#/views/dev/task/add-modal.vue';
+import { _vNodeDictTag } from '#/dicts';
 
 interface DataItem {
   title: string;
@@ -150,91 +151,94 @@ function onCreate() {
 
 <template>
   <Page :autoContentHeight="true">
-    <a-button @click="onCreate" type="primary">添加任务</a-button>
-    <br />
-    <br />
-    <a-list :grid="{ gutter: 0, column: 3 }" :data-source="taskDataList">
-      <template #renderItem="{ item, index }">
-        <a-list-item>
-          <Card size="small" :body-style="{ padding: 0 }">
-            <template #title>
-              <a-flex>
-                <span :class="item.icon" style="font-size: 20px"></span>
-                <span class="ml-2">{{ item.title }}</span>
-              </a-flex>
-            </template>
-            <div
-              class="sort-container h-[650px] overflow-auto"
-              :data-container="item.title"
-              :ref="(el) => (sortContainers[index] = el)"
-            >
-              <template v-if="item.children.length > 0">
-                <div
-                  v-for="taskInfo in item.children"
-                  :key="taskInfo.taskId"
-                  :data-id="taskInfo.taskId"
-                  :data-parent-index="index"
-                  class="border-b p-3"
-                >
-                  <div class="cursor-pointer">
-                    <div class="top flex items-center justify-between">
-                      <div class="left">
-                        <a-tag color="blue">
-                          {{ taskInfo.moduleTitle }}
-                        </a-tag>
-                        <a-tag color="green">
-                          {{ taskInfo.taskType }}
-                        </a-tag>
+    <Card>
+      <a-button @click="onCreate" type="primary">添加任务</a-button>
+      <br />
+      <br />
+      <a-list :grid="{ gutter: 0, column: 3 }" :data-source="taskDataList">
+        <template #renderItem="{ item, index }">
+          <a-list-item>
+            <Card size="small" :body-style="{ padding: 0 }">
+              <template #title>
+                <a-flex>
+                  <span :class="item.icon" style="font-size: 20px"></span>
+                  <span class="ml-2">
+                    {{ item.title }}({{ item.children.length }})
+                  </span>
+                </a-flex>
+              </template>
+              <div
+                class="sort-container h-[600px] overflow-auto"
+                :data-container="item.title"
+                :ref="(el) => (sortContainers[index] = el)"
+              >
+                <template v-if="item.children.length > 0">
+                  <div
+                    v-for="taskInfo in item.children"
+                    :key="taskInfo.taskId"
+                    :data-id="taskInfo.taskId"
+                    :data-parent-index="index"
+                    class="border-b p-3"
+                  >
+                    <div class="cursor-pointer">
+                      <div class="top flex items-center justify-between">
+                        <div class="left">
+                          <a-tag color="blue">
+                            {{ taskInfo.moduleTitle }}
+                          </a-tag>
+                          <component
+                            :is="_vNodeDictTag('TASK_TYPE', taskInfo.taskType)"
+                          />
+                        </div>
+                        <div class="right">
+                          <a-tag color="blue"> #{{ taskInfo.taskNum }} </a-tag>
+                          <a-tag color="green">
+                            {{ taskInfo.version }}
+                          </a-tag>
+                        </div>
                       </div>
-                      <div class="right">
-                        <a-tag color="blue"> #{{ taskInfo.taskNum }} </a-tag>
-                        <a-tag color="green">
-                          {{ taskInfo.version }}
-                        </a-tag>
+
+                      <div class="title line2 py-2">
+                        <a-typography-paragraph
+                          style="margin-bottom: 0"
+                          :ellipsis="{
+                            rows: 3,
+                          }"
+                          :editable="{
+                            onChange: (e: string) => (taskInfo.taskTitle = e),
+                            onEnd: () => changeTaskTitle(taskInfo),
+                          }"
+                          :content="taskInfo.taskTitle"
+                        />
                       </div>
-                    </div>
 
-                    <div class="title line2 py-2">
-                      <a-typography-paragraph
-                        style="margin-bottom: 0"
-                        :ellipsis="{
-                          rows: 3,
-                        }"
-                        :editable="{
-                          onChange: (e: string) => (taskInfo.taskTitle = e),
-                          onEnd: () => changeTaskTitle(taskInfo),
-                        }"
-                        :content="taskInfo.taskTitle"
-                      />
-
-                      <!-- <EllipsisText :line="3" expand :tooltip="false">
-                          {{ taskInfo.taskTitle }}
-                        </EllipsisText> -->
-                    </div>
-
-                    <div class="bottom flex items-center justify-between">
-                      <div class="left">
-                        <a-avatar :size="30" :src="taskInfo.avatar"></a-avatar>
-                      </div>
-                      <div class="right">
-                        <span class="flex items-center">
-                          {{ dayjs(taskInfo.endDate).format('MM月DD号') }}
-                          {{ taskInfo.actualHours || 0 }}h
-                        </span>
+                      <div class="bottom flex items-center justify-between">
+                        <div class="left">
+                          <a-avatar
+                            :size="30"
+                            :src="taskInfo.avatar"
+                          ></a-avatar>
+                        </div>
+                        <div class="right">
+                          <span class="flex items-center">
+                            {{ dayjs(taskInfo.endDate).format('MM月DD号') }}
+                            {{ taskInfo.actualHours || 0 }}h
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="h-[100px]"></div>
-                <a-empty class="empty-component" />
-              </template>
-            </div>
-          </Card>
-        </a-list-item>
-      </template>
-    </a-list>
+                </template>
+                <template v-else>
+                  <div class="h-[100px]"></div>
+                  <a-empty class="empty-component" />
+                </template>
+              </div>
+            </Card>
+          </a-list-item>
+        </template>
+      </a-list>
+    </Card>
 
     <AddTaskModal />
   </Page>

@@ -10980,7 +10980,7 @@
       {
         "id": "C06AE9E4-207F-4B3C-A2FE-48A734B3B79D",
         "schemaName": null,
-        "defKey": "dev_story_change_history",
+        "defKey": "dev_change_history",
         "defName": "需求变更历史",
         "intro": "",
         "type": "P",
@@ -10988,7 +10988,7 @@
           {
             "id": "36AFF375-846D-46BE-BB7E-0DD477C21350",
             "defKey": "change_id",
-            "defName": "需求变更记录id,UUID格式",
+            "defName": "变更记录id,UUID格式",
             "intro": "",
             "baseDataType": "CHAR",
             "bizDomainType": "",
@@ -17041,7 +17041,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1770189009428,
-  "signature": "9ab5070ac54b687b8e7b1bd2ee3bd296",
+  "updateTime": 1770200141333,
+  "signature": "cb470009b80b28bec1767d4467b0fb28",
   "branchId": "1111"
 }

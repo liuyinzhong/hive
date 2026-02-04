@@ -85,27 +85,23 @@ function onActionClick({
       break;
     }
     case 'addTask': {
-      let defaultData = {
+      AddTaskModalApi.setData({
         storyId: row.storyId,
         projectId: row.projectId,
         versionId: row.versionId,
         moduleId: row.moduleId,
         openModalSource: 'storyListAddBtn',
-      };
-
-      AddTaskModalApi.setData(defaultData).open();
+      }).open();
       break;
     }
     case 'addBug': {
-      let defaultData = {
+      AddBugModalApi.setData({
         storyId: row.storyId,
         projectId: row.projectId,
         versionId: row.versionId,
         moduleId: row.moduleId,
         openModalSource: 'storyListAddBtn',
-      };
-
-      AddBugModalApi.setData(defaultData).open();
+      }).open();
       break;
     }
     case 'next': {

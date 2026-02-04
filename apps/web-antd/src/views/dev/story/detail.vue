@@ -4,6 +4,7 @@ import { useTabs } from '@vben/hooks';
 import { Page } from '@vben/common-ui';
 import { useRoute } from 'vue-router';
 import StoryDetail from './components/story-detail.vue';
+import { Card } from 'ant-design-vue';
 
 defineOptions({
   name: 'StoryDetail',
@@ -20,8 +21,8 @@ setTabTitle(`#${storyNum.value}需求详情`);
 </script>
 <template>
   <Page autoContentHeight>
-    <div class="h-full w-full bg-white p-1">
+    <Card>
       <StoryDetail :storyNum="storyNum" />
-    </div>
+    </Card>
   </Page>
 </template>

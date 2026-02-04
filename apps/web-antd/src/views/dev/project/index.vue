@@ -8,7 +8,7 @@ import ProjectSelect from '#/components/dev/ProjectSelect/index.vue';
 import BugTable from '#/views/dev/bug/list.vue';
 import StoryTable from '#/views/dev/story/list.vue';
 import TaskTable from '#/views/dev/task/list.vue';
-
+import { Card } from 'ant-design-vue';
 // 跳转路由
 const router = useRouter();
 
@@ -96,7 +96,7 @@ const moduleList = ref([
 
 <template>
   <Page auto-content-height>
-    <div class="h-full w-full bg-white p-2">
+    <Card>
       <div class="flex justify-between">
         <div>
           <a-form :model="queryParams" layout="inline">
@@ -148,6 +148,6 @@ const moduleList = ref([
       <StoryTable v-if="queryParams.tableType === 'story'" />
       <TaskTable v-if="queryParams.tableType === 'task'" />
       <BugTable v-if="queryParams.tableType === 'bug'" />
-    </div>
+    </Card>
   </Page>
 </template>
