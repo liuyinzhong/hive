@@ -3,13 +3,14 @@ import { ref, watch, onMounted } from 'vue';
 import { getStoryDetail, type DevStoryApi } from '#/api/dev/story';
 import { message } from 'ant-design-vue';
 import AiEditor from '#/components/aieditor/index.vue';
+import BaseInfo from './base-info.vue';
 /**
  * 需求详情组件
  * @property {number} storyNum - 需求编号
  */
 const props = defineProps({
   storyNum: {
-    type: [Number],
+    type: [Number, String],
     required: true,
   },
 });
@@ -30,17 +31,13 @@ watch(
 /**
  * 需求详情数据
  */
-const detail = ref<DevStoryApi.DevStoryFace>({
-  storyId: '',
-  pid: '',
-  storyTitle: undefined,
-  storyNum: 0,
-});
+const detail = ref<DevStoryApi.DevStoryFace>({});
 const loading = ref(false);
 
 const activeKey = ref('基本信息');
 
-const params = ref({
+/* 评论接口请求参数 */
+const params = ref<DevStoryApi.DevStoryFace>({
   storyNum: props.storyNum,
 });
 
@@ -54,7 +51,7 @@ const loadStoryDetail = () => {
   }
 
   loading.value = true;
-  getStoryDetail(props.storyNum)
+  getStoryDetail(Number(props.storyNum))
     .then((res: DevStoryApi.DevStoryFace) => {
       if (!res) {
         message.error('获取需求详情失败');
@@ -87,7 +84,7 @@ const loadStoryDetail = () => {
             <a-card :bodyStyle="{ padding: '10px' }">
               <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="基本信息" tab="基本信息">
-                  Content of Tab Pane 1
+                  <BaseInfo :storyInfo="detail" />
                 </a-tab-pane>
                 <a-tab-pane key="关联任务" tab="关联任务">
                   Content of Tab Pane 3
@@ -101,15 +98,14 @@ const loadStoryDetail = () => {
         </a-row>
         <a-row>
           <a-col :span="24">
-            <a-avatar src="https://picsum.photos/100/100"> </a-avatar>
+            <AiEditor
+              v-model="params.storyRichText"
+              width="100%"
+              height="300px"
+            />
+            <a-button type="primary" block>提交</a-button>
           </a-col>
         </a-row>
-
-        <AiEditor
-          v-model="detail.storyRichHtml"
-          v-model:text="detail.storyRichText"
-        />
-        <!-- <ai-editor v-model="detail.storyRichHtml" v-model:text="detail.storyRichText" /> -->
       </div>
     </div>
   </Page>

@@ -1,4 +1,6 @@
 import { getDictListAll, type SystemDictApi } from '#/api/system';
+import { Tag } from 'ant-design-vue';
+import { h } from 'vue';
 
 const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
 
@@ -20,7 +22,7 @@ export const getLocalDictList = (
 
 /** 静态获取 根据本地字典值，获取本地字典名称
  * @param type 字典类型
- * @param value 字典值
+ * @param value 当前数据值
  * @param key 以字典哪个字段读取值，默认为 value 字段
  */
 export const getLocalDictText = (
@@ -38,7 +40,7 @@ export const getLocalDictText = (
 
 /** 静态获取 根据本地字典值，获取本地字典标签颜色
  * @param type 字典类型
- * @param value 字典值
+ * @param value 当前数据值
  * @param key 以字典哪个字段读取值，默认为 value 字段
  */
 export const getLocalDictColor = (
@@ -52,4 +54,33 @@ export const getLocalDictColor = (
   const list: any = dictionaryData[type];
   const item: any = list?.find((a: any) => a[key || 'value'] == value);
   return item?.color || '';
+};
+
+/** 根据本地字典值，获取本地字典行数据
+ * @param type 字典类型
+ * @param value 当前数据值
+ * @param key 以字典哪个字段读取值，默认为 value 字段
+ */
+export const getLocalDictRow = (
+  type: string,
+  value: any,
+  key?: string,
+): SystemDictApi.SystemDictFace => {
+  if (['', null, undefined].includes(value)) {
+    return {};
+  }
+  const list: any = dictionaryData[type];
+  const item: any = list?.find((a: any) => a[key || 'value'] == value);
+  return item || {};
+};
+
+export const _vNodeDictTag = (dictType: string, value: any, key?: string) => {
+  let item = getLocalDictRow(dictType, value, key);
+  return h(
+    Tag,
+    {
+      color: item.color,
+    },
+    { default: () => item.label || '' },
+  );
 };

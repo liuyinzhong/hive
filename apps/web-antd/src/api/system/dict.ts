@@ -8,9 +8,9 @@ export namespace SystemDictApi {
     /** 字典父id,; */
     pid?: string | number | null;
     /** 字典标题,; */
-    label: string;
+    label?: string;
     /** 字典值,; */
-    value: string;
+    value?: string;
     /** 字典类型,; */
     type?: string;
     /** 禁用状态 */

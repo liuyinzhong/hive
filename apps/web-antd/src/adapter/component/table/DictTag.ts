@@ -1,5 +1,4 @@
-import { Tag, Tooltip, TypographyText } from 'ant-design-vue';
-import { getLocalDictText, getLocalDictColor } from '#/dicts';
+import { _vNodeDictTag } from '#/dicts';
 
 import { h } from 'vue';
 export default {
@@ -11,15 +10,7 @@ export default {
     if (props.mode === 'multiple') {
       return h('div', {}, { default: () => (row[field] || []).length });
     } else {
-      let text = getLocalDictText(props.type, row[field]);
-      let color = getLocalDictColor(props.type, row[field]);
-      return h(
-        Tag,
-        {
-          color,
-        },
-        { default: () => text },
-      );
+      return _vNodeDictTag(props.type, row[field]);
     }
   },
 };

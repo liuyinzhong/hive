@@ -10,10 +10,10 @@ interface userListFace {
 export namespace DevStoryApi {
   export interface DevStoryFace {
     [key: string]: any;
-    storyId: string;
-    pid: string;
-    storyTitle: any;
-    storyNum: number;
+    storyId?: string;
+    pid?: string;
+    storyTitle?: any;
+    storyNum?: any;
     creatorName?: string;
     creatorId?: string;
     storyRichText?: string;
@@ -21,8 +21,18 @@ export namespace DevStoryApi {
     storyType?: number;
     storyStatus?: number;
     storyLevel?: number;
+    /** 关联版本id */
     versionId?: string;
+    /** 关联版本名称 */
+    version?: string;
+    /** 关联模块id */
     moduleId?: string;
+    /** 关联模块名称 */
+    moduleTitle?: string;
+    /** 关联项目id */
+    projectId?: string;
+    /** 关联项目名称 */
+    projectTitle?: string;
     source?: number;
     createDate?: string;
     updateDate?: string;

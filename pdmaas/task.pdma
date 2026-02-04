@@ -5798,7 +5798,7 @@
           {
             "id": "41B5346E-2EB5-4BE1-BD0C-DA4DE0E3B945",
             "defKey": "task_type",
-            "defName": "任务类别,字典",
+            "defName": "任务类型,字典",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -7480,7 +7480,7 @@
           {
             "id": "5904FC3B-E2F9-428A-B9EF-D75DEF343803",
             "defKey": "story_type",
-            "defName": "需求类别",
+            "defName": "需求类型",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -8490,7 +8490,7 @@
           {
             "id": "885218DC-48FA-4AFD-8F5A-3BEDF934ADC4",
             "defKey": "bug_type",
-            "defName": "bug类别",
+            "defName": "bug类型",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -9271,8 +9271,8 @@
           },
           {
             "id": "7BDE47B7-92EB-485C-8367-2BDBB781324D",
-            "defKey": "disabled",
-            "defName": "禁用状态 0=正常,1=禁用",
+            "defKey": "status",
+            "defName": "状态 1=正常,0=禁用",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -17041,7 +17041,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1770025376247,
-  "signature": "5695ba6ff29a2c10db742019311b40b4",
+  "updateTime": 1770189009428,
+  "signature": "9ab5070ac54b687b8e7b1bd2ee3bd296",
   "branchId": "1111"
 }

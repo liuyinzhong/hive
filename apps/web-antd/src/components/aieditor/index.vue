@@ -1,6 +1,6 @@
 <template>
-  <div class="aiEditorBox">
-    <div ref="divRef" style="height: 600px"></div>
+  <div class="aiEditorBox" :style="{ width, height }">
+    <div ref="divRef" class="h-full w-full"></div>
   </div>
 </template>
 
@@ -9,7 +9,7 @@ import { AiEditor } from 'aieditor';
 import 'aieditor/dist/style.css';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { usePreferences } from '@vben/preferences';
-import { getUserListAll, type SystemUserApi } from '#/api/system';
+import { getUserListAll } from '#/api/system';
 
 const emit = defineEmits(['update:modelValue', 'update:text']); // 用于触发 v-model 更新
 
@@ -18,9 +18,16 @@ const divRef = ref();
 
 let aiEditor: AiEditor | null = null;
 
-const { modelValue, defaultHtml } = defineProps({
+const {
+  modelValue,
+  defaultHtml,
+  width = '100%',
+  height = '600px',
+} = defineProps({
   modelValue: String, // 双向绑定的值
   defaultHtml: String, // 默认的 html 内容
+  width: String, // 宽度
+  height: String, // 高度
 });
 onMounted(() => {
   aiEditor = new AiEditor({
