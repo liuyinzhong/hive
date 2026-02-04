@@ -11,7 +11,7 @@ import type { SystemDictApi } from '#/api/system';
 import { useFormSchema } from './data';
 
 const emit = defineEmits(['success']);
-const formData = ref<SystemDictApi.SystemDict>();
+const formData = ref<SystemDictApi.SystemDictFace>();
 
 const [Form, formApi] = useVbenForm({
   layout: 'vertical',
@@ -43,7 +43,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = modalApi.getData<SystemDictApi.SystemDict>() || {};
+      const data = modalApi.getData<SystemDictApi.SystemDictFace>() || {};
       formData.value = data;
       formApi.setValues(data);
       modalApi.setState({ title: data.id ? '编辑字典' : '添加字典' });

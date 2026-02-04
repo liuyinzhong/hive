@@ -1,9 +1,9 @@
 import { getDictListAll, type SystemDictApi } from '#/api/system';
 
-const dictionaryData: Record<string, SystemDictApi.SystemDict[]> = {};
+const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
 
 getDictListAll().then((res) => {
-  res.forEach((item: SystemDictApi.SystemDict) => {
+  res.forEach((item: SystemDictApi.SystemDictFace) => {
     if (item.type != null) {
       dictionaryData[item.type] = item.children || [];
     }
@@ -11,7 +11,9 @@ getDictListAll().then((res) => {
 });
 
 /** 获取本地字典列表 */
-export const getLocalDictList = (type: string): SystemDictApi.SystemDict[] => {
+export const getLocalDictList = (
+  type: string,
+): SystemDictApi.SystemDictFace[] => {
   const list = dictionaryData[type];
   return list || [];
 };

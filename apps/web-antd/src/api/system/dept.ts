@@ -1,9 +1,9 @@
 import { requestClient } from '#/api/request';
 
 export namespace SystemDeptApi {
-  export interface SystemDept {
+  export interface SystemDeptFace {
     [key: string]: any;
-    children?: SystemDept[];
+    children?: SystemDeptFace[];
     id: string;
     name: string;
     remark?: string;
@@ -15,7 +15,7 @@ export namespace SystemDeptApi {
  * 获取部门列表数据
  */
 async function getDeptList() {
-  return requestClient.get<Array<SystemDeptApi.SystemDept>>(
+  return requestClient.get<Array<SystemDeptApi.SystemDeptFace>>(
     '/system/dept/list',
   );
 }
@@ -25,7 +25,7 @@ async function getDeptList() {
  * @param data 部门数据
  */
 async function createDept(
-  data: Omit<SystemDeptApi.SystemDept, 'children' | 'id'>,
+  data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'id'>,
 ) {
   return requestClient.post('/system/dept', data);
 }
@@ -38,7 +38,7 @@ async function createDept(
  */
 async function updateDept(
   id: string,
-  data: Omit<SystemDeptApi.SystemDept, 'children' | 'id'>,
+  data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'id'>,
 ) {
   return requestClient.put(`/system/dept/${id}`, data);
 }

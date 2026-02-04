@@ -17,7 +17,7 @@ import detailDrawer from './detail-drawer.vue';
 import addTaskModal from '#/views/dev/task/add-modal.vue';
 import addBugModal from '#/views/dev/bug/add-modal.vue';
 
-import { getStoryList, type SystemStoryApi } from '#/api/dev';
+import { getStoryList, type DevStoryApi } from '#/api/dev';
 import { useGridFormSchema, useColumns } from './data';
 import { message, Button } from 'ant-design-vue';
 import { Plus } from '@vben/icons';
@@ -74,7 +74,7 @@ const [AddFormModal, AddFormModalApi] = useVbenModal({
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemStoryApi.SystemStory>) {
+}: OnActionClickParams<DevStoryApi.DevStoryFace>) {
   switch (code) {
     case 'delete': {
       onDelete(row);
@@ -113,10 +113,10 @@ function onActionClick({
       break;
     }
     case 'storyTitle': {
-      /*  router.push({
+      router.push({
         path: `/dev/story/detail/${row.storyNum}`,
-      }); */
-      DetailDrawerApi.setData(row).open();
+      });
+      // DetailDrawerApi.setData(row).open();
       break;
     }
   }
@@ -126,11 +126,11 @@ function onCreate() {
   AddFormModalApi.setData(null).open();
 }
 
-function onEdit(row: SystemStoryApi.SystemStory) {
+function onEdit(row: DevStoryApi.DevStoryFace) {
   AddFormModalApi.setData(row).open();
 }
 
-async function onDelete(row: SystemStoryApi.SystemStory) {
+async function onDelete(row: DevStoryApi.DevStoryFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,

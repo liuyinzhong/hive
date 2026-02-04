@@ -58,7 +58,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as any,
 });
 
-function onActionClick(e: OnActionClickParams<SystemRoleApi.SystemRole>) {
+function onActionClick(e: OnActionClickParams<SystemRoleApi.SystemRoleFace>) {
   switch (e.code) {
     case 'delete': {
       onDelete(e.row);
@@ -99,7 +99,7 @@ function confirm(content: string, title: string) {
  */
 async function onStatusChange(
   newStatus: number,
-  row: SystemRoleApi.SystemRole,
+  row: SystemRoleApi.SystemRoleFace,
 ) {
   const status: Recordable<string> = {
     0: '禁用',
@@ -117,11 +117,11 @@ async function onStatusChange(
   }
 }
 
-function onEdit(row: SystemRoleApi.SystemRole) {
+function onEdit(row: SystemRoleApi.SystemRoleFace) {
   formDrawerApi.setData(row).open();
 }
 
-function onDelete(row: SystemRoleApi.SystemRole) {
+function onDelete(row: SystemRoleApi.SystemRoleFace) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.name]),
     duration: 0,

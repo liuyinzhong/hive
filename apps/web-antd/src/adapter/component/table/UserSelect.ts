@@ -5,7 +5,7 @@ import { getUserListAll, type SystemUserApi } from '#/api/system';
 import UserAvatarGroup from './UserAvatarGroup';
 
 // 使用 ref 来存储用户列表数据
-const userListRef = ref<SystemUserApi.SystemUser[]>([]);
+const userListRef = ref<SystemUserApi.SystemUserFace[]>([]);
 
 // 加载用户列表数据的函数
 async function loadUserList() {
@@ -26,7 +26,7 @@ export default {
     const { props, events } = _renderOpts;
     const userIds =
       row?.[column.field].map(
-        (item: SystemUserApi.SystemUser) => item.userId,
+        (item: SystemUserApi.SystemUserFace) => item.userId,
       ) || [];
 
     return h(
@@ -67,7 +67,7 @@ export default {
           },
         },
         // 构造选项列表
-        userListRef.value.map((item: SystemUserApi.SystemUser) =>
+        userListRef.value.map((item: SystemUserApi.SystemUserFace) =>
           h(
             SelectOption,
             {

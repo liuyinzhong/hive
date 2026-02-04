@@ -74,8 +74,8 @@ export function useSchema(): VbenFormSchema[] {
  * @param onActionClick 表格操作按钮点击事件
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemDeptApi.SystemDept>,
-): VxeTableGridOptions<SystemDeptApi.SystemDept>['columns'] {
+  onActionClick?: OnActionClickFn<SystemDeptApi.SystemDeptFace>,
+): VxeTableGridOptions<SystemDeptApi.SystemDeptFace>['columns'] {
   return [
     {
       align: 'left',
@@ -117,7 +117,7 @@ export function useColumns(
           'edit', // 默认的编辑按钮
           {
             code: 'delete', // 默认的删除按钮
-            disabled: (row: SystemDeptApi.SystemDept) => {
+            disabled: (row: SystemDeptApi.SystemDeptFace) => {
               return !!(row.children && row.children.length > 0);
             },
           },

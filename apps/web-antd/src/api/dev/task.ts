@@ -1,8 +1,8 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
 
-export namespace SystemTaskApi {
-  export interface SystemTask {
+export namespace DevTaskApi {
+  export interface DevTaskFace {
     [key: string]: any;
     taskId?: string;
     pid?: null;
@@ -34,14 +34,14 @@ export namespace SystemTaskApi {
 
 async function getTaskList(params: Recordable<any>) {
   return requestClient.get<{
-    items: Array<SystemTaskApi.SystemTask>;
+    items: Array<DevTaskApi.DevTaskFace>;
     total: number;
   }>('/dev/task/list', {
     params,
   });
 }
 
-async function createTask(data: Omit<SystemTaskApi.SystemTask, 'taskId'>) {
+async function createTask(data: Omit<DevTaskApi.DevTaskFace, 'taskId'>) {
   return requestClient.post('/dev/task', data);
 }
 

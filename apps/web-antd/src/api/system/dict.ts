@@ -2,7 +2,7 @@ import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
 
 export namespace SystemDictApi {
-  export interface SystemDict {
+  export interface SystemDictFace {
     /** 字典id,; */
     id?: string | number;
     /** 字典父id,; */
@@ -20,7 +20,7 @@ export namespace SystemDictApi {
     /** 颜色 */
     color?: string;
     /** 子字典 */
-    children?: SystemDict[];
+    children?: SystemDictFace[];
     /** 创建时间 */
     createDate?: string;
   }
@@ -30,7 +30,7 @@ export namespace SystemDictApi {
  * 获取字典列表数据
  */
 async function getDictListApi(params: Recordable<any>) {
-  return requestClient.get<Array<SystemDictApi.SystemDict>>(
+  return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
     '/system/dict/list',
     { params },
   );
@@ -40,7 +40,7 @@ async function getDictListApi(params: Recordable<any>) {
  * 获取字典全量数据
  */
 async function getDictListAll() {
-  return requestClient.get<Array<SystemDictApi.SystemDict>>(
+  return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
     '/system/dict/listAll',
   );
 }
@@ -50,7 +50,7 @@ async function getDictListAll() {
  * @param data 字典数据
  */
 async function createDict(
-  data: Omit<SystemDictApi.SystemDict, 'children' | 'id'>,
+  data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
 ) {
   return requestClient.post('/system/dict', data);
 }

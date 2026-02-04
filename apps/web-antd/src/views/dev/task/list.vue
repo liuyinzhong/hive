@@ -3,7 +3,7 @@ import type { VbenFormProps } from '#/adapter/form';
 import { Page, useVbenModal, useVbenDrawer } from '@vben/common-ui';
 import { message, Button } from 'ant-design-vue';
 import { Plus } from '@vben/icons';
-import { getTaskList, type SystemTaskApi } from '#/api/dev';
+import { getTaskList, type DevTaskApi } from '#/api/dev';
 import detailDrawer from './detail-drawer.vue';
 import {
   useVbenVxeGrid,
@@ -59,7 +59,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemTaskApi.SystemTask>) {
+}: OnActionClickParams<DevTaskApi.DevTaskFace>) {
   switch (code) {
     case 'delete': {
       onDelete(row);
@@ -84,11 +84,11 @@ function onCreate() {
   AddFormModalApi.setData(null).open();
 }
 
-function onEdit(row: SystemTaskApi.SystemTask) {
+function onEdit(row: DevTaskApi.DevTaskFace) {
   AddFormModalApi.setData(row).open();
 }
 
-async function onDelete(row: SystemTaskApi.SystemTask) {
+async function onDelete(row: DevTaskApi.DevTaskFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,

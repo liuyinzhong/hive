@@ -11,8 +11,8 @@ import {
   type OnActionClickParams,
 } from '#/adapter/vxe-table';
 import {
-  type SystemModuleApi,
-  type SystemProjectApi,
+  type DevModuleApi,
+  type DevProjectApi,
   getProjectsList,
   getModulesList,
 } from '#/api/dev';
@@ -58,7 +58,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemModuleApi.SystemModule>) {
+}: OnActionClickParams<DevModuleApi.DevModuleFace>) {
   switch (code) {
     case 'delete': {
       break;
@@ -71,7 +71,7 @@ function onActionClick({
 }
 //#endregion
 
-const items = ref<SystemProjectApi.SystemProject[]>([]);
+const items = ref<DevProjectApi.DevProjectFace[]>([]);
 
 onMounted(async () => {
   const res = await getProjectsList();

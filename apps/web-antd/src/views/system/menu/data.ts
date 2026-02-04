@@ -22,8 +22,8 @@ export function getMenuTypeOptions() {
 }
 
 export function useColumns(
-  onActionClick: OnActionClickFn<SystemMenuApi.SystemMenu>,
-): VxeTableGridOptions<SystemMenuApi.SystemMenu>['columns'] {
+  onActionClick: OnActionClickFn<SystemMenuApi.SystemMenuFace>,
+): VxeTableGridOptions<SystemMenuApi.SystemMenuFace>['columns'] {
   return [
     {
       align: 'left',

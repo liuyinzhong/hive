@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { Sortable } from '@vben-core/composables';
 
-import { getTaskList, type SystemTaskApi } from '#/api/dev';
+import { getTaskList, type DevTaskApi } from '#/api/dev';
 
 import { onMounted, reactive, ref } from 'vue';
 
@@ -17,7 +17,7 @@ interface DataItem {
   title: string;
   icon: string;
   taskStatus: number;
-  children: SystemTaskApi.SystemTask[];
+  children: DevTaskApi.DevTaskFace[];
 }
 
 // 待办事项数据
@@ -106,12 +106,12 @@ const sortableOptions: Sortable.Options = {
 
     // 从源列表中查找并移除任务（使用ID查找）
     const taskIndexById = fromList.children.findIndex(
-      (task: SystemTaskApi.SystemTask) => task.taskId === taskId,
+      (task: DevTaskApi.DevTaskFace) => task.taskId === taskId,
     );
     const task = fromList.children.splice(
       taskIndexById,
       1,
-    )[0] as SystemTaskApi.SystemTask;
+    )[0] as DevTaskApi.DevTaskFace;
     toList.children.push(task);
     event.item.remove();
   },

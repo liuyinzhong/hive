@@ -71,8 +71,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemUserApi.SystemUser>,
-): VxeTableGridOptions<SystemUserApi.SystemUser>['columns'] {
+  onActionClick?: OnActionClickFn<SystemUserApi.SystemUserFace>,
+): VxeTableGridOptions<SystemUserApi.SystemUserFace>['columns'] {
   return [
     {
       field: 'avatar',

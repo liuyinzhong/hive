@@ -1,5 +1,5 @@
 import { type VbenFormSchema } from '#/adapter/form';
-import { type SystemModuleApi } from '#/api/dev';
+import { type DevModuleApi } from '#/api/dev';
 import { type OnActionClickFn } from '#/adapter/vxe-table';
 import { type VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import { upload_file } from '#/api/examples/upload';
@@ -82,8 +82,8 @@ export function useFormModuleSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemModuleApi.SystemModule>,
-): VxeTableGridOptions<SystemModuleApi.SystemModule>['columns'] {
+  onActionClick?: OnActionClickFn<DevModuleApi.DevModuleFace>,
+): VxeTableGridOptions<DevModuleApi.DevModuleFace>['columns'] {
   return [
     {
       field: 'sort',

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue';
-import { getStoryDetail, type SystemStoryApi } from '#/api/dev/story';
+import { getStoryDetail, type DevStoryApi } from '#/api/dev/story';
 import { message } from 'ant-design-vue';
-
+import AiEditor from '#/components/aieditor/index.vue';
 /**
  * 需求详情组件
  * @property {number} storyNum - 需求编号
@@ -30,14 +30,19 @@ watch(
 /**
  * 需求详情数据
  */
-const detail = ref<SystemStoryApi.SystemStory>({
+const detail = ref<DevStoryApi.DevStoryFace>({
   storyId: '',
   pid: '',
   storyTitle: undefined,
+  storyNum: 0,
 });
 const loading = ref(false);
 
 const activeKey = ref('基本信息');
+
+const params = ref({
+  storyNum: props.storyNum,
+});
 
 /**
  * 加载需求详情
@@ -50,7 +55,7 @@ const loadStoryDetail = () => {
 
   loading.value = true;
   getStoryDetail(props.storyNum)
-    .then((res: SystemStoryApi.SystemStory) => {
+    .then((res: DevStoryApi.DevStoryFace) => {
       if (!res) {
         message.error('获取需求详情失败');
         return;
@@ -100,6 +105,10 @@ const loadStoryDetail = () => {
           </a-col>
         </a-row>
 
+        <AiEditor
+          v-model="detail.storyRichHtml"
+          v-model:text="detail.storyRichText"
+        />
         <!-- <ai-editor v-model="detail.storyRichHtml" v-model:text="detail.storyRichText" /> -->
       </div>
     </div>

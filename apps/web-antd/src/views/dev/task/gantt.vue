@@ -15,7 +15,7 @@ import * as VTableGantt from '@visactor/vtable-gantt';
 import storyDetailDrawerComponent from '#/views/dev/story/detail-drawer.vue';
 import taskDetailDrawerComponent from '#/views/dev/task/detail-drawer.vue';
 
-import { getTaskList, type SystemTaskApi } from '#/api/dev';
+import { getTaskList, type DevTaskApi } from '#/api/dev';
 
 const { SCROLL, CLICK_TASK_BAR, MOVE_END_TASK_BAR, CHANGE_DATE_RANGE } =
   VTableGantt.TYPES.GANTT_EVENT_TYPE;

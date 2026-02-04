@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useVbenDrawer } from '@vben/common-ui';
 import StoryDetail from './components/story-detail.vue';
+import { type DevStoryApi } from '#/api/dev';
 
 defineOptions({
   name: 'StoryTrackDrawer',
@@ -13,19 +14,23 @@ defineOptions({
 const [Drawer, DrawerApi] = useVbenDrawer({
   onOpenChange: (open: boolean) => {
     if (open) {
-      let data = DrawerApi.getData();
-      currentStoryNum.value = data.storyNum;
+      storyInfo.value = DrawerApi.getData();
     }
   },
 });
 
 /**
- * 当前打开的需求编号
+ * 当前打开的需求信息
  */
-const currentStoryNum = ref(0);
+const storyInfo = ref<DevStoryApi.DevStoryFace>({
+  storyId: '',
+  pid: '',
+  storyTitle: undefined,
+  storyNum: 0,
+});
 </script>
 <template>
   <Drawer title="需求详情" class="w-[45%]">
-    <StoryDetail :storyNum="currentStoryNum" />
+    <StoryDetail :storyNum="storyInfo.storyNum" />
   </Drawer>
 </template>

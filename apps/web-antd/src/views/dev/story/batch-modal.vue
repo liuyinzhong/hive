@@ -20,7 +20,7 @@ import {
   getVersionsList,
   getModulesList,
   getProjectsList,
-  type SystemStoryApi,
+  type DevStoryApi,
 } from '#/api/dev';
 
 defineOptions({
@@ -38,10 +38,10 @@ const {
 let ListTableApi: VTable.ListTable;
 
 // 初始化为 10个空对象
-const records = ref<SystemStoryApi.SystemStory[]>();
+const records = ref<DevStoryApi.DevStoryFace[]>();
 
 const addRow = (installIndex?: number) => {
-  ListTableApi.addRecord({} as SystemStoryApi.SystemStory, installIndex);
+  ListTableApi.addRecord({} as DevStoryApi.DevStoryFace, installIndex);
 };
 
 const getRecords = () => {
@@ -58,7 +58,7 @@ const columns: VTable.ColumnsDefine = [
       labelField: 'projectTitle',
       valueField: 'projectId',
       resultField: '',
-      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
+      change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.projectId = e.projectId || '';
       },
     }),
@@ -72,7 +72,7 @@ const columns: VTable.ColumnsDefine = [
       labelField: 'moduleTitle',
       valueField: 'moduleId',
       resultField: '',
-      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
+      change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.moduleId = e.moduleId || '';
       },
     }),
@@ -91,7 +91,7 @@ const columns: VTable.ColumnsDefine = [
       labelField: 'version',
       valueField: 'versionId',
       resultField: 'items',
-      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
+      change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.versionId = e.versionId || '';
         // rowData.version = e.label;
       },
@@ -110,7 +110,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
-      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
+      change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.storyStatus = e.value || '';
       },
     }),
@@ -121,7 +121,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_TYPE'),
-      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
+      change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.storyType = e.value || '';
       },
     }),
@@ -132,7 +132,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_LEVEL'),
-      change: (rowData: SystemStoryApi.SystemStory, e: any) => {
+      change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.storyLevel = e.value || '';
       },
     }),

@@ -24,7 +24,7 @@ const [FormModal, formModalApi] = useVbenModal({
  * 编辑部门
  * @param row
  */
-function onEdit(row: SystemDeptApi.SystemDept) {
+function onEdit(row: SystemDeptApi.SystemDeptFace) {
   formModalApi.setData(row).open();
 }
 
@@ -32,7 +32,7 @@ function onEdit(row: SystemDeptApi.SystemDept) {
  * 添加下级部门
  * @param row
  */
-function onAppend(row: SystemDeptApi.SystemDept) {
+function onAppend(row: SystemDeptApi.SystemDeptFace) {
   formModalApi.setData({ pid: row.id }).open();
 }
 
@@ -47,7 +47,7 @@ function onCreate() {
  * 删除部门
  * @param row
  */
-function onDelete(row: SystemDeptApi.SystemDept) {
+function onDelete(row: SystemDeptApi.SystemDeptFace) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.name]),
     duration: 0,
@@ -72,7 +72,7 @@ function onDelete(row: SystemDeptApi.SystemDept) {
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemDeptApi.SystemDept>) {
+}: OnActionClickParams<SystemDeptApi.SystemDeptFace>) {
   switch (code) {
     case 'append': {
       onAppend(row);

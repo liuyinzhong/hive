@@ -8,7 +8,7 @@ import {
   getModulesList,
   getProjectsList,
   getStoryList,
-  type SystemBugApi,
+  type DevBugApi,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
@@ -378,8 +378,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemBugApi.SystemBug>,
-): VxeTableGridOptions<SystemBugApi.SystemBug>['columns'] {
+  onActionClick?: OnActionClickFn<DevBugApi.DevBugFace>,
+): VxeTableGridOptions<DevBugApi.DevBugFace>['columns'] {
   return [
     {
       title: '编号',

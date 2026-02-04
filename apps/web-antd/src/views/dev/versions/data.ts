@@ -3,11 +3,7 @@ import type { VbenFormSchema } from '#/adapter/form';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import {
-  getLastVersion,
-  getProjectsList,
-  type SystemVersionApi,
-} from '#/api/dev';
+import { getLastVersion, getProjectsList, type DevVersionApi } from '#/api/dev';
 import { changeVersionType } from '#/utils/versionUtils';
 import { z } from '#/adapter/form';
 
@@ -183,8 +179,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemVersionApi.SystemVersion>,
-): VxeTableGridOptions<SystemVersionApi.SystemVersion>['columns'] {
+  onActionClick?: OnActionClickFn<DevVersionApi.DevVersionFace>,
+): VxeTableGridOptions<DevVersionApi.DevVersionFace>['columns'] {
   return [
     {
       field: 'version',

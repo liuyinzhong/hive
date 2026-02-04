@@ -68,7 +68,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemUserApi.SystemUser>) {
+}: OnActionClickParams<SystemUserApi.SystemUserFace>) {
   switch (code) {
     case 'delete': {
       onDelete(row);
@@ -88,7 +88,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   connectedComponent: ExtraDrawer,
 });
 
-function onEdit(row: SystemUserApi.SystemUser) {
+function onEdit(row: SystemUserApi.SystemUserFace) {
   drawerApi.setData(row).open();
 }
 
@@ -96,7 +96,7 @@ function onCreate() {
   drawerApi.setData(null).open();
 }
 
-async function onDelete(row: SystemUserApi.SystemUser) {
+async function onDelete(row: SystemUserApi.SystemUserFace) {
   const hideLoading = message.loading({
     content: '正在删除用户:' + row.username,
     duration: 0,

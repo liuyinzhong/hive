@@ -141,8 +141,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemDictApi.SystemDict>,
-): VxeTableGridOptions<SystemDictApi.SystemDict>['columns'] {
+  onActionClick?: OnActionClickFn<SystemDictApi.SystemDictFace>,
+): VxeTableGridOptions<SystemDictApi.SystemDictFace>['columns'] {
   return [
     {
       align: 'left',
@@ -198,7 +198,7 @@ export function useColumns(
           'edit', // 默认的编辑按钮
           {
             code: 'delete', // 默认的删除按钮
-            disabled: (row: SystemDictApi.SystemDict) => {
+            disabled: (row: SystemDictApi.SystemDictFace) => {
               return !!(row.children && row.children.length > 0);
             },
           },

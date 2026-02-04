@@ -1,7 +1,7 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
-export namespace SystemBugApi {
-  export interface SystemBug {
+export namespace DevBugApi {
+  export interface DevBugFace {
     [key: string]: any;
     /** bugID,UUID格式 */
     bugId?: string;
@@ -57,12 +57,12 @@ export namespace SystemBugApi {
 }
 
 async function getBugList(params: Recordable<any>) {
-  return requestClient.get<Array<SystemBugApi.SystemBug>>('/dev/bug/list', {
+  return requestClient.get<Array<DevBugApi.DevBugFace>>('/dev/bug/list', {
     params,
   });
 }
 
-async function createBug(data: Omit<SystemBugApi.SystemBug, 'bugId'>) {
+async function createBug(data: Omit<DevBugApi.DevBugFace, 'bugId'>) {
   return requestClient.post('/dev/bug', data);
 }
 

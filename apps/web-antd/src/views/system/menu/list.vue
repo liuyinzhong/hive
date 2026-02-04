@@ -58,7 +58,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemMenuApi.SystemMenu>) {
+}: OnActionClickParams<SystemMenuApi.SystemMenuFace>) {
   switch (code) {
     case 'append': {
       onAppend(row);
@@ -81,17 +81,17 @@ function onActionClick({
 function onRefresh() {
   gridApi.query();
 }
-function onEdit(row: SystemMenuApi.SystemMenu) {
+function onEdit(row: SystemMenuApi.SystemMenuFace) {
   formDrawerApi.setData(row).open();
 }
 function onCreate() {
   formDrawerApi.setData({}).open();
 }
-function onAppend(row: SystemMenuApi.SystemMenu) {
+function onAppend(row: SystemMenuApi.SystemMenuFace) {
   formDrawerApi.setData({ pid: row.id }).open();
 }
 
-function onDelete(row: SystemMenuApi.SystemMenu) {
+function onDelete(row: SystemMenuApi.SystemMenuFace) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.name]),
     duration: 0,

@@ -12,7 +12,7 @@ import { $t } from '#/locales';
 import { useSchema } from '../data';
 
 const emit = defineEmits(['success']);
-const formData = ref<SystemDeptApi.SystemDept>();
+const formData = ref<SystemDeptApi.SystemDeptFace>();
 const getTitle = computed(() => {
   return formData.value?.id
     ? $t('ui.actionTitle.edit', [$t('system.dept.name')])
@@ -49,7 +49,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = modalApi.getData<SystemDeptApi.SystemDept>();
+      const data = modalApi.getData<SystemDeptApi.SystemDeptFace>();
       if (data) {
         if (data.pid === 0) {
           data.pid = undefined;

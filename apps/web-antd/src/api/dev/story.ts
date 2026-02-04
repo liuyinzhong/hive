@@ -7,13 +7,13 @@ interface userListFace {
   avatar?: string;
 }
 
-export namespace SystemStoryApi {
-  export interface SystemStory {
+export namespace DevStoryApi {
+  export interface DevStoryFace {
     [key: string]: any;
     storyId: string;
     pid: string;
     storyTitle: any;
-    storyNum?: number;
+    storyNum: number;
     creatorName?: string;
     creatorId?: string;
     storyRichText?: string;
@@ -31,18 +31,17 @@ export namespace SystemStoryApi {
 }
 
 async function getStoryList(params: Recordable<any>) {
-  return requestClient.get<Array<SystemStoryApi.SystemStory>>(
-    '/dev/story/list',
-    { params },
-  );
+  return requestClient.get<Array<DevStoryApi.DevStoryFace>>('/dev/story/list', {
+    params,
+  });
 }
 
-async function createStory(data: Omit<SystemStoryApi.SystemStory, 'storyId'>) {
+async function createStory(data: Omit<DevStoryApi.DevStoryFace, 'storyId'>) {
   return requestClient.post('/dev/story', data);
 }
 
 async function getStoryDetail(storyNum: number) {
-  return requestClient.get<SystemStoryApi.SystemStory>('/dev/story/get', {
+  return requestClient.get<DevStoryApi.DevStoryFace>('/dev/story/get', {
     params: { storyNum },
   });
 }

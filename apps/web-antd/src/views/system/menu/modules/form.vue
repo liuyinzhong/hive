@@ -31,7 +31,7 @@ import { getMenuTypeOptions } from '../data';
 const emit = defineEmits<{
   success: [];
 }>();
-const formData = ref<SystemMenuApi.SystemMenu>();
+const formData = ref<SystemMenuApi.SystemMenuFace>();
 const titleSuffix = ref<string>();
 const schema: VbenFormSchema[] = [
   {
@@ -447,7 +447,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   onConfirm: onSubmit,
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = drawerApi.getData<SystemMenuApi.SystemMenu>();
+      const data = drawerApi.getData<SystemMenuApi.SystemMenuFace>();
       if (data?.type === 'link') {
         data.linkSrc = data.meta?.link;
       } else if (data?.type === 'embedded') {
@@ -473,7 +473,7 @@ async function onSubmit() {
     drawerApi.lock();
     const data =
       await formApi.getValues<
-        Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>
+        Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>
       >();
     if (data.type === 'link') {
       data.meta = { ...data.meta, link: data.linkSrc };

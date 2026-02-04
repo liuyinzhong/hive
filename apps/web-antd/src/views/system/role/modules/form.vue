@@ -19,7 +19,7 @@ import { useFormSchema } from '../data';
 
 const emits = defineEmits(['success']);
 
-const formData = ref<SystemRoleApi.SystemRole>();
+const formData = ref<SystemRoleApi.SystemRoleFace>();
 
 const [Form, formApi] = useVbenForm({
   schema: useFormSchema(),
@@ -47,7 +47,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = drawerApi.getData<SystemRoleApi.SystemRole>();
+      const data = drawerApi.getData<SystemRoleApi.SystemRoleFace>();
       formApi.resetForm();
       if (data) {
         formData.value = data;

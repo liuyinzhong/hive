@@ -1,7 +1,7 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
 export namespace SystemUserApi {
-  export interface SystemUser {
+  export interface SystemUserFace {
     [key: string]: any;
     userId: string;
     avatar: string;
@@ -21,7 +21,7 @@ export namespace SystemUserApi {
  * 获取用户列表数据
  */
 async function getUsersList(params: Recordable<any>) {
-  return requestClient.get<Array<SystemUserApi.SystemUser>>(
+  return requestClient.get<Array<SystemUserApi.SystemUserFace>>(
     '/system/user/list',
     {
       params,
@@ -30,7 +30,7 @@ async function getUsersList(params: Recordable<any>) {
 }
 
 async function getUserListAll(params?: Recordable<any>) {
-  return requestClient.get<Array<SystemUserApi.SystemUser>>(
+  return requestClient.get<Array<SystemUserApi.SystemUserFace>>(
     '/system/user/listAll',
     { params },
   );

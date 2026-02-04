@@ -10,7 +10,7 @@ import {
 import addFormModal from './add-modal.vue';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
-import { getBugList, type SystemBugApi } from '#/api/dev';
+import { getBugList, type DevBugApi } from '#/api/dev';
 import { useGridFormSchema, useColumns } from './data';
 import { message, Button } from 'ant-design-vue';
 import { Plus } from '@vben/icons';
@@ -46,7 +46,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           });
         },
       },
-    } as VxeTableGridOptions<SystemBugApi.SystemBug>,
+    } as VxeTableGridOptions<DevBugApi.DevBugFace>,
   },
   gridEvents: {},
 });
@@ -55,7 +55,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemBugApi.SystemBug>) {
+}: OnActionClickParams<DevBugApi.DevBugFace>) {
   switch (code) {
     case 'delete': {
       onDelete(row);
@@ -83,11 +83,11 @@ function onCreate() {
   AddFormModalApi.setData(null).open();
 }
 
-function onEdit(row: SystemBugApi.SystemBug) {
+function onEdit(row: DevBugApi.DevBugFace) {
   AddFormModalApi.setData(row).open();
 }
 
-async function onDelete(row: SystemBugApi.SystemBug) {
+async function onDelete(row: DevBugApi.DevBugFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,

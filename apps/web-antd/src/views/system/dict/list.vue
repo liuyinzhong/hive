@@ -62,7 +62,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
  * 编辑字典
  * @param row
  */
-function onEdit(row: SystemDictApi.SystemDict) {
+function onEdit(row: SystemDictApi.SystemDictFace) {
   formModalApi.setData(row).open();
 }
 
@@ -70,7 +70,7 @@ function onEdit(row: SystemDictApi.SystemDict) {
  * 添加下级字典
  * @param row
  */
-function onAppend(row: SystemDictApi.SystemDict) {
+function onAppend(row: SystemDictApi.SystemDictFace) {
   formModalApi.setData({ pid: row.id, type: row.type }).open();
 }
 
@@ -85,7 +85,7 @@ function onCreate() {
  * 删除字典
  * @param row
  */
-function onDelete(row: SystemDictApi.SystemDict) {
+function onDelete(row: SystemDictApi.SystemDictFace) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.label]),
     duration: 0,
@@ -100,7 +100,7 @@ function onDelete(row: SystemDictApi.SystemDict) {
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemDictApi.SystemDict>) {
+}: OnActionClickParams<SystemDictApi.SystemDictFace>) {
   switch (code) {
     case 'append': {
       onAppend(row);

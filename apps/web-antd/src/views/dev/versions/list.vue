@@ -5,7 +5,7 @@ import {
   type VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 import { Page } from '@vben/common-ui';
-import { getVersionsList, type SystemVersionApi } from '#/api/dev';
+import { getVersionsList, type DevVersionApi } from '#/api/dev';
 import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { sleep } from '#/utils';
@@ -46,7 +46,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 function onActionClick({
   code,
   row,
-}: OnActionClickParams<SystemVersionApi.SystemVersion>) {
+}: OnActionClickParams<DevVersionApi.DevVersionFace>) {
   switch (code) {
     case 'delete': {
       onDelete(row);
@@ -65,7 +65,7 @@ const [FormModal, FormModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
-function onEdit(row: SystemVersionApi.SystemVersion) {
+function onEdit(row: DevVersionApi.DevVersionFace) {
   FormModalApi.setData(row).open();
 }
 
@@ -73,7 +73,7 @@ function onCreate() {
   FormModalApi.setData(null).open();
 }
 
-async function onDelete(row: SystemVersionApi.SystemVersion) {
+async function onDelete(row: DevVersionApi.DevVersionFace) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.version]),
     duration: 0,

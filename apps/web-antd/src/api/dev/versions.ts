@@ -1,7 +1,7 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
-export namespace SystemVersionApi {
-  export interface SystemVersion {
+export namespace DevVersionApi {
+  export interface DevVersionFace {
     [key: string]: any;
     versionId: string;
     version: string;
@@ -25,20 +25,20 @@ export namespace SystemVersionApi {
  * 获取版本列表数据
  */
 async function getVersionsList(params: Recordable<any>) {
-  return requestClient.get<Array<SystemVersionApi.SystemVersion>>(
+  return requestClient.get<Array<DevVersionApi.DevVersionFace>>(
     '/dev/versions/list',
     { params },
   );
 }
 
 async function createVersion(
-  data: Omit<SystemVersionApi.SystemVersion, 'versionId'>,
+  data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
 ) {
   return requestClient.post('/dev/versions', data);
 }
 
 async function getLastVersion(params: Object) {
-  return requestClient.get<SystemVersionApi.SystemVersion>(
+  return requestClient.get<DevVersionApi.DevVersionFace>(
     '/dev/versions/getLastVersion',
     { params },
   );

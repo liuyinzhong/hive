@@ -8,7 +8,7 @@ import {
   getVersionsList,
   getModulesList,
   getProjectsList,
-  type SystemStoryApi,
+  type DevStoryApi,
   getLastVersion,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
@@ -277,8 +277,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns(
-  onActionClick?: OnActionClickFn<SystemStoryApi.SystemStory>,
-): VxeTableGridOptions<SystemStoryApi.SystemStory>['columns'] {
+  onActionClick?: OnActionClickFn<DevStoryApi.DevStoryFace>,
+): VxeTableGridOptions<DevStoryApi.DevStoryFace>['columns'] {
   return [
     {
       field: 'storyNum',
@@ -335,7 +335,7 @@ export function useColumns(
           mode: 'multiple',
         },
         events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
+          change: (val: any, row: DevStoryApi.DevStoryFace) => {
             let params = {
               storyId: row.storyId,
               userIds: val,
@@ -365,7 +365,7 @@ export function useColumns(
           type: 'STORY_TYPE',
         },
         events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
+          change: (val: any, row: DevStoryApi.DevStoryFace) => {
             let params = {
               storyId: row.storyId,
               storyType: val,
@@ -387,7 +387,7 @@ export function useColumns(
           type: 'STORY_LEVEL',
         },
         events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
+          change: (val: any, row: DevStoryApi.DevStoryFace) => {
             let params = {
               storyId: row.storyId,
               storyLevel: val,
@@ -408,7 +408,7 @@ export function useColumns(
           type: 'STORY_SOURCE',
         },
         events: {
-          change: (val: any, row: SystemStoryApi.SystemStory) => {
+          change: (val: any, row: DevStoryApi.DevStoryFace) => {
             let params = {
               storyId: row.storyId,
               source: val,
@@ -437,7 +437,7 @@ export function useColumns(
             code: 'addTask',
             icon: 'lucide:badge-plus',
             tips: '添加任务按钮',
-            disabled: (row: SystemStoryApi.SystemStory) => {
+            disabled: (row: DevStoryApi.DevStoryFace) => {
               if (row.versionId) {
                 return false;
               } else {
@@ -450,7 +450,7 @@ export function useColumns(
             code: 'addBug',
             icon: 'lucide:bug',
             tips: '添加缺陷按钮',
-            disabled: (row: SystemStoryApi.SystemStory) => {
+            disabled: (row: DevStoryApi.DevStoryFace) => {
               if (row.versionId) {
                 return false;
               } else {

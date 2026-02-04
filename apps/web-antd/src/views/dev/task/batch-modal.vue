@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SystemTaskApi } from '#/api/dev';
+import type { DevTaskApi } from '#/api/dev';
 
 import { ref } from 'vue';
 
@@ -21,7 +21,7 @@ const { CHANGE_CELL_VALUE, COPY_DATA, PASTED_DATA, DROPDOWN_MENU_CLICK } =
 let ListTableApi: VTable.ListTable;
 
 // 初始化为 10个空对象
-const records = ref<SystemTaskApi.SystemTask[]>();
+const records = ref<DevTaskApi.DevTaskFace[]>();
 
 const [Modal, modalApi] = useVbenModal({
   async onConfirm() {
@@ -33,7 +33,7 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 const addRow = (installIndex?: number) => {
-  ListTableApi.addRecord({} as SystemTaskApi.SystemTask, installIndex);
+  ListTableApi.addRecord({} as DevTaskApi.DevTaskFace, installIndex);
 };
 
 const getRecords = () => {
@@ -47,7 +47,7 @@ const columns: VTable.ColumnsDefine = [
     width: 200,
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
-      change: (rowData: SystemTaskApi.SystemTask, e: any) => {
+      change: (rowData: DevTaskApi.DevTaskFace, e: any) => {
         rowData.storyId = e.value;
       },
     }),
@@ -64,7 +64,7 @@ const columns: VTable.ColumnsDefine = [
     width: 100,
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
-      change: (rowData: SystemTaskApi.SystemTask, e: any) => {
+      change: (rowData: DevTaskApi.DevTaskFace, e: any) => {
         rowData.userId = e.value;
       },
     }),
@@ -93,7 +93,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
-      change: (rowData: SystemTaskApi.SystemTask, e: any) => {},
+      change: (rowData: DevTaskApi.DevTaskFace, e: any) => {},
     }),
   },
   {
@@ -102,7 +102,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
-      change: (rowData: SystemTaskApi.SystemTask, e: any) => {},
+      change: (rowData: DevTaskApi.DevTaskFace, e: any) => {},
     }),
   },
 ];

@@ -1,6 +1,6 @@
 import { requestClient } from '#/api/request';
-export namespace SystemProjectApi {
-  export interface SystemProject {
+export namespace DevProjectApi {
+  export interface DevProjectFace {
     [key: string]: any;
     projectId: string;
     projectTitle: string;
@@ -12,13 +12,13 @@ export namespace SystemProjectApi {
 }
 
 async function getProjectsList() {
-  return requestClient.get<Array<SystemProjectApi.SystemProject>>(
+  return requestClient.get<Array<DevProjectApi.DevProjectFace>>(
     '/dev/project/list',
   );
 }
 
 async function createProject(
-  data: Omit<SystemProjectApi.SystemProject, 'projectId'>,
+  data: Omit<DevProjectApi.DevProjectFace, 'projectId'>,
 ) {
   return requestClient.post('/dev/project', data);
 }
