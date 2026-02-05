@@ -2,32 +2,25 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import {
-  getStoryDetail,
+  getBugDetail,
   getChangeList,
-  type DevStoryApi,
+  type DevBugApi,
   type DevChangeApi,
 } from '#/api/dev';
-import { getLocalDictList, getLocalDictText } from '#/dicts';
+import { getLocalDictText } from '#/dicts';
 import { message } from 'ant-design-vue';
 import { useTabs } from '@vben/hooks';
 import {
-  Page,
   VbenButton,
   VbenButtonGroup,
-  VbenCheckButtonGroup,
   useVbenModal,
-  alert,
   confirm,
 } from '@vben/common-ui';
 
 import AiEditor from '#/components/aieditor/index.vue';
 import BaseInfo from './base-info.vue';
-import TaskList from './task-list.vue';
-import BugList from './bug-list.vue';
-import addTaskModal from '#/views/dev/task/add-modal.vue';
-import addBugModal from '#/views/dev/bug/add-modal.vue';
-import nextModal from '#/views/dev/story/next-modal.vue';
-import addFormModal from '#/views/dev/story/add-modal.vue';
+import nextModal from '#/views/dev/bug/next-modal.vue';
+import addFormModal from '#/views/dev/bug/add-modal.vue';
 
 const { closeCurrentTab } = useTabs();
 
@@ -35,12 +28,11 @@ const { closeCurrentTab } = useTabs();
 const router = useRouter();
 
 /**
- * 需求详情组件
- * @property {number} storyNum - 需求编号
+ * 缺陷详情组件
+ * @property {number} bugNum - 缺陷编号
  */
 const props = defineProps({
-  storyNum: {
-    type: [Number, String],
+  bugNum: {
     required: true,
   },
   showBtn: {
@@ -51,49 +43,44 @@ const props = defineProps({
 
 // 组件挂载时加载详情
 onMounted(() => {
-  loadStoryDetail();
+  loadBugDetail();
 });
 
-// 监听 storyNum 变化，重新加载详情
+// 监听 bugNum 变化，重新加载详情
 watch(
-  () => props.storyNum,
+  () => props.bugNum,
   () => {
-    loadStoryDetail();
+    loadBugDetail();
   },
 );
 
 /**
- * 需求详情数据
+ * 缺陷详情数据
  */
-const detail = ref<DevStoryApi.DevStoryFace>({});
+const detail = ref<DevBugApi.DevBugFace>({});
 const loading = ref(false);
 
 const activeKey = ref('基本信息');
 
-/* 评论接口请求参数 */
-const params = ref<DevStoryApi.DevStoryFace>({
-  storyNum: props.storyNum,
-});
-
 /**
- * 加载需求详情
+ * 加载缺陷详情
  */
-const loadStoryDetail = () => {
-  if (!props.storyNum) {
-    message.error('需求编号不能为空');
+const loadBugDetail = () => {
+  if (!props.bugNum) {
+    message.error('缺陷编号不能为空');
     return;
   }
 
   loading.value = true;
-  getStoryDetail(Number(props.storyNum))
-    .then((res: DevStoryApi.DevStoryFace) => {
+  getBugDetail(Number(props.bugNum))
+    .then((res: DevBugApi.DevBugFace) => {
       if (!res) {
         router.push({ name: 'FallbackNotFound' });
         return;
       }
       detail.value = res;
 
-      loadChangeLogList(detail.value.storyId as string);
+      loadChangeLogList(detail.value.bugId as string);
     })
     .finally(() => {
       loading.value = false;
@@ -103,24 +90,6 @@ const loadStoryDetail = () => {
 //#region 按钮点击事件
 const onBtnClick = (btnType: string) => {
   switch (btnType) {
-    case '添加任务':
-      AddTaskModalApi.setData({
-        storyId: detail.value.storyId,
-        projectId: detail.value.projectId,
-        versionId: detail.value.versionId,
-        moduleId: detail.value.moduleId,
-        openModalSource: 'storyListAddBtn',
-      }).open();
-      break;
-    case '添加缺陷':
-      AddBugModalApi.setData({
-        storyId: detail.value.storyId,
-        projectId: detail.value.projectId,
-        versionId: detail.value.versionId,
-        moduleId: detail.value.moduleId,
-        openModalSource: 'storyListAddBtn',
-      }).open();
-      break;
     case '流转按钮':
       NextModalApi.setData(detail.value).open();
       break;
@@ -130,7 +99,7 @@ const onBtnClick = (btnType: string) => {
     case '删除按钮':
       confirm({
         title: '删除确认',
-        content: '删除该需求吗?',
+        content: '删除该任务吗?',
         icon: 'error',
         beforeClose({ isConfirm }) {
           if (isConfirm) {
@@ -160,43 +129,29 @@ const onBtnClick = (btnType: string) => {
 //#endregion
 
 //#region 弹窗引用
-
 const [AddFormModal, AddFormModalApi] = useVbenModal({
-  title: '添加需求',
+  title: '添加任务',
   connectedComponent: addFormModal,
   destroyOnClose: true,
 });
 
 const [NextModal, NextModalApi] = useVbenModal({
-  title: '流转需求',
+  title: '流转任务',
   connectedComponent: nextModal,
   destroyOnClose: true,
 });
-
-const [AddTaskModal, AddTaskModalApi] = useVbenModal({
-  title: '添加任务',
-  connectedComponent: addTaskModal,
-  destroyOnClose: true,
-});
-
-const [AddBugModal, AddBugModalApi] = useVbenModal({
-  title: '添加缺陷',
-  connectedComponent: addBugModal,
-  destroyOnClose: true,
-});
-
 //#endregion
 
 //#region 变更记录
 const changeLogList = ref<DevChangeApi.DevChangeFace[]>([]);
-const loadChangeLogList = (storyId: string) => {
-  if (!storyId) {
+const loadChangeLogList = (taskId: string) => {
+  if (!taskId) {
     return;
   }
 
   getChangeList({
-    fkId: storyId,
-    fkType: 0,
+    fkId: taskId,
+    fkType: 20,
   }).then((res: DevChangeApi.DevChangeFace[]) => {
     changeLogList.value = res || [];
   });
@@ -211,27 +166,20 @@ const loadChangeLogList = (storyId: string) => {
           <a-typography-paragraph>
             <a-typography-title :level="4">
               <blockquote>
-                {{ detail.storyTitle }}
+                {{ detail.bugTitle }}
               </blockquote>
             </a-typography-title>
           </a-typography-paragraph>
 
           <!-- 富文本内容 -->
-          <div v-html="detail.storyRichText" style="min-height: 300px"></div>
-          <div v-html="detail.storyRichText" style="min-height: 300px"></div>
-          <div v-html="detail.storyRichText" style="min-height: 300px"></div>
-          <div v-html="detail.storyRichText" style="min-height: 300px"></div>
+          <div v-html="detail.bugRichText" style="min-height: 300px"></div>
+          <div v-html="detail.bugRichText" style="min-height: 300px"></div>
+          <div v-html="detail.bugRichText" style="min-height: 300px"></div>
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
           <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="基本信息" tab="基本信息">
-              <BaseInfo :storyInfo="detail" />
-            </a-tab-pane>
-            <a-tab-pane key="关联任务" tab="关联任务">
-              <TaskList :storyId="detail.storyId ?? ''" />
-            </a-tab-pane>
-            <a-tab-pane key="关联缺陷" tab="关联缺陷">
-              <BugList :storyId="detail.storyId ?? ''" />
+              <BaseInfo :bugInfo="detail" />
             </a-tab-pane>
           </a-tabs>
           <br />
@@ -268,12 +216,6 @@ const loadChangeLogList = (storyId: string) => {
     <a-affix :offset-bottom="30" v-if="showBtn">
       <div class="text-center">
         <VbenButtonGroup border size="large">
-          <VbenButton @click="onBtnClick('添加任务')">
-            <span class="icon-[lucide--badge-plus]"></span>
-          </VbenButton>
-          <VbenButton @click="onBtnClick('添加缺陷')">
-            <span class="icon-[lucide--bug]"></span>
-          </VbenButton>
           <VbenButton @click="onBtnClick('流转按钮')">
             <span class="icon-[lucide--redo-dot]"></span>
           </VbenButton>
@@ -287,10 +229,7 @@ const loadChangeLogList = (storyId: string) => {
       </div>
     </a-affix>
 
-    <!-- <AiEditor v-model="params.storyRichText" width="100%" height="300px" /> -->
     <AddFormModal />
     <NextModal />
-    <AddTaskModal />
-    <AddBugModal />
   </div>
 </template>

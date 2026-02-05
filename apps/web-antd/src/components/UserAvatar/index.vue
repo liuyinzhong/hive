@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 const props = defineProps({
   avatar: {
-    type: String,
     required: true,
   },
   name: {

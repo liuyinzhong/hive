@@ -61,7 +61,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockChangeData = generateMockDataList(800);
+export const mockChangeData = generateMockDataList(8000);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

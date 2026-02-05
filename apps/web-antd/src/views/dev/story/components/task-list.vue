@@ -43,9 +43,7 @@ taskListByStoryId({
             <template #description>
               <DictTag dictType="TASK_STATUS" :value="item.taskStatus" />
               <DictTag dictType="TASK_TYPE" :value="item.taskType" />
-              <a-tag :color="item.percent > 100 ? 'warning' : 'success'">
-                {{ item.percent }}%
-              </a-tag>
+              <a-tag>{{ item.percent }}%</a-tag>
               <a-tag>{{ item.endDate }}</a-tag>
             </template>
 

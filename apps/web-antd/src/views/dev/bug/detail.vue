@@ -3,26 +3,26 @@ import { computed } from 'vue';
 import { useTabs } from '@vben/hooks';
 import { Page } from '@vben/common-ui';
 import { useRoute } from 'vue-router';
-import StoryDetail from './components/story-detail.vue';
+import BugDetail from './components/bug-detail.vue';
 import { Card } from 'ant-design-vue';
 
 defineOptions({
-  name: 'StoryDetail',
+  name: 'BugDetail',
 });
 
 const route = useRoute();
 
 const { setTabTitle } = useTabs();
 
-const storyNum: any = computed(() => {
-  return route.params?.storyNum ?? '-1';
+const bugNum: any = computed(() => {
+  return route.params?.bugNum ?? '-1';
 });
-setTabTitle(`需求详情 #${storyNum.value}`);
+setTabTitle(`缺陷详情 #${bugNum.value}`);
 </script>
 <template>
   <Page autoContentHeight>
     <Card>
-      <StoryDetail :storyNum="storyNum" :showBtn="true" />
+      <BugDetail :bugNum="bugNum" :showBtn="true" />
     </Card>
   </Page>
 </template>

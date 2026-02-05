@@ -18,6 +18,9 @@ let userList = computed(() => props.storyInfo.userList || []);
 </script>
 <template>
   <a-descriptions :column="1" bordered size="small">
+    <a-descriptions-item label="需求编号">
+      <a-tag>#{{ storyInfo.storyNum || '-' }}</a-tag>
+    </a-descriptions-item>
     <a-descriptions-item label="关联版本">
       <a-tag>{{ storyInfo.version || '-' }}</a-tag>
     </a-descriptions-item>
@@ -27,14 +30,14 @@ let userList = computed(() => props.storyInfo.userList || []);
     <a-descriptions-item label="关联模块">
       {{ storyInfo.moduleTitle || '-' }}
     </a-descriptions-item>
-    <a-descriptions-item label="需求来源">
-      <DictTag dictType="STORY_SOURCE" :value="storyInfo.source" />
-    </a-descriptions-item>
     <a-descriptions-item label="需求类型">
       <DictTag dictType="STORY_TYPE" :value="storyInfo.storyType" />
     </a-descriptions-item>
     <a-descriptions-item label="需求优先级">
       <DictTag dictType="STORY_LEVEL" :value="storyInfo.storyLevel" />
+    </a-descriptions-item>
+    <a-descriptions-item label="需求来源">
+      <DictTag dictType="STORY_SOURCE" :value="storyInfo.source" />
     </a-descriptions-item>
     <a-descriptions-item label="参与人">
       <UserAvatarGroup :userList="userList" />

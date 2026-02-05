@@ -76,4 +76,10 @@ async function bugListByStoryId(params: Recordable<any>) {
   );
 }
 
-export { getBugList, createBug, bugListByStoryId };
+async function getBugDetail(bugNum: number) {
+  return requestClient.get<DevBugApi.DevBugFace>('/dev/bug/get', {
+    params: { bugNum },
+  });
+}
+
+export { getBugList, createBug, bugListByStoryId, getBugDetail };

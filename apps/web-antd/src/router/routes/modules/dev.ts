@@ -75,6 +75,17 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'devTaskDetail',
+        path: '/dev/task/detail/:taskNum',
+        component: () => import('#/views/dev/task/detail.vue'),
+        meta: {
+          title: '任务详情',
+          hideInMenu: true,
+          maxNumOfOpenTab: 3,
+          activePath: '/dev/task/list',
+        },
+      },
+      {
         name: 'taskGantt',
         path: '/dev/task/gantt',
         component: () => import('#/views/dev/task/gantt.vue'),
@@ -102,6 +113,17 @@ const routes: RouteRecordRaw[] = [
           title: '缺陷管理',
           badge: '10',
           badgeVariants: 'destructive',
+        },
+      },
+      {
+        name: 'devBugDetail',
+        path: '/dev/bug/detail/:bugNum',
+        component: () => import('#/views/dev/bug/detail.vue'),
+        meta: {
+          title: '缺陷详情',
+          hideInMenu: true,
+          maxNumOfOpenTab: 3,
+          activePath: '/dev/bug/list',
         },
       },
     ],

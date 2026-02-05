@@ -3,26 +3,26 @@ import { computed } from 'vue';
 import { useTabs } from '@vben/hooks';
 import { Page } from '@vben/common-ui';
 import { useRoute } from 'vue-router';
-import StoryDetail from './components/story-detail.vue';
+import TaskDetail from './components/task-detail.vue';
 import { Card } from 'ant-design-vue';
 
 defineOptions({
-  name: 'StoryDetail',
+  name: 'TaskDetail',
 });
 
 const route = useRoute();
 
 const { setTabTitle } = useTabs();
 
-const storyNum: any = computed(() => {
-  return route.params?.storyNum ?? '-1';
+const taskNum: any = computed(() => {
+  return route.params?.taskNum ?? '-1';
 });
-setTabTitle(`需求详情 #${storyNum.value}`);
+setTabTitle(`任务详情 #${taskNum.value}`);
 </script>
 <template>
   <Page autoContentHeight>
     <Card>
-      <StoryDetail :storyNum="storyNum" :showBtn="true" />
+      <TaskDetail :taskNum="taskNum" :showBtn="true" />
     </Card>
   </Page>
 </template>

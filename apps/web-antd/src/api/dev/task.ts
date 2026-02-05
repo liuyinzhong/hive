@@ -5,7 +5,7 @@ export namespace DevTaskApi {
   export interface DevTaskFace {
     [key: string]: any;
     taskId?: string;
-    pid?: null;
+    pid?: any;
     storyId?: string;
     storyTitle?: string;
     moduleId?: string;
@@ -15,7 +15,7 @@ export namespace DevTaskApi {
     projectId?: string;
     projectTitle?: string;
     taskTitle?: string;
-    taskNum?: number;
+    taskNum?: any;
     taskRichText?: string;
     taskStatus?: number;
     taskType?: number;
@@ -47,6 +47,15 @@ async function createTask(data: Omit<DevTaskApi.DevTaskFace, 'taskId'>) {
   return requestClient.post('/dev/task', data);
 }
 
+/* 根据任务编号查询数据 */
+async function getTaskDetail(taskNum: number) {
+  return requestClient.get<DevTaskApi.DevTaskFace>('/dev/task/get', {
+    params: {
+      taskNum,
+    },
+  });
+}
+
 /* 根据storyId查询任务 */
 async function taskListByStoryId(params: Recordable<any>) {
   return requestClient.get<Array<DevTaskApi.DevTaskFace>>(
@@ -57,4 +66,4 @@ async function taskListByStoryId(params: Recordable<any>) {
   );
 }
 
-export { getTaskList, createTask, taskListByStoryId };
+export { getTaskList, createTask, taskListByStoryId, getTaskDetail };
