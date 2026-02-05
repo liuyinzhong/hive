@@ -22,7 +22,7 @@ setTabTitle(`#${storyNum.value}需求详情`);
 <template>
   <Page autoContentHeight>
     <Card>
-      <StoryDetail :storyNum="storyNum" />
+      <StoryDetail :storyNum="storyNum" :showBtn="true" />
     </Card>
   </Page>
 </template>

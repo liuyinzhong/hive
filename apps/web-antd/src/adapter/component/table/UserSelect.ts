@@ -42,11 +42,8 @@ export default {
         {
           ...props,
           allowClear: true,
-          filterOption: (input: string, option: any) => {
-            return (
-              option.realName.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            );
-          },
+          filterOption: true,
+          optionFilterProp: 'realName',
           showSearch: true,
           defaultOpen: true,
           dropdownMatchSelectWidth: false,
@@ -56,8 +53,8 @@ export default {
           },
           value: userIds || [],
           // 关键：将下拉菜单挂载到当前单元格元素内
-          getPopupContainer: (e) => {
-            return e.parentNode;
+          getPopupContainer: (e: HTMLElement) => {
+            return e.parentNode as HTMLElement;
           },
           onChange: (value: any) => {
             row[column.field] = userListRef.value.filter((item) =>

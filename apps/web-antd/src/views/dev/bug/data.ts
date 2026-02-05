@@ -11,8 +11,10 @@ import {
   type DevBugApi,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
-import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
-import UserAvatar from '#/adapter/component/table/UserAvatar';
+
+import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
+import UserAvatar from '#/components/UserAvatar/index.vue';
+
 import { h, nextTick, ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { Tag, Flex, TypographyText } from 'ant-design-vue';
@@ -134,14 +136,12 @@ export function useFormSchema(): VbenFormSchema[] {
       renderComponentContent: () => {
         return {
           option: (optionItem: any) => {
-            let userList = UserAvatarGroup.renderTableDefault(
-              { name: 'UserAvatarGroup', props: { size: 'small' } },
-              { row: optionItem },
-            );
             return h(Flex, { gap: 10 }, [
               h(Tag, {}, '#' + optionItem.storyNum || ''),
               h(TypographyText, { ellipsis: true }, optionItem.label || ''),
-              userList,
+              h(UserAvatarGroup, {
+                userList: optionItem.userList || [],
+              }),
             ]);
           },
         };
@@ -194,18 +194,10 @@ export function useFormSchema(): VbenFormSchema[] {
       renderComponentContent: () => {
         return {
           option: (optionItem: any) => {
-            let avatar = UserAvatar.renderTableDefault(
-              {
-                name: 'UserAvatar',
-                props: {
-                  avatarField: 'avatar',
-                  nameField: 'label',
-                  size: 'small',
-                },
-              },
-              { row: optionItem },
-            );
-            return h(avatar);
+            return h(UserAvatar, {
+              avatar: optionItem.avatar || '',
+              name: optionItem.label || '',
+            });
           },
         };
       },

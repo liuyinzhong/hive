@@ -12,7 +12,7 @@ import { useSortable } from '@vben-core/composables';
 import { Card, message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import addTaskModal from '#/views/dev/task/add-modal.vue';
-import { _vNodeDictTag } from '#/dicts';
+import DictTag from '#/components/DictTag/index.vue';
 
 interface DataItem {
   title: string;
@@ -186,8 +186,9 @@ function onCreate() {
                           <a-tag color="blue">
                             {{ taskInfo.moduleTitle }}
                           </a-tag>
-                          <component
-                            :is="_vNodeDictTag('TASK_TYPE', taskInfo.taskType)"
+                          <DictTag
+                            dictType="TASK_TYPE"
+                            :value="taskInfo.taskType"
                           />
                         </div>
                         <div class="right">

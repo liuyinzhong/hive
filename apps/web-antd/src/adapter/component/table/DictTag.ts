@@ -1,5 +1,4 @@
-import { _vNodeDictTag } from '#/dicts';
-
+import DictTag from '#/components/DictTag/index.vue';
 import { h } from 'vue';
 export default {
   renderTableDefault(renderOpts: any, params: any) {
@@ -10,7 +9,7 @@ export default {
     if (props.mode === 'multiple') {
       return h('div', {}, { default: () => (row[field] || []).length });
     } else {
-      return _vNodeDictTag(props.type, row[field]);
+      return h(DictTag, { dictType: props.type, value: row[field] });
     }
   },
 };

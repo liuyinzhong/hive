@@ -73,14 +73,3 @@ export const getLocalDictRow = (
   const item: any = list?.find((a: any) => a[key || 'value'] == value);
   return item || {};
 };
-
-export const _vNodeDictTag = (dictType: string, value: any, key?: string) => {
-  let item = getLocalDictRow(dictType, value, key);
-  return h(
-    Tag,
-    {
-      color: item.color,
-    },
-    { default: () => item.label || '' },
-  );
-};

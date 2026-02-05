@@ -43,6 +43,10 @@ const props = defineProps({
     type: [Number, String],
     required: true,
   },
+  showBtn: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 // 组件挂载时加载详情
@@ -203,7 +207,7 @@ const loadChangeLogList = (storyId: string) => {
   <div v-spinning="loading">
     <div>
       <a-row>
-        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="16">
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="16" :xxl="16">
           <a-typography-paragraph>
             <a-typography-title :level="4">
               <blockquote>
@@ -218,7 +222,7 @@ const loadChangeLogList = (storyId: string) => {
           <div v-html="detail.storyRichText" style="min-height: 300px"></div>
           <div v-html="detail.storyRichText" style="min-height: 300px"></div>
         </a-col>
-        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
           <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="基本信息" tab="基本信息">
               <BaseInfo :storyInfo="detail" />
@@ -261,7 +265,7 @@ const loadChangeLogList = (storyId: string) => {
       </a-row>
     </div>
 
-    <a-affix :offset-bottom="30">
+    <a-affix :offset-bottom="30" v-if="showBtn">
       <div class="text-center">
         <VbenButtonGroup border size="large">
           <VbenButton @click="onBtnClick('添加任务')">

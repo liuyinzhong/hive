@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { bugListByStoryId, type DevBugApi } from '#/api/dev';
-import { _vNodeDictTag } from '#/dicts';
+import DictTag from '#/components/DictTag/index.vue';
 import { ref } from 'vue';
 
 /**
@@ -41,9 +41,9 @@ bugListByStoryId({
             </template>
 
             <template #description>
-              <component :is="_vNodeDictTag('BUG_STATUS', item.bugStatus)" />
-              <component :is="_vNodeDictTag('BUG_LEVEL', item.bugLevel)" />
-              <component :is="_vNodeDictTag('BUG_ENV', item.bugEnv)" />
+              <DictTag dictType="BUG_STATUS" :value="item.bugStatus" />
+              <DictTag dictType="BUG_LEVEL" :value="item.bugLevel" />
+              <DictTag dictType="BUG_ENV" :value="item.bugEnv" />
             </template>
 
             <template #avatar>

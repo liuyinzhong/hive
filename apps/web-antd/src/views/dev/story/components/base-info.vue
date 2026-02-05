@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { type DevStoryApi } from '#/api/dev';
-import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
-import { _vNodeDictTag } from '#/dicts';
-
+import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
+import DictTag from '#/components/DictTag/index.vue';
+import { computed } from 'vue';
 /**
  * 基本信息组件
  * @property {Object} storyInfo - 需求信息对象
@@ -14,10 +14,7 @@ const props = defineProps({
   },
 });
 
-let userList = UserAvatarGroup.renderTableDefault(
-  { name: 'UserAvatarGroup', props: { size: 'small' } },
-  { row: props.storyInfo },
-);
+let userList = computed(() => props.storyInfo.userList || []);
 </script>
 <template>
   <a-descriptions :column="1" bordered size="small">
@@ -31,16 +28,16 @@ let userList = UserAvatarGroup.renderTableDefault(
       {{ storyInfo.moduleTitle || '-' }}
     </a-descriptions-item>
     <a-descriptions-item label="需求来源">
-      <component :is="_vNodeDictTag('STORY_SOURCE', storyInfo.source)" />
+      <DictTag dictType="STORY_SOURCE" :value="storyInfo.source" />
     </a-descriptions-item>
     <a-descriptions-item label="需求类型">
-      <component :is="_vNodeDictTag('STORY_TYPE', storyInfo.storyType)" />
+      <DictTag dictType="STORY_TYPE" :value="storyInfo.storyType" />
     </a-descriptions-item>
     <a-descriptions-item label="需求优先级">
-      <component :is="_vNodeDictTag('STORY_LEVEL', storyInfo.storyLevel)" />
+      <DictTag dictType="STORY_LEVEL" :value="storyInfo.storyLevel" />
     </a-descriptions-item>
     <a-descriptions-item label="参与人">
-      <component :is="userList" />
+      <UserAvatarGroup :userList="userList" />
     </a-descriptions-item>
   </a-descriptions>
 </template>

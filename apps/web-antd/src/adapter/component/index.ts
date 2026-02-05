@@ -96,10 +96,6 @@ const AiEditor = defineAsyncComponent(
   () => import('#/components/aieditor/index.vue'),
 );
 
-const UserSelect = defineAsyncComponent(
-  () => import('#/components/UserSelect/index.vue'),
-);
-
 const ColorSelect = defineAsyncComponent(
   () => import('#/components/ColorSelect/index.vue'),
 );
@@ -524,7 +520,6 @@ export type ComponentType =
   | 'TreeSelect'
   | 'Upload'
   | 'AiEditor'
-  | 'UserSelect'
   | 'ColorSelect'
   | BaseFormComponentType;
 
@@ -590,7 +585,6 @@ async function initComponentAdapter() {
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload: withPreviewUpload(),
     AiEditor,
-    UserSelect: withDefaultPlaceholder(UserSelect, 'select'),
     ColorSelect: withDefaultPlaceholder(ColorSelect, 'select'),
   };
 

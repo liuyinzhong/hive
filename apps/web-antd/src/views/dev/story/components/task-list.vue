@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { taskListByStoryId, type DevTaskApi } from '#/api/dev';
-import { _vNodeDictTag } from '#/dicts';
+import DictTag from '#/components/DictTag/index.vue';
 import { ref } from 'vue';
 
 /**
@@ -41,8 +41,8 @@ taskListByStoryId({
             </template>
 
             <template #description>
-              <component :is="_vNodeDictTag('TASK_STATUS', item.taskStatus)" />
-              <component :is="_vNodeDictTag('TASK_TYPE', item.taskType)" />
+              <DictTag dictType="TASK_STATUS" :value="item.taskStatus" />
+              <DictTag dictType="TASK_TYPE" :value="item.taskType" />
               <a-tag :color="item.percent > 100 ? 'warning' : 'success'">
                 {{ item.percent }}%
               </a-tag>

@@ -19,6 +19,9 @@ const [Drawer, DrawerApi] = useVbenDrawer({
       storyInfo.value = DrawerApi.getData();
     }
   },
+  onConfirm: () => {
+    window.open(`/dev/story/detail/${storyInfo.value.storyNum}`);
+  },
 });
 
 /**
@@ -33,6 +36,6 @@ const storyInfo = ref<DevStoryApi.DevStoryFace>({
 </script>
 <template>
   <Drawer title="需求详情" class="w-[45%]">
-    <StoryDetail :storyNum="storyInfo.storyNum" />
+    <StoryDetail :storyNum="storyInfo.storyNum" :showBtn="false" />
   </Drawer>
 </template>
