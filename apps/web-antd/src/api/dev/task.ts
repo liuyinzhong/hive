@@ -21,6 +21,8 @@ export namespace DevTaskApi {
     taskType?: number;
     planHours?: number;
     actualHours?: number;
+    /* 任务进度百分比 0~100 */
+    percent?: number;
     endDate?: string;
     startDate?: string;
     createDate?: string;
@@ -45,4 +47,14 @@ async function createTask(data: Omit<DevTaskApi.DevTaskFace, 'taskId'>) {
   return requestClient.post('/dev/task', data);
 }
 
-export { getTaskList, createTask };
+/* 根据storyId查询任务 */
+async function taskListByStoryId(params: Recordable<any>) {
+  return requestClient.get<Array<DevTaskApi.DevTaskFace>>(
+    '/dev/task/taskListByStoryId',
+    {
+      params,
+    },
+  );
+}
+
+export { getTaskList, createTask, taskListByStoryId };

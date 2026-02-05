@@ -683,7 +683,7 @@ let datalist = [
     value: 99,
     type: 'TASK_STATUS',
     remark: null,
-    color: null,
+    color: 'success',
     disabled: 0,
     createDate: '2026/01/30 01:39:20',
     updateDate: '2026/01/30 01:39:20',

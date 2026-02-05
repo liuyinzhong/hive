@@ -69,7 +69,7 @@ function generateMockDataList(count: number) {
       bugNum: 1000 + i,
       bugRichText: faker.lorem.paragraph(),
       bugStatus: faker.helpers.arrayElement([0, 10, 20, 30, 99]),
-      bugLevel: faker.helpers.arrayElement([0, 10, 20, 30, 40]),
+      bugLevel: faker.helpers.arrayElement([0, 10, 20, 30]),
       bugSource: faker.helpers.arrayElement([
         0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,
       ]),

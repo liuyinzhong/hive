@@ -12,6 +12,8 @@ defineOptions({
  * 抽屉实例
  */
 const [Drawer, DrawerApi] = useVbenDrawer({
+  cancelText: '关闭',
+  confirmText: '新窗口',
   onOpenChange: (open: boolean) => {
     if (open) {
       storyInfo.value = DrawerApi.getData();

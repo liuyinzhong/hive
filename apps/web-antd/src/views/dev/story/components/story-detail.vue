@@ -22,6 +22,8 @@ import {
 
 import AiEditor from '#/components/aieditor/index.vue';
 import BaseInfo from './base-info.vue';
+import TaskList from './task-list.vue';
+import BugList from './bug-list.vue';
 import addTaskModal from '#/views/dev/task/add-modal.vue';
 import addBugModal from '#/views/dev/bug/add-modal.vue';
 import nextModal from '#/views/dev/story/next-modal.vue';
@@ -183,10 +185,6 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
 
 //#region 变更记录
 const changeLogList = ref<DevChangeApi.DevChangeFace[]>([]);
-
-/**
- * 加载变更记录
- */
 const loadChangeLogList = (storyId: string) => {
   if (!storyId) {
     return;
@@ -199,14 +197,13 @@ const loadChangeLogList = (storyId: string) => {
     changeLogList.value = res || [];
   });
 };
-
 //#endregion
 </script>
 <template>
   <div v-spinning="loading">
     <div>
       <a-row>
-        <a-col :span="18">
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="16">
           <a-typography-paragraph>
             <a-typography-title :level="4">
               <blockquote>
@@ -221,16 +218,16 @@ const loadChangeLogList = (storyId: string) => {
           <div v-html="detail.storyRichText" style="min-height: 300px"></div>
           <div v-html="detail.storyRichText" style="min-height: 300px"></div>
         </a-col>
-        <a-col :span="6">
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
           <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="基本信息" tab="基本信息">
               <BaseInfo :storyInfo="detail" />
             </a-tab-pane>
             <a-tab-pane key="关联任务" tab="关联任务">
-              Content of Tab Pane 3
+              <TaskList :storyId="detail.storyId ?? ''" />
             </a-tab-pane>
             <a-tab-pane key="关联缺陷" tab="关联缺陷">
-              Content of Tab Pane 4
+              <BugList :storyId="detail.storyId ?? ''" />
             </a-tab-pane>
           </a-tabs>
           <br />
@@ -246,12 +243,15 @@ const loadChangeLogList = (storyId: string) => {
                 v-for="item in changeLogList"
                 :key="item.changeId"
               >
-                <p>{{ item.createDate }}</p>
-                <span style="margin-right: 8px">{{ item.creatorName }}</span>
-                <a-tag>
-                  {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeType)
-                  }}{{ getLocalDictText('CHANGE_TYPE', item.fkType) }}
-                </a-tag>
+                <div>
+                  {{ item.createDate }}
+                  <span style="margin-right: 8px">{{ item.creatorName }}</span>
+                  <a-tag>
+                    {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeType) }}
+                    {{ getLocalDictText('CHANGE_TYPE', item.fkType) }}
+                  </a-tag>
+                </div>
+
                 <div v-html="item.changeRichText"></div>
               </a-timeline-item>
             </a-timeline>

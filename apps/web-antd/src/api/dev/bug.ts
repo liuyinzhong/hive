@@ -66,4 +66,14 @@ async function createBug(data: Omit<DevBugApi.DevBugFace, 'bugId'>) {
   return requestClient.post('/dev/bug', data);
 }
 
-export { getBugList, createBug };
+/* 根据storyId查询Bug */
+async function bugListByStoryId(params: Recordable<any>) {
+  return requestClient.get<Array<DevBugApi.DevBugFace>>(
+    '/dev/bug/bugListByStoryId',
+    {
+      params,
+    },
+  );
+}
+
+export { getBugList, createBug, bugListByStoryId };

@@ -109,10 +109,10 @@ function onActionClick({
       break;
     }
     case 'storyTitle': {
-      router.push({
+      /* router.push({
         path: `/dev/story/detail/${row.storyNum}`,
-      });
-      // DetailDrawerApi.setData(row).open();
+      }); */
+      DetailDrawerApi.setData(row).open();
       break;
     }
   }

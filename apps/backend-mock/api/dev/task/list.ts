@@ -93,13 +93,18 @@ function generateMockDataList(count: number) {
       realName: userInfo.realName,
       avatar: userInfo.avatar,
     };
+    /* 使用 faker 计算进度 保留2位小数 并返回number类型*/
+    dataItem.percent = Number(
+      ((dataItem.actualHours / dataItem.planHours) * 100).toFixed(2),
+    );
+
     dataList.push(dataItem);
   }
 
   return dataList;
 }
 
-export const mockTaskData = generateMockDataList(100);
+export const mockTaskData = generateMockDataList(1000);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

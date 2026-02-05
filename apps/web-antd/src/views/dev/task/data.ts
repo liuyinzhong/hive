@@ -423,16 +423,12 @@ export function useColumns(
       },
     },
     {
-      field: 'actualHours',
+      field: 'percent',
       title: '任务进度',
       align: 'center',
-      width: 100,
+      width: 130,
       cellRender: {
         name: 'CellProgress',
-        props: {
-          totalNumField: 'planHours',
-          currentNumField: 'actualHours',
-        },
       },
     },
     {
