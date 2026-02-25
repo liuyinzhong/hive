@@ -19,7 +19,7 @@ export namespace DevStoryApi {
     storyRichText?: string;
     files?: string;
     storyType?: number;
-    storyStatus?: number;
+    storyStatus?: number | any;
     storyLevel?: number;
     /** 关联版本id */
     versionId?: string;

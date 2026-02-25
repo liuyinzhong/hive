@@ -20,12 +20,7 @@ const [Drawer, DrawerApi] = useVbenDrawer({
   },
 });
 
-const bugInfo = ref<DevBugApi.DevBugFace>({
-  bugId: '',
-  pid: '',
-  bugTitle: undefined,
-  bugNum: 0,
-});
+const bugInfo = ref<DevBugApi.DevBugFace>({});
 </script>
 <template>
   <Drawer title="缺陷详情" class="w-[45%]">

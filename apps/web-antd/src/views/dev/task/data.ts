@@ -133,19 +133,21 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyId',
       label: '关联需求',
       formItemClass: 'col-span-3',
-      renderComponentContent: () => {
-        return {
-          option: (optionItem: any) => {
-            return h(Flex, { gap: 10 }, [
-              h(Tag, {}, '#' + optionItem.storyNum || ''),
-              h(TypographyText, { ellipsis: true }, optionItem.label || ''),
-              h(UserAvatarGroup, {
-                userList: optionItem.userList || [],
-              }),
-            ]);
-          },
-        };
-      },
+      renderComponentContent: () => ({
+        option: (optionItem: any) => {
+          return h(Flex, { gap: 10, align: 'center' }, [
+            h(
+              Tag,
+              { style: { height: 'fit-content' } },
+              '#' + optionItem.storyNum || '',
+            ),
+            h(TypographyText, { ellipsis: true }, optionItem.label || ''),
+            h(UserAvatarGroup, {
+              userList: optionItem.userList || [],
+            }),
+          ]);
+        },
+      }),
       componentProps: (value, formApi) => {
         if (!value.versionId) {
           return {};

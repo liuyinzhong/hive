@@ -26,6 +26,7 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@tanstack/vue-query": "catalog:",
     "@faker-js/faker": "catalog:",
     "@vben-core/composables": "workspace:*",
     "@vben-core/menu-ui": "workspace:*",

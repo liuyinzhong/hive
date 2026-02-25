@@ -27,12 +27,7 @@ const [Drawer, DrawerApi] = useVbenDrawer({
 /**
  * 当前打开的需求信息
  */
-const storyInfo = ref<DevStoryApi.DevStoryFace>({
-  storyId: '',
-  pid: '',
-  storyTitle: undefined,
-  storyNum: 0,
-});
+const storyInfo = ref<DevStoryApi.DevStoryFace>({});
 </script>
 <template>
   <Drawer title="需求详情" class="w-[45%]">

@@ -26,7 +26,7 @@ function generateMockDataList(count: number) {
     const dataItem: Record<string, any> = {
       versionId: faker.string.uuid(),
       version: `1.${faker.number.int({ min: 0, max: 9 })}.${faker.number.int({ min: 0, max: 9 })}`,
-      versionType: faker.helpers.arrayElement(['0', '10', '20']),
+      versionType: faker.helpers.arrayElement([0, 10, 20]),
       remark: faker.lorem.sentence(),
       creatorId: faker.string.uuid(),
       creatorName: faker.person.fullName(),
@@ -36,7 +36,7 @@ function generateMockDataList(count: number) {
       endDate: '',
       startDate: '',
       projectId: faker.helpers.arrayElement(projectIds),
-      releaseStatus: faker.helpers.arrayElement(['0', '10', '20', '30', '40']),
+      releaseStatus: faker.helpers.arrayElement([0, 10, 20, 30, 40]),
       releaseDate: '',
       changeLogRichText: faker.lorem.paragraph(),
       changeLog: faker.lorem.paragraph(),

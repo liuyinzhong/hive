@@ -6,12 +6,16 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  maxCount: {
+    type: Number,
+    default: 3,
+  },
 });
 
 const data: any = computed(() => props.userList);
 </script>
 <template>
-  <a-avatar-group maxCount="3">
+  <a-avatar-group :maxCount="maxCount">
     <a-tooltip
       v-for="item in data"
       :key="item.userId"

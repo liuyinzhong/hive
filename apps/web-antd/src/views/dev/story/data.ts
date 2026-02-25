@@ -315,17 +315,18 @@ export function useColumns(
       field: 'storyTitle',
       title: '需求名称',
       minWidth: 200,
-      cellRender: {
+      slots: { default: 'storyTitle' },
+      /* cellRender: {
         name: 'CellLink',
         events: {
           click: (val: any) => {
             onActionClick && onActionClick({ code: 'storyTitle', row: val });
           },
         },
-      },
+      }, */
     },
     {
-      width: 120,
+      width: 165,
       field: 'userList',
       showOverflow: true,
       title: '参与人员',
@@ -333,6 +334,7 @@ export function useColumns(
         name: 'UserSelect',
         props: {
           mode: 'multiple',
+          maxCount: 6,
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
@@ -438,7 +440,11 @@ export function useColumns(
             icon: 'lucide:badge-plus',
             tips: '添加任务',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              if (row.versionId) {
+              if (
+                row.versionId &&
+                row.storyStatus > 0 &&
+                row.storyStatus < 99
+              ) {
                 return false;
               } else {
                 return true;
@@ -451,7 +457,7 @@ export function useColumns(
             icon: 'lucide:bug',
             tips: '添加缺陷',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              if (row.versionId) {
+              if (row.versionId && row.storyStatus > 0) {
                 return false;
               } else {
                 return true;
