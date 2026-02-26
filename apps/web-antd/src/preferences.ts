@@ -12,4 +12,8 @@ export const overridesPreferences = defineOverridesPreferences({
     checkUpdatesInterval: 60,
     enableCheckUpdates: false,
   },
+  widget: {
+    languageToggle: true,
+    timezone: true,
+  },
 });
