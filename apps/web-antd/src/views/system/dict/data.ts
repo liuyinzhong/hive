@@ -99,8 +99,8 @@ export function useFormSchema(): VbenFormSchema[] {
         optionType: 'button',
       },
       defaultValue: 1,
-      fieldName: 'disabled',
-      label: '禁用状态',
+      fieldName: 'status',
+      label: '状态',
     },
     {
       component: 'Textarea',
@@ -163,7 +163,7 @@ export function useColumns(
     },
     {
       cellRender: { name: 'CellSwitch' },
-      field: 'disabled',
+      field: 'status',
       title: $t('system.dept.status'),
     },
 
@@ -194,6 +194,10 @@ export function useColumns(
           {
             code: 'append',
             text: '新增下级',
+            disabled: (row: SystemDictApi.SystemDictFace, level: number) => {
+              // 字典不允许有3级
+              return level > 0;
+            },
           },
           'edit', // 默认的编辑按钮
           {

@@ -4886,18 +4886,18 @@
           },
           {
             "id": "D48964FB-69EA-48D1-84D3-A5DF5B5C9693",
-            "defKey": "disabled",
-            "defName": "禁用状态",
+            "defKey": "status",
+            "defName": "状态 0禁用 1启用",
             "intro": "",
-            "baseDataType": "TINYINT",
+            "baseDataType": "INT",
             "bizDomainType": "",
-            "dbDataType": "TINYINT",
+            "dbDataType": "INT",
             "dataLen": "",
             "numScale": "",
             "primaryKey": 0,
             "notNull": 0,
             "autoIncrement": 0,
-            "defaultValue": "0",
+            "defaultValue": "1",
             "stndDictId": "",
             "stndFieldId": "",
             "attr1": "",
@@ -17281,7 +17281,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1772101415344,
-  "signature": "1b4e24c95592aafa87188a638e93f53c",
+  "updateTime": 1772173237208,
+  "signature": "e1ba2c68f01a80ec8995d9ec2b1a9622",
   "branchId": "1111"
 }

@@ -13,6 +13,7 @@ import { IconifyIcon } from '@vben/icons';
  * @param {Object} options - 操作项配置
  * @param {Object} row - 当前行数据
  * @param {Object} column - 当前列配置
+ * @param {number} level - 操作行的层级，用于树表格
  * @returns {VNode} - 渲染后的操作列组件
  * @description 操作列组件用于渲染操作按钮，如编辑、删除等。
  *
@@ -20,7 +21,20 @@ import { IconifyIcon } from '@vben/icons';
  */
 
 export default {
-  renderTableDefault({ attrs, options, props }: any, { column, row }: any) {
+  renderTableDefault(
+    { attrs, options, props }: any,
+    {
+      row,
+      rowIndex,
+      $rowIndex,
+      column,
+      columnIndex,
+      $columnIndex,
+      _columnIndex,
+      $table,
+      level,
+    }: any,
+  ) {
     const defaultProps = { size: 'small', type: 'link', ...props };
     let align = 'end';
     switch (column.align) {
@@ -63,7 +77,7 @@ export default {
       .map((opt: Recordable<any>) => {
         const optBtn: Recordable<any> = {};
         Object.keys(opt).forEach((key) => {
-          optBtn[key] = isFunction(opt[key]) ? opt[key](row) : opt[key];
+          optBtn[key] = isFunction(opt[key]) ? opt[key](row, level) : opt[key];
         });
         return optBtn;
       })

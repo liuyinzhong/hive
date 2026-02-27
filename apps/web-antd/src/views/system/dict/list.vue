@@ -41,6 +41,8 @@ const [Grid, gridApi] = useVbenVxeGrid({
     treeConfig: {
       parentField: 'pid',
       rowField: 'id',
+      childrenField: 'children',
+      showLine: false,
       transform: false,
     },
     proxyConfig: {
