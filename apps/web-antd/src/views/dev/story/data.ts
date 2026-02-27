@@ -315,15 +315,14 @@ export function useColumns(
       field: 'storyTitle',
       title: '需求名称',
       minWidth: 200,
-      slots: { default: 'storyTitle' },
-      /* cellRender: {
+      cellRender: {
         name: 'CellLink',
         events: {
           click: (val: any) => {
             onActionClick && onActionClick({ code: 'storyTitle', row: val });
           },
         },
-      }, */
+      },
     },
     {
       width: 165,

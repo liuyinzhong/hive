@@ -12,6 +12,13 @@ const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   schema: useFormModuleSchema(),
   showDefaultActions: false,
+  // 所有表单项共用，可单独在表单内覆盖
+  commonConfig: {
+    // 所有表单项
+    componentProps: {
+      class: 'w-full',
+    },
+  },
 });
 const [Modal, modalApi] = useVbenModal({
   fullscreenButton: false,

@@ -159,18 +159,17 @@ function openAddModuleModal(row: any) {
                     status="processing"
                   />
                 </span>
-                <span>
-                  <a-button type="link" size="small" @click="editProject(item)">
-                    <span class="icon-[lucide--pencil-line]"></span>
-                  </a-button>
-
-                  <a-button
-                    type="link"
-                    size="small"
-                    @click="openAddModuleModal(item)"
-                  >
-                    <span class="icon-[lucide--git-branch-plus]"></span>
-                  </a-button>
+                <span @click.stop="">
+                  <a-space warp>
+                    <a-button type="dashed" size="small"> 统计 </a-button>
+                    <a-button
+                      type="dashed"
+                      size="small"
+                      @click="editProject(item)"
+                    >
+                      编辑
+                    </a-button>
+                  </a-space>
                 </span>
               </div>
             </div>
@@ -179,6 +178,14 @@ function openAddModuleModal(row: any) {
       </a-col>
       <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
         <a-card title="模块">
+          <template #extra>
+            <a-button
+              type="primary"
+              @click="openAddModuleModal({ projectId: activeProjectId.value })"
+            >
+              添加
+            </a-button>
+          </template>
           <Grid />
         </a-card>
       </a-col>

@@ -6253,7 +6253,52 @@
           }
         ],
         "indexes": [],
-        "refers": []
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "version_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_version",
+            "refFieldKey": "version_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "module_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_module",
+            "refFieldKey": "module_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "story_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_story",
+            "refFieldKey": "story_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "project_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_project",
+            "refFieldKey": "project_id",
+            "orderValue": 1
+          }
+        ]
       },
       {
         "id": "1B4948A7-7453-4ED5-8FF9-BAC19469DFE0",
@@ -6607,7 +6652,19 @@
           }
         ],
         "indexes": [],
-        "refers": []
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "project_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_project",
+            "refFieldKey": "project_id",
+            "orderValue": 1
+          }
+        ]
       },
       {
         "id": "366E937F-AD0A-43D7-AF7C-8EE8807C391B",
@@ -7858,7 +7915,42 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "module_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_module",
+            "refFieldKey": "module_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "version_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_version",
+            "refFieldKey": "version_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "project_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_project",
+            "refFieldKey": "project_id",
+            "orderValue": 1
+          }
+        ]
       },
       {
         "id": "E433DE34-FA9B-474D-88AF-B8C617E0F4AB",
@@ -8173,7 +8265,8 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": []
       },
       {
         "id": "18E0AD44-F344-49C2-8FB8-A7E250E5BDB5",
@@ -8906,7 +8999,53 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "project_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_project",
+            "refFieldKey": "project_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "module_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_module",
+            "refFieldKey": "module_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "story_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_story",
+            "refFieldKey": "story_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "version_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_version",
+            "refFieldKey": "version_id",
+            "orderValue": 1
+          }
+        ]
       },
       {
         "id": "559C1598-EA41-4894-A67D-F89851F3BB5E",
@@ -9145,7 +9284,31 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "user_id",
+            "refSchemaName": null,
+            "refEntityKey": "sys_user",
+            "refFieldKey": "user_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "role_id",
+            "refSchemaName": null,
+            "refEntityKey": "sys_role",
+            "refFieldKey": "role_id",
+            "orderValue": 1
+          }
+        ]
       },
       {
         "id": "B4D374E8-C7CB-4D52-A6F9-546C22AE4D70",
@@ -9422,7 +9585,8 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": []
       },
       {
         "id": "C8DE02EF-3980-428E-BEE4-67BCA6C06A61",
@@ -10421,7 +10585,8 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": []
       },
       {
         "id": "9E634B8E-8C96-492B-99AC-E200028EBE5A",
@@ -10736,7 +10901,8 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": []
       },
       {
         "id": "0AF2644E-67D6-4EFB-8F40-1E3A29C02BE8",
@@ -10975,7 +11141,31 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "role_id",
+            "refSchemaName": null,
+            "refEntityKey": "sys_role",
+            "refFieldKey": "role_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "menu_id",
+            "refSchemaName": null,
+            "refEntityKey": "sys_menu",
+            "refFieldKey": "menu_id",
+            "orderValue": 1
+          }
+        ]
       },
       {
         "id": "C06AE9E4-207F-4B3C-A2FE-48A734B3B79D",
@@ -11374,7 +11564,8 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": []
       },
       {
         "id": "B58CD3DE-77F0-4903-A9D8-57A0836C9A39",
@@ -11383,7 +11574,8 @@
         "defKey": "graph LR",
         "fields": [],
         "intro": "    A[提交BUG] --> B[确认状态: 待确认<br>BUG状态: null]    B --> C{确认决策}    C -->|确认有效| D[确认状态: 已确认<br>BUG状态: 待修复]    C -->|确认为无效| E[确认状态: 已拒绝/重复<br>BUG状态: 已关闭]    D --> F[开发修复: BUG状态: 已修复]    F --> G{测试验证}    G -->|验证通过| H[BUG状态: 已关闭]    G -->|验证失败| I[BUG状态: 待修复]    subgraph 逻辑计算        I -.-> J(系统计算历史: <br>存在 10 -> 0 的记录<br>标记为“已重新打开”)    end    H -->|End| Z([生命周期结束])    J -.->|仅作为显示和统计| IC_NEW_MODEL_1-概念模型_1",
-        "indexes": []
+        "indexes": [],
+        "refers": []
       },
       {
         "id": "E1633388-E504-4B2B-A4BB-C518430E8843",
@@ -11622,7 +11814,31 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "user_id",
+            "refSchemaName": null,
+            "refEntityKey": "sys_user",
+            "refFieldKey": "user_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "dept_id",
+            "refSchemaName": null,
+            "refEntityKey": "sys_dept",
+            "refFieldKey": "dept_id",
+            "orderValue": 1
+          }
+        ]
       },
       {
         "id": "996E311D-A997-4DF1-A75C-3B5F71B17F2F",
@@ -11861,7 +12077,31 @@
             "origin": "UI"
           }
         ],
-        "indexes": []
+        "indexes": [],
+        "refers": [
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "story_id",
+            "refSchemaName": null,
+            "refEntityKey": "dev_story",
+            "refFieldKey": "story_id",
+            "orderValue": 1
+          },
+          {
+            "type": "many-to-one",
+            "defKey": "",
+            "defName": "",
+            "intro": "",
+            "myFieldKey": "user_id",
+            "refSchemaName": null,
+            "refEntityKey": "sys_user",
+            "refFieldKey": "user_id",
+            "orderValue": 1
+          }
+        ]
       }
     ],
     "diagrams": [
@@ -17041,7 +17281,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1770200141333,
-  "signature": "cb470009b80b28bec1767d4467b0fb28",
+  "updateTime": 1772101415344,
+  "signature": "1b4e24c95592aafa87188a638e93f53c",
   "branchId": "1111"
 }

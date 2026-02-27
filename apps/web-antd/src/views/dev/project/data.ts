@@ -74,6 +74,18 @@ export function useFormModuleSchema(): VbenFormSchema[] {
         showCount: true,
       },
     },
+    {
+      component: 'InputNumber',
+      label: '模块排序',
+      defaultValue: 0,
+      fieldName: 'sort',
+      componentProps: {
+        step: 1,
+        precision: 0,
+        min: 0,
+      },
+      rules: 'required',
+    },
   ];
 }
 

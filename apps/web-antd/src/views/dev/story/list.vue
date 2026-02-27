@@ -209,12 +209,6 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
           批量新建
         </Button>
       </template>
-
-      <template #storyTitle="{ row }">
-        <a @click="onActionClick({ code: 'storyTitle', row })">
-          {{ row.storyTitle }}
-        </a>
-      </template>
     </Grid>
     <AddFormModal />
     <BatchFormModal />

@@ -19,3 +19,13 @@ export const LucideSettings = createIconifyIcon('lucide:settings');
 export const LucidePencilLine = createIconifyIcon('lucide:pencil-line');
 
 export const LucideEllipsis = createIconifyIcon('lucide:ellipsis');
+
+export const LucideBug = createIconifyIcon('lucide:bug');
+
+export const LucideChartBarStacked = createIconifyIcon(
+  'lucide:chart-bar-stacked',
+);
+
+export const LucideFilm = createIconifyIcon('lucide:film');
+
+export const LucideHourglass = createIconifyIcon('lucide:hourglass');
