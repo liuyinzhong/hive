@@ -55,7 +55,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       custom: true,
       refresh: true,
     },
-  } as any,
+  } as VxeTableGridOptions<SystemRoleApi.SystemRoleFace>,
 });
 
 function onActionClick(e: OnActionClickParams<SystemRoleApi.SystemRoleFace>) {

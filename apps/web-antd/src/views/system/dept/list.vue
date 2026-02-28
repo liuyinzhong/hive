@@ -116,7 +116,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       rowField: 'id',
       transform: false,
     },
-  } as any,
+  } as VxeTableGridOptions<SystemDeptApi.SystemDeptFace>,
 });
 
 /**

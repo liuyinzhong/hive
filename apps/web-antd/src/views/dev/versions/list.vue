@@ -36,7 +36,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
         },
       },
     },
-  } as any,
+  } as VxeTableGridOptions<DevVersionApi.DevVersionFace>,
   gridEvents: {},
 });
 

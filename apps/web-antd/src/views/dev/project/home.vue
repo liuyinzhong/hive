@@ -44,7 +44,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
         },
       },
     },
-  } as any,
+  } as VxeTableGridOptions<DevModuleApi.DevModuleFace>,
   gridEvents: {
     rowDragstart: (e: any) => {},
     rowDragend: ({ oldRow, _index }: any) => {
