@@ -117,7 +117,6 @@ function generateMockDataList(count: number) {
 }
 
 export const mockTaskData = generateMockDataList(10000);
-console.log(mockTaskData);
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
   if (!userinfo) {

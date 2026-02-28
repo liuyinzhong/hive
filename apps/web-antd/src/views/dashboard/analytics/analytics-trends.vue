@@ -4,7 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
-import { getTaskFindDay } from '#/api/dev/task';
+import { getTaskFindDay } from '#/api/statistics/dev';
 
 const chartRef = ref<EchartsUIType>();
 const { renderEcharts } = useEcharts(chartRef);

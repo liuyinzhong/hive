@@ -29,3 +29,5 @@ export const LucideChartBarStacked = createIconifyIcon(
 export const LucideFilm = createIconifyIcon('lucide:film');
 
 export const LucideHourglass = createIconifyIcon('lucide:hourglass');
+
+export const LucideFileStack = createIconifyIcon('lucide:file-stack');

@@ -12,6 +12,7 @@ import {
   LucideBug,
   LucideChartBarStacked,
   LucideFilm,
+  LucideFileStack,
 } from '@vben/icons';
 
 import AnalyticsTrends from './analytics-trends.vue';
@@ -20,27 +21,45 @@ import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
 
-const overviewItems: AnalysisOverviewItem[] = [
+import { getWorkspaceEnum } from '#/api/statistics/dev';
+import { onMounted, ref } from 'vue';
+
+const overviewItems: any = ref([
   {
     icon: LucideFilm,
     title: '需求',
     totalTitle: '总需求数',
-    totalValue: 120_000,
-    value: 2000,
+    totalValue: 0,
+    totalValueFindKey: 'storyTotalNum',
+    value: 0,
+    valueFindKey: 'storyNum',
   },
   {
     icon: LucideChartBarStacked,
     title: '任务',
     totalTitle: '总任务数',
-    totalValue: 500_000,
-    value: 20_000,
+    totalValue: 0,
+    totalValueFindKey: 'taskTotalNum',
+    value: 0,
+    valueFindKey: 'taskNum',
   },
   {
     icon: LucideBug,
     title: '缺陷',
     totalTitle: '总缺陷数',
-    totalValue: 120_000,
-    value: 8000,
+    totalValueFindKey: 'bugTotalNum',
+    totalValue: 0,
+    valueFindKey: 'bugNum',
+    value: 0,
+  },
+  {
+    icon: LucideFileStack,
+    title: '版本',
+    totalTitle: '总版本数',
+    totalValueFindKey: 'versionTotalNum',
+    totalValue: 0,
+    valueFindKey: 'versionNum',
+    value: 0,
   },
   {
     icon: LucideHourglass,
@@ -49,7 +68,7 @@ const overviewItems: AnalysisOverviewItem[] = [
     totalValue: 50_000,
     value: 5000,
   },
-];
+]);
 
 const chartTabs: TabOption[] = [
   {
@@ -61,6 +80,15 @@ const chartTabs: TabOption[] = [
     value: 'visits',
   },
 ];
+
+onMounted(() => {
+  getWorkspaceEnum({}).then((res) => {
+    overviewItems.value.forEach((item: any) => {
+      item.totalValue = res?.[item.totalValueFindKey] || 0;
+      item.value = res?.[item.valueFindKey] || 0;
+    });
+  });
+});
 </script>
 
 <template>

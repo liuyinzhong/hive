@@ -66,25 +66,4 @@ async function taskListByStoryId(params: Recordable<any>) {
   );
 }
 
-/* 统计任务趋势 */
-async function getTaskFindDay(params: Recordable<any>) {
-  return requestClient.get('/dev/task/getTaskFindDay', {
-    params,
-  });
-}
-
-/* 统计任务总量。以年-月统计数量，拼凑柱状图 */
-async function getTaskFindYear(params: Recordable<any>) {
-  return requestClient.get('/dev/task/getTaskFindYear', {
-    params,
-  });
-}
-
-export {
-  getTaskList,
-  createTask,
-  taskListByStoryId,
-  getTaskDetail,
-  getTaskFindDay,
-  getTaskFindYear,
-};
+export { getTaskList, createTask, taskListByStoryId, getTaskDetail };
