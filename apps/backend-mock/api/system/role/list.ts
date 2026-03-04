@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler, getQuery } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
-import { getMenuIds, MOCK_MENU_LIST } from '~/utils/mock-data';
+import { MOCK_MENU_LIST_V2_IDS } from '~/api/menu/menuJSON';
+
 import { unAuthorizedResponse, usePageResponseSuccess } from '~/utils/response';
 
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
@@ -14,8 +15,6 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
-const menuIds = getMenuIds(MOCK_MENU_LIST);
-
 function generateMockDataList(count: number) {
   const dataList = [];
 
@@ -27,7 +26,7 @@ function generateMockDataList(count: number) {
       createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
       ),
-      permissions: faker.helpers.arrayElements(menuIds),
+      permissions: faker.helpers.arrayElements(MOCK_MENU_LIST_V2_IDS),
       remark: faker.lorem.sentence(),
     };
 

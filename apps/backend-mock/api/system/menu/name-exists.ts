@@ -1,6 +1,6 @@
 import { eventHandler, getQuery } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
-import { MOCK_MENU_LIST } from '~/utils/mock-data';
+import { MOCK_MENU_LIST_V2 } from '~/api/menu/menuJSON';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
 const namesMap: Record<string, any> = {};
@@ -13,7 +13,7 @@ function getNames(menus: any[]) {
     }
   });
 }
-getNames(MOCK_MENU_LIST);
+getNames(MOCK_MENU_LIST_V2);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

@@ -50,6 +50,7 @@ const schema: VbenFormSchema[] = [
     component: 'Input',
     fieldName: 'name',
     label: $t('system.menu.menuName'),
+    help: $t('system.menu.menuNameHelp'),
     rules: z
       .string()
       .min(2, $t('ui.formRules.minLength', [$t('system.menu.menuName'), 2]))
@@ -114,6 +115,7 @@ const schema: VbenFormSchema[] = [
       };
     },
     fieldName: 'meta.title',
+    help: $t('system.menu.menuTitleHelp'),
     label: $t('system.menu.menuTitle'),
     rules: 'required',
   },
@@ -322,6 +324,63 @@ const schema: VbenFormSchema[] = [
     label: $t('system.menu.badgeVariants'),
   },
   {
+    component: 'InputNumber',
+    componentProps: {
+      precision: 0,
+      min: 0,
+      max: 9999,
+      step: 1,
+      allowClear: true,
+      class: 'w-full',
+    },
+    dependencies: {
+      show: (values) => {
+        return values.type == 'catalog' || values.type == 'menu';
+      },
+      triggerFields: ['type'],
+    },
+    fieldName: 'meta.order',
+    help: $t('system.menu.orderHelp'),
+    label: $t('system.menu.order'),
+  },
+  {
+    component: 'InputNumber',
+    componentProps: {
+      precision: 0,
+      min: 0,
+      max: 10,
+      step: 1,
+      allowClear: true,
+      class: 'w-full',
+    },
+    dependencies: {
+      show: (values) => {
+        return values.type == 'menu';
+      },
+      triggerFields: ['type'],
+    },
+    fieldName: 'meta.maxNumOfOpenTab',
+    help: $t('system.menu.maxNumOfOpenTabHelp'),
+    label: $t('system.menu.maxNumOfOpenTab'),
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      allowClear: true,
+      class: 'w-full',
+      placeholder: $t('system.menu.queryHelp', { json: '{id:1}' }),
+    },
+    dependencies: {
+      show: (values) => {
+        return values.type == 'menu';
+      },
+      triggerFields: ['type'],
+    },
+    fieldName: 'meta.query',
+    help: $t('system.menu.queryHelp', { json: '{id:1}' }),
+    label: $t('system.menu.query'),
+  },
+  {
     component: 'Divider',
     dependencies: {
       show: (values) => {
@@ -346,10 +405,28 @@ const schema: VbenFormSchema[] = [
       },
       triggerFields: ['type'],
     },
+    help: $t('system.menu.keepAliveHelp'),
     fieldName: 'meta.keepAlive',
     renderComponentContent() {
       return {
         default: () => $t('system.menu.keepAlive'),
+      };
+    },
+  },
+  {
+    component: 'Checkbox',
+    dependencies: {
+      show: (values) => {
+        return ['menu'].includes(values.type);
+      },
+      triggerFields: ['type'],
+    },
+    help: () =>
+      h('p', { style: { maxWidth: '200px' } }, $t('system.menu.domCachedHelp')),
+    fieldName: 'meta.domCached',
+    renderComponentContent() {
+      return {
+        default: () => $t('system.menu.domCached'),
       };
     },
   },
@@ -362,11 +439,39 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.affixTab',
+    help: $t('system.menu.affixTabHelp'),
     renderComponentContent() {
       return {
         default: () => $t('system.menu.affixTab'),
       };
     },
+  },
+  {
+    component: 'InputNumber',
+    dependencies: {
+      show: (values) => {
+        return ['menu'].includes(values.type);
+      },
+      disabled: (values) => {
+        if (!values.meta?.affixTab) {
+          values.meta.affixTabOrder = null;
+        }
+        return !values.meta?.affixTab;
+      },
+      triggerFields: ['type', 'meta.affixTab'],
+    },
+    colon: false,
+    componentProps: {
+      precision: 0,
+      min: 0,
+      max: 9999,
+      step: 1,
+      allowClear: true,
+      class: 'w-full',
+    },
+    fieldName: 'meta.affixTabOrder',
+    help: $t('system.menu.affixTabOrderHelp'),
+    label: $t('system.menu.affixTabOrder'),
   },
   {
     component: 'Checkbox',
@@ -377,6 +482,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.hideInMenu',
+    help: $t('system.menu.hideInMenuHelp'),
     renderComponentContent() {
       return {
         default: () => $t('system.menu.hideInMenu'),
@@ -392,6 +498,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.hideChildrenInMenu',
+    help: $t('system.menu.hideChildrenInMenuHelp'),
     renderComponentContent() {
       return {
         default: () => $t('system.menu.hideChildrenInMenu'),
@@ -407,6 +514,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.hideInBreadcrumb',
+    help: $t('system.menu.hideInBreadcrumbHelp'),
     renderComponentContent() {
       return {
         default: () => $t('system.menu.hideInBreadcrumb'),
@@ -422,9 +530,47 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.hideInTab',
+    help: $t('system.menu.hideInTabHelp'),
     renderComponentContent() {
       return {
         default: () => $t('system.menu.hideInTab'),
+      };
+    },
+  },
+  {
+    component: 'Checkbox',
+    dependencies: {
+      show: (values) => {
+        return ['menu'].includes(values.type);
+      },
+      triggerFields: ['type'],
+    },
+    fieldName: 'meta.noBasicLayout',
+    help: () =>
+      h(
+        'p',
+        { style: { maxWidth: '200px' } },
+        $t('system.menu.noBasicLayoutHelp'),
+      ),
+    renderComponentContent() {
+      return {
+        default: () => $t('system.menu.noBasicLayout'),
+      };
+    },
+  },
+  {
+    component: 'Checkbox',
+    dependencies: {
+      show: (values) => {
+        return ['menu'].includes(values.type);
+      },
+      triggerFields: ['type'],
+    },
+    fieldName: 'meta.openInNewWindow',
+    help: $t('system.menu.openInNewWindowHelp'),
+    renderComponentContent() {
+      return {
+        default: () => $t('system.menu.openInNewWindow'),
       };
     },
   },

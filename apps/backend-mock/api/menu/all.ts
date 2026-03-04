@@ -1,15 +1,16 @@
 import { eventHandler } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
-import { MOCK_MENUS } from '~/utils/mock-data';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+import { MOCK_MENU_LIST_V2_TREE } from './menuJSON';
 
+/* 
+  获取用户所有菜单
+ */
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
   if (!userinfo) {
     return unAuthorizedResponse(event);
   }
 
-  const menus =
-    MOCK_MENUS.find((item) => item.username === userinfo.username)?.menus ?? [];
-  return useResponseSuccess(menus);
+  return useResponseSuccess(MOCK_MENU_LIST_V2_TREE);
 });

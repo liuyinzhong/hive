@@ -20,6 +20,11 @@ import { useRouter, useRoute } from 'vue-router';
 import { useRefresh } from '@vben/hooks';
 import { useGridFormSchema, useColumns } from './data';
 import type { Recordable } from '@vben/types';
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  console.log('onMounted');
+});
 
 const userStore = useUserStore();
 
