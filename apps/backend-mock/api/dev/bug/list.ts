@@ -60,7 +60,7 @@ function generateMockDataList(count: number) {
     }
 
     let userInfo = faker.helpers.arrayElement(
-      mockUserData.filter((item) => item.disabled === 0),
+      mockUserData.filter((item) => item.status === 1),
     );
 
     const dataItem: Record<string, any> = {

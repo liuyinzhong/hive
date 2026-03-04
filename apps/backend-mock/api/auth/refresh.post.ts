@@ -5,7 +5,7 @@ import {
   setRefreshTokenCookie,
 } from '~/utils/cookie-utils';
 import { generateAccessToken, verifyRefreshToken } from '~/utils/jwt-utils';
-import { MOCK_USERS } from '~/utils/mock-data';
+import { mockUserData } from '~/api/system/user/list';
 import { forbiddenResponse } from '~/utils/response';
 
 export default defineEventHandler(async (event) => {
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     return forbiddenResponse(event);
   }
 
-  const findUser = MOCK_USERS.find(
+  const findUser = mockUserData.find(
     (item) => item.username === userinfo.username,
   );
   if (!findUser) {

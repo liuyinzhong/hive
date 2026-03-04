@@ -3,46 +3,66 @@ import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
-const formatterCN = new Intl.DateTimeFormat('zh-CN', {
-  timeZone: 'Asia/Shanghai',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-});
-
-function generateMockDataList(count: number) {
-  const dataList = [];
-
-  for (let i = 0; i < count; i++) {
-    const dataItem: Record<string, any> = {
-      userId: faker.string.uuid(),
-      avatar: 'https://picsum.photos/100/100',
-      username: faker.phone.number(),
-      realName: faker.person.fullName(),
-      desc: faker.lorem.word(),
-      password: faker.internet.password(),
-      disabled: faker.helpers.arrayElement([0, 1]),
-      lastLoginIp: faker.internet.ip(),
-      lastLoginDate: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
-      ),
-      createDate: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
-      ),
-      updateDate: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
-      ),
-    };
-    dataList.push(dataItem);
-  }
-
-  return dataList;
+export interface UserInfo {
+  userId: string;
+  password: string;
+  realName: string;
+  roles?: string[];
+  username: string;
+  homePath?: string;
+  [key: string]: any;
 }
 
-export const mockUserData = generateMockDataList(100);
+export const mockUserData: UserInfo[] = [
+  {
+    userId: 'fd8b5f2c-77c6-4e59-b81c-306c2fb85d44',
+    avatar: 'https://picsum.photos/100/100',
+    username: 'vben',
+    realName: 'Vben',
+    roles: ['super'],
+    roleIds: ['458e8285-cd9e-48ca-ac78-d2178a0e8c4f'],
+    desc: '超管',
+    password: '123456',
+    homePath: '/analytics',
+    status: 1,
+    lastLoginIp: faker.internet.ip(),
+    lastLoginDate: null,
+    createDate: null,
+    updateDate: null,
+  },
+  {
+    userId: '68fd6081-f907-44a2-a309-4d856a3276e9',
+    avatar: 'https://picsum.photos/100/100',
+    username: 'admin',
+    realName: 'Admin',
+    roles: ['admin'],
+    roleIds: ['6b81f1cf-301a-444f-a5b4-2ffa333de39f'],
+    desc: '管理员',
+    password: '123456',
+    homePath: '/workspace',
+    status: 1,
+    lastLoginIp: faker.internet.ip(),
+    lastLoginDate: null,
+    createDate: null,
+    updateDate: null,
+  },
+  {
+    userId: '2d0058c0-6347-4b73-92fa-c1b12f5e6454',
+    avatar: 'https://picsum.photos/100/100',
+    username: 'jack',
+    realName: 'Jack',
+    roles: ['user'],
+    roleIds: ['2d0058c0-6347-4b73-92fa-c1b12f5e6454'],
+    desc: '普通用户',
+    password: '123456',
+    homePath: null,
+    status: 1,
+    lastLoginIp: faker.internet.ip(),
+    lastLoginDate: null,
+    createDate: null,
+    updateDate: null,
+  },
+];
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -55,18 +75,22 @@ export default eventHandler(async (event) => {
     pageSize = 20,
     username,
     realName,
-    disabled,
+    status,
   } = getQuery(event);
 
   let listData = structuredClone(mockUserData);
   if (username) {
-    listData = listData.filter((item) => item.username.includes(username));
+    listData = listData.filter((item) =>
+      item.username.includes(username as string),
+    );
   }
   if (realName) {
-    listData = listData.filter((item) => item.realName.includes(realName));
+    listData = listData.filter((item) =>
+      item.realName.includes(realName as string),
+    );
   }
-  if (['0', '1'].includes(disabled as string)) {
-    listData = listData.filter((item) => item.disabled === Number(disabled));
+  if (['0', '1'].includes(status as string)) {
+    listData = listData.filter((item) => item.status === Number(status));
   }
 
   /* 分页响应 */

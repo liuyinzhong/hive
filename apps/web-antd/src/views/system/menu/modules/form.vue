@@ -368,7 +368,7 @@ const schema: VbenFormSchema[] = [
     componentProps: {
       allowClear: true,
       class: 'w-full',
-      placeholder: $t('system.menu.queryHelp', { json: '{id:1}' }),
+      placeholder: $t('system.menu.queryHelp', { json: '{"id":1}' }),
     },
     dependencies: {
       show: (values) => {
@@ -377,8 +377,17 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.query',
-    help: $t('system.menu.queryHelp', { json: '{id:1}' }),
+    help: $t('system.menu.queryHelp', { json: '{"id":1}' }),
     label: $t('system.menu.query'),
+    rules: z.string().refine((value) => {
+      if (!value) return true;
+      try {
+        JSON.parse(value);
+        return true;
+      } catch {
+        return false;
+      }
+    }, $t('system.menu.queryMustBeJson')),
   },
   {
     component: 'Divider',
@@ -543,7 +552,10 @@ const schema: VbenFormSchema[] = [
       show: (values) => {
         return ['menu'].includes(values.type);
       },
-      triggerFields: ['type'],
+      disabled: (values) => {
+        return !!values.pid;
+      },
+      triggerFields: ['type', 'pid'],
     },
     fieldName: 'meta.noBasicLayout',
     help: () =>

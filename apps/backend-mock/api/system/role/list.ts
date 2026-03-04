@@ -1,42 +1,90 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler, getQuery } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
-import { MOCK_MENU_LIST_V2_IDS } from '~/api/menu/menuJSON';
-
+import { MOCK_MENU_LIST_V2 } from '~/api/menu/menuJSON';
 import { unAuthorizedResponse, usePageResponseSuccess } from '~/utils/response';
 
-const formatterCN = new Intl.DateTimeFormat('zh-CN', {
-  timeZone: 'Asia/Shanghai',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-});
+export const mockRoleData = [
+  {
+    id: '458e8285-cd9e-48ca-ac78-d2178a0e8c4f',
+    name: 'super',
+    status: 1,
+    createDate: null,
+    permissions: MOCK_MENU_LIST_V2.map((item) => item.id),
+    remark: null,
+  },
+  {
+    id: '6b81f1cf-301a-444f-a5b4-2ffa333de39f',
+    name: 'admin',
+    status: 1,
+    createDate: null,
+    permissions: [
+      // 工作台
+      '205ce73c-baa0-4df9-b853-f6ae810d38ef',
+      '7c17031e-63fd-4f5d-8c00-17d85673457c',
+      '45843bfc-4e97-4061-87cb-7e4835100d43',
+      // 开发管理
+      'f9d7d286-4a01-48dd-a503-eda000103a4a',
+      '877eb221-31fd-4d46-8c6d-03d667b62dcd',
+      '383afd6b-6090-4dce-b7d8-7f0df0ebb225',
+      '1be595c3-dc09-49dc-a468-f2eea965aa12',
+      '3e35239c-a181-4963-a368-e2cd23e0b734',
+      '5e06ad51-784a-4273-bba1-5e7ce8b9d6ce',
+      '22ce1ac1-eb8e-4238-8a8d-e0c736156508',
+      '0184066a-406c-4d35-b2fc-09733dcba057',
+      'f503e83d-479c-4377-bf4e-07306f97f20c',
+      '11d8b422-9586-4754-813b-ac978be20da3',
+      'e2f3e82a-7b16-4cb3-b3c0-a29502f18ae7',
+      'ad29b52f-70d9-4d02-82e5-66208a1414d5',
+      'ffa185fa-4070-4a98-ae35-6e98b5eadec2',
 
-function generateMockDataList(count: number) {
-  const dataList = [];
-
-  for (let i = 0; i < count; i++) {
-    const dataItem: Record<string, any> = {
-      id: faker.string.uuid(),
-      name: faker.commerce.product(),
-      status: faker.helpers.arrayElement([0, 1]),
-      createDate: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
-      ),
-      permissions: faker.helpers.arrayElements(MOCK_MENU_LIST_V2_IDS),
-      remark: faker.lorem.sentence(),
-    };
-
-    dataList.push(dataItem);
-  }
-
-  return dataList;
-}
-
-const mockData = generateMockDataList(100);
+      // 系统管理
+      '4d7223d8-a14d-4dec-9063-1e111d208278',
+      '382dc7b6-de8d-45bc-834b-fee9c19cae32',
+      'd4abd481-5e86-4a1c-b91c-6c6b821c00bb',
+      '8d9c1f40-549e-4de3-8322-dc15417ff00a',
+      'c6a12e2a-30cf-47cf-a407-17baf6269abf',
+      '49bd2e37-8544-487c-a17f-27d122ffe092',
+      // 关于 个人中心
+      '66e78598-5193-4f2f-959e-2dc5df517093',
+      '84018393-3142-40b2-aa28-b03127044faa',
+    ],
+    remark: null,
+  },
+  {
+    id: '2d0058c0-6347-4b73-92fa-c1b12f5e6454',
+    name: 'user',
+    status: 1,
+    createDate: null,
+    permissions: [
+      // 工作台
+      '205ce73c-baa0-4df9-b853-f6ae810d38ef',
+      '45843bfc-4e97-4061-87cb-7e4835100d43',
+      '7c17031e-63fd-4f5d-8c00-17d85673457c',
+      // 开发管理
+      'f9d7d286-4a01-48dd-a503-eda000103a4a',
+      '383afd6b-6090-4dce-b7d8-7f0df0ebb225',
+      '1be595c3-dc09-49dc-a468-f2eea965aa12',
+      '3e35239c-a181-4963-a368-e2cd23e0b734',
+      '5e06ad51-784a-4273-bba1-5e7ce8b9d6ce',
+      '22ce1ac1-eb8e-4238-8a8d-e0c736156508',
+      '0184066a-406c-4d35-b2fc-09733dcba057',
+      'f503e83d-479c-4377-bf4e-07306f97f20c',
+      '11d8b422-9586-4754-813b-ac978be20da3',
+      'e2f3e82a-7b16-4cb3-b3c0-a29502f18ae7',
+      'ad29b52f-70d9-4d02-82e5-66208a1414d5',
+      'ffa185fa-4070-4a98-ae35-6e98b5eadec2',
+      // 流程管理
+      '975030a3-c34c-4ed4-a500-52fe6b08eb3d',
+      '42a00658-be1e-4ed5-8e1d-93c7a4f75b64',
+      'd1de0ae8-6ce4-45dd-bd9b-2d58740da66c',
+      // 关于 个人中心
+      '66e78598-5193-4f2f-959e-2dc5df517093',
+      '84018393-3142-40b2-aa28-b03127044faa',
+    ],
+    remark: null,
+  },
+];
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -54,7 +102,7 @@ export default eventHandler(async (event) => {
     endDate,
     status,
   } = getQuery(event);
-  let listData = structuredClone(mockData);
+  let listData = structuredClone(mockRoleData);
   if (name) {
     listData = listData.filter((item) =>
       item.name.toLowerCase().includes(String(name).toLowerCase()),

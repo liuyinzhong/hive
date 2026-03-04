@@ -11,6 +11,7 @@ import { message } from 'ant-design-vue';
 import { getAllMenusApi } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
+import { sortTree, mapTree } from '@vben/utils';
 
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
 
@@ -29,7 +30,17 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         content: `${$t('common.loadingMenu')}...`,
         duration: 1.5,
       });
-      return await getAllMenusApi();
+      let res: any = await getAllMenusApi();
+      res = mapTree(res, (node: any) => {
+        return {
+          ...node,
+          meta: {
+            ...node.meta,
+            query: node.meta?.query ? JSON.parse(node.meta.query) : {},
+          },
+        };
+      });
+      return res || [];
     },
     // 可以指定没有权限跳转403页面
     forbiddenComponent,

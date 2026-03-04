@@ -11,13 +11,15 @@ export default eventHandler(async (event) => {
   }
 
   let listData = structuredClone(
-    mockUserData.filter((item) => item.disabled === 0),
+    mockUserData.filter((item) => item.status === 1),
   );
 
   const { realName } = getQuery(event);
 
   if (realName) {
-    listData = listData.filter((item) => item.realName.includes(realName));
+    listData = listData.filter((item) =>
+      item.realName.includes(realName as string),
+    );
   }
 
   /* 全量响应 */

@@ -1,11 +1,9 @@
 import type { EventHandlerRequest, H3Event } from 'h3';
 
-import type { UserInfo } from './mock-data';
-
 import { getHeader } from 'h3';
 import jwt from 'jsonwebtoken';
 
-import { MOCK_USERS } from './mock-data';
+import { type UserInfo, mockUserData } from '~/api/system/user/list';
 
 // TODO: Replace with your own secret key
 const ACCESS_TOKEN_SECRET = 'access_token_secret';
@@ -46,7 +44,7 @@ export function verifyAccessToken(
     ) as unknown as UserPayload;
 
     const username = decoded.username;
-    const user = MOCK_USERS.find((item) => item.username === username);
+    const user = mockUserData.find((item) => item.username === username);
     if (!user) {
       return null;
     }
@@ -63,7 +61,7 @@ export function verifyRefreshToken(
   try {
     const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET) as UserPayload;
     const username = decoded.username;
-    const user = MOCK_USERS.find(
+    const user = mockUserData.find(
       (item) => item.username === username,
     ) as UserInfo;
     if (!user) {

@@ -133,7 +133,7 @@ const menuDevJSON = [
   {
     title: '需求详情',
     id: '5e06ad51-784a-4273-bba1-5e7ce8b9d6ce',
-    pid: 'f9d7d286-4a01-48dd-a503-eda000103a4a',
+    pid: '3e35239c-a181-4963-a368-e2cd23e0b734',
     type: 'menu',
     icon: 'lucide:film',
     name: 'devStoryDetail',
@@ -144,6 +144,33 @@ const menuDevJSON = [
     hideInMenu: 1,
     maxNumOfOpenTab: 3,
     activePath: '/dev/story/list',
+  },
+  {
+    title: '添加按钮',
+    id: '66a635f0-6a2d-4690-851a-89976ac2ea8c',
+    pid: '3e35239c-a181-4963-a368-e2cd23e0b734',
+    type: 'button',
+    name: 'AddStory',
+    authCode: 'sys:dev:story:list:add',
+    ...baseInfo,
+  },
+  {
+    title: '修改按钮',
+    id: '58fe567b-de36-40fb-96b4-0b4846cb8204',
+    pid: '3e35239c-a181-4963-a368-e2cd23e0b734',
+    type: 'button',
+    name: 'UpdateStory',
+    authCode: 'sys:dev:story:list:update',
+    ...baseInfo,
+  },
+  {
+    title: '删除按钮',
+    id: 'c39c613b-eedd-467e-8d03-e6e83432bd30',
+    pid: '3e35239c-a181-4963-a368-e2cd23e0b734',
+    type: 'button',
+    name: 'DeleteStory',
+    authCode: 'sys:dev:story:list:delete',
+    ...baseInfo,
   },
   {
     title: '任务管理',
@@ -160,7 +187,7 @@ const menuDevJSON = [
   {
     title: '任务详情',
     id: '0184066a-406c-4d35-b2fc-09733dcba057',
-    pid: 'f9d7d286-4a01-48dd-a503-eda000103a4a',
+    pid: '22ce1ac1-eb8e-4238-8a8d-e0c736156508',
     type: 'menu',
     icon: 'lucide:chart-bar-stacked',
     name: 'devTaskDetail',
@@ -214,7 +241,7 @@ const menuDevJSON = [
   {
     title: '缺陷详情',
     id: 'ad29b52f-70d9-4d02-82e5-66208a1414d5',
-    pid: 'f9d7d286-4a01-48dd-a503-eda000103a4a',
+    pid: 'e2f3e82a-7b16-4cb3-b3c0-a29502f18ae7',
     type: 'menu',
     icon: 'lucide:bug',
     name: 'devBugDetail',
@@ -305,7 +332,7 @@ const menuSystemJSON = [
     component: '/system/user/list',
     authCode: 'sys:system:user:list',
     ...baseInfo,
-    keepAlive: 1,
+    query: '{ "id": 1 }',
   },
   {
     title: 'system.role.title',
@@ -390,7 +417,7 @@ const menuUserJSON = [
   },
 ];
 
-export const MOCK_MENU_LIST_V2 = [
+export const MOCK_MENU_LIST_V2: any = [
   ...menuWorkspaceJSON,
   ...menuDevJSON,
   ...menuFlowJSON,
@@ -403,53 +430,55 @@ export const MOCK_MENU_LIST_V2 = [
  * 将菜单数组转换为树状结构
  * @returns 树状结构的菜单数组
  */
-export function convertMenuToTree() {
+export function convertMenuToTree(data = MOCK_MENU_LIST_V2) {
   // 首先将每个菜单项转换为标准格式
-  const menuItems = MOCK_MENU_LIST_V2.map((item) => {
-    if (item.status == 0) {
-      return null;
-    }
+  const menuItems = data
+    .map((item) => {
+      if (item.status == 0 || item.type == 'button') {
+        return null;
+      }
 
-    return {
-      authCode: item.authCode,
-      children: [],
-      component: item.component,
-      id: item.id,
-      meta: {
-        activeIcon: item.activeIcon,
-        activePath: item.activePath,
-        affixTab: !!item.affixTab,
-        affixTabOrder: item.affixTabOrder,
-        badge: item.badge,
-        badgeType: item.badgeType,
-        badgeVariants: item.badgeVariants,
-        hideChildrenInMenu: !!item.hideChildrenInMenu,
-        hideInBreadcrumb: !!item.hideInBreadcrumb,
-        hideInMenu: !!item.hideInMenu,
-        hideInTab: !!item.hideInTab,
-        icon: item.icon,
-        iframeSrc: item.iframeSrc,
-        keepAlive: !!item.keepAlive,
-        link: item.link,
-        maxNumOfOpenTab: item.maxNumOfOpenTab,
-        noBasicLayout: !!item.noBasicLayout,
-        openInNewWindow: !!item.openInNewWindow,
-        order: item.order,
-        query: item.query,
-        title: item.title,
-        domCached: !!item.domCached,
-      },
-      name: item.name,
-      path: item.path,
-      pid: item.pid,
-      type: item.type,
-      creatorId: item.creatorId,
-      creatorName: item.creatorName,
-      createDate: item.createDate,
-      updateDate: item.updateDate,
-      status: item.status,
-    };
-  }).filter(Boolean); // 过滤掉 status 为 0 的项
+      return {
+        authCode: item.authCode,
+        children: [],
+        component: item.component,
+        id: item.id,
+        meta: {
+          activeIcon: item.activeIcon,
+          activePath: item.activePath,
+          affixTab: !!item.affixTab,
+          affixTabOrder: item.affixTabOrder,
+          badge: item.badge,
+          badgeType: item.badgeType,
+          badgeVariants: item.badgeVariants,
+          hideChildrenInMenu: !!item.hideChildrenInMenu,
+          hideInBreadcrumb: !!item.hideInBreadcrumb,
+          hideInMenu: !!item.hideInMenu,
+          hideInTab: !!item.hideInTab,
+          icon: item.icon,
+          iframeSrc: item.iframeSrc,
+          keepAlive: !!item.keepAlive,
+          link: item.link,
+          maxNumOfOpenTab: item.maxNumOfOpenTab,
+          noBasicLayout: !!item.noBasicLayout,
+          openInNewWindow: !!item.openInNewWindow,
+          order: item.order,
+          query: item.query,
+          title: item.title,
+          domCached: !!item.domCached,
+        },
+        name: item.name,
+        path: item.path,
+        pid: item.pid,
+        type: item.type,
+        creatorId: item.creatorId,
+        creatorName: item.creatorName,
+        createDate: item.createDate,
+        updateDate: item.updateDate,
+        status: item.status,
+      };
+    })
+    .filter(Boolean); // 过滤掉 status 为 0 的项
 
   // 创建一个以 id 为键的映射，便于快速查找
   const menuMap = new Map();
@@ -475,36 +504,3 @@ export function convertMenuToTree() {
 
   return tree;
 }
-
-/**
- * 获取菜单数组中的所有菜单 id
- * @param menus 菜单数组
- * @returns 所有菜单 id 组成的数组
- */
-export const MOCK_MENU_LIST_V2_TREE = convertMenuToTree();
-
-/*
- * 获取菜单数组中的所有菜单 id
- */
-export const MOCK_MENU_LIST_V2_IDS = MOCK_MENU_LIST_V2.map((item) => item.id);
-
-/*
- * 获取菜单数组中的所有菜单 authCode
- */
-export const MOCK_MENU_LIST_V2_CODES = MOCK_MENU_LIST_V2.map(
-  (item) => item.authCode,
-);
-
-/*
- * 获取菜单数组中的所有菜单 path
- */
-export const MOCK_MENU_LIST_V2_PATHS = MOCK_MENU_LIST_V2.map(
-  (item) => item.path,
-);
-
-/*
- * 获取菜单数组中的所有菜单 name
- */
-export const MOCK_MENU_LIST_V2_NAMES = MOCK_MENU_LIST_V2.map(
-  (item) => item.name,
-);

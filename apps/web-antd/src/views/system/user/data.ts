@@ -53,13 +53,13 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Select',
-      fieldName: 'disabled',
+      fieldName: 'status',
       label: '状态',
       componentProps: {
         allowClear: true,
         options: [
-          { label: $t('common.enabled'), value: 0 },
-          { label: $t('common.disabled'), value: 1 },
+          { label: $t('common.enabled'), value: 1 },
+          { label: $t('common.disabled'), value: 0 },
         ],
       },
     },
@@ -88,7 +88,7 @@ export function useColumns(
     { field: 'username', title: '登录名' },
     {
       cellRender: { name: 'CellSwitch' },
-      field: 'disabled',
+      field: 'status',
       title: '状态',
     },
     { field: 'desc', title: '描述' },

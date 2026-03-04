@@ -58,7 +58,7 @@ function generateMockDataList(count: number) {
 
     /* 随机从用户表中取一个用户 */
     let userInfo: any = faker.helpers.arrayElement(
-      mockUserData.filter((item) => item.disabled === 0),
+      mockUserData.filter((item) => item.status === 1),
     );
 
     const dataItem: Record<string, any> = {

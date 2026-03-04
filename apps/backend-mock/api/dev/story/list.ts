@@ -74,7 +74,7 @@ function generateMockDataList(count: number) {
       /* 关联用户列表，使用 faker 随机 1~5个值 */
       userList: faker.helpers.arrayElements(
         mockUserData
-          .filter((item) => item.disabled === 0)
+          .filter((item) => item.status === 1)
           .map((item) => ({
             userId: item.userId,
             avatar: item.avatar,
