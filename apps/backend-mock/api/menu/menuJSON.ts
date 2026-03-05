@@ -93,6 +93,7 @@ const menuDevJSON = [
     component: '/dev/project/home',
     authCode: 'sys:dev:project:home',
     ...baseInfo,
+    menuVisibleWithForbidden: 1,
   },
   {
     title: '迭代版本',
@@ -466,6 +467,7 @@ export function convertMenuToTree(data = MOCK_MENU_LIST_V2) {
           query: item.query,
           title: item.title,
           domCached: !!item.domCached,
+          menuVisibleWithForbidden: !!item.menuVisibleWithForbidden,
         },
         name: item.name,
         path: item.path,

@@ -7,7 +7,7 @@ import { unAuthorizedResponse, usePageResponseSuccess } from '~/utils/response';
 export const mockRoleData = [
   {
     id: '458e8285-cd9e-48ca-ac78-d2178a0e8c4f',
-    name: 'super',
+    name: 'SuperAdmin',
     status: 1,
     createDate: null,
     permissions: MOCK_MENU_LIST_V2.map((item) => item.id),
@@ -15,7 +15,7 @@ export const mockRoleData = [
   },
   {
     id: '6b81f1cf-301a-444f-a5b4-2ffa333de39f',
-    name: 'admin',
+    name: 'Admin',
     status: 1,
     createDate: null,
     permissions: [

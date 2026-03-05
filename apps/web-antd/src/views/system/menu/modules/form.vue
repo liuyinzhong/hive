@@ -586,6 +586,27 @@ const schema: VbenFormSchema[] = [
       };
     },
   },
+  {
+    component: 'Checkbox',
+    dependencies: {
+      show: (values) => {
+        return ['menu'].includes(values.type);
+      },
+      triggerFields: ['type'],
+    },
+    fieldName: 'meta.menuVisibleWithForbidden',
+    help: () =>
+      h(
+        'p',
+        { style: { maxWidth: '200px' } },
+        $t('system.menu.menuVisibleWithForbiddenHelp'),
+      ),
+    renderComponentContent() {
+      return {
+        default: () => $t('system.menu.menuVisibleWithForbidden'),
+      };
+    },
+  },
 ];
 
 const breakpoints = useBreakpoints(breakpointsTailwind);

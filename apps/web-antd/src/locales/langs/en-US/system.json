@@ -26,7 +26,7 @@
     "orderHelp": "Menu sort, ascending",
     "maxNumOfOpenTab": "MaxOpenTabs",
     "maxNumOfOpenTabHelp": "Maximum number of open tabs (only valid for tabs with the same name)",
-    "query": "Query Params",
+    "query": "QueryParams",
     "queryHelp": "Query parameters format: {json}",
     "queryMustBeJson": "Query parameters must be valid JSON",
     "affixTabOrder": "Pin Sort",
@@ -35,6 +35,8 @@
     "noBasicLayoutHelp": "Configure current route not to use basic layout, only valid at top level. By default, all routes are wrapped in basic layout (including top and sidebar navigation)",
     "openInNewWindow": "Open in New Window",
     "openInNewWindowHelp": "Configure whether to open current route in a new window",
+    "menuVisibleWithForbidden": "Menu visible but redirected to 403 page ",
+    "menuVisibleWithForbiddenHelp": "Menus are visible, but access is redirected to 403.  Usage scenarios: function maintenance/upgrade/shutdown, temporary control on business side, violation/risk control, preparation before gray release ",
     "domCached": "Cache DOM",
     "domCachedHelp": "Configure whether to cache the DOM element for the route. For complex pages, switching tabs may cause lag due to browser reflow/repaint. Setting domCached to true fixes this, but costs: 1. Higher memory usage 2. Some Vue lifecycles not triggered",
     "badgeType": {
