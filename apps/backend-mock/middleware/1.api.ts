@@ -1,6 +1,13 @@
 import { defineEventHandler } from 'h3';
 import { forbiddenResponse, sleep } from '~/utils/response';
 
+/* 
+Nitro 会 自动加载 middleware/ 目录下的所有文件作为全局中间件，按文件名排序执行。
+
+- 1.api.ts - 第一个执行
+- 2.xxx.ts - 第二个执行
+*/
+
 export default defineEventHandler(async (event) => {
   event.node.res.setHeader(
     'Access-Control-Allow-Origin',

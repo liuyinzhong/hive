@@ -486,9 +486,12 @@ const schema: VbenFormSchema[] = [
     component: 'Checkbox',
     dependencies: {
       show: (values) => {
+        if (values.meta?.menuVisibleWithForbidden) {
+          values.meta.hideInMenu = null;
+        }
         return !['button'].includes(values.type);
       },
-      triggerFields: ['type'],
+      triggerFields: ['type', 'meta.menuVisibleWithForbidden'],
     },
     fieldName: 'meta.hideInMenu',
     help: $t('system.menu.hideInMenuHelp'),
@@ -590,9 +593,12 @@ const schema: VbenFormSchema[] = [
     component: 'Checkbox',
     dependencies: {
       show: (values) => {
+        if (values.meta?.hideInMenu) {
+          values.meta.menuVisibleWithForbidden = null;
+        }
         return ['menu'].includes(values.type);
       },
-      triggerFields: ['type'],
+      triggerFields: ['type', 'pid', 'meta.hideInMenu'],
     },
     fieldName: 'meta.menuVisibleWithForbidden',
     help: () =>
