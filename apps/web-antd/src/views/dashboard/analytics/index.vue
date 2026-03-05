@@ -53,15 +53,6 @@ const overviewItems: any = ref([
     value: 0,
   },
   {
-    icon: LucideFileStack,
-    title: '版本',
-    totalTitle: '总版本数',
-    totalValueFindKey: 'versionTotalNum',
-    totalValue: 0,
-    valueFindKey: 'versionNum',
-    value: 0,
-  },
-  {
     icon: LucideHourglass,
     title: '本周工时',
     totalTitle: '总工时',

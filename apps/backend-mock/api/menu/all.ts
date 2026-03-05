@@ -26,5 +26,5 @@ export default eventHandler(async (event) => {
     (item) => menuIds.includes(item.id) || item.menuVisibleWithForbidden,
   );
 
-  return useResponseSuccess(convertMenuToTree(menus));
+  return useResponseSuccess(convertMenuToTree(menus, false));
 });

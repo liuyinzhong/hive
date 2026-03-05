@@ -3,7 +3,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { useFormSchema } from './data';
-import { createBug } from '#/api/dev';
+import { createBug, updateBug } from '#/api/dev';
 import { deepClone } from '#/utils';
 defineOptions({
   name: 'BugAddFormModel',
@@ -52,21 +52,14 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 async function onSubmit(values: Record<string, any>) {
-  message.loading({
-    content: '正在提交中...',
-    duration: 0,
-    key: 'is-form-submitting',
-  });
   modalApi.lock();
-
-  await createBug(values);
-
-  modalApi.close();
-  message.success({
-    content: `提交成功：${JSON.stringify(values)}`,
-    duration: 2,
-    key: 'is-form-submitting',
-  });
+  (values.bugId ? updateBug(values.bugId, values) : createBug(values))
+    .then(() => {
+      modalApi.close();
+    })
+    .catch(() => {
+      modalApi.unlock();
+    });
 }
 </script>
 <template>

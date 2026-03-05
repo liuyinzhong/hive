@@ -486,7 +486,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'taskId',
-      label: '任务id',
+      label: '任务主键id',
       dependencies: {
         triggerFields: ['taskId'],
         show: false,

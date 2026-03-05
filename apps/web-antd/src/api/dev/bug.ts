@@ -66,6 +66,19 @@ async function createBug(data: Omit<DevBugApi.DevBugFace, 'bugId'>) {
   return requestClient.post('/dev/bug', data);
 }
 
+/**
+ * 更新Bug
+ *
+ * @param id Bug ID
+ * @param data Bug 数据
+ */
+async function updateBug(
+  id: string,
+  data: Omit<DevBugApi.DevBugFace, 'bugId'>,
+) {
+  return requestClient.put(`/dev/bug/${id}`, data);
+}
+
 /* 根据storyId查询Bug */
 async function bugListByStoryId(params: Recordable<any>) {
   return requestClient.get<Array<DevBugApi.DevBugFace>>(
@@ -82,4 +95,4 @@ async function getBugDetail(bugNum: number) {
   });
 }
 
-export { getBugList, createBug, bugListByStoryId, getBugDetail };
+export { getBugList, createBug, updateBug, bugListByStoryId, getBugDetail };

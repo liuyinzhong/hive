@@ -8,5 +8,5 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  return useResponseSuccess(convertMenuToTree(MOCK_MENU_LIST_V2));
+  return useResponseSuccess(convertMenuToTree(MOCK_MENU_LIST_V2, true));
 });

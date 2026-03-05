@@ -22,7 +22,7 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'pid',
-      label: '父级',
+      label: '父级字典表主键id',
       disabled: true,
       formItemClass: 'col-span-2 md:col-span-2',
       dependencies: {

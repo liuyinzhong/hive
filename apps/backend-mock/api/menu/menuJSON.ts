@@ -131,21 +131,7 @@ const menuDevJSON = [
     authCode: 'sys:dev:story:list',
     ...baseInfo,
   },
-  {
-    title: '需求详情',
-    id: '5e06ad51-784a-4273-bba1-5e7ce8b9d6ce',
-    pid: '3e35239c-a181-4963-a368-e2cd23e0b734',
-    type: 'menu',
-    icon: 'lucide:film',
-    name: 'devStoryDetail',
-    path: '/dev/story/detail/:storyNum',
-    component: '/dev/story/detail',
-    authCode: 'sys:dev:story:detail',
-    ...baseInfo,
-    hideInMenu: 1,
-    maxNumOfOpenTab: 3,
-    activePath: '/dev/story/list',
-  },
+
   {
     title: '添加按钮',
     id: '66a635f0-6a2d-4690-851a-89976ac2ea8c',
@@ -185,21 +171,7 @@ const menuDevJSON = [
     authCode: 'sys:dev:task:list',
     ...baseInfo,
   },
-  {
-    title: '任务详情',
-    id: '0184066a-406c-4d35-b2fc-09733dcba057',
-    pid: '22ce1ac1-eb8e-4238-8a8d-e0c736156508',
-    type: 'menu',
-    icon: 'lucide:chart-bar-stacked',
-    name: 'devTaskDetail',
-    path: '/dev/task/detail/:taskNum',
-    component: '/dev/task/detail',
-    authCode: 'sys:dev:task:detail',
-    ...baseInfo,
-    hideInMenu: 1,
-    maxNumOfOpenTab: 3,
-    activePath: '/dev/task/list',
-  },
+
   {
     title: '任务甘特',
     id: 'f503e83d-479c-4377-bf4e-07306f97f20c',
@@ -230,7 +202,7 @@ const menuDevJSON = [
     pid: 'f9d7d286-4a01-48dd-a503-eda000103a4a',
     type: 'menu',
     icon: 'lucide:bug',
-    name: 'bug',
+    name: 'devBug',
     path: '/dev/bug/list',
     component: '/dev/bug/list',
     authCode: 'sys:dev:bug:list',
@@ -239,21 +211,7 @@ const menuDevJSON = [
     badgeVariants: 'destructive',
     badgeType: 'dot',
   },
-  {
-    title: '缺陷详情',
-    id: 'ad29b52f-70d9-4d02-82e5-66208a1414d5',
-    pid: 'e2f3e82a-7b16-4cb3-b3c0-a29502f18ae7',
-    type: 'menu',
-    icon: 'lucide:bug',
-    name: 'devBugDetail',
-    path: '/dev/bug/detail/:bugNum',
-    component: '/dev/bug/detail',
-    authCode: 'sys:dev:bug:detail',
-    ...baseInfo,
-    hideInMenu: 1,
-    maxNumOfOpenTab: 3,
-    activePath: '/dev/bug/list',
-  },
+
   {
     title: 'signature.title',
     id: 'ffa185fa-4070-4a98-ae35-6e98b5eadec2',
@@ -385,57 +343,28 @@ const menuSystemJSON = [
   },
 ];
 
-/* 关于 */
-const menuVbenJSON = [
-  {
-    title: 'demos.vben.about',
-    id: '66e78598-5193-4f2f-959e-2dc5df517093',
-    pid: null,
-    type: 'menu',
-    icon: 'lucide:copyright',
-    name: 'VbenAbout',
-    path: '/vben-admin/about',
-    component: '/_core/about/index',
-    authCode: 'sys:about',
-    ...baseInfo,
-    order: 9999,
-  },
-];
-
-const menuUserJSON = [
-  {
-    title: 'page.auth.profile',
-    id: '84018393-3142-40b2-aa28-b03127044faa',
-    pid: null,
-    type: 'menu',
-    icon: 'lucide:user',
-    name: 'Profile',
-    path: '/profile',
-    component: '/_core/profile/index',
-    authCode: 'sys:profile',
-    ...baseInfo,
-    hideInMenu: 1,
-  },
-];
-
 export const MOCK_MENU_LIST_V2: any = [
   ...menuWorkspaceJSON,
   ...menuDevJSON,
   ...menuFlowJSON,
   ...menuSystemJSON,
-  ...menuVbenJSON,
-  ...menuUserJSON,
 ];
 
 /**
  * 将菜单数组转换为树状结构
  * @returns 树状结构的菜单数组
+ * @param data 菜单数组
+ * @param hasButton 是否包含按钮
  */
-export function convertMenuToTree(data = MOCK_MENU_LIST_V2) {
+export function convertMenuToTree(data: any[], hasButton: boolean = false) {
   // 首先将每个菜单项转换为标准格式
   const menuItems = data
     .map((item) => {
-      if (item.status == 0 || item.type == 'button') {
+      if (item.status == 0) {
+        return null;
+      }
+
+      if (!hasButton && item.type == 'button') {
         return null;
       }
 

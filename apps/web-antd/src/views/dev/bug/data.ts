@@ -529,7 +529,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'bugId',
-      label: '缺陷id',
+      label: '缺陷主键id',
       dependencies: {
         triggerFields: ['bugId'],
         show: false,
