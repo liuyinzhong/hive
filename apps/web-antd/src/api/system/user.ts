@@ -1,5 +1,6 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+import { objectOmit } from '@vueuse/core';
 export namespace SystemUserApi {
   export interface SystemUserFace {
     [key: string]: any;
@@ -36,4 +37,17 @@ async function getUserListAll(params?: Recordable<any>) {
   );
 }
 
-export { getUsersList, getUserListAll };
+async function createUser(data: Omit<SystemUserApi.SystemUserFace, 'userId'>) {
+  const newData = objectOmit(data, ['userId']);
+  return requestClient.post('/system/user', newData);
+}
+
+async function updateUser(
+  userId: string | number,
+  data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
+) {
+  const newData = objectOmit(data, ['userId']);
+  return requestClient.put(`/system/user/${userId}`, newData);
+}
+
+export { getUsersList, getUserListAll, createUser, updateUser };

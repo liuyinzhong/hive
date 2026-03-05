@@ -74,12 +74,7 @@ function onActionClick({
 const items = ref<DevProjectApi.DevProjectFace[]>([]);
 
 onMounted(async () => {
-  const res = await getProjectsList();
-  items.value = res || [];
-  if (items.value.length > 0) {
-    activeProjectId.value = items.value[0]?.projectId || '';
-    gridApi.query();
-  }
+  init();
 });
 
 let activeProjectId = ref<any>('');
@@ -96,6 +91,14 @@ const [AddProjectModal, AddProjectModalApi] = useVbenModal({
   connectedComponent: addFormModal,
   destroyOnClose: true,
 });
+
+async function init() {
+  const res = await getProjectsList();
+  items.value = res || [];
+  if (items.value.length > 0) {
+    activeProjectId.value = items.value[0]?.projectId || '';
+  }
+}
 
 function createProject() {
   AddProjectModalApi.open();
@@ -190,7 +193,7 @@ function openAddModuleModal(row: any) {
         </a-card>
       </a-col>
     </a-row>
-    <AddProjectModal />
-    <AddModuleModal />
+    <AddProjectModal @success="init" />
+    <AddModuleModal @success="gridApi.query" />
   </Page>
 </template>

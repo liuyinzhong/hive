@@ -139,7 +139,7 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
         </Button>
       </template>
     </Grid>
-    <AddFormModal />
+    <AddFormModal @success="gridApi.query" />
     <NextModal />
     <DetailDrawer />
   </Page>

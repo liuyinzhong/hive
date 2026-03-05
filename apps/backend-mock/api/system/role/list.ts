@@ -11,7 +11,7 @@ export const mockRoleData = [
     status: 1,
     createDate: null,
     permissions: MOCK_MENU_LIST_V2.map((item) => item.id),
-    remark: null,
+    remark: '超级管理员，普通人不要给这个',
   },
   {
     id: '6b81f1cf-301a-444f-a5b4-2ffa333de39f',
@@ -43,7 +43,7 @@ export const mockRoleData = [
       'c6a12e2a-30cf-47cf-a407-17baf6269abf',
       '49bd2e37-8544-487c-a17f-27d122ffe092',
     ],
-    remark: null,
+    remark: '管理员，一般用户不要给这个',
   },
   {
     id: '2d0058c0-6347-4b73-92fa-c1b12f5e6454',
@@ -70,7 +70,7 @@ export const mockRoleData = [
       '42a00658-be1e-4ed5-8e1d-93c7a4f75b64',
       'd1de0ae8-6ce4-45dd-bd9b-2d58740da66c',
     ],
-    remark: null,
+    remark: '普通用户',
   },
 ];
 

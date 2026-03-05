@@ -8,7 +8,9 @@ import { deepClone } from '#/utils';
 defineOptions({
   name: 'BugAddFormModel',
 });
-
+const emit = defineEmits<{
+  success: [];
+}>();
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   handleValuesChange(_values, fieldsChanged) {
@@ -60,6 +62,7 @@ async function onSubmit(values: Record<string, any>) {
     .catch(() => {
       modalApi.unlock();
     });
+  emit('success');
 }
 </script>
 <template>

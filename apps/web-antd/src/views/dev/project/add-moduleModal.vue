@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
-import { createModule } from '#/api/dev';
+import { createModule, updateModule } from '#/api/dev';
 import { useFormModuleSchema } from './data';
 defineOptions({
   name: 'AddModuleModal',
 });
+
+const emit = defineEmits<{
+  success: [];
+}>();
 
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
@@ -37,22 +40,18 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 async function onSubmit(values: Record<string, any>) {
-  message.loading({
-    content: '正在提交中...',
-    duration: 0,
-    key: 'is-form-submitting',
-  });
   modalApi.lock();
-
-  await createModule(values);
-
-  modalApi.close();
-
-  message.success({
-    content: `提交成功`,
-    duration: 2,
-    key: 'is-form-submitting',
-  });
+  (values.moduleId
+    ? updateModule(values.moduleId, values)
+    : createModule(values)
+  )
+    .then(() => {
+      modalApi.close();
+    })
+    .catch(() => {
+      modalApi.unlock();
+    });
+  emit('success');
 }
 </script>
 <template>

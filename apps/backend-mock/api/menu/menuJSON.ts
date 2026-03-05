@@ -93,7 +93,6 @@ const menuDevJSON = [
     component: '/dev/project/home',
     authCode: 'sys:dev:project:home',
     ...baseInfo,
-    menuVisibleWithForbidden: 1,
   },
   {
     title: '迭代版本',

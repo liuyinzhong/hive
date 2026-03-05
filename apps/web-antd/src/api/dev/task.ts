@@ -1,6 +1,6 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
-
+import { objectOmit } from '@vueuse/core';
 export namespace DevTaskApi {
   export interface DevTaskFace {
     [key: string]: any;
@@ -44,7 +44,22 @@ async function getTaskList(params: Recordable<any>) {
 }
 
 async function createTask(data: Omit<DevTaskApi.DevTaskFace, 'taskId'>) {
-  return requestClient.post('/dev/task', data);
+  const newData = objectOmit(data, ['taskId']);
+  return requestClient.post('/dev/task', newData);
+}
+
+/**
+ * 更新任务
+ *
+ * @param id 任务 ID
+ * @param data 任务 数据
+ */
+async function updateTask(
+  id: string,
+  data: Omit<DevTaskApi.DevTaskFace, 'taskId'>,
+) {
+  const newData = objectOmit(data, ['taskId']);
+  return requestClient.put(`/dev/task/${id}`, newData);
 }
 
 /* 根据任务编号查询数据 */
@@ -66,4 +81,10 @@ async function taskListByStoryId(params: Recordable<any>) {
   );
 }
 
-export { getTaskList, createTask, taskListByStoryId, getTaskDetail };
+export {
+  getTaskList,
+  createTask,
+  updateTask,
+  taskListByStoryId,
+  getTaskDetail,
+};

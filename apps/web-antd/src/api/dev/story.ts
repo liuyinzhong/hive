@@ -1,5 +1,6 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+import { objectOmit } from '@vueuse/core';
 
 interface userListFace {
   userId: string;
@@ -47,7 +48,22 @@ async function getStoryList(params: Recordable<any>) {
 }
 
 async function createStory(data: Omit<DevStoryApi.DevStoryFace, 'storyId'>) {
-  return requestClient.post('/dev/story', data);
+  const newData = objectOmit(data, ['storyId']);
+  return requestClient.post('/dev/story', newData);
+}
+
+/**
+ * 更新需求
+ *
+ * @param id 需求 ID
+ * @param data 需求 数据
+ */
+async function updateStory(
+  id: string,
+  data: Omit<DevStoryApi.DevStoryFace, 'storyId'>,
+) {
+  const newData = objectOmit(data, ['storyId']);
+  return requestClient.put(`/dev/story/${id}`, newData);
 }
 
 async function getStoryDetail(storyNum: number) {
@@ -56,4 +72,4 @@ async function getStoryDetail(storyNum: number) {
   });
 }
 
-export { getStoryList, createStory, getStoryDetail };
+export { getStoryList, createStory, updateStory, getStoryDetail };

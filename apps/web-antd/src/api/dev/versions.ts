@@ -1,5 +1,6 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+import { objectOmit } from '@vueuse/core';
 export namespace DevVersionApi {
   export interface DevVersionFace {
     [key: string]: any;
@@ -34,7 +35,22 @@ async function getVersionsList(params: Recordable<any>) {
 async function createVersion(
   data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
 ) {
-  return requestClient.post('/dev/versions', data);
+  const newData = objectOmit(data, ['versionId']);
+  return requestClient.post('/dev/versions', newData);
+}
+
+/**
+ * 更新版本
+ *
+ * @param id 版本 ID
+ * @param data 版本 数据
+ */
+async function updateVersion(
+  id: string,
+  data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
+) {
+  const newData = objectOmit(data, ['versionId']);
+  return requestClient.put(`/dev/versions/${id}`, newData);
 }
 
 async function getLastVersion(params: Object) {
@@ -44,4 +60,4 @@ async function getLastVersion(params: Object) {
   );
 }
 
-export { getVersionsList, createVersion, getLastVersion };
+export { getVersionsList, createVersion, updateVersion, getLastVersion };

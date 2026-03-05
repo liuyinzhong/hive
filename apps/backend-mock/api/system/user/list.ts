@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
 import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+import { mockDeptData } from '~/api/system/dept/list';
 
 export interface UserInfo {
   userId: string;
@@ -12,6 +13,8 @@ export interface UserInfo {
   homePath?: string;
   [key: string]: any;
 }
+
+let deptIds = mockDeptData.map((item) => item.id);
 
 export const mockUserData: UserInfo[] = [
   {
@@ -25,8 +28,10 @@ export const mockUserData: UserInfo[] = [
     email: 'vben@example.com',
     password: '123456',
     homePath: null,
-    deptId: [],
-    deptName: [],
+    deptIds: faker.helpers.arrayElements(
+      deptIds,
+      faker.number.int({ min: 1, max: 5 }),
+    ),
     status: 1,
     lastLoginIp: faker.internet.ip(),
     lastLoginDate: null,
@@ -44,8 +49,10 @@ export const mockUserData: UserInfo[] = [
     email: 'admin@example.com',
     password: '123456',
     homePath: null,
-    deptId: [],
-    deptName: [],
+    deptIds: faker.helpers.arrayElements(
+      deptIds,
+      faker.number.int({ min: 1, max: 5 }),
+    ),
     status: 1,
     lastLoginIp: faker.internet.ip(),
     lastLoginDate: null,
@@ -63,8 +70,10 @@ export const mockUserData: UserInfo[] = [
     email: 'Jack@example.com',
     password: '123456',
     homePath: null,
-    deptId: [],
-    deptName: [],
+    deptIds: faker.helpers.arrayElements(
+      deptIds,
+      faker.number.int({ min: 1, max: 5 }),
+    ),
     status: 1,
     lastLoginIp: faker.internet.ip(),
     lastLoginDate: null,

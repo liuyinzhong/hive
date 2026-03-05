@@ -48,7 +48,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-const mockData = generateMockDataList(10);
+export const mockDeptData = generateMockDataList(10);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -56,6 +56,6 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  const listData = structuredClone(mockData);
+  const listData = structuredClone(mockDeptData);
   return useResponseSuccess(listData);
 });

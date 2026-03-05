@@ -1,5 +1,6 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+import { objectOmit } from '@vueuse/core';
 export namespace DevBugApi {
   export interface DevBugFace {
     [key: string]: any;
@@ -63,7 +64,8 @@ async function getBugList(params: Recordable<any>) {
 }
 
 async function createBug(data: Omit<DevBugApi.DevBugFace, 'bugId'>) {
-  return requestClient.post('/dev/bug', data);
+  const newData = objectOmit(data, ['bugId']);
+  return requestClient.post('/dev/bug', newData);
 }
 
 /**
@@ -76,7 +78,8 @@ async function updateBug(
   id: string,
   data: Omit<DevBugApi.DevBugFace, 'bugId'>,
 ) {
-  return requestClient.put(`/dev/bug/${id}`, data);
+  const newData = objectOmit(data, ['bugId']);
+  return requestClient.put(`/dev/bug/${id}`, newData);
 }
 
 /* 根据storyId查询Bug */

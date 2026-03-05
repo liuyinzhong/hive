@@ -1,4 +1,5 @@
 import { requestClient } from '#/api/request';
+import { objectOmit } from '@vueuse/core';
 export namespace DevProjectApi {
   export interface DevProjectFace {
     [key: string]: any;
@@ -20,7 +21,22 @@ async function getProjectsList() {
 async function createProject(
   data: Omit<DevProjectApi.DevProjectFace, 'projectId'>,
 ) {
-  return requestClient.post('/dev/project', data);
+  const newData = objectOmit(data, ['projectId']);
+  return requestClient.post('/dev/project', newData);
 }
 
-export { getProjectsList, createProject };
+/**
+ * 更新项目
+ *
+ * @param id 项目 ID
+ * @param data 项目 数据
+ */
+async function updateProject(
+  id: string,
+  data: Omit<DevProjectApi.DevProjectFace, 'projectId'>,
+) {
+  const newData = objectOmit(data, ['projectId']);
+  return requestClient.put(`/dev/project/${id}`, newData);
+}
+
+export { getProjectsList, createProject, updateProject };

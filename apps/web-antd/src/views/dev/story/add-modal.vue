@@ -3,13 +3,15 @@ import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { useFormSchema } from './data';
-import { createStory } from '#/api/dev';
+import { createStory, updateStory } from '#/api/dev';
 import { filesToUrlString, urlStringToFiles, deepClone } from '#/utils';
 
 defineOptions({
   name: 'StoryAddFormModel',
 });
-
+const emit = defineEmits<{
+  success: [];
+}>();
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   handleValuesChange(_values, fieldsChanged) {
@@ -50,22 +52,17 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 async function onSubmit(values: Record<string, any>) {
-  message.loading({
-    content: '正在提交中...',
-    duration: 0,
-    key: 'is-form-submitting',
-  });
   modalApi.lock();
-
   values.files = filesToUrlString(values.files || []);
-  await createStory(values);
+  (values.storyId ? updateStory(values.storyId, values) : createStory(values))
+    .then(() => {
+      modalApi.close();
+    })
+    .catch(() => {
+      modalApi.unlock();
+    });
 
-  modalApi.close();
-  message.success({
-    content: `提交成功`,
-    duration: 2,
-    key: 'is-form-submitting',
-  });
+  emit('success');
 }
 </script>
 <template>

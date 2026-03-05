@@ -7,7 +7,7 @@ import { Button } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
 import { $t } from '#/locales';
-import type { SystemDictApi } from '#/api/system';
+import { type SystemDictApi, createDict, updateDict } from '#/api/system';
 import { useFormSchema } from './data';
 
 const emit = defineEmits(['success']);
@@ -35,10 +35,15 @@ const [Modal, modalApi] = useVbenModal({
     if (valid) {
       modalApi.lock();
       const data = await formApi.getValues();
-      console.log(data);
-      modalApi.close();
+
+      (data.id ? updateDict(data.id, data) : createDict(data))
+        .then(() => {
+          modalApi.close();
+        })
+        .catch(() => {
+          modalApi.unlock();
+        });
       emit('success');
-      modalApi.lock(false);
     }
   },
   onOpenChange(isOpen) {

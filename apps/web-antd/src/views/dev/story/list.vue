@@ -210,7 +210,7 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
         </Button>
       </template>
     </Grid>
-    <AddFormModal />
+    <AddFormModal @success="gridApi.query" />
     <BatchFormModal />
     <NextModal />
     <DetailDrawer />

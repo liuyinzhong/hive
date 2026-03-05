@@ -1,22 +1,34 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
 import { useVbenDrawer, useVbenForm } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
 import { useFormSchema } from './data';
+import { createUser, updateUser } from '#/api/system';
+import { nextTick } from 'vue';
+import { sleep } from '#/utils';
 
 defineOptions({
   name: 'FormModelDemo',
 });
+const emit = defineEmits<{
+  success: [];
+}>();
 
 const [Drawer, drawerApi] = useVbenDrawer({
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
-    drawerApi.close();
-
-    // 提交表单...
-    message.success('提交成功');
+    const { valid } = await formApi.validate();
+    if (valid) {
+      const data = await formApi.getValues();
+      drawerApi.lock();
+      (data.userId ? updateUser(data.userId, data) : createUser(data))
+        .then(() => {
+          drawerApi.close();
+        })
+        .catch(() => {
+          drawerApi.unlock();
+        });
+      emit('success');
+    }
   },
-  onOpenChange(isOpen: boolean) {
+  onOpenChange: (isOpen: boolean) => {
     if (isOpen) {
       formApi.setValues(drawerApi.getData());
     }

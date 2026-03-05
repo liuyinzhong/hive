@@ -104,6 +104,6 @@ async function onDelete(row: DevVersionApi.DevVersionFace) {
         </a-button>
       </template>
     </Grid>
-    <FormModal />
+    <FormModal @success="gridApi.query" />
   </Page>
 </template>

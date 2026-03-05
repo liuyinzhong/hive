@@ -2,13 +2,17 @@
 import { useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
-import { createProject } from '#/api/dev';
+import { createProject, updateProject } from '#/api/dev';
 import { useFormProjectSchema } from './data';
 
 import { filesToUrlString, urlStringToFiles } from '#/utils';
 defineOptions({
   name: 'AddProjectModal',
 });
+
+const emit = defineEmits<{
+  success: [];
+}>();
 
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
@@ -33,27 +37,23 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 async function onSubmit(values: Record<string, any>) {
-  message.loading({
-    content: '正在提交中...',
-    duration: 0,
-    key: 'is-form-submitting',
-  });
   modalApi.lock();
-
   // 处理项目logo文件数组
   if (values.projectLogo?.length) {
     values.projectLogo = filesToUrlString(values.projectLogo);
   }
 
-  await createProject(values);
-
-  modalApi.close();
-
-  message.success({
-    content: `提交成功`,
-    duration: 2,
-    key: 'is-form-submitting',
-  });
+  (values.projectId
+    ? updateProject(values.projectId, values)
+    : createProject(values)
+  )
+    .then(() => {
+      modalApi.close();
+    })
+    .catch(() => {
+      modalApi.unlock();
+    });
+  emit('success');
 }
 </script>
 <template>

@@ -91,6 +91,7 @@ function onActionClick({
 const [Drawer, drawerApi] = useVbenDrawer({
   // 连接抽离的组件
   connectedComponent: ExtraDrawer,
+  destroyOnClose: true,
 });
 
 function onEdit(row: SystemUserApi.SystemUserFace) {
@@ -98,7 +99,7 @@ function onEdit(row: SystemUserApi.SystemUserFace) {
 }
 
 function onCreate() {
-  drawerApi.setData(null).open();
+  drawerApi.setData({}).open();
 }
 
 async function onDelete(row: SystemUserApi.SystemUserFace) {
@@ -133,6 +134,6 @@ async function onDelete(row: SystemUserApi.SystemUserFace) {
         </Button>
       </template>
     </Grid>
-    <Drawer />
+    <Drawer @success="gridApi.query" />
   </Page>
 </template>

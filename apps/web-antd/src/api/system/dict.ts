@@ -1,8 +1,10 @@
 import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+import { objectOmit } from '@vueuse/core';
 
 export namespace SystemDictApi {
   export interface SystemDictFace {
+    [key: string]: any;
     /** 字典id,; */
     id?: string | number;
     /** 字典父id,; */
@@ -52,7 +54,16 @@ async function getDictListAll() {
 async function createDict(
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
 ) {
-  return requestClient.post('/system/dict', data);
+  const newData = objectOmit(data, ['children', 'id']);
+  return requestClient.post('/system/dict', newData);
 }
 
-export { createDict, getDictListApi, getDictListAll };
+async function updateDict(
+  id: string | number,
+  data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
+) {
+  const newData = objectOmit(data, ['children', 'id']);
+  return requestClient.put(`/system/dict/${id}`, newData);
+}
+
+export { createDict, getDictListApi, getDictListAll, updateDict };
