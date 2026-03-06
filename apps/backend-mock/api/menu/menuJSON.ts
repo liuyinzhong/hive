@@ -183,18 +183,7 @@ const menuDevJSON = [
     authCode: 'sys:dev:task:gantt',
     ...baseInfo,
   },
-  {
-    title: '任务待办',
-    id: '11d8b422-9586-4754-813b-ac978be20da3',
-    pid: 'f9d7d286-4a01-48dd-a503-eda000103a4a',
-    type: 'menu',
-    icon: 'lucide:list-todo',
-    name: 'taskTodo',
-    path: '/dev/task/todo',
-    component: '/dev/task/todo-list',
-    authCode: 'sys:dev:task:todo',
-    ...baseInfo,
-  },
+
   {
     title: '缺陷管理',
     id: 'e2f3e82a-7b16-4cb3-b3c0-a29502f18ae7',

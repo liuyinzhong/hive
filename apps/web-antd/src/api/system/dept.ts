@@ -14,21 +14,21 @@ export namespace SystemDeptApi {
 /**
  * 获取部门列表数据
  */
-async function getDeptList() {
+export const getDeptList = async () => {
   return requestClient.get<Array<SystemDeptApi.SystemDeptFace>>(
     '/system/dept/list',
   );
-}
+};
 
 /**
  * 创建部门
  * @param data 部门数据
  */
-async function createDept(
+export const createDept = async (
   data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'id'>,
-) {
+) => {
   return requestClient.post('/system/dept', data);
-}
+};
 
 /**
  * 更新部门
@@ -36,19 +36,17 @@ async function createDept(
  * @param id 部门 ID
  * @param data 部门数据
  */
-async function updateDept(
+export const updateDept = async (
   id: string,
   data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'id'>,
-) {
+) => {
   return requestClient.put(`/system/dept/${id}`, data);
-}
+};
 
 /**
  * 删除部门
  * @param id 部门 ID
  */
-async function deleteDept(id: string) {
+export const deleteDept = async (id: string) => {
   return requestClient.delete(`/system/dept/${id}`);
-}
-
-export { createDept, deleteDept, getDeptList, updateDept };
+};

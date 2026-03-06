@@ -21,13 +21,11 @@ export namespace DevChangeApi {
   }
 }
 
-async function getChangeList(params: Recordable<any>) {
+export const getChangeList = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevChangeApi.DevChangeFace>>(
     '/dev/change/list',
     {
       params,
     },
   );
-}
-
-export { getChangeList };
+};

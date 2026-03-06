@@ -34,19 +34,31 @@ export namespace DevTaskApi {
   }
 }
 
-async function getTaskList(params: Recordable<any>) {
+/**
+ * 获取任务列表
+ *
+ * @param params 查询参数
+ */
+export const getTaskList = async (params: Recordable<any>) => {
   return requestClient.get<{
     items: Array<DevTaskApi.DevTaskFace>;
     total: number;
   }>('/dev/task/list', {
     params,
   });
-}
+};
 
-async function createTask(data: Omit<DevTaskApi.DevTaskFace, 'taskId'>) {
+/**
+ * 创建任务
+ *
+ * @param data 任务 数据
+ */
+export const createTask = async (
+  data: Omit<DevTaskApi.DevTaskFace, 'taskId'>,
+) => {
   const newData = objectOmit(data, ['taskId']);
   return requestClient.post('/dev/task', newData);
-}
+};
 
 /**
  * 更新任务
@@ -54,37 +66,37 @@ async function createTask(data: Omit<DevTaskApi.DevTaskFace, 'taskId'>) {
  * @param id 任务 ID
  * @param data 任务 数据
  */
-async function updateTask(
+export const updateTask = async (
   id: string,
   data: Omit<DevTaskApi.DevTaskFace, 'taskId'>,
-) {
+) => {
   const newData = objectOmit(data, ['taskId']);
   return requestClient.put(`/dev/task/${id}`, newData);
-}
+};
 
-/* 根据任务编号查询数据 */
-async function getTaskDetail(taskNum: number) {
+/**
+ * 根据任务编号查询数据
+ *
+ * @param taskNum 任务编号
+ */
+export const getTaskDetail = async (taskNum: number) => {
   return requestClient.get<DevTaskApi.DevTaskFace>('/dev/task/get', {
     params: {
       taskNum,
     },
   });
-}
+};
 
-/* 根据storyId查询任务 */
-async function taskListByStoryId(params: Recordable<any>) {
+/**
+ * 根据storyId查询任务
+ *
+ * @param params 查询参数
+ */
+export const taskListByStoryId = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevTaskApi.DevTaskFace>>(
     '/dev/task/taskListByStoryId',
     {
       params,
     },
   );
-}
-
-export {
-  getTaskList,
-  createTask,
-  updateTask,
-  taskListByStoryId,
-  getTaskDetail,
 };

@@ -41,16 +41,28 @@ export namespace DevStoryApi {
   }
 }
 
-async function getStoryList(params: Recordable<any>) {
+/**
+ * 获取需求列表
+ *
+ * @param params 查询参数
+ */
+export const getStoryList = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevStoryApi.DevStoryFace>>('/dev/story/list', {
     params,
   });
-}
+};
 
-async function createStory(data: Omit<DevStoryApi.DevStoryFace, 'storyId'>) {
+/**
+ * 创建需求
+ *
+ * @param data 需求 数据
+ */
+export const createStory = async (
+  data: Omit<DevStoryApi.DevStoryFace, 'storyId'>,
+) => {
   const newData = objectOmit(data, ['storyId']);
   return requestClient.post('/dev/story', newData);
-}
+};
 
 /**
  * 更新需求
@@ -58,18 +70,21 @@ async function createStory(data: Omit<DevStoryApi.DevStoryFace, 'storyId'>) {
  * @param id 需求 ID
  * @param data 需求 数据
  */
-async function updateStory(
+export const updateStory = async (
   id: string,
   data: Omit<DevStoryApi.DevStoryFace, 'storyId'>,
-) {
+) => {
   const newData = objectOmit(data, ['storyId']);
   return requestClient.put(`/dev/story/${id}`, newData);
-}
+};
 
-async function getStoryDetail(storyNum: number) {
+/**
+ * 根据storyNum查询需求详情
+ *
+ * @param storyNum 需求编号
+ */
+export const getStoryDetail = async (storyNum: number) => {
   return requestClient.get<DevStoryApi.DevStoryFace>('/dev/story/get', {
     params: { storyNum },
   });
-}
-
-export { getStoryList, createStory, updateStory, getStoryDetail };
+};

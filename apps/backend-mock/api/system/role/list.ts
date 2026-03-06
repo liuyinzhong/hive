@@ -31,7 +31,6 @@ export const mockRoleData = [
       '3e35239c-a181-4963-a368-e2cd23e0b734',
       '22ce1ac1-eb8e-4238-8a8d-e0c736156508',
       'f503e83d-479c-4377-bf4e-07306f97f20c',
-      '11d8b422-9586-4754-813b-ac978be20da3',
       'e2f3e82a-7b16-4cb3-b3c0-a29502f18ae7',
       'ffa185fa-4070-4a98-ae35-6e98b5eadec2',
 
@@ -62,7 +61,6 @@ export const mockRoleData = [
       '3e35239c-a181-4963-a368-e2cd23e0b734',
       '22ce1ac1-eb8e-4238-8a8d-e0c736156508',
       'f503e83d-479c-4377-bf4e-07306f97f20c',
-      '11d8b422-9586-4754-813b-ac978be20da3',
       'e2f3e82a-7b16-4cb3-b3c0-a29502f18ae7',
       'ffa185fa-4070-4a98-ae35-6e98b5eadec2',
       // 流程管理

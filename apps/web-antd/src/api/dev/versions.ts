@@ -24,20 +24,27 @@ export namespace DevVersionApi {
 
 /**
  * 获取版本列表数据
+ *
+ * @param params 查询参数
  */
-async function getVersionsList(params: Recordable<any>) {
+export const getVersionsList = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevVersionApi.DevVersionFace>>(
     '/dev/versions/list',
     { params },
   );
-}
+};
 
-async function createVersion(
+/**
+ * 创建版本
+ *
+ * @param data 版本 数据
+ */
+export const createVersion = async (
   data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
-) {
+) => {
   const newData = objectOmit(data, ['versionId']);
   return requestClient.post('/dev/versions', newData);
-}
+};
 
 /**
  * 更新版本
@@ -45,19 +52,22 @@ async function createVersion(
  * @param id 版本 ID
  * @param data 版本 数据
  */
-async function updateVersion(
+export const updateVersion = async (
   id: string,
   data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
-) {
+) => {
   const newData = objectOmit(data, ['versionId']);
   return requestClient.put(`/dev/versions/${id}`, newData);
-}
+};
 
-async function getLastVersion(params: Object) {
+/**
+ * 获取最新版本
+ *
+ * @param params 查询参数
+ */
+export const getLastVersion = async (params: Object) => {
   return requestClient.get<DevVersionApi.DevVersionFace>(
     '/dev/versions/getLastVersion',
     { params },
   );
-}
-
-export { getVersionsList, createVersion, updateVersion, getLastVersion };
+};

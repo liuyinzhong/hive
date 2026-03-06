@@ -5,6 +5,6 @@ import { requestClient } from '#/api/request';
 /**
  * 获取用户所有菜单
  */
-export async function getAllMenusApi() {
+export const getAllMenusApi = async () => {
   return requestClient.get<RouteRecordStringComponent[]>('/menu/all');
-}
+};

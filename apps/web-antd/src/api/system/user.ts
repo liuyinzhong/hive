@@ -21,33 +21,33 @@ export namespace SystemUserApi {
 /**
  * 获取用户列表数据
  */
-async function getUsersList(params: Recordable<any>) {
+export const getUsersList = async (params: Recordable<any>) => {
   return requestClient.get<Array<SystemUserApi.SystemUserFace>>(
     '/system/user/list',
     {
       params,
     },
   );
-}
+};
 
-async function getUserListAll(params?: Recordable<any>) {
+export const getUserListAll = async (params?: Recordable<any>) => {
   return requestClient.get<Array<SystemUserApi.SystemUserFace>>(
     '/system/user/listAll',
     { params },
   );
-}
+};
 
-async function createUser(data: Omit<SystemUserApi.SystemUserFace, 'userId'>) {
+export const createUser = async (
+  data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
+) => {
   const newData = objectOmit(data, ['userId']);
   return requestClient.post('/system/user', newData);
-}
+};
 
-async function updateUser(
+export const updateUser = async (
   userId: string | number,
   data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
-) {
+) => {
   const newData = objectOmit(data, ['userId']);
   return requestClient.put(`/system/user/${userId}`, newData);
-}
-
-export { getUsersList, getUserListAll, createUser, updateUser };
+};

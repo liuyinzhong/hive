@@ -16,21 +16,31 @@ export namespace DevModuleApi {
   }
 }
 
-async function getModulesList(params: Recordable<any>) {
+/**
+ * 获取模块列表
+ *
+ * @param params 查询参数
+ */
+export const getModulesList = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevModuleApi.DevModuleFace>>(
     '/dev/module/list',
     {
       params,
     },
   );
-}
+};
 
-async function createModule(
+/**
+ * 创建模块
+ *
+ * @param data 模块 数据
+ */
+export const createModule = async (
   data: Omit<DevModuleApi.DevModuleFace, 'moduleId'>,
-) {
+) => {
   const newData = objectOmit(data, ['moduleId']);
   return requestClient.post('/dev/module', newData);
-}
+};
 
 /**
  * 更新模块
@@ -38,12 +48,10 @@ async function createModule(
  * @param id 模块 ID
  * @param data 模块 数据
  */
-async function updateModule(
+export const updateModule = async (
   id: string,
   data: Omit<DevModuleApi.DevModuleFace, 'moduleId'>,
-) {
+) => {
   const newData = objectOmit(data, ['moduleId']);
   return requestClient.put(`/dev/module/${id}`, newData);
-}
-
-export { getModulesList, createModule, updateModule };
+};

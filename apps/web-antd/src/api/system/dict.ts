@@ -31,39 +31,42 @@ export namespace SystemDictApi {
 /**
  * 获取字典列表数据
  */
-async function getDictListApi(params: Recordable<any>) {
+export const getDictListApi = async (params: Recordable<any>) => {
   return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
     '/system/dict/list',
     { params },
   );
-}
+};
 
 /**
  * 获取字典全量数据
  */
-async function getDictListAll() {
+export const getDictListAll = async () => {
   return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
     '/system/dict/listAll',
   );
-}
+};
 
 /**
  * 创建字典
  * @param data 字典数据
  */
-async function createDict(
+export const createDict = async (
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
-) {
+) => {
   const newData = objectOmit(data, ['children', 'id']);
   return requestClient.post('/system/dict', newData);
-}
+};
 
-async function updateDict(
+/**
+ * 更新字典
+ * @param id 字典 ID
+ * @param data 字典数据
+ */
+export const updateDict = async (
   id: string | number,
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
-) {
+) => {
   const newData = objectOmit(data, ['children', 'id']);
   return requestClient.put(`/system/dict/${id}`, newData);
-}
-
-export { createDict, getDictListApi, getDictListAll, updateDict };
+};

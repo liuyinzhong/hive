@@ -57,16 +57,16 @@ export namespace DevBugApi {
   }
 }
 
-async function getBugList(params: Recordable<any>) {
+export const getBugList = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevBugApi.DevBugFace>>('/dev/bug/list', {
     params,
   });
-}
+};
 
-async function createBug(data: Omit<DevBugApi.DevBugFace, 'bugId'>) {
+export const createBug = async (data: Omit<DevBugApi.DevBugFace, 'bugId'>) => {
   const newData = objectOmit(data, ['bugId']);
   return requestClient.post('/dev/bug', newData);
-}
+};
 
 /**
  * 更新Bug
@@ -74,28 +74,30 @@ async function createBug(data: Omit<DevBugApi.DevBugFace, 'bugId'>) {
  * @param id Bug ID
  * @param data Bug 数据
  */
-async function updateBug(
+export const updateBug = async (
   id: string,
   data: Omit<DevBugApi.DevBugFace, 'bugId'>,
-) {
+) => {
   const newData = objectOmit(data, ['bugId']);
   return requestClient.put(`/dev/bug/${id}`, newData);
-}
+};
 
-/* 根据storyId查询Bug */
-async function bugListByStoryId(params: Recordable<any>) {
+/**
+ * 根据storyId查询Bug
+ *
+ * @param params 查询参数
+ */
+export const bugListByStoryId = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevBugApi.DevBugFace>>(
     '/dev/bug/bugListByStoryId',
     {
       params,
     },
   );
-}
+};
 
-async function getBugDetail(bugNum: number) {
+export const getBugDetail = async (bugNum: number) => {
   return requestClient.get<DevBugApi.DevBugFace>('/dev/bug/get', {
     params: { bugNum },
   });
-}
-
-export { getBugList, createBug, updateBug, bugListByStoryId, getBugDetail };
+};

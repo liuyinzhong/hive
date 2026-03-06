@@ -93,39 +93,49 @@ export namespace SystemMenuApi {
 /**
  * 获取菜单数据列表
  */
-async function getMenuList() {
+export const getMenuList = async () => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
     '/system/menu/list',
   );
-}
+};
 
-async function isMenuNameExists(
+/**
+ * 检查菜单名称是否存在
+ * @param name 菜单名称
+ * @param id 菜单 ID（可选）
+ */
+export const isMenuNameExists = async (
   name: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
-) {
+) => {
   return requestClient.get<boolean>('/system/menu/name-exists', {
     params: { id, name },
   });
-}
+};
 
-async function isMenuPathExists(
+/**
+ * 检查菜单路径是否存在
+ * @param path 菜单路径
+ * @param id 菜单 ID（可选）
+ */
+export const isMenuPathExists = async (
   path: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
-) {
+) => {
   return requestClient.get<boolean>('/system/menu/path-exists', {
     params: { id, path },
   });
-}
+};
 
 /**
  * 创建菜单
  * @param data 菜单数据
  */
-async function createMenu(
+export const createMenu = async (
   data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
-) {
+) => {
   return requestClient.post('/system/menu', data);
-}
+};
 
 /**
  * 更新菜单
@@ -133,26 +143,17 @@ async function createMenu(
  * @param id 菜单 ID
  * @param data 菜单数据
  */
-async function updateMenu(
+export const updateMenu = async (
   id: string,
   data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
-) {
+) => {
   return requestClient.put(`/system/menu/${id}`, data);
-}
+};
 
 /**
  * 删除菜单
  * @param id 菜单 ID
  */
-async function deleteMenu(id: string) {
+export const deleteMenu = async (id: string) => {
   return requestClient.delete(`/system/menu/${id}`);
-}
-
-export {
-  createMenu,
-  deleteMenu,
-  getMenuList,
-  isMenuNameExists,
-  isMenuPathExists,
-  updateMenu,
 };
