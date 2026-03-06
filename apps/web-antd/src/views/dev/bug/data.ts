@@ -14,6 +14,7 @@ import { getUserListAll } from '#/api/system';
 
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
+import { bugRichTemplateText } from '#/template/richText';
 
 import { h, nextTick, ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
@@ -261,19 +262,21 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      component: 'AiEditor',
+      fieldName: 'bugRichText',
+      label: '内容',
+      formItemClass: 'col-span-3',
+      componentProps: {
+        defaultHtml: bugRichTemplateText,
+      },
+    },
+    {
       component: 'Input',
       fieldName: 'bugUa',
       label: '浏览器信息',
       disabled: true,
       defaultValue: navigator.userAgent,
       formItemClass: 'col-span-3',
-    },
-    {
-      component: 'AiEditor',
-      fieldName: 'bugRichText',
-      label: '内容',
-      formItemClass: 'col-span-3',
-      componentProps: {},
     },
   ];
 }
@@ -431,6 +434,19 @@ export function useColumns(
     },
 
     {
+      title: '缺陷确认状态',
+      field: 'bugConfirmStatus',
+      width: 100,
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          { label: '待确认', value: 0 },
+          { label: '非BUG', value: 10 },
+          { label: '是BUG', value: 20, color: 'error' },
+        ],
+      },
+    },
+    {
       title: '缺陷状态',
       field: 'bugStatus',
       width: 100,
@@ -441,7 +457,6 @@ export function useColumns(
         },
       },
     },
-
     {
       title: '级别',
       field: 'bugLevel',
@@ -488,7 +503,7 @@ export function useColumns(
     },
 
     {
-      width: 120,
+      width: 150,
       field: 'operation',
       fixed: 'right',
       title: $t('system.dept.operation'),
@@ -500,6 +515,12 @@ export function useColumns(
         },
         name: 'CellOperation',
         options: [
+          {
+            code: 'confirmBug',
+            icon: 'lucide:circle-check',
+            tips: '确认bug按钮',
+            disabled: (row: any) => row.bugConfirmStatus,
+          },
           {
             code: 'next',
             icon: 'lucide:redo-dot',
@@ -540,8 +561,42 @@ export function useNextFormSchema(): VbenFormSchema[] {
       fieldName: 'bugStatus',
       label: '缺陷状态',
       dependencies: {
-        triggerFields: ['bugId'],
         show: false,
+        triggerFields: ['bugId', 'openModalSource'],
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'openModalSource',
+      label: '打开弹窗来源',
+      dependencies: {
+        triggerFields: ['openModalSource'],
+        show: false,
+      },
+    },
+    {
+      component: 'RadioGroup',
+      fieldName: 'bugConfirmStatus',
+      label: '缺陷确认状态',
+      componentProps: {
+        options: [
+          {
+            label: '待确认',
+            value: 0,
+          },
+          {
+            label: '非BUG',
+            value: 10,
+          },
+          {
+            label: '是BUG',
+            value: 20,
+          },
+        ],
+      },
+      dependencies: {
+        show: (value: any) => value.openModalSource === 'confirmBug',
+        triggerFields: ['openModalSource'],
       },
     },
     {

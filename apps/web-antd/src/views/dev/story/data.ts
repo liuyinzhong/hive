@@ -13,6 +13,7 @@ import {
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
 import { upload_file } from '#/api/examples/upload';
+import { storyRichTemplateText } from '#/template/richText';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -172,7 +173,9 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyRichText',
       label: '内容',
       formItemClass: 'col-span-3',
-      componentProps: {},
+      componentProps: {
+        defaultHtml: storyRichTemplateText,
+      },
     },
   ];
 }

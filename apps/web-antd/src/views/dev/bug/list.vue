@@ -69,6 +69,12 @@ function onActionClick({
       break;
     }
     case 'next': {
+      row.openModalSource = 'next';
+      NextModalApi.setData(row).open();
+      break;
+    }
+    case 'confirmBug': {
+      row.openModalSource = 'confirmBug';
       NextModalApi.setData(row).open();
       break;
     }
@@ -120,7 +126,6 @@ const [NextModal, NextModalApi] = useVbenModal({
   connectedComponent: nextModal,
   destroyOnClose: true,
 });
-// #endregion
 
 // #region 打开详情抽屉
 const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
@@ -140,7 +145,7 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
       </template>
     </Grid>
     <AddFormModal @success="gridApi.query" />
-    <NextModal />
+    <NextModal @success="gridApi.query" />
     <DetailDrawer />
   </Page>
 </template>

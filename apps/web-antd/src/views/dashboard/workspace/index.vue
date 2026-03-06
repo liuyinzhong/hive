@@ -23,7 +23,8 @@ import { getTaskList, type DevTaskApi } from '#/api/dev';
 import dayjs from 'dayjs';
 import addTaskModal from '#/views/dev/task/add-modal.vue';
 import DictTag from '#/components/DictTag/index.vue';
-
+import UserAvatar from '#/components/UserAvatar/index.vue';
+import CellProgress from '#/components/CellProgress/index.vue';
 interface DataItem {
   title: string;
   icon: string;
@@ -177,10 +178,6 @@ async function initSortable() {
   }
 }
 
-const changeTaskTitle = (e: string) => {
-  console.log(e);
-};
-
 // #region 任务添加弹窗
 const [AddTaskModal, AddTaskModalApi] = useVbenModal({
   title: '添加任务',
@@ -242,7 +239,7 @@ function onCreate() {
                       <div class="cursor-pointer">
                         <div class="top flex items-center justify-between">
                           <div class="left">
-                            <a-tag color="blue">
+                            <a-tag>
                               {{ taskInfo.moduleTitle }}
                             </a-tag>
                             <DictTag
@@ -251,10 +248,7 @@ function onCreate() {
                             />
                           </div>
                           <div class="right">
-                            <a-tag color="blue">
-                              #{{ taskInfo.taskNum }}
-                            </a-tag>
-                            <a-tag color="green">
+                            <a-tag>
                               {{ taskInfo.version }}
                             </a-tag>
                           </div>
@@ -266,26 +260,27 @@ function onCreate() {
                             :ellipsis="{
                               rows: 3,
                             }"
-                            :editable="{
-                              onChange: (e: string) => (taskInfo.taskTitle = e),
-                              onEnd: () => changeTaskTitle(taskInfo),
-                            }"
                             :content="taskInfo.taskTitle"
                           />
                         </div>
 
                         <div class="bottom flex items-center justify-between">
                           <div class="left">
-                            <a-avatar
-                              :size="30"
-                              :src="taskInfo.avatar"
-                            ></a-avatar>
+                            <UserAvatar
+                              :avatar="taskInfo.avatar"
+                              :name="taskInfo.realName"
+                            />
                           </div>
                           <div class="right">
                             <span class="flex items-center">
                               {{ dayjs(taskInfo.endDate).format('MM月DD号') }}
-                              {{ taskInfo.actualHours || 0 }}h
+                              {{ taskInfo.planHours || 0 }}h/{{
+                                taskInfo.actualHours || 0
+                              }}h
                             </span>
+                            <CellProgress
+                              :value="taskInfo.percent"
+                            ></CellProgress>
                           </div>
                         </div>
                       </div>

@@ -8,7 +8,7 @@ import { ref, nextTick, h } from 'vue';
 import { Tag, Flex, TypographyText } from 'ant-design-vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
-
+import { taskRichTemplateText } from '#/template/richText';
 import {
   getVersionsList,
   getModulesList,
@@ -270,7 +270,9 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'taskRichText',
       label: '内容',
       formItemClass: 'col-span-3',
-      componentProps: {},
+      componentProps: {
+        defaultHtml: taskRichTemplateText,
+      },
     },
   ];
 }
