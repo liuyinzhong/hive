@@ -514,6 +514,10 @@ export function useNextFormSchema(): VbenFormSchema[] {
       component: 'AiEditor',
       fieldName: 'commentRichText',
       label: '',
+      labelWidth: 30,
+      componentProps: {
+        placeholder: '请输入内容。文本可拖拽输入',
+      },
     },
   ];
 }

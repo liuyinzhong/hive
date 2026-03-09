@@ -23,17 +23,19 @@ const {
   defaultHtml,
   width = '100%',
   height = '600px',
+  placeholder = '', // 新增占位符属性
 } = defineProps({
   modelValue: String, // 双向绑定的值
   defaultHtml: String, // 默认的 html 内容
   width: String, // 宽度
   height: String, // 高度
+  placeholder: String, // 新增占位符属性
 });
 onMounted(() => {
   aiEditor = new AiEditor({
     element: divRef.value as Element,
     onMentionQuery: _getUserListAll,
-    placeholder: '点击输入内容...', // 使用传入的占位符
+    placeholder: placeholder || '点击输入内容...', // 使用传入的占位符
     theme: isDark.value ? 'dark' : 'light',
     /* 编辑的内容 */
     content: modelValue || '', // 初始化内容

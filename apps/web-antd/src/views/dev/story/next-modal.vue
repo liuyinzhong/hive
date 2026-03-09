@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
-import { useVbenModal } from '@vben/common-ui';
+import { ref, reactive, nextTick } from 'vue';
+import { useVbenModal, EllipsisText } from '@vben/common-ui';
 import { useVbenForm } from '#/adapter/form';
 import { useNextFormSchema } from './data';
 import { message } from 'ant-design-vue';
 import { getLocalDictList } from '#/dicts';
-
+import { type Sortable, useSortable } from '@vben-core/composables';
 defineOptions({
   name: 'StoryNextModal',
 });
@@ -49,6 +49,9 @@ const [Modal, modalApi] = useVbenModal({
       });
     }
   },
+  onOpened() {
+    initSortable();
+  },
 });
 
 function onSubmit(values: Record<string, any>) {
@@ -67,6 +70,15 @@ function onSubmit(values: Record<string, any>) {
     });
   }, 3000);
 }
+
+const containerSortable = ref<any>();
+
+async function initSortable() {
+  const { initializeSortable } = useSortable(containerSortable.value, {
+    sort: false,
+  });
+  await initializeSortable();
+}
 </script>
 <template>
   <Modal class="w-[1000px]">
@@ -78,6 +90,33 @@ function onSubmit(values: Record<string, any>) {
           @change="changeCurrent"
           :items="stepsItems"
         />
+        <a-divider dashed>常用语</a-divider>
+        <div ref="containerSortable">
+          <div class="mb-2 cursor-move">
+            <EllipsisText tooltipWhenEllipsis> 已更新至测试环境 </EllipsisText>
+          </div>
+
+          <div class="mb-2 cursor-move">
+            <EllipsisText tooltipWhenEllipsis>
+              需求开发完成，转由测试验证，已更新至测试环境
+            </EllipsisText>
+          </div>
+          <div class="mb-2 cursor-move">
+            <EllipsisText tooltipWhenEllipsis>
+              测试通过，转由产品验收
+            </EllipsisText>
+          </div>
+          <div class="mb-2 cursor-move">
+            <EllipsisText tooltipWhenEllipsis>
+              产品验收通过，转由业务验收
+            </EllipsisText>
+          </div>
+          <div class="mb-2 cursor-move">
+            <EllipsisText tooltipWhenEllipsis>
+              业务验收通过，可安排发版
+            </EllipsisText>
+          </div>
+        </div>
       </a-col>
       <a-col :span="18">
         <Form />

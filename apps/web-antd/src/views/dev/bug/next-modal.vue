@@ -47,6 +47,13 @@ const [Modal, modalApi] = useVbenModal({
       if (formData.value.openModalSource === 'confirmBug') {
         modalApi.setState({ title: '缺陷确认' });
       }
+
+      /* if (formData.value.openModalSource === 'confirmBug') {
+        formApi.updateSchema([{ fieldName: 'bugConfirmStatus', hide: true }]);
+      } else {
+        formApi.updateSchema([{ fieldName: 'bugStatus', hide: true }]);
+      } */
+
       formApi.setValues(data);
 
       /* 设置当前步骤 */
