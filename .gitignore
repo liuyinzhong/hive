@@ -52,3 +52,10 @@ vite.config.ts.*
 /apps/web-antd/dist-electron/
 /playground/dist-electron/
 .cursor
+
+# AI
+.agent
+.agents
+.claude
+.codex
+skills-lock.json
