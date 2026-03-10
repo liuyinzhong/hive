@@ -31,3 +31,9 @@ export const LucideFilm = createIconifyIcon('lucide:film');
 export const LucideHourglass = createIconifyIcon('lucide:hourglass');
 
 export const LucideFileStack = createIconifyIcon('lucide:file-stack');
+
+export const LucideTableProperties = createIconifyIcon(
+  'lucide:table-properties',
+);
+
+export const LucidePlus = createIconifyIcon('lucide:plus');

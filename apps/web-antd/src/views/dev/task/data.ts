@@ -49,13 +49,39 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'taskTitle',
       label: '任务标题',
       rules: 'required',
-      formItemClass: 'col-span-3',
+      formItemClass: 'col-span-3 items-baseline',
     },
+    {
+      component: 'RangePicker',
+      fieldName: 'timeArr',
+      label: '开始时间',
+      rules: 'required',
+      formItemClass: 'col-span-2',
+      componentProps: {
+        format: 'YYYY-MM-DD HH:mm:ss',
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      },
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'planHours',
+      label: '计划工时',
+      defaultValue: 0,
+      rules: 'required',
+      formItemClass: 'col-span-1',
+      componentProps: {
+        min: 0,
+        precision: 2,
+        addonAfter: '小时',
+      },
+    },
+
     {
       component: 'ApiSelect',
       fieldName: 'projectId',
       label: '项目',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value: any, formApi: any) => {
         return {
           api: () => getProjectsList(),
@@ -72,10 +98,21 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      component: 'AiEditor',
+      fieldName: 'taskRichText',
+      label: '',
+      labelWidth: 0,
+      formItemClass: 'col-span-2 row-span-8',
+      componentProps: {
+        defaultHtml: taskRichTemplateText,
+      },
+    },
+    {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value: any, formApi: any) => {
         if (!value.projectId) {
           return {};
@@ -105,6 +142,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'moduleId',
       label: '关联模块',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value, formApi) => {
         if (!value.projectId) {
           return {};
@@ -132,7 +170,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyId',
       label: '关联需求',
-      formItemClass: 'col-span-3',
+      formItemClass: 'col-span-1',
       renderComponentContent: () => ({
         option: (optionItem: any) => {
           return h(Flex, { gap: 10, align: 'center' }, [
@@ -194,6 +232,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'userId',
       label: '执行人',
       rules: 'required',
+      formItemClass: 'col-span-1',
       renderComponentContent: () => {
         return {
           option: (optionItem: any) => {
@@ -215,17 +254,6 @@ export function useFormSchema(): VbenFormSchema[] {
         optionFilterProp: 'label',
       },
     },
-    {
-      component: 'RangePicker',
-      fieldName: 'timeArr',
-      label: '开始时间',
-      rules: 'required',
-      formItemClass: 'col-span-2',
-      componentProps: {
-        format: 'YYYY-MM-DD HH:mm:ss',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss',
-      },
-    },
 
     /* {
       component: 'InputNumber',
@@ -239,39 +267,26 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'taskStatus',
       label: '任务状态',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('TASK_STATUS'),
       },
-    },
-    {
-      component: 'InputNumber',
-      fieldName: 'planHours',
-      label: '计划工时',
-      defaultValue: 0,
-      rules: 'required',
-      componentProps: {
-        min: 0,
-        precision: 2,
-        addonAfter: '小时',
+      dependencies: {
+        triggerFields: ['taskId'],
+        disabled: (value) => {
+          return value.taskId;
+        },
       },
     },
+
     {
       component: 'ApiSelect',
       fieldName: 'taskType',
       label: '任务类型',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('TASK_TYPE'),
-      },
-    },
-
-    {
-      component: 'AiEditor',
-      fieldName: 'taskRichText',
-      label: '内容',
-      formItemClass: 'col-span-3',
-      componentProps: {
-        defaultHtml: taskRichTemplateText,
       },
     },
   ];

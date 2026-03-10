@@ -110,8 +110,10 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
+      labelField: 'label',
+      valueField: 'value',
       change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
-        rowData.storyStatus = e.value || '';
+        rowData.storyStatus = e.value ?? '';
       },
     }),
   },
@@ -122,7 +124,7 @@ const columns: VTable.ColumnsDefine = [
     editor: new SelectEditor({
       options: getLocalDictList('STORY_TYPE'),
       change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
-        rowData.storyType = e.value || '';
+        rowData.storyType = e.value ?? '';
       },
     }),
   },
@@ -133,7 +135,7 @@ const columns: VTable.ColumnsDefine = [
     editor: new SelectEditor({
       options: getLocalDictList('STORY_LEVEL'),
       change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
-        rowData.storyLevel = e.value || '';
+        rowData.storyLevel = e.value ?? '';
       },
     }),
   },
@@ -257,7 +259,7 @@ const [Modal, modalApi] = useVbenModal({
 });
 </script>
 <template>
-  <Modal class="w-[1258px]">
+  <Modal class="w-[1100px]">
     <div class="h-[600px] w-full">
       <div
         id="tableContainer"

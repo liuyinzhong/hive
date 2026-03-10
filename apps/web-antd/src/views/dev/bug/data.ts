@@ -52,11 +52,13 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
       formItemClass: 'col-span-3',
     },
+
     {
       component: 'ApiSelect',
       fieldName: 'projectId',
       label: '项目',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value: any, formApi: any) => {
         return {
           api: () => getProjectsList(),
@@ -73,10 +75,21 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      component: 'AiEditor',
+      fieldName: 'bugRichText',
+      label: '',
+      labelWidth: 0,
+      formItemClass: 'col-span-2 row-span-12',
+      componentProps: {
+        defaultHtml: bugRichTemplateText,
+      },
+    },
+    {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value: any, formApi: any) => {
         if (!value.projectId) {
           return {};
@@ -106,6 +119,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'moduleId',
       label: '关联模块',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value, formApi) => {
         if (!value.projectId) {
           return {};
@@ -133,7 +147,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyId',
       label: '关联需求',
-      formItemClass: 'col-span-3',
+      formItemClass: 'col-span-1',
       renderComponentContent: () => ({
         option: (optionItem: any) => {
           return h(Flex, { gap: 10, align: 'center' }, [
@@ -194,6 +208,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'userId',
       label: '修复人',
       rules: 'required',
+      formItemClass: 'col-span-1',
       renderComponentContent: () => {
         return {
           option: (optionItem: any) => {
@@ -221,6 +236,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'bugLevel',
       label: '级别',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_LEVEL'),
       },
@@ -230,6 +246,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'bugEnv',
       label: '环境',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_ENV'),
       },
@@ -239,6 +256,11 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'bugStatus',
       label: '缺陷状态',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
+      dependencies: {
+        triggerFields: ['bugId'],
+        disabled: (value) => value.bugId,
+      },
       componentProps: {
         options: getLocalDictList('BUG_STATUS'),
       },
@@ -248,6 +270,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'bugSource',
       label: '来源',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_SOURCE'),
       },
@@ -257,17 +280,9 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'bugType',
       label: '缺陷类型',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_TYPE'),
-      },
-    },
-    {
-      component: 'AiEditor',
-      fieldName: 'bugRichText',
-      label: '内容',
-      formItemClass: 'col-span-3',
-      componentProps: {
-        defaultHtml: bugRichTemplateText,
       },
     },
     {
@@ -276,7 +291,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '浏览器信息',
       disabled: true,
       defaultValue: navigator.userAgent,
-      formItemClass: 'col-span-3',
+      formItemClass: 'col-span-1',
     },
   ];
 }
@@ -439,11 +454,7 @@ export function useColumns(
       width: 100,
       cellRender: {
         name: 'CellTag',
-        options: [
-          { label: '待确认', value: 0 },
-          { label: '非BUG', value: 10 },
-          { label: '是BUG', value: 20, color: 'error' },
-        ],
+        options: getLocalDictList('BUG_CONFIRM_STATUS'),
       },
     },
     {
@@ -519,12 +530,17 @@ export function useColumns(
             code: 'confirmBug',
             icon: 'lucide:circle-check',
             tips: '确认bug按钮',
-            disabled: (row: any) => row.bugConfirmStatus,
+            /* 确认已是bug时。禁止重复确认 */
+            disabled: (row: any) => row.bugConfirmStatus == 20,
           },
           {
             code: 'next',
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
+            disabled: (row: any) => {
+              /* 待确认时，禁止流转bug */
+              return row.bugConfirmStatus < 10;
+            },
           },
           {
             code: 'edit', // 默认的编辑按钮
@@ -579,20 +595,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
       fieldName: 'bugConfirmStatus',
       label: '缺陷确认状态',
       componentProps: {
-        options: [
-          {
-            label: '待确认',
-            value: 0,
-          },
-          {
-            label: '非BUG',
-            value: 10,
-          },
-          {
-            label: '是BUG',
-            value: 20,
-          },
-        ],
+        options: getLocalDictList('BUG_CONFIRM_STATUS'),
       },
       dependencies: {
         show: (value: any) => value.openModalSource === 'confirmBug',

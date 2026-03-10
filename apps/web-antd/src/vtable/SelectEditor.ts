@@ -175,7 +175,7 @@ export class SelectEditor implements IEditor {
    */
   private async processOptions(rowData: any) {
     // 如果配置了api，则从api获取数据
-    if (this.editorConfig.api) {
+    if (JSON.stringify(this.editorConfig.api) !== '{}') {
       try {
         const data = await this.editorConfig.api(rowData);
         // 根据resultField提取列表数据

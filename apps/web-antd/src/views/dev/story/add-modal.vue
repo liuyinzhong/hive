@@ -27,8 +27,7 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  // 大屏一行显示3个，中屏一行显示2个，小屏一行显示1个
-  wrapperClass: 'grid-cols-1 md:grid-cols-3',
+  wrapperClass: 'grid-cols-3',
   schema: useFormSchema(),
   showDefaultActions: false,
 });
@@ -66,7 +65,7 @@ async function onSubmit(values: Record<string, any>) {
 }
 </script>
 <template>
-  <Modal class="w-[800px]">
+  <Modal class="w-[1000px]">
     <Form />
   </Modal>
 </template>

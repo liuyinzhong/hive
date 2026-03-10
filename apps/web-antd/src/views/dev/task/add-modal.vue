@@ -34,7 +34,7 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  wrapperClass: 'grid-cols-1 md:grid-cols-3',
+  wrapperClass: 'grid-cols-3',
   fieldMappingTime: [
     ['timeArr', ['endDate', 'startDate'], 'YYYY-MM-DD HH:mm:ss'],
   ],
@@ -78,7 +78,7 @@ async function onSubmit(values: Record<string, any>) {
 }
 </script>
 <template>
-  <Modal class="w-[800px]">
+  <Modal class="w-[1000px]">
     <Form />
   </Modal>
 </template>

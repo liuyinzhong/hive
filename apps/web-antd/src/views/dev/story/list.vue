@@ -20,9 +20,10 @@ import addBugModal from '#/views/dev/bug/add-modal.vue';
 import { getStoryList, type DevStoryApi } from '#/api/dev';
 import { useGridFormSchema, useColumns } from './data';
 import { message, Button } from 'ant-design-vue';
-import { Plus } from '@vben/icons';
+import { Plus, LucideTableProperties, LucidePlus } from '@vben/icons';
 import { sleep } from '#/utils';
 import type { Recordable } from '@vben/types';
+import { h } from 'vue';
 // 跳转路由
 const router = useRouter();
 
@@ -203,16 +204,23 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
     <Grid>
       <template #toolbar-actions>
         <Button class="mr-2" type="primary" @click="onCreate()">
-          <Plus class="size-5" />新建需求
+          <template #icon>
+            <LucidePlus class="size-5" />
+          </template>
+          新建需求
         </Button>
+
         <Button class="mr-2" type="primary" @click="openAddBatchStoryModal">
+          <template #icon>
+            <LucideTableProperties class="size-5" />
+          </template>
           批量新建
         </Button>
       </template>
     </Grid>
     <AddFormModal @success="gridApi.query" />
     <BatchFormModal />
-    <NextModal />
+    <NextModal @success="gridApi.query" />
     <DetailDrawer />
     <AddTaskModal />
     <AddBugModal />

@@ -5,10 +5,14 @@ import { useVbenForm } from '#/adapter/form';
 import { useNextFormSchema } from './data';
 import { message } from 'ant-design-vue';
 import { getLocalDictList } from '#/dicts';
-
+import CommonPhrase from '#/components/CommonPhrase/index.vue';
 defineOptions({
   name: 'TaskNextModal',
 });
+
+const emit = defineEmits<{
+  success: [];
+}>();
 
 const stepsItems: any = getLocalDictList('TASK_STATUS').map((item: any) => ({
   title: item.label,
@@ -62,6 +66,11 @@ function onSubmit(values: Record<string, any>) {
       key: 'is-form-submitting',
     });
   }, 3000);
+  emit('success');
+}
+
+function setCommentRichText(value: string) {
+  formApi.setFieldValue('commentRichText', value);
 }
 </script>
 <template>
@@ -73,6 +82,11 @@ function onSubmit(values: Record<string, any>) {
           direction="vertical"
           @change="changeCurrent"
           :items="stepsItems"
+        />
+        <a-divider dashed>常用语(双击)</a-divider>
+        <CommonPhrase
+          :textList="['已完成，已更新至测试环境']"
+          @dblClick="setCommentRichText"
         />
       </a-col>
       <a-col :span="18">

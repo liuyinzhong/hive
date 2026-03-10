@@ -34,13 +34,29 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyTitle',
       label: '需求标题',
       rules: 'required',
+      formItemClass: 'col-span-3 items-baseline',
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'userList',
+      label: '参与人员',
       formItemClass: 'col-span-3',
+      componentProps: {
+        allowClear: true,
+        mode: 'multiple',
+        maxTagCount: 6,
+        api: () => getUserListAll(),
+        labelField: 'realName',
+        valueField: 'userId',
+        resultField: 'items',
+      },
     },
     {
       component: 'ApiSelect',
       fieldName: 'projectId',
       label: '项目',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value: any, formApi: any) => {
         return {
           api: () => getProjectsList(),
@@ -50,11 +66,23 @@ export function useFormSchema(): VbenFormSchema[] {
         };
       },
     },
+
+    {
+      component: 'AiEditor',
+      fieldName: 'storyRichText',
+      label: '',
+      labelWidth: 0,
+      formItemClass: 'col-span-2 row-span-9',
+      componentProps: {
+        defaultHtml: storyRichTemplateText,
+      },
+    },
     {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value, formApi) => {
         if (!value.projectId) {
           return {};
@@ -82,6 +110,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'moduleId',
       label: '关联模块',
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: (value, formApi) => {
         if (!value.projectId) {
           return {};
@@ -99,27 +128,21 @@ export function useFormSchema(): VbenFormSchema[] {
         triggerFields: ['projectId'],
       },
     },
-    {
-      component: 'ApiSelect',
-      fieldName: 'userList',
-      label: '参与人员',
-      componentProps: {
-        allowClear: true,
-        mode: 'multiple',
-        maxTagCount: 1,
-        api: () => getUserListAll(),
-        labelField: 'realName',
-        valueField: 'userId',
-        resultField: 'items',
-      },
-    },
+
     {
       component: 'ApiSelect',
       fieldName: 'storyStatus',
       label: '需求状态',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('STORY_STATUS'),
+      },
+      dependencies: {
+        triggerFields: ['storyId'],
+        disabled(row: any) {
+          return row.storyId;
+        },
       },
     },
     {
@@ -128,6 +151,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '需求类型',
       rules: 'required',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('STORY_TYPE'),
       },
@@ -137,6 +161,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyLevel',
       label: '优先级',
+      formItemClass: 'col-span-1',
       defaultValue: 0,
       componentProps: {
         api: () => getLocalDictList('STORY_LEVEL'),
@@ -147,6 +172,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'source',
       label: '需求来源',
       defaultValue: 0,
+      formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('STORY_SOURCE'),
       },
@@ -155,7 +181,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Upload',
       fieldName: 'files',
       label: '附件',
-      formItemClass: 'col-span-3',
+      formItemClass: 'col-span-1',
       componentProps: {
         // 更多属性见：https://ant.design/components/upload-cn
         // 自动携带认证信息
@@ -166,15 +192,6 @@ export function useFormSchema(): VbenFormSchema[] {
         showUploadList: true,
         // 上传列表的内建样式，支持四种基本样式 text, picture, picture-card 和 picture-circle
         listType: 'text',
-      },
-    },
-    {
-      component: 'AiEditor',
-      fieldName: 'storyRichText',
-      label: '内容',
-      formItemClass: 'col-span-3',
-      componentProps: {
-        defaultHtml: storyRichTemplateText,
       },
     },
   ];
@@ -515,9 +532,6 @@ export function useNextFormSchema(): VbenFormSchema[] {
       fieldName: 'commentRichText',
       label: '',
       labelWidth: 30,
-      componentProps: {
-        placeholder: '请输入内容。文本可拖拽输入',
-      },
     },
   ];
 }

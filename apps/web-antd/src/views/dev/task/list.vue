@@ -162,7 +162,7 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
     </Grid>
     <AddFormModal @success="gridApi.query" />
     <BatchFormModal />
-    <NextModal />
+    <NextModal @success="gridApi.query" />
     <DetailDrawer />
   </Page>
 </template>
