@@ -487,6 +487,9 @@ export function useColumns(
             code: 'next',
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
+            disabled: (row: DevStoryApi.DevStoryFace) => {
+              return row.storyStatus == 99;
+            },
           },
           {
             code: 'edit', // 默认的编辑按钮

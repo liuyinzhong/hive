@@ -530,16 +530,17 @@ export function useColumns(
             code: 'confirmBug',
             icon: 'lucide:circle-check',
             tips: '确认bug按钮',
-            /* 确认已是bug时。禁止重复确认 */
-            disabled: (row: any) => row.bugConfirmStatus == 20,
+            /* 确认已是bug时。禁止重复确认、bug已关闭时禁止确认 */
+            disabled: (row: any) =>
+              row.bugConfirmStatus == 20 || row.bugStatus == 99,
           },
           {
             code: 'next',
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
             disabled: (row: any) => {
-              /* 待确认时，禁止流转bug */
-              return row.bugConfirmStatus < 10;
+              /* 待确认时，禁止流转bug 、bug已关闭时禁止流转 */
+              return row.bugConfirmStatus == 0 || row.bugStatus == 99;
             },
           },
           {
