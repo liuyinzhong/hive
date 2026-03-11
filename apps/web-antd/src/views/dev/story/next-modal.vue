@@ -71,8 +71,8 @@ function onSubmit(values: Record<string, any>) {
   emit('success');
 }
 
-function setCommentRichText(value: string) {
-  formApi.setFieldValue('commentRichText', value);
+function setChangeRichText(value: string) {
+  formApi.setFieldValue('changeRichText', value);
 }
 </script>
 <template>
@@ -94,7 +94,7 @@ function setCommentRichText(value: string) {
             '产品验收通过，转由业务验收',
             '业务验收通过，可安排发版',
           ]"
-          @dblClick="setCommentRichText"
+          @dblClick="setChangeRichText"
         />
       </a-col>
       <a-col :span="18">

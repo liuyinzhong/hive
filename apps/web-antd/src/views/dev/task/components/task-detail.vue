@@ -7,21 +7,20 @@ import {
   type DevTaskApi,
   type DevChangeApi,
 } from '#/api/dev';
-import { getLocalDictList, getLocalDictText } from '#/dicts';
 import { message } from 'ant-design-vue';
 import { useTabs } from '@vben/hooks';
 import {
-  Page,
   VbenButton,
   VbenButtonGroup,
-  VbenCheckButtonGroup,
   useVbenModal,
-  alert,
   confirm,
+  prompt,
 } from '@vben/common-ui';
 
-import AiEditor from '#/components/aieditor/index.vue';
+import AiEditor from '#/components/AiEditor/index.vue';
 import BaseInfo from './base-info.vue';
+import ChangeLog from '#/views/dev/story/components/change-log.vue';
+
 import nextModal from '#/views/dev/task/next-modal.vue';
 import addFormModal from '#/views/dev/task/add-modal.vue';
 
@@ -64,7 +63,7 @@ watch(
 const detail = ref<DevTaskApi.DevTaskFace>({});
 const loading = ref(false);
 
-const activeKey = ref('基本信息');
+const activeKey = ref('变更日志');
 
 /**
  * 加载任务详情
@@ -83,8 +82,6 @@ const loadTaskDetail = () => {
         return;
       }
       detail.value = res;
-
-      loadChangeLogList(detail.value.taskId as string);
     })
     .finally(() => {
       loading.value = false;
@@ -94,6 +91,24 @@ const loadTaskDetail = () => {
 //#region 按钮点击事件
 const onBtnClick = (btnType: string) => {
   switch (btnType) {
+    case '添加评论':
+      prompt({
+        component: AiEditor,
+        content: '',
+        title: '添加评论',
+        modelPropName: 'modelValue',
+      }).then((val) => {
+        let params = {
+          businessId: detail.value.taskId,
+          businessType: 10,
+          changeBehavior: 20,
+          changeRichText: val,
+        };
+        console.log(params);
+
+        loadTaskDetail();
+      });
+      break;
     case '流转按钮':
       NextModalApi.setData(detail.value).open();
       break;
@@ -146,21 +161,10 @@ const [NextModal, NextModalApi] = useVbenModal({
 });
 //#endregion
 
-//#region 变更记录
-const changeLogList = ref<DevChangeApi.DevChangeFace[]>([]);
-const loadChangeLogList = (taskId: string) => {
-  if (!taskId) {
-    return;
-  }
-
-  getChangeList({
-    fkId: taskId,
-    fkType: 10,
-  }).then((res: DevChangeApi.DevChangeFace[]) => {
-    changeLogList.value = res || [];
-  });
-};
-//#endregion
+// 暴露方法
+defineExpose({
+  loadTaskDetail,
+});
 </script>
 <template>
   <div v-spinning="loading">
@@ -178,41 +182,16 @@ const loadChangeLogList = (taskId: string) => {
           <!-- 富文本内容 -->
           <div v-html="detail.taskRichText" style="min-height: 300px"></div>
           <div v-html="detail.taskRichText" style="min-height: 300px"></div>
-          <div v-html="detail.taskRichText" style="min-height: 300px"></div>
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
           <a-tabs v-model:activeKey="activeKey">
+            <a-tab-pane key="变更日志" tab="变更日志">
+              <ChangeLog :businessId="detail.taskId ?? ''" />
+            </a-tab-pane>
             <a-tab-pane key="基本信息" tab="基本信息">
               <BaseInfo :taskInfo="detail" />
             </a-tab-pane>
           </a-tabs>
-          <br />
-          <div>
-            <a-typography-paragraph>
-              <a-typography-title :level="5">
-                <blockquote>变更记录</blockquote>
-              </a-typography-title>
-            </a-typography-paragraph>
-            <a-empty v-if="changeLogList.length === 0" />
-            <a-timeline v-else>
-              <a-timeline-item
-                v-for="item in changeLogList"
-                :key="item.changeId"
-              >
-                <div>
-                  {{ item.createDate }}
-                  <span style="margin-right: 8px">{{ item.creatorName }}</span>
-                  <a-tag>
-                    {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeType) }}
-                    {{ getLocalDictText('CHANGE_TYPE', item.fkType) }}
-                  </a-tag>
-                </div>
-
-                <div v-html="item.changeRichText"></div>
-              </a-timeline-item>
-            </a-timeline>
-          </div>
-          <br />
         </a-col>
       </a-row>
     </div>
@@ -220,13 +199,24 @@ const loadChangeLogList = (taskId: string) => {
     <a-affix :offset-bottom="30" v-if="showBtn">
       <div class="text-center">
         <VbenButtonGroup border size="large">
-          <VbenButton @click="onBtnClick('流转按钮')">
+          <VbenButton @click="onBtnClick('添加评论')" class="cursor-pointer">
+            <span class="icon-[lucide--message-circle-plus]"></span>
+          </VbenButton>
+          <VbenButton
+            @click="onBtnClick('流转按钮')"
+            class="cursor-pointer"
+            :disabled="detail.taskStatus == 99"
+          >
             <span class="icon-[lucide--redo-dot]"></span>
           </VbenButton>
-          <VbenButton @click="onBtnClick('编辑按钮')">
+          <VbenButton
+            @click="onBtnClick('编辑按钮')"
+            class="cursor-pointer"
+            :disabled="detail.taskStatus == 99"
+          >
             <span class="icon-[lucide--pencil-line]"></span>
           </VbenButton>
-          <VbenButton @click="onBtnClick('删除按钮')">
+          <VbenButton @click="onBtnClick('删除按钮')" class="cursor-pointer">
             <span class="icon-[lucide--trash-2]"></span>
           </VbenButton>
         </VbenButtonGroup>

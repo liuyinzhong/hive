@@ -66,7 +66,9 @@ defineExpose({
 
 <template>
   <a-button v-bind="$attrs" @click="handleCopy">
-    <span v-if="showIcon" class="icon-[lucide--copy]"></span>
-    <span v-if="showText">复制</span>
+    <a-flex align="center" :gap="5">
+      <span v-if="showIcon" class="icon-[lucide--link]"></span>
+      <span v-if="showText">复制</span>
+    </a-flex>
   </a-button>
 </template>

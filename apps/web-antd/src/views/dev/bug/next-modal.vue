@@ -75,8 +75,8 @@ function onSubmit(values: Record<string, any>) {
 }
 //#endregion
 
-function setCommentRichText(value: string) {
-  formApi.setFieldValue('commentRichText', value);
+function setChangeRichText(value: string) {
+  formApi.setFieldValue('changeRichText', value);
 }
 </script>
 <template>
@@ -102,7 +102,7 @@ function setCommentRichText(value: string) {
               '测试验证完毕，已关闭',
               '非BUG，已关闭',
             ]"
-            @dblClick="setCommentRichText"
+            @dblClick="setChangeRichText"
           />
         </div>
       </a-col>

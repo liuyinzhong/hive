@@ -487,6 +487,9 @@ export function useColumns(
             icon: 'lucide:pencil-line',
             text: '',
             tips: '编辑按钮',
+            disabled: (row: DevTaskApi.DevTaskFace) => {
+              return row.taskStatus == 99;
+            },
           },
           {
             code: 'delete', // 默认的删除按钮
@@ -523,7 +526,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'AiEditor',
-      fieldName: 'commentRichText',
+      fieldName: 'changeRichText',
       label: '',
     },
   ];

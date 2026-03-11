@@ -93,7 +93,7 @@ const PreviewGroup = defineAsyncComponent(() =>
 );
 
 const AiEditor = defineAsyncComponent(
-  () => import('#/components/aieditor/index.vue'),
+  () => import('#/components/AiEditor/index.vue'),
 );
 
 const ColorSelect = defineAsyncComponent(

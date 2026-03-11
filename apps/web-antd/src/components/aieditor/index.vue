@@ -10,7 +10,7 @@ import 'aieditor/dist/style.css';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { usePreferences } from '@vben/preferences';
 import { getUserListAll } from '#/api/system';
-
+import { upload_file } from '#/api/examples/upload';
 const emit = defineEmits(['update:modelValue', 'update:text']); // 用于触发 v-model 更新
 
 const { isDark } = usePreferences();
@@ -24,12 +24,14 @@ const {
   width = '100%',
   height = '600px',
   placeholder = '', // 新增占位符属性
+  showToolbar = true, // 新增工具栏按钮属性
 } = defineProps({
   modelValue: String, // 双向绑定的值
   defaultHtml: String, // 默认的 html 内容
   width: String, // 宽度
   height: String, // 高度
   placeholder: String, // 新增占位符属性
+  showToolbar: Boolean, // 新增工具栏按钮属性
 });
 onMounted(() => {
   aiEditor = new AiEditor({
@@ -47,34 +49,40 @@ onMounted(() => {
     contentRetentionKey: 'ai-editor-content',
     /* 是否可以通过在右下角拖动调整编辑器的大小 */
     draggable: true,
+    toolbarKeys: showToolbar ? undefined : [], // 根据 showToolbar 动态设置工具栏按钮
     toolbarExcludeKeys: ['video', 'attachment'], // 排除的工具栏按钮
     image: {
-      uploadUrl: 'https://your-domain/image/upload',
-      uploadHeaders: {
-        jwt: 'xxxxx',
-        other: 'xxxx',
-      },
       uploader: (
         file: File,
         uploadUrl: string,
         headers: Record<string, any>,
         formName: string,
       ): Promise<Record<string, any>> => {
-        const formData = new FormData();
-        formData.append(formName, file);
         return new Promise((resolve, reject) => {
-          fetch(uploadUrl, {
-            method: 'post',
-            headers: { Accept: 'application/json', ...headers },
-            body: formData,
-          })
+          upload_file({
+            file,
+            onSuccess: (data: any, file: File) => {
+              resolve({
+                errorCode: 0,
+                data: {
+                  src: data.url,
+                  alt: formName || '',
+                },
+              });
+            },
+            onError: (error: Error) => {
+              reject(error);
+            },
+          });
+
+          /* requestClient.upload('/upload', { file })
             .then((resp) => resp.json())
             .then((json) => {
               resolve(json);
             })
             .catch((error) => {
               reject(error);
-            });
+            }); */
         });
       },
     },
@@ -102,7 +110,6 @@ onMounted(() => {
       emit('update:text', aiEditor.getText());
     },
   });
-
   aiEditor.setContent(defaultHtml || '');
 });
 
@@ -130,6 +137,11 @@ const _getUserListAll = async (query: string) => {
     avatar: item.avatar,
   }));
 };
+
+// 暴露方法
+defineExpose({
+  aiEditor: () => aiEditor,
+});
 </script>
 
 <style>

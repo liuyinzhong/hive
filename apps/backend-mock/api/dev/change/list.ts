@@ -26,27 +26,27 @@ function generateMockDataList(count: number) {
   );
 
   for (let i = 0; i < count; i++) {
-    let fkType: number = faker.helpers.arrayElement([0, 10, 20, 30]);
+    let businessType: number = faker.helpers.arrayElement([0, 10, 20, 30]);
 
-    let fkId: string = '';
-    if (fkType === 0) {
-      fkId = faker.helpers.arrayElement(mockStoryData).storyId;
-    } else if (fkType === 10) {
-      fkId = faker.helpers.arrayElement(mockTaskData).taskId;
-    } else if (fkType === 20) {
-      fkId = faker.helpers.arrayElement(mockBugData).bugId;
-    } else if (fkType === 30) {
-      fkId = faker.helpers.arrayElement(mockVersionData).versionId;
+    let businessId: string = '';
+    if (businessType === 0) {
+      businessId = faker.helpers.arrayElement(mockStoryData).storyId;
+    } else if (businessType === 10) {
+      businessId = faker.helpers.arrayElement(mockTaskData).taskId;
+    } else if (businessType === 20) {
+      businessId = faker.helpers.arrayElement(mockBugData).bugId;
+    } else if (businessType === 30) {
+      businessId = faker.helpers.arrayElement(mockVersionData).versionId;
     }
 
     const dataItem: Record<string, any> = {
       changeId: faker.string.uuid(),
-      changeType: faker.helpers.arrayElement([0, 10, 20, 30]),
+      changeBehavior: faker.helpers.arrayElement([0, 10, 20, 30]),
       changeRichText: faker.lorem.paragraph(),
       creatorId: userInfo.userId,
       creatorName: userInfo.realName,
-      fkId: fkId,
-      fkType: fkType,
+      businessId,
+      businessType,
       extendJson: '',
       createDate: formatterCN.format(
         faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
@@ -71,12 +71,14 @@ export default eventHandler(async (event) => {
 
   let listData = structuredClone(mockChangeData);
 
-  const { fkType, fkId } = getQuery(event);
-  if (fkType) {
-    listData = listData.filter((item) => item.fkType === Number(fkType));
+  const { businessType, businessId } = getQuery(event);
+  if (businessType) {
+    listData = listData.filter(
+      (item) => item.businessType === Number(businessType),
+    );
   }
-  if (fkId) {
-    listData = listData.filter((item) => item.fkId === fkId);
+  if (businessId) {
+    listData = listData.filter((item) => item.businessId === businessId);
   }
 
   /* 全量响应 */

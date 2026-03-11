@@ -5,14 +5,14 @@ export namespace DevChangeApi {
     [key: string]: any;
     changeId?: string;
     /* 字典：CHANGE_BEHAVIOR */
-    changeType?: string;
+    changeBehavior?: string;
     /* 变更原因,富文本格式 */
     changeRichText?: string;
     creatorId?: string;
     creatorName?: string;
-    fkId?: string;
+    businessId?: string;
     /* 字典：CHANGE_TYPE */
-    fkType?: string;
+    businessType?: string;
     extendJson?: string;
     /** 创建时间 (在TS中通常使用字符串格式的时间，也可根据实际情况用Date) */
     createDate?: string | Date;

@@ -459,14 +459,10 @@ export function useColumns(
             icon: 'lucide:badge-plus',
             tips: '添加任务',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              if (
-                row.versionId &&
-                row.storyStatus > 0 &&
-                row.storyStatus < 99
-              ) {
-                return false;
-              } else {
+              if (!row.versionId || [0, 99].includes(row.storyStatus)) {
                 return true;
+              } else {
+                return false;
               }
             },
           },
@@ -476,10 +472,10 @@ export function useColumns(
             icon: 'lucide:bug',
             tips: '添加缺陷',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              if (row.versionId && row.storyStatus > 0) {
-                return false;
-              } else {
+              if (!row.versionId || [0].includes(row.storyStatus)) {
                 return true;
+              } else {
+                return false;
               }
             },
           },
@@ -496,6 +492,9 @@ export function useColumns(
             icon: 'lucide:pencil-line',
             text: '',
             tips: '编辑按钮',
+            disabled: (row: DevStoryApi.DevStoryFace) => {
+              return row.storyStatus == 99;
+            },
           },
           {
             code: 'delete', // 默认的删除按钮
@@ -532,7 +531,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'AiEditor',
-      fieldName: 'commentRichText',
+      fieldName: 'changeRichText',
       label: '',
       labelWidth: 30,
     },

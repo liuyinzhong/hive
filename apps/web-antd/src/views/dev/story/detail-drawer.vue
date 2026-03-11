@@ -4,6 +4,8 @@ import { useVbenDrawer } from '@vben/common-ui';
 import StoryDetail from './components/story-detail.vue';
 import { type DevStoryApi } from '#/api/dev';
 import CopyButton from '#/components/CopyButton/index.vue';
+import AiEditor from '#/components/AiEditor/index.vue';
+import UserAvatar from '#/components/UserAvatar/index.vue';
 
 defineOptions({
   name: 'StoryTrackDrawer',
@@ -13,14 +15,12 @@ defineOptions({
  * 抽屉实例
  */
 const [Drawer, DrawerApi] = useVbenDrawer({
-  confirmText: '新窗口',
+  showCancelButton: false,
+  showConfirmButton: false,
   onOpenChange: (open: boolean) => {
     if (open) {
       storyInfo.value = DrawerApi.getData();
     }
-  },
-  onConfirm: () => {
-    window.open(storyLink.value);
   },
 });
 
@@ -32,12 +32,56 @@ const storyInfo = ref<DevStoryApi.DevStoryFace>({});
 const storyLink = computed(
   () => location.origin + `/dev/story/detail/${storyInfo.value.storyNum}`,
 );
+
+const newTab = () => {
+  window.open(storyLink.value);
+};
+
+const changeRichTextRef = ref<any>();
+const submit = () => {
+  DrawerApi.lock();
+  setTimeout(() => {
+    let params = {
+      businessId: storyInfo.value.storyId,
+      businessType: 0,
+      changeBehavior: 20,
+      changeRichText: changeRichTextRef.value?.aiEditor()?.getHtml() || '',
+    };
+    console.log(params);
+    DrawerApi.unlock();
+    DrawerApi.close();
+  }, 1000);
+};
 </script>
 <template>
   <Drawer title="需求详情" class="w-[45%]">
+    <template #extra>
+      <a-space size="small">
+        <CopyButton :text="storyLink" type="dashed" />
+        <a-button @click="newTab" type="dashed">
+          <a-flex align="center" :gap="5">
+            <span class="icon-[lucide--app-window] size-4"></span>
+            <span>新窗口</span>
+          </a-flex>
+        </a-button>
+      </a-space>
+    </template>
     <StoryDetail :storyNum="storyInfo.storyNum" :showBtn="false" />
     <template #prepend-footer>
-      <CopyButton :text="storyLink" type="dashed" />
+      <div class="w-full">
+        <a-flex align="start" :gap="5" class="w-full mb-2">
+          <UserAvatar></UserAvatar>
+          <AiEditor
+            width="100%"
+            height="100%"
+            :showToolbar="false"
+            ref="changeRichTextRef"
+          />
+        </a-flex>
+        <div class="w-full flex justify-end">
+          <a-button type="primary" @click="submit">提交</a-button>
+        </div>
+      </div>
     </template>
   </Drawer>
 </template>

@@ -605,7 +605,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'AiEditor',
-      fieldName: 'commentRichText',
+      fieldName: 'changeRichText',
       label: '',
     },
   ];

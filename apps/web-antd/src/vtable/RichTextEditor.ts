@@ -8,7 +8,7 @@ import type {
 
 import type { ComponentPublicInstance } from 'vue';
 
-import AiEditor from '#/components/aieditor/index.vue';
+import AiEditor from '#/components/AiEditor/index.vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 

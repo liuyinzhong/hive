@@ -69,8 +69,8 @@ function onSubmit(values: Record<string, any>) {
   emit('success');
 }
 
-function setCommentRichText(value: string) {
-  formApi.setFieldValue('commentRichText', value);
+function setChangeRichText(value: string) {
+  formApi.setFieldValue('changeRichText', value);
 }
 </script>
 <template>
@@ -86,7 +86,7 @@ function setCommentRichText(value: string) {
         <a-divider dashed>常用语(双击)</a-divider>
         <CommonPhrase
           :textList="['已完成，已更新至测试环境']"
-          @dblClick="setCommentRichText"
+          @dblClick="setChangeRichText"
         />
       </a-col>
       <a-col :span="18">
