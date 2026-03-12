@@ -1280,7 +1280,7 @@ let datalist = [
     id: 'cfe27969-a9c5-4923-addf-b3ede774884d',
     pid: 'be0e3fa5-d405-4292-bc9f-cb1652dbe91a',
     label: '已发版master',
-    value: 40,
+    value: 99,
     type: 'RELEASE_STATUS',
     remark: null,
     color: null,

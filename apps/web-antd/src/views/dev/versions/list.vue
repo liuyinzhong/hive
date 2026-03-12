@@ -26,6 +26,17 @@ const [Grid, gridApi] = useVbenVxeGrid({
   },
   gridOptions: {
     columns: useColumns(onActionClick),
+    toolbarConfig: {
+      zoom: true,
+      custom: true,
+      refresh: true,
+      export: true,
+    },
+    exportConfig: {},
+    editConfig: {
+      trigger: 'click',
+      mode: 'cell',
+    },
     proxyConfig: {
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
