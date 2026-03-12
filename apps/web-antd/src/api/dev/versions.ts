@@ -4,21 +4,21 @@ import { objectOmit } from '@vueuse/core';
 export namespace DevVersionApi {
   export interface DevVersionFace {
     [key: string]: any;
-    versionId: string;
-    version: string;
-    versionType: number;
+    versionId?: string;
+    version?: string;
+    versionType?: number;
     remark?: string;
-    creatorId: string;
-    creatorName: string;
-    createDate: string;
-    updateDate: string;
-    startDate: string;
-    endDate: string;
-    projectId: string;
-    releaseStatus: number;
-    releaseDate: string;
-    changeLogRichText: string;
-    changeLog: string;
+    creatorId?: string;
+    creatorName?: string;
+    createDate?: string;
+    updateDate?: string;
+    startDate?: string;
+    endDate?: string;
+    projectId?: string;
+    releaseStatus?: number;
+    releaseDate?: string;
+    changeLogRichText?: string;
+    changeLog?: string;
   }
 }
 
@@ -32,6 +32,17 @@ export const getVersionsList = async (params: Recordable<any>) => {
     '/dev/versions/list',
     { params },
   );
+};
+
+/**
+ * 获取版本详情数据
+ *
+ * @param params 查询参数
+ */
+export const getVersionDetail = async (versionId: string) => {
+  return requestClient.get<DevVersionApi.DevVersionFace>('/dev/versions/get', {
+    params: { versionId },
+  });
 };
 
 /**

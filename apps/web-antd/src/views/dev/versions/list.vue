@@ -15,6 +15,8 @@ import { useColumns, useGridFormSchema } from './data';
 import addFormModal from './add-modal.vue';
 import nextFormModal from './next-modal.vue';
 import type { Recordable } from '@vben/types';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -70,6 +72,12 @@ function onActionClick({
     }
     case 'next': {
       NextModalApi.setData(row).open();
+      break;
+    }
+    case 'detail': {
+      router.push({
+        path: '/dev/versions/detail/' + row.versionId,
+      });
       break;
     }
   }

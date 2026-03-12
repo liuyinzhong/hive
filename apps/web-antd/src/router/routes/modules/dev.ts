@@ -33,6 +33,17 @@ const routes: RouteRecordRaw[] = [
       activePath: '/dev/bug/list',
     },
   },
+  {
+    name: 'devVersionDetail',
+    path: '/dev/versions/detail/:versionId',
+    component: () => import('#/views/dev/versions/detail.vue'),
+    meta: {
+      title: '版本详情',
+      hideInMenu: true,
+      maxNumOfOpenTab: 3,
+      activePath: '/dev/versions/list',
+    },
+  },
 ];
 
 export default routes;

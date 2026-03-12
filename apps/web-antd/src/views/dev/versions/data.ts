@@ -233,7 +233,7 @@ export function useColumns(
       headerAlign: 'center',
       showOverflow: false,
       title: $t('system.dept.operation'),
-      width: 110,
+      width: 150,
       cellRender: {
         attrs: {
           nameField: 'version',
@@ -242,6 +242,11 @@ export function useColumns(
         },
         name: 'CellOperation',
         options: [
+          {
+            code: 'detail',
+            icon: 'lucide:chart-pie',
+            tips: '统计按钮',
+          },
           {
             code: 'next',
             icon: 'lucide:redo-dot',
