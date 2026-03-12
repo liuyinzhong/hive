@@ -15,7 +15,7 @@ export namespace DevVersionApi {
     startDate: string;
     endDate: string;
     projectId: string;
-    releaseStatus: string;
+    releaseStatus: number;
     releaseDate: string;
     changeLogRichText: string;
     changeLog: string;

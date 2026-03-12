@@ -243,14 +243,60 @@ export function useColumns(
         name: 'CellOperation',
         options: [
           {
+            code: 'next',
+            icon: 'lucide:redo-dot',
+            tips: '流转按钮',
+            disabled: (row: DevVersionApi.DevVersionFace) => {
+              return row.releaseStatus == 99;
+            },
+          },
+          {
             code: 'edit', // 默认的编辑按钮
-            text: '编辑',
+            icon: 'lucide:pencil-line',
+            text: '',
+            tips: '编辑按钮',
+            disabled: (row: DevVersionApi.DevVersionFace) => {
+              return row.releaseStatus == 99;
+            },
           },
           {
             code: 'delete', // 默认的删除按钮
+            icon: 'lucide:trash-2',
+            text: '',
+            tips: '删除按钮',
           },
         ],
       },
+    },
+  ];
+}
+
+/** 流转表单配置 */
+export function useNextFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      fieldName: 'versionId',
+      label: '版本主键id',
+      dependencies: {
+        triggerFields: ['versionId'],
+        show: false,
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'releaseStatus',
+      label: '发布状态',
+      dependencies: {
+        triggerFields: ['versionId'],
+        show: false,
+      },
+    },
+    {
+      component: 'AiEditor',
+      fieldName: 'changeRichText',
+      label: '',
+      labelWidth: 30,
     },
   ];
 }

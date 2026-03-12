@@ -13,6 +13,7 @@ import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
 import addFormModal from './add-modal.vue';
+import nextFormModal from './next-modal.vue';
 import type { Recordable } from '@vben/types';
 
 // 表格分页
@@ -56,12 +57,22 @@ function onActionClick({
       onEdit(row);
       break;
     }
+    case 'next': {
+      NextModalApi.setData(row).open();
+      break;
+    }
   }
 }
 
 // #region 单个添加，编辑 表单弹窗
 const [FormModal, FormModalApi] = useVbenModal({
   connectedComponent: addFormModal,
+  destroyOnClose: true,
+});
+
+// #region 单个流转 表单弹窗
+const [NextModal, NextModalApi] = useVbenModal({
+  connectedComponent: nextFormModal,
   destroyOnClose: true,
 });
 
@@ -105,5 +116,6 @@ async function onDelete(row: DevVersionApi.DevVersionFace) {
       </template>
     </Grid>
     <FormModal @success="gridApi.query" />
+    <NextModal @success="gridApi.query" />
   </Page>
 </template>
