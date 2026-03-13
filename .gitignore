@@ -51,7 +51,6 @@ vite.config.ts.*
 .history
 /apps/web-antd/dist-electron/
 /playground/dist-electron/
-.cursor
 
 # AI
 .agent
