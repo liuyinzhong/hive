@@ -21,14 +21,6 @@ const customConfig: Linter.Config[] = [
     ignores: restrictedImportIgnores,
     rules: {
       'perfectionist/sort-interfaces': 'off',
-      'perfectionist/sort-objects': 'off',
-    },
-  },
-  {
-    files: ['**/**.vue'],
-    ignores: restrictedImportIgnores,
-    rules: {
-      'perfectionist/sort-objects': 'off',
     },
   },
   {
@@ -63,7 +55,6 @@ const customConfig: Linter.Config[] = [
           ],
         },
       ],
-      'perfectionist/sort-interfaces': 'off',
     },
   },
   {
@@ -137,19 +128,12 @@ const customConfig: Linter.Config[] = [
   {
     files: ['apps/backend-mock/**/**', 'docs/**/**'],
     rules: {
-      '@typescript-eslint/no-extraneous-class': 'off',
-      'n/no-extraneous-import': 'off',
-      'n/prefer-global/buffer': 'off',
-      'n/prefer-global/process': 'off',
       'no-console': 'off',
-      'unicorn/prefer-module': 'off',
     },
   },
   {
     files: ['**/**/playwright.config.ts'],
     rules: {
-      'n/prefer-global/buffer': 'off',
-      'n/prefer-global/process': 'off',
       'no-console': 'off',
     },
   },
