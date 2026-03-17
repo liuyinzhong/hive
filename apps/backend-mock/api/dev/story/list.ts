@@ -21,10 +21,10 @@ function generateMockDataList(count: number) {
 
   for (let i = 0; i < count; i++) {
     /* 随机从项目表中取一个项目 */
-    let projectInfo: any = faker.helpers.arrayElement(mockProjectData);
+    const projectInfo: any = faker.helpers.arrayElement(mockProjectData);
 
     /* 从版本表中取当前项目的版本 */
-    let versionList: any = mockVersionData.filter(
+    const versionList: any = mockVersionData.filter(
       (item) => item.projectId === projectInfo.projectId,
     );
     /* 随机从版本表中取一个版本 */
@@ -34,7 +34,7 @@ function generateMockDataList(count: number) {
     }
 
     /* 从模块表中取当前项目的模块 */
-    let moduleList: any = mockModuleData.filter(
+    const moduleList: any = mockModuleData.filter(
       (item) => item.projectId === projectInfo.projectId,
     );
     /* 随机从模块表中取一个模块 */
@@ -89,7 +89,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockStoryData = generateMockDataList(100);
+export const mockStoryData = generateMockDataList(10000);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

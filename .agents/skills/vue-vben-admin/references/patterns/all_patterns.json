@@ -1,0 +1,27 @@
+[
+  {
+    "file_path": "/root/.openclaw/workspace/skills/vue-vben-admin/vue-vben-admin-repo/vue-vben-admin-main/packages/@core/base/shared/src/utils/state-handler.ts",
+    "language": "TypeScript",
+    "patterns": [
+      {
+        "pattern_type": "ChainOfResponsibility",
+        "category": "Behavioral",
+        "confidence": 0.6,
+        "location": "/root/.openclaw/workspace/skills/vue-vben-admin/vue-vben-admin-repo/vue-vben-admin-main/packages/@core/base/shared/src/utils/state-handler.ts",
+        "class_name": "StateHandler",
+        "method_name": null,
+        "line_number": 1,
+        "evidence": [
+          "Class name suggests handler chain: StateHandler"
+        ],
+        "related_classes": []
+      }
+    ],
+    "total_classes": 1,
+    "total_functions": 0,
+    "analysis_depth": "deep",
+    "pattern_summary": {
+      "ChainOfResponsibility": 1
+    }
+  }
+]

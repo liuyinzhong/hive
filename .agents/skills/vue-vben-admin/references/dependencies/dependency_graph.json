@@ -1,0 +1,2577 @@
+{
+  "nodes": [
+    {
+      "file": "apps/backend-mock/api/auth/codes.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/auth/login.post.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/auth/logout.post.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/auth/refresh.post.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/demo/bigint.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/menu/all.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/status.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/dept/.post.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/dept/[id].delete.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/dept/[id].put.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/dept/list.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/menu/list.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/menu/name-exists.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/menu/path-exists.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/system/role/list.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/table/list.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/test.get.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/test.post.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/timezone/getTimezone.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/timezone/getTimezoneOptions.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/timezone/setTimezone.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/upload.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/api/user/info.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/error.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/middleware/1.api.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/nitro.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/routes/[...].ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/utils/cookie-utils.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/utils/jwt-utils.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/utils/mock-data.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/utils/response.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/backend-mock/utils/timezone-utils.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/adapter/component/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/api/core/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/api/core/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/api/core/menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/api/core/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/api/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/api/request.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/bootstrap.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/layouts/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/locales/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/main.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/guard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/routes/core.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/routes/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/routes/modules/dashboard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/routes/modules/demos.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/router/routes/modules/vben.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/store/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antd/src/store/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/adapter/component/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/api/core/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/api/core/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/api/core/menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/api/core/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/api/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/api/request.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/bootstrap.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/layouts/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/locales/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/main.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/guard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/routes/core.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/routes/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/routes/modules/dashboard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/routes/modules/demos.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/router/routes/modules/vben.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/store/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-antdv-next/src/store/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/adapter/component/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/api/core/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/api/core/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/api/core/menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/api/core/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/api/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/api/request.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/bootstrap.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/layouts/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/locales/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/main.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/guard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/routes/core.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/routes/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/routes/modules/dashboard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/routes/modules/demos.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/router/routes/modules/vben.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/store/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-ele/src/store/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/adapter/component/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/adapter/naive.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/api/core/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/api/core/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/api/core/menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/api/core/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/api/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/api/request.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/bootstrap.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/layouts/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/locales/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/main.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/guard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/routes/core.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/routes/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/routes/modules/dashboard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/routes/modules/demos.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/router/routes/modules/vben.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/store/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-naive/src/store/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/adapter/component/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/adapter/tdesign.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/api/core/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/api/core/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/api/core/menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/api/core/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/api/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/api/request.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/bootstrap.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/layouts/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/locales/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/main.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/guard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/routes/core.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/routes/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/routes/modules/dashboard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/routes/modules/demos.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/router/routes/modules/vben.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/store/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "apps/web-tdesign/src/store/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/.vitepress/components/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/.vitepress/config/plugins/demo-preview.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/.vitepress/theme/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/.vitepress/theme/plugins/hm.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/.vitepress/theme/styles/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/src/_env/adapter/component.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/src/_env/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/src/_env/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/src/_env/node/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/src/_env/node/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/src/demos/vben-vxe-table/mock-api.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "docs/src/demos/vben-vxe-table/table-data.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/command.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/comments.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/disableds.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/ignores.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/import.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/javascript.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/jsdoc.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/jsonc.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/node.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/perfectionist.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/pnpm.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/prettier.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/regexp.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/tailwindcss.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/turbo.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/typescript.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/unicorn.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/vue.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/configs/yaml.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/custom-config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/lint-configs/eslint-config/src/util.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/__tests__/hash.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/__tests__/path.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/constants.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/date.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/fs.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/git.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/hash.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/monorepo.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/path.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/prettier.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/node-utils/src/spinner.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/config/application.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/config/common.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/config/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/config/library.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/options.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/archiver.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/extra-app-config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/importmap.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/inject-app-loading/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/inject-metadata.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/license.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/nitro-mock.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/print.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/tailwind-reference.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/plugins/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/typing.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "internal/vite-config/src/utils/env.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/design/src/design-tokens/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/design/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/icons/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/icons/src/create-icon.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/icons/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/icons/src/lucide.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/cache/__tests__/storage-manager.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/cache/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/cache/storage-manager.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/cache/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/color/__tests__/convert.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/color/color.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/color/convert.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/color/generator.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/color/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/constants/globals.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/constants/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/constants/vben.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/global-state.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/store.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/date.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/diff.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/dom.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/inference.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/letter.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/resources.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/stack.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/state-handler.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/tree.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/unique.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/update-css-variables.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/util.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/__tests__/window.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/cn.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/date.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/diff.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/dom.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/download.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/inference.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/letter.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/merge.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/nprogress.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/resources.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/stack.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/state-handler.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/to.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/tree.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/unique.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/update-css-variables.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/util.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/shared/src/utils/window.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/src/app.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/src/basic.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/src/helper.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/src/menu-record.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/src/tabs.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/src/vue-router.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/base/typings/vue-router.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/__tests__/use-sortable.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-is-mobile.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-layout-style.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-namespace.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-priority-value.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-scroll-lock.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-simple-locale/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-simple-locale/messages.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/composables/src/use-sortable.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/__tests__/config.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/__tests__/preferences.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/src/config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/src/constants.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/src/preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/src/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/src/update-css-variables.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/preferences/src/use-preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/__tests__/form-api.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/form-api.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/form-render/context.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/form-render/dependencies.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/form-render/expandable.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/form-render/helper.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/form-render/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/use-form-context.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/form-ui/src/use-vben-form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/layout-ui/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/layout-ui/src/components/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/layout-ui/src/components/widgets/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/layout-ui/src/hooks/use-layout.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/layout-ui/src/hooks/use-sidebar-drag.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/layout-ui/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/layout-ui/src/vben-layout.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/components/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/components/normal-menu/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/components/normal-menu/normal-menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/hooks/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/hooks/use-menu-context.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/hooks/use-menu-scroll.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/hooks/use-menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/menu-ui/src/utils/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/alert/AlertBuilder.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/alert/alert.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/alert/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/drawer/__tests__/drawer-api.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/drawer/drawer-api.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/drawer/drawer.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/drawer/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/drawer/use-drawer.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/modal/__tests__/modal-api.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/modal/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/modal/modal-api.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/modal/modal.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/modal/use-modal-draggable.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/popup-ui/src/modal/use-modal.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/avatar/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/back-top/backtop.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/back-top/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/back-top/use-backtop.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/breadcrumb/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/breadcrumb/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/button/button.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/button/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/checkbox/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/context-menu/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/context-menu/interface.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/count-to-animator/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/dropdown-menu/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/dropdown-menu/interface.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/expandable-arrow/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/full-screen/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/hover-card/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/icon/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/input-password/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/logo/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/pin-input/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/pin-input/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/popover/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/render-content/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/scrollbar/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/segmented/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/segmented/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/select/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/spine-text/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/spinner/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/components/tooltip/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/accordion/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/alert-dialog/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/avatar/avatar.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/avatar/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/badge/badge.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/badge/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/breadcrumb/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/button/button.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/button/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/button/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/card/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/checkbox/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/context-menu/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/dialog/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/dropdown-menu/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/form/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/form/injectionKeys.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/form/useFormField.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/hover-card/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/input/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/label/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/number-field/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/pagination/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/pin-input/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/popover/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/radio-group/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/resizable/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/scroll-area/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/select/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/separator/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/sheet/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/sheet/sheet.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/switch/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/tabs/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/textarea/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/toggle/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/toggle/toggle.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/toggle-group/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/tooltip/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/tree/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/shadcn-ui/src/ui/tree/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/tabs-ui/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/tabs-ui/src/components/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/tabs-ui/src/components/widgets/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/tabs-ui/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/tabs-ui/src/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/tabs-ui/src/use-tabs-drag.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/@core/ui-kit/tabs-ui/src/use-tabs-view-scroll.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/constants/src/core.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/constants/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/access/src/accessible.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/access/src/directive.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/access/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/access/src/use-access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/api-component/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/captcha/hooks/useCaptchaPoints.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/captcha/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/captcha/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/col-page/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/col-page/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/count-to/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/count-to/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/cropper/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/ellipsis-text/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/icon-picker/icons.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/icon-picker/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/json-viewer/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/json-viewer/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/loading/directive.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/loading/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/page/__tests__/page.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/page/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/page/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/resize/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/tippy/directive.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/tippy/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/components/tree/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/about/about.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/about/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/authentication/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/authentication/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/dashboard/analysis/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/dashboard/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/dashboard/typing.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/dashboard/workbench/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/fallback/fallback.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/fallback/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/profile/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/common-ui/src/ui/profile/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-app-config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-content-maximize.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-design-tokens.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-hover-toggle.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-pagination.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-refresh.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-tabs.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/hooks/src/use-watermark.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/authentication/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/authentication/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/content/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/content/use-content-spinner.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/copyright/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/footer/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/header/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/menu/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/menu/use-extra-menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/menu/use-mixed-menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/menu/use-navigation.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/tabbar/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/basic/tabbar/use-tabbar.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/hooks/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/iframe/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/route-cached/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/check-updates/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/global-search/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/lock-screen/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/notification/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/notification/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/preferences/blocks/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/preferences/icons/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/preferences/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/preferences/use-open-preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/theme-toggle/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/timezone/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/layouts/src/widgets/user-dropdown/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/echarts/echarts.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/echarts/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/echarts/use-echarts.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/motion/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/motion/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/vxe-table/api.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/vxe-table/extends.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/vxe-table/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/vxe-table/init.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/vxe-table/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/plugins/src/vxe-table/use-vxe-grid.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/modules/downloader.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/modules/downloader.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/modules/interceptor.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/modules/sse.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/modules/sse.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/modules/uploader.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/modules/uploader.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/preset-interceptors.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/request-client.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/request-client.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/effects/request/src/request-client/types.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/icons/src/iconify/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/icons/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/icons/src/svg/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/icons/src/svg/load.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/locales/src/i18n.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/locales/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/locales/src/typing.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/preferences/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/shim-pinia.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/access.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/tabbar.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/tabbar.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/timezone.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/user.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/modules/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/stores/src/setup.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/styles/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/types/global.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/types/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/types/src/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/__tests__/find-menu-by-path.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/__tests__/generate-menus.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/__tests__/generate-routes-frontend.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/__tests__/merge-route-modules.test.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/find-menu-by-path.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/generate-menus.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/generate-routes-backend.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/generate-routes-frontend.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/get-popup-container.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/merge-route-modules.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/reset-routes.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/helpers/unmount-global-loading.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "packages/utils/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/__tests__/e2e/auth-login.spec.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/__tests__/e2e/common/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/playwright.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/adapter/component/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/adapter/form.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/adapter/vxe-table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/core/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/core/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/core/menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/core/timezone.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/core/user.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/examples/download.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/examples/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/examples/json-bigint.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/examples/params.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/examples/status.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/examples/table.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/examples/upload.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/request.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/system/dept.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/system/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/system/menu.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/api/system/role.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/bootstrap.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/layouts/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/locales/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/main.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/preferences.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/access.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/guard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/routes/core.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/routes/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/routes/modules/dashboard.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/routes/modules/demos.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/routes/modules/examples.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/routes/modules/system.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/router/routes/modules/vben.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/store/auth.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/store/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/timezone-init.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/views/demos/features/file-download/base64.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/views/demos/features/vue-query/typing.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/views/examples/json-viewer/data.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/views/examples/vxe-table/table-data.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/views/system/dept/data.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/views/system/menu/data.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "playground/src/views/system/role/data.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/turbo-run/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/turbo-run/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/turbo-run/src/run.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/build.config.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/env.d.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/src/check-circular/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/src/check-dep/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/src/code-workspace/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/src/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/src/lint/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "scripts/vsh/src/publint/index.ts",
+      "language": "TypeScript"
+    },
+    {
+      "file": "vitest.config.ts",
+      "language": "TypeScript"
+    }
+  ],
+  "edges": []
+}

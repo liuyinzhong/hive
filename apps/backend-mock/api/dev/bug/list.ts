@@ -18,17 +18,17 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
-let projectIds = mockModuleData.map((item) => item.projectId);
+const projectIds = mockModuleData.map((item) => item.projectId);
 
 function generateMockDataList(count: number) {
   const dataList = [];
 
   for (let i = 0; i < count; i++) {
     /* 随机从项目表中取一个项目 */
-    let projectInfo: any = faker.helpers.arrayElement(mockProjectData);
+    const projectInfo: any = faker.helpers.arrayElement(mockProjectData);
 
     /* 从版本表中取当前项目的版本 */
-    let versionList: any = mockVersionData.filter(
+    const versionList: any = mockVersionData.filter(
       (item) => item.projectId === projectInfo.projectId,
     );
     /* 随机从版本表中取一个版本 */
@@ -38,7 +38,7 @@ function generateMockDataList(count: number) {
     }
 
     /* 从模块表中取当前项目的模块 */
-    let moduleList: any = mockModuleData.filter(
+    const moduleList: any = mockModuleData.filter(
       (item) => item.projectId === projectInfo.projectId,
     );
     /* 随机从模块表中取一个模块 */
@@ -48,7 +48,7 @@ function generateMockDataList(count: number) {
     }
 
     /* 从需求表里取当前项目的需求 */
-    let storyList: any = mockStoryData.filter(
+    const storyList: any = mockStoryData.filter(
       (item) =>
         item.projectId === projectInfo.projectId &&
         item.versionId === versionInfo.versionId,
@@ -59,7 +59,7 @@ function generateMockDataList(count: number) {
       storyInfo = faker.helpers.arrayElement(storyList);
     }
 
-    let userInfo = faker.helpers.arrayElement(
+    const userInfo = faker.helpers.arrayElement(
       mockUserData.filter((item) => item.status === 1),
     );
 
@@ -106,7 +106,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockBugData = generateMockDataList(100);
+export const mockBugData = generateMockDataList(1000);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

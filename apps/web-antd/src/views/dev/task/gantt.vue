@@ -15,7 +15,8 @@ import * as VTableGantt from '@visactor/vtable-gantt';
 import storyDetailDrawerComponent from '#/views/dev/story/detail-drawer.vue';
 import taskDetailDrawerComponent from '#/views/dev/task/detail-drawer.vue';
 
-import { getTaskList, type DevTaskApi } from '#/api/dev';
+import { getTaskList } from '#/api/dev';
+import type { DevTaskApi } from '#/api/dev';
 
 const { SCROLL, CLICK_TASK_BAR, MOVE_END_TASK_BAR, CHANGE_DATE_RANGE } =
   VTableGantt.TYPES.GANTT_EVENT_TYPE;
@@ -33,17 +34,6 @@ const [StoryDetailDrawer, StoryDetailDrawerApi] = useVbenDrawer({
 
 const columns: any = [
   {
-    field: 'storyTitle',
-    title: '需求名称',
-    width: 100,
-    mergeCell: true,
-    style: {
-      color: preferences.theme.colorPrimary,
-      textDecoration: 'underline',
-      cursor: 'pointer',
-    },
-  },
-  {
     field: 'realName',
     title: '执行人',
     width: 100,
@@ -59,21 +49,10 @@ const columns: any = [
       cursor: 'pointer',
     },
   },
-
-  {
-    field: 'startDate',
-    title: '开始时间',
-    width: 'auto',
-  },
-  {
-    field: 'endDate',
-    title: '结束时间',
-    width: 'auto',
-  },
 ];
 
 nextTick(async () => {
-  let TaskData: any = await getTaskList({});
+  const TaskData: any = await getTaskList({});
   const ganttInstance = new Gantt(
     document.querySelector('#tableContainer') as HTMLDivElement,
     {

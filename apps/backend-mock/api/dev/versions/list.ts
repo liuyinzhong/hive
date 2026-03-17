@@ -17,7 +17,7 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
-let projectIds = mockModuleData.map((item) => item.projectId);
+const projectIds = mockModuleData.map((item) => item.projectId);
 
 function generateMockDataList(count: number) {
   const dataList = [];
@@ -52,7 +52,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockVersionData = generateMockDataList(100);
+export const mockVersionData = generateMockDataList(10);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);

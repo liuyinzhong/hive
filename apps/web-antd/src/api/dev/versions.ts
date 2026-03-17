@@ -2,6 +2,54 @@ import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
 import { objectOmit } from '@vueuse/core';
 export namespace DevVersionApi {
+  export interface VersionStatisticsSummary {
+    storyTotal: number;
+    storyDone: number;
+    taskTotal: number;
+    taskDone: number;
+    bugTotal: number;
+    bugFixed: number;
+  }
+
+  export interface DistItem {
+    name: string;
+    value: number;
+  }
+
+  export interface TaskWorkload {
+    categories: string[];
+    planHours: number[];
+    actualHours: number[];
+  }
+
+  export interface ProgressTrend {
+    dates: string[];
+    taskDone: number[];
+    bugFixed: number[];
+  }
+
+  export interface VersionStatisticsFace {
+    summary: VersionStatisticsSummary;
+    progressTrend: ProgressTrend;
+    // 人员维度
+    personTaskDist: DistItem[];
+    personStoryDist: DistItem[];
+    personHoursDist: DistItem[];
+    moduleDist: DistItem[];
+    // 需求面板
+    storyTypeDist: DistItem[];
+    storySourceDist: DistItem[];
+    storyStatusFunnel: DistItem[];
+    // 任务面板
+    taskTypeDist: DistItem[];
+    taskWorkload: TaskWorkload;
+    // Bug 面板
+    bugTypeDist: DistItem[];
+    bugLevelDist: DistItem[];
+    bugSourceDist: DistItem[];
+    bugFixerDist: DistItem[];
+  }
+
   export interface DevVersionFace {
     [key: string]: any;
     versionId?: string;
@@ -76,9 +124,21 @@ export const updateVersion = async (
  *
  * @param params 查询参数
  */
-export const getLastVersion = async (params: Object) => {
+export const getLastVersion = async (params: object) => {
   return requestClient.get<DevVersionApi.DevVersionFace>(
     '/dev/versions/getLastVersion',
     { params },
+  );
+};
+
+/**
+ * 获取版本统计数据
+ *
+ * @param versionId 版本 ID
+ */
+export const getVersionStatistics = async (versionId: string) => {
+  return requestClient.get<DevVersionApi.VersionStatisticsFace>(
+    '/dev/versions/statistics',
+    { params: { versionId } },
   );
 };

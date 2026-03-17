@@ -37,3 +37,7 @@ export const LucideTableProperties = createIconifyIcon(
 );
 
 export const LucidePlus = createIconifyIcon('lucide:plus');
+
+export const LucideCheckCircle = createIconifyIcon('lucide:check-circle');
+
+export const LucideListTodo = createIconifyIcon('lucide:list-todo');
