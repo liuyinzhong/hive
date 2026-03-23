@@ -52,6 +52,7 @@
     "aieditor": "catalog:",
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",
+    "frappe-gantt": "catalog:",
     "json-bigint": "catalog:",
     "pinia": "catalog:",
     "signature_pad": "catalog:",
@@ -61,6 +62,7 @@
     "vxe-table": "catalog:"
   },
   "devDependencies": {
-    "@types/json-bigint": "catalog:"
+    "@types/json-bigint": "catalog:",
+    "@types/frappe-gantt": "catalog:"
   }
 }
