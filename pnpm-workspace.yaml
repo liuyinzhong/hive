@@ -195,4 +195,3 @@ catalog:
   '@visactor/vtable-editors': 1.19.7
   'frappe-gantt': ^1.2.2
   '@types/frappe-gantt': ^0.9.0
-
