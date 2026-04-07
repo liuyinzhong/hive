@@ -221,6 +221,60 @@ type RenderComponentContentType = (
   api: FormActions,
 ) => Record<string, any>;
 
+type MappedComponentProps<P> =
+  | ((
+      value: Partial<Record<string, any>>,
+      actions: FormActions,
+    ) => P & Record<string, any>)
+  | (P & Record<string, any>);
+
+interface FormSchemaBody extends Omit<FormCommonConfig, 'componentProps'> {
+  /** 默认值 */
+  defaultValue?: any;
+  /** 依赖 */
+  dependencies?: FormItemDependencies;
+  /** 描述 */
+  description?: CustomRenderType;
+  /** 字段名 */
+  fieldName: string;
+  /** 帮助信息 */
+  help?: CustomParamsRenderType;
+  /** 是否隐藏表单项 */
+  hide?: boolean;
+  /** 表单项 */
+  label?: CustomRenderType;
+  // 自定义组件内部渲染
+  renderComponentContent?: RenderComponentContentType;
+  /** 字段规则 */
+  rules?: FormSchemaRuleType;
+  /** 后缀 */
+  suffix?: CustomRenderType;
+}
+
+type FormSchemaDiscriminated<
+  T extends BaseFormComponentType,
+  P extends Record<string, any>,
+> = {
+  [K in Extract<keyof P, T>]: {
+    /** 组件 */
+    component: K;
+    /** 组件参数 */
+    componentProps?: MappedComponentProps<P[K]>;
+  } & FormSchemaBody;
+}[Extract<keyof P, T>];
+
+type FormSchemaFallback<T extends BaseFormComponentType> = {
+  /** 组件 */
+  component: Component | T;
+  /** 组件参数 */
+  componentProps?: ComponentProps;
+} & FormSchemaBody;
+
+export type FormSchema<
+  T extends BaseFormComponentType = BaseFormComponentType,
+  P extends Record<string, any> = Record<never, never>,
+> = FormSchemaDiscriminated<T, P> | FormSchemaFallback<T>;
+
 export type HandleSubmitFn = (
   values: Record<string, any>,
 ) => Promise<void> | void;
@@ -246,41 +300,18 @@ export type ArrayToStringFields = Array<
   | string[] // 简单数组格式，最后一个元素可以是分隔符
 >;
 
-export interface FormSchema<
+export interface FormFieldProps<
   T extends BaseFormComponentType = BaseFormComponentType,
-> extends FormCommonConfig {
+> extends FormSchemaBody {
   /** 组件 */
   component: Component | T;
   /** 组件参数 */
   componentProps?: ComponentProps;
-  /** 默认值 */
-  defaultValue?: any;
-  /** 依赖 */
-  dependencies?: FormItemDependencies;
-  /** 描述 */
-  description?: CustomRenderType;
-  /** 字段名 */
-  fieldName: string;
-  /** 帮助信息 */
-  help?: CustomParamsRenderType;
-  /** 是否隐藏表单项 */
-  hide?: boolean;
-  /** 表单项 */
-  label?: CustomRenderType;
-  // 自定义组件内部渲染
-  renderComponentContent?: RenderComponentContentType;
-  /** 字段规则 */
-  rules?: FormSchemaRuleType;
-  /** 后缀 */
-  suffix?: CustomRenderType;
-}
-
-export interface FormFieldProps extends FormSchema {
-  required?: boolean;
 }
 
 export interface FormRenderProps<
   T extends BaseFormComponentType = BaseFormComponentType,
+  P extends Record<string, any> = Record<never, never>,
 > {
   /**
    * 表单字段数组映射字符串配置 默认使用","
@@ -332,7 +363,7 @@ export interface FormRenderProps<
   /**
    * 表单定义
    */
-  schema?: FormSchema<T>[];
+  schema?: FormSchema<T, P>[];
 
   /**
    * 是否显示展开/折叠
@@ -357,8 +388,9 @@ export interface ActionButtonOptions extends VbenButtonProps {
 
 export interface VbenFormProps<
   T extends BaseFormComponentType = BaseFormComponentType,
+  P extends Record<string, any> = Record<never, never>,
 > extends Omit<
-  FormRenderProps<T>,
+  FormRenderProps<T, P>,
   'componentBindEventMap' | 'componentMap' | 'form'
 > {
   /**

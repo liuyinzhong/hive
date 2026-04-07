@@ -1,33 +1,24 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { Recordable } from '@vben/types';
 
-import type { ComponentType } from './component';
+import type { ComponentPropsMap, ComponentType } from './component';
 
-import { h } from 'vue';
-
-import { IconifyIcon } from '@vben/icons';
-import { $te } from '@vben/locales';
 import {
   setupVbenVxeTable,
   useVbenVxeGrid as useGrid,
 } from '@vben/plugins/vxe-table';
-import { get, isFunction, isString } from '@vben/utils';
-
-import { objectOmit } from '@vueuse/core';
-import { Button, Popconfirm, Switch, Tag } from 'ant-design-vue';
 
 import CellImage from '#/adapter/component/table/CellImage';
 import CellLink from '#/adapter/component/table/CellLink';
+import CellProgress from '#/adapter/component/table/CellProgress';
 import DictSelect from '#/adapter/component/table/DictSelect';
 import DictTag from '#/adapter/component/table/DictTag';
 import UserAvatar from '#/adapter/component/table/UserAvatar';
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
-import CellProgress from '#/adapter/component/table/CellProgress';
-import CellTag from './component/table/CellTag';
-import CellSwitch from './component/table/CellSwitch';
-import CellOperation from './component/table/CellOperation';
-import { $t } from '#/locales';
 
+import CellOperation from './component/table/CellOperation';
+import CellSwitch from './component/table/CellSwitch';
+import CellTag from './component/table/CellTag';
 import UserSelect from './component/table/UserSelect';
 import { useVbenForm } from './form';
 
@@ -104,8 +95,8 @@ setupVbenVxeTable({
 });
 
 export const useVbenVxeGrid = <T extends Record<string, any>>(
-  ...rest: Parameters<typeof useGrid<T, ComponentType>>
-) => useGrid<T, ComponentType>(...rest);
+  ...rest: Parameters<typeof useGrid<T, ComponentType, ComponentPropsMap>>
+) => useGrid<T, ComponentType, ComponentPropsMap>(...rest);
 
 export type OnActionClickParams<T = Recordable<any>> = {
   code: string;

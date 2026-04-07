@@ -1,15 +1,11 @@
-import { Button, TypographyParagraph } from 'ant-design-vue';
 import { h } from 'vue';
+
+import { Button } from 'ant-design-vue';
 export default {
   renderTableDefault(renderOpts: any, params: any) {
     const { props, events } = renderOpts;
     const { column, row } = params;
-    let text = '';
-    if (props?.text) {
-      text = props?.text;
-    } else {
-      text = row[column.field];
-    }
+    const text = props?.text || row[column.field];
     return h(
       Button,
       {

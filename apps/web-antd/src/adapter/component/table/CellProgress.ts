@@ -1,4 +1,5 @@
 import { h } from 'vue';
+
 import CellProgress from '#/components/CellProgress/index.vue';
 /**
  * vxe-table 自定义进度条单元格组件
@@ -7,7 +8,7 @@ import CellProgress from '#/components/CellProgress/index.vue';
 export default {
   renderTableDefault(renderOpts: any, params: any) {
     const { row, column } = params;
-    let percent = row[column.field] || 0;
+    const percent = row[column.field] || 0;
     return h(CellProgress, {
       value: percent,
     });

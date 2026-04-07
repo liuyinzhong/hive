@@ -1,5 +1,7 @@
-import { Switch } from 'ant-design-vue';
 import { h } from 'vue';
+
+import { Switch } from 'ant-design-vue';
+
 import { $t } from '#/locales';
 
 /**

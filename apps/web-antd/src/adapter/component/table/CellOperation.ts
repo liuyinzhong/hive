@@ -1,10 +1,14 @@
-import { h } from 'vue';
-import { $t } from '#/locales';
 import type { Recordable } from '@vben/types';
-import { isFunction, isString } from '@vben/utils';
-import { $te } from '@vben/locales';
-import { Button, Popconfirm } from 'ant-design-vue';
+
+import { h } from 'vue';
+
 import { IconifyIcon } from '@vben/icons';
+import { $te } from '@vben/locales';
+import { isFunction, isString } from '@vben/utils';
+
+import { Button, Popconfirm } from 'ant-design-vue';
+
+import { $t } from '#/locales';
 
 /**
  * 操作列组件
@@ -36,7 +40,7 @@ export default {
     }: any,
   ) {
     const defaultProps = { size: 'small', type: 'link', ...props };
-    let align = 'end';
+    let align: string;
     switch (column.align) {
       case 'center': {
         align = 'center';
@@ -61,7 +65,7 @@ export default {
       },
     };
     const operations: Array<Recordable<any>> = (options || ['edit', 'delete'])
-      .map((opt: string | Recordable<any>) => {
+      .map((opt: Recordable<any> | string) => {
         if (isString(opt)) {
           return presets[opt]
             ? { code: opt, ...presets[opt], ...defaultProps }
