@@ -1,24 +1,26 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getLocalDictList } from '#/dicts';
-import { $t } from '#/locales';
+
+import { h, nextTick, ref } from 'vue';
+
+import { useDebounceFn } from '@vueuse/core';
+import { Flex, Tag, TypographyText } from 'ant-design-vue';
+
 import {
-  getVersionsList,
+  type DevBugApi,
   getModulesList,
   getProjectsList,
   getStoryList,
-  type DevBugApi,
+  getVersionsList,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
-
-import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
+import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
+import { getLocalDictList } from '#/dicts';
+import { $t } from '#/locales';
 import { bugRichTemplateText } from '#/template/richText';
-
-import { h, nextTick, ref } from 'vue';
-import { useDebounceFn } from '@vueuse/core';
-import { Tag, Flex, TypographyText } from 'ant-design-vue';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -292,6 +294,12 @@ export function useFormSchema(): VbenFormSchema[] {
       disabled: true,
       defaultValue: navigator.userAgent,
       formItemClass: 'col-span-1',
+    },
+    {
+      component: 'RichEditor',
+      fieldName: 'richEditor',
+      label: '富文本',
+      formItemClass: 'col-span-3 items-baseline',
     },
   ];
 }

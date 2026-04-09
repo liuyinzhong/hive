@@ -39,6 +39,7 @@ import type {
   IconPickerProps,
 } from '@vben/common-ui';
 import type { Sortable } from '@vben/hooks';
+import type { TipTapProps } from '@vben/plugins/tiptap';
 import type { Recordable } from '@vben/types';
 
 import {
@@ -64,6 +65,7 @@ import {
 import { useSortable } from '@vben/hooks';
 import { IconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
+import { VbenTiptap } from '@vben/plugins/tiptap';
 import { isEmpty } from '@vben/utils';
 
 import { message, Modal, notification } from 'ant-design-vue';
@@ -605,6 +607,7 @@ const withPreviewUpload = () => {
 
 // 这里需要自行根据业务组件库进行适配，需要用到的组件都需要在这里类型说明
 export type ComponentType =
+  | 'AiEditor'
   | 'ApiCascader'
   | 'ApiSelect'
   | 'ApiTreeSelect'
@@ -612,6 +615,7 @@ export type ComponentType =
   | 'Cascader'
   | 'Checkbox'
   | 'CheckboxGroup'
+  | 'ColorSelect'
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
@@ -625,6 +629,7 @@ export type ComponentType =
   | 'RadioGroup'
   | 'RangePicker'
   | 'Rate'
+  | 'RichEditor'
   | 'Select'
   | 'Space'
   | 'Switch'
@@ -632,8 +637,6 @@ export type ComponentType =
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
-  | 'AiEditor'
-  | 'ColorSelect'
   | BaseFormComponentType;
 
 /**
@@ -660,6 +663,7 @@ export interface ComponentPropsMap {
   RadioGroup: RadioGroupProps;
   RangePicker: RangePickerProps;
   Rate: RateProps;
+  RichEditor: TipTapProps;
   Select: SelectProps;
   Space: SpaceProps;
   Switch: SwitchProps;
@@ -723,6 +727,7 @@ async function initComponentAdapter() {
     RadioGroup,
     RangePicker,
     Rate,
+    RichEditor: withDefaultPlaceholder(VbenTiptap, 'input'),
     Select: withDefaultPlaceholder(Select, 'select'),
     Space,
     Switch,

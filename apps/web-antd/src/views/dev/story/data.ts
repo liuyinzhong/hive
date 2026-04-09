@@ -1,18 +1,20 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getLocalDictList } from '#/dicts';
-import { $t } from '#/locales';
+
 import { message } from 'ant-design-vue';
+
 import {
-  getVersionsList,
+  type DevStoryApi,
   getModulesList,
   getProjectsList,
-  type DevStoryApi,
-  getLastVersion,
+  getVersionsList,
 } from '#/api/dev';
-import { getUserListAll } from '#/api/system';
 import { upload_file } from '#/api/examples/upload';
+import { getUserListAll } from '#/api/system';
+import { getLocalDictList } from '#/dicts';
+import { $t } from '#/locales';
 import { storyRichTemplateText } from '#/template/richText';
 
 /** 新增表单配置 */
@@ -357,7 +359,7 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            let params = {
+            const params = {
               storyId: row.storyId,
               userIds: val,
             };
@@ -387,7 +389,7 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            let params = {
+            const params = {
               storyId: row.storyId,
               storyType: val,
             };
@@ -409,7 +411,7 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            let params = {
+            const params = {
               storyId: row.storyId,
               storyLevel: val,
             };
@@ -430,7 +432,7 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            let params = {
+            const params = {
               storyId: row.storyId,
               source: val,
             };
@@ -459,11 +461,9 @@ export function useColumns(
             icon: 'lucide:badge-plus',
             tips: '添加任务',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              if (!row.versionId || [0, 99].includes(row.storyStatus)) {
-                return true;
-              } else {
-                return false;
-              }
+              return !row.versionId || [0, 99].includes(row.storyStatus)
+                ? true
+                : false;
             },
           },
 
@@ -472,11 +472,9 @@ export function useColumns(
             icon: 'lucide:bug',
             tips: '添加缺陷',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              if (!row.versionId || [0].includes(row.storyStatus)) {
-                return true;
-              } else {
-                return false;
-              }
+              return !row.versionId || [0].includes(row.storyStatus)
+                ? true
+                : false;
             },
           },
           {

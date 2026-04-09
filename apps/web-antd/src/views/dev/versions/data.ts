@@ -1,11 +1,13 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+
 import type { VbenFormSchema } from '#/adapter/form';
+import type { OnActionClickFn } from '#/adapter/vxe-table';
+
+import { z } from '#/adapter/form';
+import { type DevVersionApi, getLastVersion, getProjectsList } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getLastVersion, getProjectsList, type DevVersionApi } from '#/api/dev';
 import { changeVersionType } from '#/utils/versionUtils';
-import { z } from '#/adapter/form';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {

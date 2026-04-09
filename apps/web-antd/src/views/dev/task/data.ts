@@ -1,22 +1,26 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { getLocalDictList } from '#/dicts';
+
+import { h, nextTick, ref } from 'vue';
+
 import { useDebounceFn } from '@vueuse/core';
-import { $t } from '#/locales';
-import { ref, nextTick, h } from 'vue';
-import { Tag, Flex, TypographyText } from 'ant-design-vue';
-import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
-import UserAvatar from '#/components/UserAvatar/index.vue';
-import { taskRichTemplateText } from '#/template/richText';
+import { Flex, Tag, TypographyText } from 'ant-design-vue';
+
 import {
-  getVersionsList,
+  type DevTaskApi,
   getModulesList,
   getProjectsList,
-  type DevTaskApi,
   getStoryList,
+  getVersionsList,
 } from '#/api/dev';
 import { getUserListAll } from '#/api/system';
+import UserAvatar from '#/components/UserAvatar/index.vue';
+import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
+import { getLocalDictList } from '#/dicts';
+import { $t } from '#/locales';
+import { taskRichTemplateText } from '#/template/richText';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
