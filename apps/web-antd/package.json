@@ -26,8 +26,8 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@tanstack/vue-query": "catalog:",
     "@faker-js/faker": "catalog:",
+    "@tanstack/vue-query": "catalog:",
     "@vben-core/composables": "workspace:*",
     "@vben-core/menu-ui": "workspace:*",
     "@vben/access": "workspace:*",
@@ -52,7 +52,6 @@
     "aieditor": "catalog:",
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",
-    "frappe-gantt": "catalog:",
     "json-bigint": "catalog:",
     "pinia": "catalog:",
     "signature_pad": "catalog:",
@@ -62,7 +61,6 @@
     "vxe-table": "catalog:"
   },
   "devDependencies": {
-    "@types/json-bigint": "catalog:",
-    "@types/frappe-gantt": "catalog:"
+    "@types/json-bigint": "catalog:"
   }
 }

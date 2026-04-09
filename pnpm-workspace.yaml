@@ -72,15 +72,19 @@ catalog:
   '@typescript-eslint/eslint-plugin': ^8.57.2
   '@typescript-eslint/parser': ^8.57.2
   '@vee-validate/zod': ^4.15.1
+  '@visactor/vtable': 1.25.0
+  '@visactor/vtable-editors': 1.25.0
+  '@visactor/vtable-gantt': 1.25.0
   '@vite-pwa/vitepress': ^1.1.0
   '@vitejs/plugin-vue': ^6.0.5
   '@vitejs/plugin-vue-jsx': ^5.1.5
+  '@vue-flow/core': ^1.47.0
   '@vue/shared': ^3.5.31
   '@vue/test-utils': ^2.4.6
   '@vueuse/core': ^14.2.1
   '@vueuse/integrations': ^14.2.1
   '@vueuse/motion': ^3.0.3
-  '@vue-flow/core': ^1.47.0
+  aieditor: ^1.4.2
   ant-design-vue: ^4.2.6
   antdv-next: ^1.1.7
   archiver: ^7.0.1
@@ -155,6 +159,7 @@ catalog:
   sass: ^1.98.0
   sass-embedded: ^1.98.0
   secure-ls: ^2.0.0
+  signature_pad: ^5.1.1
   sortablejs: ^1.15.7
   stylelint: ^17.6.0
   stylelint-config-recess-order: ^7.7.0
@@ -199,10 +204,3 @@ catalog:
   yaml-eslint-parser: ^2.0.0
   zod: ^3.25.76
   zod-defaults: 0.1.3
-  aieditor: ^1.4.2
-  signature_pad: ^5.1.1
-  '@visactor/vtable': 1.19.7
-  '@visactor/vtable-gantt': 1.19.7
-  '@visactor/vtable-editors': 1.19.7
-  'frappe-gantt': ^1.2.2
-  '@types/frappe-gantt': ^0.9.0
