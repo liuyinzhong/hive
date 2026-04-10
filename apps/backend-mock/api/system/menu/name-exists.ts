@@ -1,6 +1,6 @@
 import { eventHandler, getQuery } from 'h3';
-import { verifyAccessToken } from '~/utils/jwt-utils';
 import { MOCK_MENU_LIST_V2 } from '~/api/menu/menuJSON';
+import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
 const namesMap: Record<string, any> = {};

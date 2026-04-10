@@ -38,7 +38,7 @@ const addRow = (installIndex?: number) => {
 };
 
 const getRecords = () => {
-  console.log(ListTableApi.records);
+  // console.log(ListTableApi.records);
 };
 
 const columns: VTable.ColumnsDefine = [
@@ -175,7 +175,7 @@ const initTable = () => {
             const columnConfig = columns[item.col];
 
             const data = ListTableApi.getRecordByCell(item.col, item.row);
-            // @ts-expect-error
+
             columnConfig?.editor?.changeCallback?.(data, {
               label: '',
               value: '',

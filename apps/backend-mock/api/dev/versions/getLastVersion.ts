@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
+import { compareVersion, verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+
 import { mockVersionData } from './list';
 
 export default eventHandler(async (event) => {
@@ -12,6 +12,7 @@ export default eventHandler(async (event) => {
 
   let listData = structuredClone(mockVersionData);
 
+  // oxlint-disable-next-line no-unused-vars
   const { page = 1, pageSize = 20, projectId } = getQuery(event);
 
   if (projectId) {

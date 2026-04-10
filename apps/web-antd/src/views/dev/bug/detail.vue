@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useTabs } from '@vben/hooks';
-import { Page } from '@vben/common-ui';
 import { useRoute } from 'vue-router';
-import BugDetail from './components/bug-detail.vue';
+
+import { Page } from '@vben/common-ui';
+import { useTabs } from '@vben/hooks';
+
 import { Card } from 'ant-design-vue';
+
+import BugDetail from './components/bug-detail.vue';
 
 defineOptions({
   name: 'BugDetail',
@@ -20,9 +23,9 @@ const bugNum: any = computed(() => {
 setTabTitle(`缺陷详情 #${bugNum.value}`);
 </script>
 <template>
-  <Page autoContentHeight>
+  <Page auto-content-height>
     <Card>
-      <BugDetail :bugNum="bugNum" :showBtn="true" />
+      <BugDetail :bug-num="bugNum" :show-btn="true" />
     </Card>
   </Page>
 </template>

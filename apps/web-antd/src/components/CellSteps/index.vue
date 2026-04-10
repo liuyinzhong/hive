@@ -10,12 +10,12 @@ const props = defineProps({
   // 当前状态值
   status: {
     type: String,
-    required: true,
+    required: false,
     default: '',
   },
   dictType: {
     type: String,
-    required: true,
+    required: false,
     default: '',
   },
 });

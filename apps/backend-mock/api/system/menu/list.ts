@@ -1,7 +1,7 @@
 import { eventHandler } from 'h3';
+import { convertMenuToTree, MOCK_MENU_LIST_V2 } from '~/api/menu/menuJSON';
 import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-import { MOCK_MENU_LIST_V2, convertMenuToTree } from '~/api/menu/menuJSON';
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
   if (!userinfo) {

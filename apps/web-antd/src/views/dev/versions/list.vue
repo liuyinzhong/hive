@@ -9,8 +9,7 @@ import type { DevVersionApi } from '#/api/dev';
 
 import { useRouter } from 'vue-router';
 
-import { Page } from '@vben/common-ui';
-import { useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
 
@@ -74,7 +73,7 @@ function onActionClick({
     }
     case 'detail': {
       router.push({
-        path: '/dev/versions/detail/' + row.versionId,
+        path: `/dev/versions/detail/${row.versionId}`,
       });
       break;
     }

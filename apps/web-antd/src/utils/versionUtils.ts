@@ -115,8 +115,8 @@ export function compareVersion(v1: string, v2: string): number {
 
   // 逐段比较版本号
   for (let i = 0; i < len; i++) {
-    const num1 = Number.parseInt(v1Parts[i]!, 10);
-    const num2 = Number.parseInt(v2Parts[i]!, 10);
+    const num1 = Number.parseInt(v1Parts[i] ?? '0', 10);
+    const num2 = Number.parseInt(v2Parts[i] ?? '0', 10);
 
     if (num1 > num2) {
       return 1;

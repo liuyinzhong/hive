@@ -1,5 +1,6 @@
-import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+
+import { requestClient } from '#/api/request';
 export namespace DevChangeApi {
   export interface DevChangeFace {
     [key: string]: any;
@@ -15,9 +16,9 @@ export namespace DevChangeApi {
     businessType?: string;
     extendJson?: string;
     /** 创建时间 (在TS中通常使用字符串格式的时间，也可根据实际情况用Date) */
-    createDate?: string | Date;
+    createDate?: Date | string;
     /** 修改时间 (在TS中通常使用字符串格式的时间，也可根据实际情况用Date) */
-    updateDate?: string | Date;
+    updateDate?: Date | string;
   }
 }
 

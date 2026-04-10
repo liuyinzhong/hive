@@ -61,7 +61,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '项目',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value: any, formApi: any) => {
+      componentProps: (_value: any, _formApi: any) => {
         return {
           api: () => getProjectsList(),
           labelField: 'projectTitle',
@@ -72,7 +72,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['projectId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn';
         },
       },
     },
@@ -92,12 +92,12 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '迭代版本',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value: any, formApi: any) => {
+      componentProps: (value: any, _formApi: any) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + value.projectId,
+          key: `versionId_${value.projectId}`,
           api: () =>
             getVersionsList({
               projectId: value.projectId,
@@ -112,7 +112,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['projectId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn';
         },
       },
     },
@@ -122,12 +122,12 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '关联模块',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'moduleId_' + value.projectId,
+          key: `moduleId_${value.projectId}`,
           api: () => getModulesList({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
@@ -156,7 +156,7 @@ export function useFormSchema(): VbenFormSchema[] {
             h(
               Tag,
               { style: { height: 'fit-content' } },
-              '#' + optionItem.storyNum || '',
+              `#${optionItem.storyNum || ''}`,
             ),
             h(TypographyText, { ellipsis: true }, optionItem.label || ''),
             h(UserAvatarGroup, {
@@ -201,7 +201,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['versionId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn';
         },
       },
     },
@@ -336,12 +336,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + value.projectId,
+          key: `versionId_${value.projectId}`,
           api: () =>
             getVersionsList({
               projectId: value.projectId,
@@ -366,12 +366,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'moduleId',
       label: '关联模块',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'moduleId_' + value.projectId,
+          key: `moduleId_${value.projectId}`,
           api: () => getModulesList({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
@@ -552,7 +552,7 @@ export function useColumns(
             tips: '确认bug按钮',
             /* 确认已是bug时。禁止重复确认、bug已关闭时禁止确认 */
             disabled: (row: any) =>
-              row.bugConfirmStatus == 20 || row.bugStatus == 99,
+              row.bugConfirmStatus === 20 || row.bugStatus === 99,
           },
           {
             code: 'next',
@@ -560,7 +560,7 @@ export function useColumns(
             tips: '流转按钮',
             disabled: (row: any) => {
               /* 待确认时，禁止流转bug 、bug已关闭时禁止流转 */
-              return row.bugConfirmStatus == 0 || row.bugStatus == 99;
+              return row.bugConfirmStatus === 0 || row.bugStatus === 99;
             },
           },
           {

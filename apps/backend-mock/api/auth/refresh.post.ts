@@ -1,11 +1,11 @@
 import { defineEventHandler } from 'h3';
+import { mockUserData } from '~/api/system/user/list';
 import {
   clearRefreshTokenCookie,
   getRefreshTokenFromCookie,
   setRefreshTokenCookie,
 } from '~/utils/cookie-utils';
 import { generateAccessToken, verifyRefreshToken } from '~/utils/jwt-utils';
-import { mockUserData } from '~/api/system/user/list';
 import { forbiddenResponse } from '~/utils/response';
 
 export default defineEventHandler(async (event) => {

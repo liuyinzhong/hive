@@ -58,7 +58,7 @@ export const getDifference = (
 ): Array<any> => {
   // 检查输入是否为数组
   if (!Array.isArray(arrayA) || !Array.isArray(arrayB)) {
-    throw new Error('入参不是数组');
+    throw new TypeError('入参不是数组');
   }
 
   // 处理空数组情况（避免后续取 [0] 报错）
@@ -144,10 +144,12 @@ export const flattenArrayRecursively = (arr: any) => {
     return [];
   }
   // 使用 reduce 遍历数组
+  // eslint-disable-next-line unicorn/no-array-reduce
   return arr.reduce((acc: any, curr: any) => {
     // 如果当前元素是数组，则递归展平；否则直接添加到结果数组中
-    return acc.concat(
-      Array.isArray(curr) ? flattenArrayRecursively(curr) : curr,
-    );
+    return [
+      ...acc,
+      ...(Array.isArray(curr) ? flattenArrayRecursively(curr) : curr),
+    ];
   }, []);
 };

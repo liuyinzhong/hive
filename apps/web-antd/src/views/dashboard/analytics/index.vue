@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { TabOption } from '@vben/types';
+
+import { onMounted, ref } from 'vue';
 
 import {
   AnalysisChartCard,
@@ -8,21 +9,19 @@ import {
   AnalysisOverview,
 } from '@vben/common-ui';
 import {
-  LucideHourglass,
   LucideBug,
   LucideChartBarStacked,
   LucideFilm,
-  LucideFileStack,
+  LucideHourglass,
 } from '@vben/icons';
+
+import { getWorkspaceEnum } from '#/api/statistics/dev';
 
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
-
-import { getWorkspaceEnum } from '#/api/statistics/dev';
-import { onMounted, ref } from 'vue';
 
 const overviewItems: any = ref([
   {

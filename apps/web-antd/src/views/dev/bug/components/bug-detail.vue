@@ -126,13 +126,12 @@ const onBtnClick = (btnType: string) => {
         title: '添加评论',
         modelPropName: 'modelValue',
       }).then((val) => {
-        const params = {
+        const _params = {
           businessId: detail.value.bugId,
           businessType: 20,
           changeBehavior: 20,
           changeRichText: val,
         };
-        console.log(params);
 
         loadBugDetail();
       });

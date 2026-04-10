@@ -1,7 +1,6 @@
-import { faker } from '@faker-js/faker';
 import { eventHandler, getQuery } from 'h3';
-import { verifyAccessToken } from '~/utils/jwt-utils';
 import { MOCK_MENU_LIST_V2 } from '~/api/menu/menuJSON';
+import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, usePageResponseSuccess } from '~/utils/response';
 
 export const mockRoleData = [

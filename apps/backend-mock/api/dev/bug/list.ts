@@ -1,13 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
-import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-import { uniqueByKey } from '~/utils/arrayExtendApi';
 import { mockUserData } from '~/api/system/user/list';
-import { mockProjectData } from '../project/list';
+import { uniqueByKey } from '~/utils/arrayExtendApi';
+import { verifyAccessToken } from '~/utils/jwt-utils';
+import { unAuthorizedResponse } from '~/utils/response';
+
 import { mockModuleData } from '../module/list';
-import { mockVersionData } from '../versions/list';
+import { mockProjectData } from '../project/list';
 import { mockStoryData } from '../story/list';
+import { mockVersionData } from '../versions/list';
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -18,7 +19,7 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
-const projectIds = mockModuleData.map((item) => item.projectId);
+const _projectIds = mockModuleData.map((item) => item.projectId);
 
 function generateMockDataList(count: number) {
   const dataList = [];
@@ -33,7 +34,7 @@ function generateMockDataList(count: number) {
     );
     /* 随机从版本表中取一个版本 */
     let versionInfo: any = {};
-    if (versionList.length) {
+    if (versionList.length > 0) {
       versionInfo = faker.helpers.arrayElement(versionList);
     }
 
@@ -43,7 +44,7 @@ function generateMockDataList(count: number) {
     );
     /* 随机从模块表中取一个模块 */
     let moduleInfo: any = {};
-    if (moduleList.length) {
+    if (moduleList.length > 0) {
       moduleInfo = faker.helpers.arrayElement(moduleList);
     }
 
@@ -55,7 +56,7 @@ function generateMockDataList(count: number) {
     );
     /* 随机从需求表里取一个需求 */
     let storyInfo: any = {};
-    if (storyList.length) {
+    if (storyList.length > 0) {
       storyInfo = faker.helpers.arrayElement(storyList);
     }
 
@@ -129,8 +130,8 @@ export default eventHandler(async (event) => {
   if (keyword) {
     listData = listData.filter(
       (item) =>
-        item.bugTitle.indexOf(keyword) > -1 ||
-        item.bugNum.toString().indexOf(keyword) > -1,
+        item.bugTitle.includes(keyword) ||
+        item.bugNum.toString().includes(keyword),
     );
   }
 

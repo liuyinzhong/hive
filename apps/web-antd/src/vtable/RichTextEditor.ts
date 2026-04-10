@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-this-alias
 import type {
   CellAddress,
   EditContext,
@@ -8,16 +9,16 @@ import type {
 
 import type { ComponentPublicInstance } from 'vue';
 
-import AiEditor from '#/components/AiEditor/index.vue';
+import { createApp, onMounted, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 
-import { createApp, onMounted, ref } from 'vue';
+import AiEditor from '#/components/AiEditor/index.vue';
 
 /**
  * 富文本编辑器配置接口
  */
-interface RichTextEditorConfig {}
+type RichTextEditorConfig = object;
 
 /**
  * 自定义富文本编辑器组件
@@ -32,18 +33,19 @@ export class RichTextEditor implements IEditor {
   // ==================== 属性声明 ====================
   /** 编辑器配置 */
   editorConfig: RichTextEditorConfig;
+  /* 富文本的html值 */
+  editorHtml: string = '';
   /** 当前列绑定的字段名 */
   field: string = '';
-  /** 表格当前行数据对象 */
-  rowData: any = {};
   /** 组件实例 */
   richTextEditorInstance: ComponentPublicInstance | null = null;
+  /** 表格当前行数据对象 */
+  rowData: any = {};
   /** 结束编辑回调函数 */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   successCallback: Function | null = null;
   /** 编辑器包装元素 */
   wrapperElement: HTMLDivElement | null = null;
-  /* 富文本的html值 */
-  editorHtml: string = '';
 
   // ==================== 构造函数 ====================
   /**
@@ -89,7 +91,7 @@ export class RichTextEditor implements IEditor {
    * @param target 目标DOM元素
    * @returns 是否属于编辑器元素
    */
-  isEditorElement(target: HTMLElement): boolean {
+  isEditorElement(_target: HTMLElement): boolean {
     return true;
     /*  return (
       !!this.wrapperElement &&
@@ -194,6 +196,7 @@ export class RichTextEditor implements IEditor {
    * 创建并挂载Vue应用
    */
   private mountVueApp() {
+    // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias
     const that = this;
 
     this.app = createApp({

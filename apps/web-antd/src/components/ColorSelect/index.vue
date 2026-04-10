@@ -4,7 +4,7 @@ import { ref, watch } from 'vue';
 // 组件属性定义
 interface Props {
   /** 当前选中的颜色值 */
-  value: string;
+  value?: string;
 }
 
 // 组件事件定义

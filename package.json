@@ -58,9 +58,6 @@
     "version": "pnpm exec changeset version && pnpm install --no-frozen-lockfile",
     "catalog": "pnpx codemod pnpm/catalog"
   },
-  "dependencies": {
-    "@tiptap/extension-mention": "catalog:conflicts_@tiptap/extension-mention_3_21_0"
-  },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",
     "@changesets/cli": "catalog:",

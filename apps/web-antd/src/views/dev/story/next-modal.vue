@@ -51,7 +51,7 @@ const [Modal, modalApi] = useVbenModal({
 
       /* 禁用已完成的步骤 */
       stepsItems.forEach((item: any, index: number) => {
-        item.disabled = index < current.value ? true : false;
+        item.disabled = index < current.value;
       });
     }
   },

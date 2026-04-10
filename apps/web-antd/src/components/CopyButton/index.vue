@@ -35,11 +35,11 @@ const emit = defineEmits<{
   /**
    * 复制成功时触发的事件
    */
-  (e: 'copy-success'): void;
+  (e: 'copySuccess'): void;
   /**
    * 复制失败时触发的事件
    */
-  (e: 'copy-error'): void;
+  (e: 'copyError'): void;
 }>();
 
 // 使用剪贴板钩子
@@ -51,9 +51,9 @@ const { copy, copied } = useClipboard();
 const handleCopy = async () => {
   try {
     await copy(props.text);
-    emit('copy-success');
-  } catch (error) {
-    emit('copy-error');
+    emit('copySuccess');
+  } catch {
+    emit('copyError');
   }
 };
 

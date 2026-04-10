@@ -3,16 +3,14 @@ import { onMounted, ref } from 'vue';
 
 import { VbenTiptap } from '@vben/plugins/tiptap';
 
-import Mention from '@tiptap/extension-mention';
-
 import { getUserListAll } from '#/api/system';
 
 const userList = ref<any[]>([]);
 
 onMounted(async () => {
   userList.value = await _getUserListAll('');
-  console.log(userList.value);
-  console.log(Mention);
+  // console.log(userList.value);
+  // console.log(Mention);
 });
 
 /* 获取用户列表 */

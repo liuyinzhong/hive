@@ -1,10 +1,11 @@
 import { eventHandler } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-import { mockTaskData } from '../task/list';
+
 import { mockBugData } from '../bug/list';
-import { mockStoryData } from '../story/list';
 import { mockModuleData } from '../module/list';
+import { mockStoryData } from '../story/list';
+import { mockTaskData } from '../task/list';
 
 /** 任务类型映射 */
 const TASK_TYPE_MAP: Record<number, string> = {
@@ -277,7 +278,7 @@ export default eventHandler(async (event) => {
   // 任务工作量（柱状图，按类型分组）
   const taskWorkloadMap: Record<
     string,
-    { planHours: number; actualHours: number }
+    { actualHours: number; planHours: number }
   > = {};
   for (const task of tasks) {
     const name = TASK_TYPE_MAP[task.taskType] ?? `类型${task.taskType}`;

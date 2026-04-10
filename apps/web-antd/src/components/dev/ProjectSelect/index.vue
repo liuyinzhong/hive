@@ -1,30 +1,21 @@
-<template>
-  <div>
-    <a-cascader
-      v-model:value="selectedValue"
-      :options="options"
-      style="width: 100%"
-      @change="handleChange"
-      ref="selectRef"
-    />
-    <FormModal />
-  </div>
-</template>
-
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
-import { faker } from '@faker-js/faker';
-import addFormModal from '#/views/dev/versions/add-modal.vue';
-import { useVbenModal } from '@vben/common-ui';
-const emit = defineEmits(['update:projectId', 'update:versionId', 'change']);
+import { onMounted, onUnmounted, ref } from 'vue';
 
+import { useVbenModal } from '@vben/common-ui';
+
+import { faker } from '@faker-js/faker';
+
+import addFormModal from '#/views/dev/versions/add-modal.vue';
 const props = defineProps({
+  // eslint-disable-next-line vue/require-default-prop
   modelValue: String,
   /** 是否显示添加版本选项 */
   showAddVersion: Boolean,
   /** 是否显示添加项目选项 */
   showAddProject: Boolean,
 });
+
+const emit = defineEmits(['update:projectId', 'update:versionId', 'change']);
 
 const options = ref<any>();
 
@@ -118,10 +109,10 @@ const [FormModal, FormModalApi] = useVbenModal({
 });
 
 const handleChange = (value: any) => {
-  if (value[0] == '添加项目' || value[1] == '添加版本') {
-    if (value[0] == '添加项目') {
+  if (value[0] === '添加项目' || value[1] === '添加版本') {
+    if (value[0] === '添加项目') {
       //
-    } else if (value[1] == '添加版本') {
+    } else if (value[1] === '添加版本') {
       selectRef.value.blur();
       FormModalApi.setData({
         projectId: value[0],
@@ -133,3 +124,16 @@ const handleChange = (value: any) => {
   emit('change', value);
 };
 </script>
+
+<template>
+  <div>
+    <a-cascader
+      v-model:value="selectedValue"
+      :options="options"
+      style="width: 100%"
+      @change="handleChange"
+      ref="selectRef"
+    />
+    <FormModal />
+  </div>
+</template>

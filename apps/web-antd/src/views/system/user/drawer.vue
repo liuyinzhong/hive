@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { useVbenDrawer, useVbenForm } from '@vben/common-ui';
-import { useFormSchema } from './data';
+
 import { createUser, updateUser } from '#/api/system';
-import { nextTick } from 'vue';
-import { sleep } from '#/utils';
+
+import { useFormSchema } from './data';
 
 defineOptions({
   name: 'FormModelDemo',

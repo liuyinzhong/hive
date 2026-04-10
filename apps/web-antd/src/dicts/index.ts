@@ -39,7 +39,7 @@ export const getLocalDictText = (
     return '';
   }
   const list: any = dictionaryData[type];
-  const item: any = list?.find((a: any) => a[key || 'value'] == value);
+  const item: any = list?.find((a: any) => a[key || 'value'] === value);
   return item?.label || '';
 };
 
@@ -57,7 +57,7 @@ export const getLocalDictColor = (
     return '';
   }
   const list: any = dictionaryData[type];
-  const item: any = list?.find((a: any) => a[key || 'value'] == value);
+  const item: any = list?.find((a: any) => a[key || 'value'] === value);
   return item?.color || '';
 };
 

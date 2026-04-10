@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useTabs } from '@vben/hooks';
-import { Page } from '@vben/common-ui';
 import { useRoute } from 'vue-router';
-import TaskDetail from './components/task-detail.vue';
+
+import { Page } from '@vben/common-ui';
+import { useTabs } from '@vben/hooks';
+
 import { Card } from 'ant-design-vue';
+
+import TaskDetail from './components/task-detail.vue';
 
 defineOptions({
   name: 'TaskDetail',
@@ -20,9 +23,9 @@ const taskNum: any = computed(() => {
 setTabTitle(`任务详情 #${taskNum.value}`);
 </script>
 <template>
-  <Page autoContentHeight>
+  <Page auto-content-height>
     <Card>
-      <TaskDetail :taskNum="taskNum" :showBtn="true" />
+      <TaskDetail :task-num="taskNum" :show-btn="true" />
     </Card>
   </Page>
 </template>

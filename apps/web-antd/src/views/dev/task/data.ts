@@ -97,7 +97,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['projectId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn';
         },
       },
     },
@@ -117,12 +117,12 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '迭代版本',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value: any, formApi: any) => {
+      componentProps: (value: any, _formApi: any) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + value.projectId,
+          key: `versionId_${value.projectId}`,
           api: () =>
             getVersionsList({
               projectId: value.projectId,
@@ -137,7 +137,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['projectId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn';
         },
       },
     },
@@ -147,12 +147,12 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '关联模块',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'moduleId_' + value.projectId,
+          key: `moduleId_${value.projectId}`,
           api: () => getModulesList({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
@@ -181,7 +181,7 @@ export function useFormSchema(): VbenFormSchema[] {
             h(
               Tag,
               { style: { height: 'fit-content' } },
-              '#' + optionItem.storyNum || '',
+              `#${optionItem.storyNum || ''}`,
             ),
             h(TypographyText, { ellipsis: true }, optionItem.label || ''),
             h(UserAvatarGroup, {
@@ -226,7 +226,7 @@ export function useFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['versionId'],
         disabled: (value) => {
-          return value.openModalSource === 'storyListAddBtn' ? true : false;
+          return value.openModalSource === 'storyListAddBtn';
         },
       },
     },
@@ -314,12 +314,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + value.projectId,
+          key: `versionId_${value.projectId}`,
           api: () =>
             getVersionsList({
               projectId: value.projectId,
@@ -376,7 +376,7 @@ export function useColumns(
       title: '编号',
       width: 60,
       dragSort: false,
-      formatter: ({ row }) => '#' + row.taskNum,
+      formatter: ({ row }) => `#${row.taskNum}`,
     },
     {
       field: 'projectTitle',
@@ -483,7 +483,7 @@ export function useColumns(
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
             disabled: (row: DevTaskApi.DevTaskFace) => {
-              return row.taskStatus == 99;
+              return row.taskStatus === 99;
             },
           },
           {
@@ -492,7 +492,7 @@ export function useColumns(
             text: '',
             tips: '编辑按钮',
             disabled: (row: DevTaskApi.DevTaskFace) => {
-              return row.taskStatus == 99;
+              return row.taskStatus === 99;
             },
           },
           {

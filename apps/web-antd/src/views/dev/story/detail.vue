@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useTabs } from '@vben/hooks';
-import { Page } from '@vben/common-ui';
 import { useRoute } from 'vue-router';
-import StoryDetail from './components/story-detail.vue';
+
+import { Page } from '@vben/common-ui';
+import { useTabs } from '@vben/hooks';
+
 import { Card } from 'ant-design-vue';
+
+import StoryDetail from './components/story-detail.vue';
 
 defineOptions({
   name: 'StoryDetail',
@@ -20,9 +23,9 @@ const storyNum: any = computed(() => {
 setTabTitle(`需求详情 #${storyNum.value}`);
 </script>
 <template>
-  <Page autoContentHeight>
+  <Page auto-content-height>
     <Card>
-      <StoryDetail :storyNum="storyNum" :showBtn="true" />
+      <StoryDetail :story-num="storyNum" :show-btn="true" />
     </Card>
   </Page>
 </template>

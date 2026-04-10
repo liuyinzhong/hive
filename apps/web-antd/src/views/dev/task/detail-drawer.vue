@@ -27,7 +27,7 @@ const [Drawer, DrawerApi] = useVbenDrawer({
 const taskInfo = ref<DevTaskApi.DevTaskFace>({});
 
 const taskLink = computed(
-  () => location.origin + `/dev/task/detail/${taskInfo.value.taskNum}`,
+  () => `${location.origin}/dev/task/detail/${taskInfo.value.taskNum}`,
 );
 
 const newTab = () => {
@@ -38,13 +38,12 @@ const changeRichTextRef = ref<any>();
 const submit = () => {
   DrawerApi.lock();
   setTimeout(() => {
-    const params = {
+    const _params = {
       businessId: taskInfo.value.taskId,
       businessType: 10,
       changeBehavior: 20,
       changeRichText: changeRichTextRef.value?.aiEditor()?.getHtml() || '',
     };
-    console.log(params);
     DrawerApi.unlock();
     DrawerApi.close();
   }, 1000);

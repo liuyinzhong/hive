@@ -9,8 +9,7 @@ import type { DevModuleApi, DevProjectApi } from '#/api/dev';
 
 import { onMounted, ref } from 'vue';
 
-import { EllipsisText } from '@vben/common-ui';
-import { Page, useVbenModal } from '@vben/common-ui';
+import { EllipsisText, Page, useVbenModal } from '@vben/common-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getModulesList, getProjectsList } from '#/api/dev';
@@ -50,10 +49,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {
     // eslint-disable-next-line unused-imports/no-unused-vars
     rowDragstart: (e: any) => {},
-    rowDragend: ({ oldRow, _index }: any) => {
-      console.log(
+    rowDragend: ({ _oldRow, _index }: any) => {
+      /* console.log(
         '排序后' + oldRow.moduleTitle + '在' + _index.newIndex + '位',
-      );
+      ); */
     },
   },
 });

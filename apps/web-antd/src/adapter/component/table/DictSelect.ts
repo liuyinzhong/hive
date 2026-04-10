@@ -1,5 +1,7 @@
-import { Select } from 'ant-design-vue';
 import { h } from 'vue';
+
+import { Select } from 'ant-design-vue';
+
 import { getLocalDictList } from '#/dicts';
 
 import DictTag from './DictTag';

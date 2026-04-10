@@ -17,8 +17,7 @@ import { createApp, onMounted, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 
-import { message, Upload } from 'ant-design-vue';
-import { UploadDragger } from 'ant-design-vue';
+import { message, Upload, UploadDragger } from 'ant-design-vue';
 
 import { upload_file } from '#/api/examples/upload';
 import { filesToUrlString, urlStringToFiles } from '#/utils';
@@ -102,7 +101,7 @@ export class UploadFileEditor implements IEditor {
    * @param target 目标DOM元素
    * @returns 是否属于编辑器元素
    */
-  isEditorElement(target: HTMLElement): boolean {
+  isEditorElement(_target: HTMLElement): boolean {
     return true;
     /* return (
       !!this.wrapperElement &&
@@ -246,7 +245,7 @@ export class UploadFileEditor implements IEditor {
           },
         });
 
-        const handleChange = (info: UploadChangeParam) => {};
+        const handleChange = (_info: UploadChangeParam) => {};
 
         const beforeUpload = (file: UploadFile, files: UploadFile[]) => {
           if (file.size > 0 && file.size > 1024 * 1024 * 100) {

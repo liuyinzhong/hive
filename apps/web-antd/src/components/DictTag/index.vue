@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { getLocalDictRow } from '#/dicts';
 import { computed } from 'vue';
+
+import { getLocalDictRow } from '#/dicts';
 
 const props = defineProps({
   dictType: {

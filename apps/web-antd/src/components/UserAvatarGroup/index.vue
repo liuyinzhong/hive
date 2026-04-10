@@ -15,7 +15,7 @@ const props = defineProps({
 const data: any = computed(() => props.userList);
 </script>
 <template>
-  <a-avatar-group :maxCount="maxCount">
+  <a-avatar-group :max-count="maxCount">
     <a-tooltip
       v-for="item in data"
       :key="item.userId"

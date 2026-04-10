@@ -40,8 +40,8 @@ const formSchema = computed(() => {
   ];
 });
 
-const handleSubmit = (e: any) => {
-  message.success('安全设置成功' + JSON.stringify(e));
+const handleSubmit = (_e: any) => {
+  message.success('安全设置成功');
 };
 </script>
 <template>

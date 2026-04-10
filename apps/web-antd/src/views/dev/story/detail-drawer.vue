@@ -34,7 +34,7 @@ const [Drawer, DrawerApi] = useVbenDrawer({
 const storyInfo = ref<DevStoryApi.DevStoryFace>({});
 
 const storyLink = computed(
-  () => location.origin + `/dev/story/detail/${storyInfo.value.storyNum}`,
+  () => `${location.origin}/dev/story/detail/${storyInfo.value.storyNum}`,
 );
 
 const newTab = () => {
@@ -45,13 +45,12 @@ const changeRichTextRef = ref<any>();
 const submit = () => {
   DrawerApi.lock();
   setTimeout(() => {
-    const params = {
+    const _params = {
       businessId: storyInfo.value.storyId,
       businessType: 0,
       changeBehavior: 20,
       changeRichText: changeRichTextRef.value?.aiEditor()?.getHtml() || '',
     };
-    console.log(params);
     DrawerApi.unlock();
     DrawerApi.close();
   }, 1000);

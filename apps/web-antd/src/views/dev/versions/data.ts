@@ -39,8 +39,8 @@ export function useFormSchema(): VbenFormSchema[] {
       },
       dependencies: {
         triggerFields: ['versionId'],
-        disabled(value, formApi) {
-          return value.versionId ? true : false;
+        disabled(value, _formApi) {
+          return !!value.versionId;
         },
       },
     },
@@ -255,7 +255,7 @@ export function useColumns(
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
             disabled: (row: DevVersionApi.DevVersionFace) => {
-              return row.releaseStatus == 99;
+              return row.releaseStatus === 99;
             },
           },
           {
@@ -264,7 +264,7 @@ export function useColumns(
             text: '',
             tips: '编辑按钮',
             disabled: (row: DevVersionApi.DevVersionFace) => {
-              return row.releaseStatus == 99;
+              return row.releaseStatus === 99;
             },
           },
           {

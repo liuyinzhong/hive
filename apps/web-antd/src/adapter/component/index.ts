@@ -734,7 +734,7 @@ async function initComponentAdapter() {
     RangePicker,
     Rate,
     RichEditor: withDefaultPlaceholder(VbenTiptap, 'input'),
-    Editor: withDefaultPlaceholder(VbenTiptap, 'input'),
+    Editor: withDefaultPlaceholder(Editor, 'input'),
     Select: withDefaultPlaceholder(Select, 'select'),
     Space,
     Switch,

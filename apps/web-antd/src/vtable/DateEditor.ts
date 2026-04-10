@@ -130,6 +130,7 @@ export class DateEditor implements IEditor {
     }
 
     // 保存 this 引用
+    // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias
     const that = this;
 
     // 创建 Vue 应用并挂载 DatePicker 组件
@@ -201,9 +202,9 @@ export class DateEditor implements IEditor {
    */
   validateValue?(
     newValue?: any,
-    oldValue?: any,
-    position?: CellAddress,
-    table?: any,
+    _oldValue?: any,
+    _position?: CellAddress,
+    _table?: any,
   ): boolean | ValidateEnum {
     // 这里可以添加日期验证逻辑
     if (newValue && !dayjs(newValue).isValid()) {

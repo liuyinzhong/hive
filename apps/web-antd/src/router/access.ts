@@ -5,13 +5,13 @@ import type {
 
 import { generateAccessible } from '@vben/access';
 import { preferences } from '@vben/preferences';
+import { mapTree } from '@vben/utils';
 
 import { message } from 'ant-design-vue';
 
 import { getAllMenusApi } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
-import { sortTree, mapTree } from '@vben/utils';
 
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
 

@@ -21,13 +21,7 @@ defineOptions({
   name: 'StoryBatchFormModel',
 });
 
-const {
-  CHANGE_CELL_VALUE,
-  COPY_DATA,
-  PASTED_DATA,
-  DROPDOWN_MENU_CLICK,
-  DBLCLICK_CELL,
-} = VTable.ListTable.EVENT_TYPE;
+const { CHANGE_CELL_VALUE, DROPDOWN_MENU_CLICK } = VTable.ListTable.EVENT_TYPE;
 
 let ListTableApi: VTable.ListTable;
 
@@ -39,7 +33,7 @@ const addRow = (installIndex?: number) => {
 };
 
 const getRecords = () => {
-  console.log(ListTableApi.records);
+  // console.log(ListTableApi.records);
 };
 
 const columns: VTable.ColumnsDefine = [
@@ -187,8 +181,8 @@ const initTable = () => {
   }
 
   ListTableApi.on(CHANGE_CELL_VALUE, (params) => {
-    console.log('编辑单元格数据', params);
-    if (params.col == 0 || params.col == 1) {
+    // console.log('编辑单元格数据', params);
+    if (params.col === 0 || params.col === 1) {
       const data = ListTableApi.getRecordByCell(params.col, params.row);
       ListTableApi.changeCellValue(params.col + 1, params.row, '');
       const editor: any = ListTableApi.getEditor(params.col + 1, params.row);

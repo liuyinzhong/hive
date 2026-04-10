@@ -1,6 +1,8 @@
-import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+
 import { objectOmit } from '@vueuse/core';
+
+import { requestClient } from '#/api/request';
 
 interface userListFace {
   userId: string;
@@ -20,7 +22,7 @@ export namespace DevStoryApi {
     storyRichText?: string;
     files?: string;
     storyType?: number;
-    storyStatus?: number | any;
+    storyStatus?: any | number;
     storyLevel?: number;
     /** 关联版本id */
     versionId?: string;

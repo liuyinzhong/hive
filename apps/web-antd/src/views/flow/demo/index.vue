@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Edge, Node } from '@vue-flow/core';
+import type { Node } from '@vue-flow/core';
 
 import { ref } from 'vue';
 

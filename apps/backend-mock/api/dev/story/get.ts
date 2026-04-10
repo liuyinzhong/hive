@@ -1,6 +1,7 @@
 import { eventHandler } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+
 import { mockStoryData } from './list';
 
 export default eventHandler(async (event) => {
@@ -11,6 +12,6 @@ export default eventHandler(async (event) => {
 
   const { storyNum } = getQuery(event);
   return useResponseSuccess(
-    mockStoryData.find((item) => item.storyNum == storyNum) || null,
+    mockStoryData.find((item) => item.storyNum === storyNum) || null,
   );
 });

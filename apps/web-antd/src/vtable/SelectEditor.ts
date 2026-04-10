@@ -239,43 +239,40 @@ export class SelectEditor implements IEditor {
    * 创建并挂载Vue应用
    */
   private mountVueApp() {
-    // eslint-disable-next-line unicorn/no-this-assignment
-    const that = this;
-
     this.app = createApp({
       // eslint-disable-next-line vue/no-reserved-component-names
       components: { Select },
-      setup() {
+      setup: () => {
         const fieldNames = {
-          label: that.editorConfig.labelField,
-          value: that.editorConfig.valueField,
+          label: this.editorConfig.labelField,
+          value: this.editorConfig.valueField,
         };
 
         // 响应式数据
         const selectValue = ref(
-          that.selectedOption[that.editorConfig.valueField as string] || '',
+          this.selectedOption[this.editorConfig.valueField as string] || '',
         );
-        const options = ref(that.options);
+        const options = ref(this.options);
 
         /**
          * 获取下拉菜单的容器
          * 确保下拉菜单在表格内正确显示
          */
-        const getPopupContainer = () => that.container as HTMLElement;
+        const getPopupContainer = () => this.container as HTMLElement;
 
         /**
          * 处理选择变化事件
          * @param value 选中的值
          * @param option 选中的完整选项对象
          */
-        const handleSelectChange = (value: string, option: any) => {
-          that.selectedOption = option || {};
-          that.successCallback?.(that.selectedOption);
+        const handleSelectChange = (_value: string, option: any) => {
+          this.selectedOption = option || {};
+          this.successCallback?.(this.selectedOption);
         };
         const dropdownVisibleChange = (visible: boolean) => {
           if (!visible) {
-            that.selectedOption = {};
-            that.successCallback?.(that.selectedOption);
+            this.selectedOption = {};
+            this.successCallback?.(this.selectedOption);
           }
         };
 

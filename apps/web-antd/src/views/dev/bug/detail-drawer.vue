@@ -27,7 +27,7 @@ const [Drawer, DrawerApi] = useVbenDrawer({
 const bugInfo = ref<DevBugApi.DevBugFace>({});
 
 const bugLink = computed(
-  () => location.origin + `/dev/bug/detail/${bugInfo.value.bugNum}`,
+  () => `${location.origin}/dev/bug/detail/${bugInfo.value.bugNum}`,
 );
 const newTab = () => {
   window.open(bugLink.value);
@@ -37,13 +37,12 @@ const changeRichTextRef = ref<any>();
 const submit = () => {
   DrawerApi.lock();
   setTimeout(() => {
-    const params = {
+    const _params = {
       businessId: bugInfo.value.bugId,
       businessType: 20,
       changeBehavior: 20,
       changeRichText: changeRichTextRef.value?.aiEditor()?.getHtml() || '',
     };
-    console.log(params);
     DrawerApi.unlock();
     DrawerApi.close();
   }, 1000);

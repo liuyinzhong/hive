@@ -1,6 +1,8 @@
-import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+
 import { objectOmit } from '@vueuse/core';
+
+import { requestClient } from '#/api/request';
 export namespace SystemUserApi {
   export interface SystemUserFace {
     [key: string]: any;
@@ -45,7 +47,7 @@ export const createUser = async (
 };
 
 export const updateUser = async (
-  userId: string | number,
+  userId: number | string,
   data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
 ) => {
   const newData = objectOmit(data, ['userId']);

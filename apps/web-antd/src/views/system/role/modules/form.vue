@@ -13,8 +13,7 @@ import { IconifyIcon } from '@vben/icons';
 import { Spin } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { getMenuList } from '#/api/system';
-import { createRole, updateRole } from '#/api/system';
+import { createRole, getMenuList, updateRole } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';

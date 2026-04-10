@@ -15,7 +15,7 @@ export function sleep(ms: number) {
 export function filesToUrlString(fileList: any) {
   if (!fileList?.length) return '';
   return fileList
-    .filter((file: any) => file.status == 'done')
+    .filter((file: any) => file.status === 'done')
     .map((file: any) => file.response?.url || file.url)
     .join(',');
 }
@@ -60,5 +60,5 @@ export function getFileNameFromUrl(url: string): string {
  * @returns 深拷贝后的对象
  */
 export function deepClone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
+  return structuredClone(obj);
 }

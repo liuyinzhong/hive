@@ -49,7 +49,7 @@ const [Modal, modalApi] = useVbenModal({
         (item: any) => item.value === taskStatus,
       );
       stepsItems.forEach((item: any, index: number) => {
-        item.disabled = index < current.value ? true : false;
+        item.disabled = index < current.value;
       });
     }
   },

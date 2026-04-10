@@ -22,7 +22,7 @@ import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
 
 onMounted(() => {
-  console.log('onMounted');
+  // console.log('onMounted');
 });
 
 // #region 表格搜索,配置
@@ -94,7 +94,7 @@ function onCreate() {
 
 async function onDelete(row: SystemUserApi.SystemUserFace) {
   const hideLoading = message.loading({
-    content: '正在删除用户:' + row.username,
+    content: `正在删除用户:${row.username}`,
     duration: 0,
     key: 'action_process_msg',
   });
@@ -102,7 +102,7 @@ async function onDelete(row: SystemUserApi.SystemUserFace) {
   await sleep(1000);
 
   message.success({
-    content: '删除用户:' + row.username + '成功',
+    content: `删除用户:${row.username}成功`,
     key: 'action_process_msg',
   });
 

@@ -1,16 +1,14 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 import { Page } from '@vben/common-ui';
+
+import { Card } from 'ant-design-vue';
 
 import ProjectSelect from '#/components/dev/ProjectSelect/index.vue';
 import BugTable from '#/views/dev/bug/list.vue';
 import StoryTable from '#/views/dev/story/list.vue';
 import TaskTable from '#/views/dev/task/list.vue';
-import { Card } from 'ant-design-vue';
-// 跳转路由
-const router = useRouter();
 
 const queryParams = reactive({
   projectId: '',
@@ -20,8 +18,8 @@ const queryParams = reactive({
 });
 
 // #region 项目切换
-const changeProject = (val: string) => {
-  console.log(queryParams);
+const changeProject = (_val: string) => {
+  // console.log(queryParams);
 };
 // #endregion 项目切换
 
@@ -52,14 +50,14 @@ const tableTypeList = ref([
     },
   },
 ]);
-const changeTableType = (val: string) => {
-  console.log(`切换tab:${val}`);
+const changeTableType = (_val: string) => {
+  // console.log(`切换tab:${val}`);
 };
 // #endregion 切换tab
 
 // #region 切换模块分类
-const changeModule = (val: any) => {
-  console.log(queryParams.moduleId);
+const changeModule = (_val: any) => {
+  // console.log(queryParams.moduleId);
 };
 const moduleList = ref([
   {

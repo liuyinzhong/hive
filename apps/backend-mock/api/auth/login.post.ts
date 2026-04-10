@@ -1,10 +1,10 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3';
+import { mockUserData } from '~/api/system/user/list';
 import {
   clearRefreshTokenCookie,
   setRefreshTokenCookie,
 } from '~/utils/cookie-utils';
 import { generateAccessToken, generateRefreshToken } from '~/utils/jwt-utils';
-import { mockUserData } from '~/api/system/user/list';
 import {
   forbiddenResponse,
   useResponseError,

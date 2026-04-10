@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { EllipsisText } from '@vben/common-ui';
 import { computed } from 'vue';
+
+import { EllipsisText } from '@vben/common-ui';
 const props = defineProps({
   textList: {
     required: true,
@@ -24,7 +25,7 @@ const textDataList = computed(() => props.textList);
       :key="item"
       @dblclick="dbClickHandle(item)"
     >
-      <EllipsisText tooltipWhenEllipsis> {{ item }} </EllipsisText>
+      <EllipsisText tooltip-when-ellipsis> {{ item }} </EllipsisText>
     </div>
   </div>
 </template>

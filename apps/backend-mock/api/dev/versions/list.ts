@@ -1,9 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
-import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 import { uniqueByKey } from '~/utils/arrayExtendApi';
-import { mockProjectData } from '../project/list';
+import { compareVersion, verifyAccessToken } from '~/utils/jwt-utils';
+import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
 import { mockModuleData } from '../module/list';
 
@@ -94,6 +93,7 @@ export default eventHandler(async (event) => {
     listData.unshift(defaultObj);
   }
 
+  // eslint-disable-next-line unicorn/prefer-ternary
   if (page && pageSize) {
     /* 分页响应 */
     return usePageResponseSuccess(

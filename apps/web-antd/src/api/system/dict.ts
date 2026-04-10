@@ -1,14 +1,16 @@
-import { requestClient } from '#/api/request';
 import type { Recordable } from '@vben/types';
+
 import { objectOmit } from '@vueuse/core';
+
+import { requestClient } from '#/api/request';
 
 export namespace SystemDictApi {
   export interface SystemDictFace {
     [key: string]: any;
     /** 字典id,; */
-    id?: string | number;
+    id?: number | string;
     /** 字典父id,; */
-    pid?: string | number | null;
+    pid?: null | number | string;
     /** 字典标题,; */
     label?: string;
     /** 字典值,; */
@@ -64,7 +66,7 @@ export const createDict = async (
  * @param data 字典数据
  */
 export const updateDict = async (
-  id: string | number,
+  id: number | string,
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
 ) => {
   const newData = objectOmit(data, ['children', 'id']);

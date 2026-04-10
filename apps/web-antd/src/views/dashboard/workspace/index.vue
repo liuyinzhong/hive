@@ -103,7 +103,7 @@ onMounted(() => {
   getTaskList({}).then(({ items }) => {
     taskDataList.forEach((taskInfo) => {
       taskInfo.children = items.filter(
-        (item) => item.taskStatus == taskInfo.taskStatus,
+        (item) => item.taskStatus === taskInfo.taskStatus,
       );
     });
   });
@@ -145,8 +145,8 @@ const sortableOptions: Sortable.Options = {
       return;
     }
 
-    console.log('从列表拖动到列表:', fromContainer, '->', toContainer);
-    console.log('拖动的任务ID:', taskId);
+    // console.log('从列表拖动到列表:', fromContainer, '->', toContainer);
+    // console.log('拖动的任务ID:', taskId);
 
     // 如果源列表和目标列表相同，不做处理
     if (fromContainer === toContainer) {

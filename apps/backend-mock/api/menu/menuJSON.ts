@@ -348,11 +348,11 @@ export function convertMenuToTree(data: any[], hasButton: boolean = false) {
   // 首先将每个菜单项转换为标准格式
   const menuItems = data
     .map((item) => {
-      if (item.status == 0) {
+      if (item.status === 0) {
         return null;
       }
 
-      if (!hasButton && item.type == 'button') {
+      if (!hasButton && item.type === 'button') {
         return null;
       }
 
@@ -409,15 +409,15 @@ export function convertMenuToTree(data: any[], hasButton: boolean = false) {
   const tree = [];
   menuItems.forEach((item) => {
     const parentId = item.pid;
-    if (!parentId) {
-      // 没有父节点，是根节点
-      tree.push(item);
-    } else {
+    if (parentId) {
       // 有父节点，将当前节点添加到父节点的 children 数组中
       const parent = menuMap.get(parentId);
       if (parent) {
         parent.children.push(item);
       }
+    } else {
+      // 没有父节点，是根节点
+      tree.push(item);
     }
   });
 

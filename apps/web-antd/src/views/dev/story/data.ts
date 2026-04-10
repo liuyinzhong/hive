@@ -55,7 +55,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '项目',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value: any, formApi: any) => {
+      componentProps: (_value: any, _formApi: any) => {
         return {
           api: () => getProjectsList(),
           labelField: 'projectTitle',
@@ -81,12 +81,12 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '迭代版本',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + value.projectId,
+          key: `versionId_${value.projectId}`,
           api: () =>
             getVersionsList({
               projectId: value.projectId,
@@ -109,12 +109,12 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '关联模块',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'moduleId_' + value.projectId,
+          key: `moduleId_${value.projectId}`,
           api: () => getModulesList({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
@@ -215,12 +215,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'versionId',
       label: '迭代版本',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'versionId_' + value.projectId,
+          key: `versionId_${value.projectId}`,
           api: () =>
             getVersionsList({
               projectId: value.projectId,
@@ -245,12 +245,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'moduleId',
       label: '关联模块',
-      componentProps: (value, formApi) => {
+      componentProps: (value, _formApi) => {
         if (!value.projectId) {
           return {};
         }
         return {
-          key: 'moduleId_' + value.projectId,
+          key: `moduleId_${value.projectId}`,
           api: () => getModulesList({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
@@ -303,7 +303,7 @@ export function useColumns(
       title: '编号',
       width: 60,
       dragSort: false,
-      formatter: ({ row }) => '#' + row.storyNum,
+      formatter: ({ row }) => `#${row.storyNum}`,
     },
     {
       field: 'projectTitle',
@@ -355,11 +355,10 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const params = {
+            const _params = {
               storyId: row.storyId,
               userIds: val,
             };
-            console.log(params);
             message.success(`控制台已输出`);
           },
         },
@@ -385,11 +384,10 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const params = {
+            const _params = {
               storyId: row.storyId,
               storyType: val,
             };
-            console.log(params);
             message.success(`控制台已输出`);
           },
         },
@@ -407,11 +405,10 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const params = {
+            const _params = {
               storyId: row.storyId,
               storyLevel: val,
             };
-            console.log(params);
             message.success(`控制台已输出`);
           },
         },
@@ -428,11 +425,10 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const params = {
+            const _params = {
               storyId: row.storyId,
               source: val,
             };
-            console.log(params);
             message.success(`控制台已输出`);
           },
         },
@@ -457,9 +453,7 @@ export function useColumns(
             icon: 'lucide:badge-plus',
             tips: '添加任务',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return !row.versionId || [0, 99].includes(row.storyStatus)
-                ? true
-                : false;
+              return !row.versionId || [0, 99].includes(row.storyStatus);
             },
           },
 
@@ -468,9 +462,7 @@ export function useColumns(
             icon: 'lucide:bug',
             tips: '添加缺陷',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return !row.versionId || [0].includes(row.storyStatus)
-                ? true
-                : false;
+              return !row.versionId || [0].includes(row.storyStatus);
             },
           },
           {

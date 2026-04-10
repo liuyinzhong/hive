@@ -15,7 +15,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '字典表主键id',
       disabled: true,
       dependencies: {
-        show(values) {
+        show(_values) {
           return false;
         },
         triggerFields: ['id'],
@@ -28,7 +28,7 @@ export function useFormSchema(): VbenFormSchema[] {
       disabled: true,
       formItemClass: 'col-span-2 md:col-span-2',
       dependencies: {
-        show(values) {
+        show(_values) {
           return false;
         },
         triggerFields: ['pid'],

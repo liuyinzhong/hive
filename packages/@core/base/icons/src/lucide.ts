@@ -54,6 +54,8 @@ export {
   LoaderCircle,
   LockKeyhole,
   LogOut,
+  LucidePlus,
+  LucideTrash,
   MailCheck,
   Maximize,
   ArrowRightFromLine as MdiMenuClose,
@@ -91,6 +93,4 @@ export {
   Unlink2,
   UserRoundPen,
   X,
-  LucidePlus,
-  LucideTrash,
 } from 'lucide-vue-next';

@@ -87,7 +87,6 @@ catalog:
   '@vueuse/motion': ^3.0.3
   aieditor: ^1.4.2
   ant-design-vue: ^4.2.6
-  antdv-next: ^1.1.7
   archiver: ^7.0.1
   axios: ^1.14.0
   axios-mock-adapter: ^2.1.0
@@ -108,7 +107,6 @@ catalog:
   depcheck: ^1.4.7
   dotenv: ^17.3.1
   echarts: ^6.0.0
-  element-plus: ^2.13.6
   es-toolkit: ^1.45.1
   eslint: ^10.1.0
   eslint-plugin-better-tailwindcss: ^4.3.2
@@ -135,7 +133,6 @@ catalog:
   lodash.clonedeep: ^4.5.0
   lucide-vue-next: ^0.577.0
   medium-zoom: ^1.1.0
-  naive-ui: ^2.44.1
   nitropack: ^2.13.2
   nprogress: ^0.2.0
   ora: ^9.3.0
@@ -172,7 +169,6 @@ catalog:
   stylelint-scss: ^7.0.0
   tailwind-merge: ^3.5.0
   tailwindcss: ^4.2.2
-  tdesign-vue-next: ^1.18.6
   theme-colors: ^0.1.0
   tippy.js: ^6.3.7
   tsdown: ^0.21.7
@@ -180,7 +176,6 @@ catalog:
   tw-animate-css: ^1.4.0
   typescript: ^6.0.2
   unplugin-dts: ^1.0.0-beta.6
-  unplugin-element-plus: ^0.11.2
   unplugin-vue: ^7.1.1
   vee-validate: ^4.15.1
   vite: ^8.0.7
@@ -205,6 +200,3 @@ catalog:
   yaml-eslint-parser: ^2.0.0
   zod: ^3.25.76
   zod-defaults: 0.1.3
-catalogs:
-  conflicts_@tiptap/extension-mention_3_21_0:
-    '@tiptap/extension-mention': 3.21.0

@@ -335,7 +335,7 @@ const schema: VbenFormSchema[] = [
     },
     dependencies: {
       show: (values) => {
-        return values.type == 'catalog' || values.type == 'menu';
+        return values.type === 'catalog' || values.type === 'menu';
       },
       triggerFields: ['type'],
     },
@@ -355,7 +355,7 @@ const schema: VbenFormSchema[] = [
     },
     dependencies: {
       show: (values) => {
-        return values.type == 'menu';
+        return values.type === 'menu';
       },
       triggerFields: ['type'],
     },
@@ -372,7 +372,7 @@ const schema: VbenFormSchema[] = [
     },
     dependencies: {
       show: (values) => {
-        return values.type == 'menu';
+        return values.type === 'menu';
       },
       triggerFields: ['type'],
     },

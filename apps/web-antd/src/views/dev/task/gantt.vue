@@ -3,20 +3,17 @@ import type { MousePointerCellEvent } from '@visactor/vtable';
 
 import { nextTick } from 'vue';
 
-import { Page, useVbenModal, useVbenDrawer } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 // 偏好设置
 import { preferences } from '@vben/preferences';
 
-import { faker } from '@faker-js/faker';
 import * as VTable from '@visactor/vtable';
 import { Gantt } from '@visactor/vtable-gantt';
 import * as VTableGantt from '@visactor/vtable-gantt';
 
+import { getTaskList } from '#/api/dev';
 import storyDetailDrawerComponent from '#/views/dev/story/detail-drawer.vue';
 import taskDetailDrawerComponent from '#/views/dev/task/detail-drawer.vue';
-
-import { getTaskList } from '#/api/dev';
-import type { DevTaskApi } from '#/api/dev';
 
 const { SCROLL, CLICK_TASK_BAR, MOVE_END_TASK_BAR, CHANGE_DATE_RANGE } =
   VTableGantt.TYPES.GANTT_EVENT_TYPE;
@@ -191,35 +188,35 @@ nextTick(async () => {
     },
   );
 
-  ganttInstance.on(SCROLL, (...args) => {
-    console.log('任务列表左右滚动表格事件');
+  ganttInstance.on(SCROLL, (..._args) => {
+    // console.log('任务列表左右滚动表格事件');
   });
-  ganttInstance.on(CLICK_TASK_BAR, (...args) => {
-    console.log('点击任务条事件');
+  ganttInstance.on(CLICK_TASK_BAR, (..._args) => {
+    // console.log('点击任务条事件');
   });
-  ganttInstance.on(MOVE_END_TASK_BAR, (...args) => {
-    console.log('任务条移动结束事件');
+  ganttInstance.on(MOVE_END_TASK_BAR, (..._args) => {
+    // console.log('任务条移动结束事件');
   });
-  ganttInstance.on(CHANGE_DATE_RANGE, (...args) => {
-    console.log('改变日期范围事件');
+  ganttInstance.on(CHANGE_DATE_RANGE, (..._args) => {
+    // console.log('改变日期范围事件');
   });
 
   ganttInstance.taskListTableInstance?.on(
     CLICK_CELL,
-    (args: MousePointerCellEvent) => {
-      console.log('左侧任务信息-单元格单击事件', args);
-      if (args.field === 'taskTitle') {
-        TaskDetailDrawerApi.setData(args.originData).open();
+    (_args: MousePointerCellEvent) => {
+      // console.log('左侧任务信息-单元格单击事件', args);
+      if (_args.field === 'taskTitle') {
+        TaskDetailDrawerApi.setData(_args.originData).open();
       }
-      if (args.field === 'storyTitle') {
-        StoryDetailDrawerApi.setData(args.originData).open();
+      if (_args.field === 'storyTitle') {
+        StoryDetailDrawerApi.setData(_args.originData).open();
       }
     },
   );
   ganttInstance.taskListTableInstance?.on(
     DBLCLICK_CELL,
-    (args: MousePointerCellEvent) => {
-      console.log('左侧任务信息-单元格双击事件', args);
+    (_args: MousePointerCellEvent) => {
+      // console.log('左侧任务信息-单元格双击事件', args);
     },
   );
 });

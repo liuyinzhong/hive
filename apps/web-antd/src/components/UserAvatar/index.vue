@@ -1,17 +1,19 @@
 <script lang="ts" setup>
-import { useUserStore } from '@vben/stores';
 import { preferences } from '@vben/preferences';
-const userStore = useUserStore();
-const props = defineProps({
+import { useUserStore } from '@vben/stores';
+defineProps({
   avatar: {
+    default: '',
     required: false,
     type: String,
   },
   name: {
+    default: '',
     required: false,
     type: String,
   },
 });
+const userStore = useUserStore();
 </script>
 <template>
   <a-space :size="5">

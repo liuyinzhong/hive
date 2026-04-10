@@ -50,8 +50,8 @@ const formSchema = computed((): VbenFormSchema[] => {
   ];
 });
 
-function handleSubmit(e: any) {
-  message.success('密码修改成功' + JSON.stringify(e));
+function handleSubmit(_e: any) {
+  message.success('密码修改成功');
 }
 </script>
 <template>

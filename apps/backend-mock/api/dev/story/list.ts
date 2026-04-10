@@ -1,11 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
-import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-import { uniqueByKey } from '~/utils/arrayExtendApi';
 import { mockUserData } from '~/api/system/user/list';
-import { mockProjectData } from '../project/list';
+import { uniqueByKey } from '~/utils/arrayExtendApi';
+import { verifyAccessToken } from '~/utils/jwt-utils';
+import { unAuthorizedResponse } from '~/utils/response';
+
 import { mockModuleData } from '../module/list';
+import { mockProjectData } from '../project/list';
 import { mockVersionData } from '../versions/list';
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
@@ -29,7 +30,7 @@ function generateMockDataList(count: number) {
     );
     /* 随机从版本表中取一个版本 */
     let versionInfo: any = {};
-    if (versionList.length) {
+    if (versionList.length > 0) {
       versionInfo = faker.helpers.arrayElement(versionList);
     }
 
@@ -39,7 +40,7 @@ function generateMockDataList(count: number) {
     );
     /* 随机从模块表中取一个模块 */
     let moduleInfo: any = {};
-    if (moduleList.length) {
+    if (moduleList.length > 0) {
       moduleInfo = faker.helpers.arrayElement(moduleList);
     }
 
@@ -89,7 +90,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockStoryData = generateMockDataList(10000);
+export const mockStoryData = generateMockDataList(10_000);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -112,8 +113,8 @@ export default eventHandler(async (event) => {
   if (keyword) {
     listData = listData.filter(
       (item) =>
-        item.storyTitle.indexOf(keyword) > -1 ||
-        item.storyNum.toString().indexOf(keyword) > -1,
+        item.storyTitle.includes(keyword) ||
+        item.storyNum.toString().includes(keyword),
     );
   }
 

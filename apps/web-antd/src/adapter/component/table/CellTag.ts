@@ -1,8 +1,11 @@
-import { Tag } from 'ant-design-vue';
-import { get } from '@vben/utils';
 import { h } from 'vue';
-import { $t } from '#/locales';
+
+import { get } from '@vben/utils';
+
 import { objectOmit } from '@vueuse/core';
+import { Tag } from 'ant-design-vue';
+
+import { $t } from '#/locales';
 
 /**
  * 单元格标签组件
@@ -24,7 +27,7 @@ export default {
     { column, row }: { column: any; row: any },
   ) {
     const value = get(row, column.field);
-    if (column.field == 'color') {
+    if (column.field === 'color') {
       return h(
         Tag,
         {
