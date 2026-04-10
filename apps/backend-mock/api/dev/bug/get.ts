@@ -12,6 +12,6 @@ export default eventHandler(async (event) => {
 
   const { bugNum } = getQuery(event);
   return useResponseSuccess(
-    mockBugData.find((item) => item.bugNum === bugNum) || null,
+    mockBugData.find((item) => item.bugNum === Number(bugNum)) || null,
   );
 });

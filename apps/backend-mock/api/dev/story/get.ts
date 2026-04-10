@@ -12,6 +12,6 @@ export default eventHandler(async (event) => {
 
   const { storyNum } = getQuery(event);
   return useResponseSuccess(
-    mockStoryData.find((item) => item.storyNum === storyNum) || null,
+    mockStoryData.find((item) => item.storyNum === Number(storyNum)) || null,
   );
 });

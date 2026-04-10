@@ -12,6 +12,7 @@ export default eventHandler(async (event) => {
 
   const { versionId } = getQuery(event);
   return useResponseSuccess(
-    mockVersionData.find((item) => item.versionId === versionId) || null,
+    mockVersionData.find((item) => item.versionId === Number(versionId)) ||
+      null,
   );
 });

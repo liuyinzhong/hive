@@ -12,6 +12,6 @@ export default eventHandler(async (event) => {
 
   const { taskNum } = getQuery(event);
   return useResponseSuccess(
-    mockTaskData.find((item) => item.taskNum === taskNum) || null,
+    mockTaskData.find((item) => item.taskNum === Number(taskNum)) || null,
   );
 });
