@@ -1,30 +1,37 @@
 <script lang="ts" setup>
+import type { AnalysisOverviewItem } from '@vben/common-ui';
+
+import type { Sortable } from '@vben-core/composables';
+
+import type { DevTaskApi } from '#/api/dev';
+
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { type Sortable, useSortable } from '@vben-core/composables';
+
 import {
-  LucideHourglass,
+  AnalysisOverview,
+  useVbenModal,
+  WorkbenchHeader,
+} from '@vben/common-ui';
+import {
   LucideBug,
   LucideChartBarStacked,
   LucideFilm,
+  LucideHourglass,
 } from '@vben/icons';
-import type { AnalysisOverviewItem } from '@vben/common-ui';
-import {
-  AnalysisChartCard,
-  WorkbenchHeader,
-  AnalysisOverview,
-  Page,
-  useVbenModal,
-} from '@vben/common-ui';
 import { preferences } from '@vben/preferences';
 import { useUserStore } from '@vben/stores';
-import { Card, message } from 'ant-design-vue';
-import { getTaskList, type DevTaskApi } from '#/api/dev';
+
+import { useSortable } from '@vben-core/composables';
+
+import { Card } from 'ant-design-vue';
 import dayjs from 'dayjs';
-import addTaskModal from '#/views/dev/task/add-modal.vue';
+
+import { getTaskList } from '#/api/dev';
+import CellProgress from '#/components/CellProgress/index.vue';
 import DictTag from '#/components/DictTag/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
-import CellProgress from '#/components/CellProgress/index.vue';
+import addTaskModal from '#/views/dev/task/add-modal.vue';
 interface DataItem {
   title: string;
   icon: string;
@@ -34,6 +41,7 @@ interface DataItem {
 
 const userStore = useUserStore();
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const router = useRouter();
 
 const overviewItems: AnalysisOverviewItem[] = [
@@ -243,7 +251,7 @@ function onCreate() {
                               {{ taskInfo.moduleTitle }}
                             </a-tag>
                             <DictTag
-                              dictType="TASK_TYPE"
+                              dict-type="TASK_TYPE"
                               :value="taskInfo.taskType"
                             />
                           </div>
@@ -278,9 +286,7 @@ function onCreate() {
                                 taskInfo.actualHours || 0
                               }}h
                             </span>
-                            <CellProgress
-                              :value="taskInfo.percent"
-                            ></CellProgress>
+                            <CellProgress :value="taskInfo.percent" />
                           </div>
                         </div>
                       </div>

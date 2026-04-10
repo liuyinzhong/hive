@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
 
-import { message } from 'ant-design-vue';
-
 import { useVbenForm } from '#/adapter/form';
-import { useFormSchema } from './data';
 import { createTask, updateTask } from '#/api/dev/task';
+
+import { useFormSchema } from './data';
 
 defineOptions({
   name: 'TaskAddFormModel',
@@ -50,7 +49,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = modalApi.getData();
+      const data = modalApi.getData();
       if (data.taskId) {
         modalApi.setState({
           title: '编辑任务',

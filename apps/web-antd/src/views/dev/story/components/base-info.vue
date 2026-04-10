@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { type DevStoryApi } from '#/api/dev';
-import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
-import DictTag from '#/components/DictTag/index.vue';
+import type { DevStoryApi } from '#/api/dev';
+
 import { computed } from 'vue';
+
+import DictTag from '#/components/DictTag/index.vue';
+import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 /**
  * 基本信息组件
  * @property {Object} storyInfo - 需求信息对象
@@ -14,7 +16,7 @@ const props = defineProps({
   },
 });
 
-let userList = computed(() => props.storyInfo.userList || []);
+const userList = computed(() => props.storyInfo.userList || []);
 </script>
 <template>
   <a-descriptions :column="1" bordered size="small">
@@ -31,16 +33,16 @@ let userList = computed(() => props.storyInfo.userList || []);
       {{ storyInfo.moduleTitle || '-' }}
     </a-descriptions-item>
     <a-descriptions-item label="需求类型">
-      <DictTag dictType="STORY_TYPE" :value="storyInfo.storyType" />
+      <DictTag dict-type="STORY_TYPE" :value="storyInfo.storyType" />
     </a-descriptions-item>
     <a-descriptions-item label="需求优先级">
-      <DictTag dictType="STORY_LEVEL" :value="storyInfo.storyLevel" />
+      <DictTag dict-type="STORY_LEVEL" :value="storyInfo.storyLevel" />
     </a-descriptions-item>
     <a-descriptions-item label="需求来源">
-      <DictTag dictType="STORY_SOURCE" :value="storyInfo.source" />
+      <DictTag dict-type="STORY_SOURCE" :value="storyInfo.source" />
     </a-descriptions-item>
     <a-descriptions-item label="参与人">
-      <UserAvatarGroup :userList="userList" />
+      <UserAvatarGroup :user-list="userList" />
     </a-descriptions-item>
   </a-descriptions>
 </template>

@@ -1,17 +1,8 @@
-<template>
-  <Steps
-    type="inline"
-    :current="current"
-    :items="items"
-    size="small"
-    style="width: 100%; height: 50px"
-    class="cell-steps"
-  />
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
+
 import { Steps } from 'ant-design-vue';
+
 import { getLocalDictList } from '#/dicts';
 
 // 定义组件属性
@@ -44,7 +35,7 @@ const items = computed(() => {
  * @returns {Array} 匹配结果数组
  */
 const getStepList = (target: any): any[] => {
-  let arr = getLocalDictList(props.dictType);
+  const arr = getLocalDictList(props.dictType);
 
   const targetIndex = arr.findIndex((item) => item.value === target);
 
@@ -75,13 +66,24 @@ const getStepList = (target: any): any[] => {
     startIndex = targetIndex - 1;
   }
 
-  let newArr: any[] = arr.slice(startIndex, startIndex + 3);
+  const newArr: any[] = arr.slice(startIndex, startIndex + 3);
   return newArr.map((item: any) => ({
     title: item.label,
     value: item.value,
   }));
 };
 </script>
+
+<template>
+  <Steps
+    type="inline"
+    :current="current"
+    :items="items"
+    size="small"
+    style="width: 100%; height: 50px"
+    class="cell-steps"
+  />
+</template>
 
 <style scoped lang="scss">
 .cell-steps {

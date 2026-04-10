@@ -21,6 +21,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -33,7 +34,9 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件面向 Vben Admin 的后端 Mock API，聚焦核心功能的 API 文档与实现原理，覆盖菜单管理、用户信息、认证鉴权与权限过滤等能力。重点说明：
+
 - 菜单 API 的树形结构获取、动态菜单生成与权限过滤机制
 - 用户 API 的个人信息获取、头像上传等
 - 完整的请求参数、响应格式与状态码说明
@@ -41,7 +44,9 @@
 - 动态路由与权限控制的实现思路与扩展方式
 
 ## 项目结构
+
 后端 Mock API 位于 apps/backend-mock，采用按功能域分层组织：
+
 - 认证模块：登录、登出、刷新令牌
 - 菜单模块：全量菜单、菜单树转换
 - 用户模块：用户信息、用户列表
@@ -103,6 +108,7 @@ BE_RoleList --> BE_MenuJSON
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/web-antd/src/api/core/menu.ts:1-11](file://apps/web-antd/src/api/core/menu.ts#L1-L11)
 - [apps/web-antd/src/api/core/user.ts:1-11](file://apps/web-antd/src/api/core/user.ts#L1-L11)
@@ -121,11 +127,13 @@ BE_RoleList --> BE_MenuJSON
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 
 章节来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/backend-mock/api/menu/all.ts:1-31](file://apps/backend-mock/api/menu/all.ts#L1-L31)
 - [apps/backend-mock/api/menu/menuJSON.ts:1-426](file://apps/backend-mock/api/menu/menuJSON.ts#L1-L426)
 
 ## 核心组件
+
 - 统一响应工具：提供成功/分页/错误/未授权/禁止访问等响应格式与状态码设置
 - JWT 工具：生成/校验访问令牌与刷新令牌，并从请求头解析用户信息
 - Cookie 工具：设置/读取/清理刷新令牌 Cookie
@@ -134,11 +142,13 @@ BE_RoleList --> BE_MenuJSON
 - 用户 API：获取用户信息、用户列表；上传头像（Mock）
 
 章节来源
+
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 
 ## 架构总览
+
 下图展示了前端调用后端 API 的整体流程，以及权限与动态菜单的关键交互。
 
 ```mermaid
@@ -173,6 +183,7 @@ Auth-->>FE : 返回新访问令牌
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/web-antd/src/api/core/menu.ts:1-11](file://apps/web-antd/src/api/core/menu.ts#L1-L11)
@@ -189,6 +200,7 @@ Auth-->>FE : 返回新访问令牌
 ## 详细组件分析
 
 ### 认证与会话管理
+
 - 登录
   - 方法与路径：POST /auth/login
   - 请求体参数：username, password
@@ -206,6 +218,7 @@ Auth-->>FE : 返回新访问令牌
   - 成功响应：空字符串
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
 - [apps/backend-mock/api/auth/refresh.post.ts:1-36](file://apps/backend-mock/api/auth/refresh.post.ts#L1-L36)
@@ -214,14 +227,15 @@ Auth-->>FE : 返回新访问令牌
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 
 ### 菜单管理
+
 - 获取用户所有菜单
   - 方法与路径：GET /menu/all
   - 请求：Authorization Bearer 令牌
   - 权限过滤流程：
-    1) 校验令牌并解析用户信息
-    2) 读取角色列表，筛选用户拥有的角色
-    3) 合并角色的菜单权限 ID
-    4) 过滤基础菜单数据，保留用户权限内的菜单与“可见但禁用”标记的菜单
+    1. 校验令牌并解析用户信息
+    2. 读取角色列表，筛选用户拥有的角色
+    3. 合并角色的菜单权限 ID
+    4. 过滤基础菜单数据，保留用户权限内的菜单与“可见但禁用”标记的菜单
   - 结果：树形菜单结构（children 递归）
 - 菜单数据结构
   - 字段概览：id, pid, name, path, type, component, authCode, meta（图标、标签、缓存、隐藏策略等），status 等
@@ -246,17 +260,20 @@ Unauthorized --> Done
 ```
 
 图表来源
+
 - [apps/backend-mock/api/menu/all.ts:1-31](file://apps/backend-mock/api/menu/all.ts#L1-L31)
 - [apps/backend-mock/api/menu/menuJSON.ts:1-426](file://apps/backend-mock/api/menu/menuJSON.ts#L1-L426)
 - [apps/backend-mock/api/system/role/list.ts:1-118](file://apps/backend-mock/api/system/role/list.ts#L1-L118)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 
 章节来源
+
 - [apps/backend-mock/api/menu/all.ts:1-31](file://apps/backend-mock/api/menu/all.ts#L1-L31)
 - [apps/backend-mock/api/menu/menuJSON.ts:1-426](file://apps/backend-mock/api/menu/menuJSON.ts#L1-L426)
 - [apps/backend-mock/api/system/role/list.ts:1-118](file://apps/backend-mock/api/system/role/list.ts#L1-L118)
 
 ### 用户信息与头像上传
+
 - 获取用户信息
   - 方法与路径：GET /user/info
   - 请求：Authorization Bearer 令牌
@@ -271,11 +288,13 @@ Unauthorized --> Done
   - 响应：Mock 图片 URL
 
 章节来源
+
 - [apps/backend-mock/api/user/info.ts:1-12](file://apps/backend-mock/api/user/info.ts#L1-L12)
 - [apps/backend-mock/api/system/user/list.ts:1-120](file://apps/backend-mock/api/system/user/list.ts#L1-L120)
 - [apps/backend-mock/api/upload.ts:1-15](file://apps/backend-mock/api/upload.ts#L1-L15)
 
 ### 前端集成与拦截器
+
 - 请求客户端
   - 自动注入 Authorization 头（Bearer + accessToken）
   - 统一响应格式（code/data/message/error）
@@ -286,12 +305,14 @@ Unauthorized --> Done
   - 登出：清空会话并清理 Cookie
 
 章节来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/web-antd/src/api/core/menu.ts:1-11](file://apps/web-antd/src/api/core/menu.ts#L1-L11)
 - [apps/web-antd/src/api/core/user.ts:1-11](file://apps/web-antd/src/api/core/user.ts#L1-L11)
 
 ## 依赖关系分析
+
 - 菜单 API 依赖
   - 角色权限映射：角色表中的 permissions 字段
   - 菜单基础数据：MOCK_MENU_LIST_V2
@@ -325,6 +346,7 @@ UserInfo --> Resp
 ```
 
 图表来源
+
 - [apps/backend-mock/api/menu/all.ts:1-31](file://apps/backend-mock/api/menu/all.ts#L1-L31)
 - [apps/backend-mock/api/system/role/list.ts:1-118](file://apps/backend-mock/api/system/role/list.ts#L1-L118)
 - [apps/backend-mock/api/menu/menuJSON.ts:1-426](file://apps/backend-mock/api/menu/menuJSON.ts#L1-L426)
@@ -333,6 +355,7 @@ UserInfo --> Resp
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 章节来源
+
 - [apps/backend-mock/api/menu/all.ts:1-31](file://apps/backend-mock/api/menu/all.ts#L1-L31)
 - [apps/backend-mock/api/system/role/list.ts:1-118](file://apps/backend-mock/api/system/role/list.ts#L1-L118)
 - [apps/backend-mock/api/menu/menuJSON.ts:1-426](file://apps/backend-mock/api/menu/menuJSON.ts#L1-L426)
@@ -341,11 +364,12 @@ UserInfo --> Resp
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 ## 性能考量
+
 - 菜单过滤与树构建
   - 线性菜单过滤与树构建的时间复杂度近似 O(n)，n 为菜单条目数
   - 建议：在数据量较大时，考虑服务端分页与懒加载树节点
 - 角色权限映射
-  - 合并与交集操作为 O(r*m)，r 为角色数，m 为菜单数
+  - 合并与交集操作为 O(r\*m)，r 为角色数，m 为菜单数
   - 建议：对权限 ID 做索引优化，避免重复遍历
 - 令牌校验
   - JWT 解析与校验为常数时间，注意密钥安全与过期时间配置
@@ -353,6 +377,7 @@ UserInfo --> Resp
   - 统一错误处理与重试策略可减少重复代码，提升稳定性
 
 ## 故障排查指南
+
 - 401 未授权
   - 检查 Authorization 头是否为 Bearer 令牌
   - 校验令牌是否过期或被篡改
@@ -367,16 +392,19 @@ UserInfo --> Resp
   - 检查菜单 status 与“可见但禁用”标记
 
 章节来源
+
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 
 ## 结论
+
 本核心 API 通过统一响应、JWT 与 Cookie 工具，实现了认证、权限过滤与动态菜单生成的闭环。前端通过请求客户端统一处理令牌注入、刷新与错误提示，形成清晰的调用链路。建议在生产环境中替换为真实数据库与鉴权服务，并对权限映射与菜单树构建进行性能优化。
 
 ## 附录
 
 ### API 定义与规范
+
 - 统一响应结构
   - 成功：code=0, data=业务数据, message="ok", error=null
   - 错误：code≠0, data=null, message=错误描述, error=错误详情
@@ -391,24 +419,29 @@ UserInfo --> Resp
   - Accept-Language: 语言偏好（由前端注入）
 
 章节来源
+
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 
 ### 数据模型
 
 #### 用户信息模型（UserInfo）
+
 - 关键字段：userId, username, realName, roles, roleIds, email, avatar, homePath, deptIds, status, lastLoginIp, lastLoginDate, createDate, updateDate
 - 示例字段路径：[apps/backend-mock/api/system/user/list.ts:7-83](file://apps/backend-mock/api/system/user/list.ts#L7-L83)
 
 #### 菜单数据模型（菜单项）
+
 - 关键字段：id, pid, name, path, type, component, authCode, status, meta（图标、标签、缓存、隐藏策略等）
 - 示例字段路径：[apps/backend-mock/api/menu/menuJSON.ts:334-426](file://apps/backend-mock/api/menu/menuJSON.ts#L334-L426)
 
 #### 角色数据模型（角色）
+
 - 关键字段：id, name, status, permissions（菜单ID数组）, remark, createDate
 - 示例字段路径：[apps/backend-mock/api/system/role/list.ts:7-73](file://apps/backend-mock/api/system/role/list.ts#L7-L73)
 
 ### 动态路由与权限控制设计要点
+
 - 动态路由
   - 前端根据后端返回的菜单树动态生成路由
   - 路由元信息（meta）来自菜单 meta 字段
@@ -418,5 +451,6 @@ UserInfo --> Resp
   - 页面级：结合路由守卫与访问码（codes）进行页面访问控制
 
 章节来源
+
 - [apps/backend-mock/api/menu/menuJSON.ts:347-426](file://apps/backend-mock/api/menu/menuJSON.ts#L347-L426)
 - [apps/web-antd/src/api/core/auth.ts:47-52](file://apps/web-antd/src/api/core/auth.ts#L47-L52)

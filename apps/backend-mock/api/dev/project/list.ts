@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
+import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
@@ -40,7 +40,7 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  let listData = structuredClone(mockProjectData);
+  const listData = structuredClone(mockProjectData);
 
   /* 分页响应 */
   // return usePageResponseSuccess(page as string, pageSize as string, listData);

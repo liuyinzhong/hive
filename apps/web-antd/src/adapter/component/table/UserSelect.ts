@@ -1,8 +1,13 @@
-import { Select } from 'ant-design-vue';
+import type { SystemUserApi } from '#/api/system';
+
 import { h } from 'vue';
-import { getUserListAll, type SystemUserApi } from '#/api/system';
+
 import { ApiComponent } from '@vben/common-ui';
+
+import { Select } from 'ant-design-vue';
+
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
+import { getUserListAll } from '#/api/system';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 
 export default {

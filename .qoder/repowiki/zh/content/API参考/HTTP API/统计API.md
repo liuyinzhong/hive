@@ -22,7 +22,9 @@
 </cite>
 
 ## 更新摘要
+
 **所做更改**
+
 - 新增版本统计功能章节，详细介绍版本级别的开发进度趋势、团队绩效分析等高级统计能力
 - 更新统计API架构图，增加版本统计处理器的可视化展示
 - 新增版本统计数据模型和响应格式说明
@@ -31,6 +33,7 @@
 - 完善版本统计的多维度分析功能，包括人员分析、需求面板、任务面板、Bug分析等
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -44,14 +47,17 @@
 11. [附录](#附录)
 
 ## 简介
+
 本文件为 Vben Admin 的统计 API 文档，全面覆盖统计 API 的增强功能，包括原有的开发统计与工作空间枚举，以及新增的版本统计功能。文档详细说明以下统计能力：
 
 ### 核心统计能力
+
 - **开发统计**：按日统计任务趋势（24 小时分布对比）、按年统计任务趋势（12 月分布）
 - **工作空间枚举**：故事/任务/缺陷/版本的总量概览
 - **版本统计**：开发进度趋势、团队绩效分析、需求/任务/Bug 多维度统计
 
 ### 统计功能特色
+
 - **多维度分析**：支持按人员、模块、需求类型、任务类型等多个维度进行统计分析
 - **实时趋势分析**：提供开发进度趋势图，支持最近30天的数据展示
 - **团队绩效评估**：包含任务完成率、工时贡献、需求参与度等关键指标
@@ -59,6 +65,7 @@
 - **完整版本分析**：从需求到任务再到Bug的全流程统计分析
 
 文档详细说明：
+
 - 请求参数与响应格式
 - 统计计算方式、时间范围选择与聚合维度
 - 图表数据与趋势分析示例
@@ -67,6 +74,7 @@
 - 扩展性与自定义统计的实现思路
 
 ## 项目结构
+
 统计 API 位于后端 Mock 服务的 statistics/dev 和 dev/versions 目录，前端通过统一请求客户端调用。
 
 ```mermaid
@@ -119,6 +127,7 @@ MOCK_TASK --> MOCK_USER
 ```
 
 **图表来源**
+
 - [apps/web-antd/src/api/statistics/dev.ts:1-24](file://apps/web-antd/src/api/statistics/dev.ts#L1-L24)
 - [apps/web-antd/src/api/dev/versions.ts:1-145](file://apps/web-antd/src/api/dev/versions.ts#L1-L145)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
@@ -129,12 +138,14 @@ MOCK_TASK --> MOCK_USER
 - [apps/backend-mock/api/dev/versions/statistics.ts:1-358](file://apps/backend-mock/api/dev/versions/statistics.ts#L1-L358)
 
 **章节来源**
+
 - [apps/web-antd/src/api/statistics/dev.ts:1-24](file://apps/web-antd/src/api/statistics/dev.ts#L1-L24)
 - [apps/web-antd/src/api/dev/versions.ts:1-145](file://apps/web-antd/src/api/dev/versions.ts#L1-L145)
 - [apps/web-antd/src/api/statistics/index.ts:1-2](file://apps/web-antd/src/api/statistics/index.ts#L1-L2)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 
 ## 核心组件
+
 - **统计API封装（前端）**
   - 开发统计：提供按日统计、按年统计、工作空间枚举三个方法
   - 版本统计：提供版本统计数据获取方法
@@ -149,6 +160,7 @@ MOCK_TASK --> MOCK_USER
   - 成功响应统一使用 code/data/message/error 字段，成功 code=0
 
 **章节来源**
+
 - [apps/web-antd/src/api/statistics/dev.ts:1-24](file://apps/web-antd/src/api/statistics/dev.ts#L1-L24)
 - [apps/web-antd/src/api/dev/versions.ts:139-144](file://apps/web-antd/src/api/dev/versions.ts#L139-L144)
 - [apps/backend-mock/api/statistics/dev/getTaskFindDay.ts:1-75](file://apps/backend-mock/api/statistics/dev/getTaskFindDay.ts#L1-L75)
@@ -159,6 +171,7 @@ MOCK_TASK --> MOCK_USER
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 
 ## 架构总览
+
 统计 API 的调用链路如下：
 
 ```mermaid
@@ -185,6 +198,7 @@ end
 ```
 
 **图表来源**
+
 - [apps/web-antd/src/api/statistics/dev.ts:1-24](file://apps/web-antd/src/api/statistics/dev.ts#L1-L24)
 - [apps/web-antd/src/api/dev/versions.ts:139-144](file://apps/web-antd/src/api/dev/versions.ts#L139-L144)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
@@ -195,6 +209,7 @@ end
 ## 详细组件分析
 
 ### 按日统计任务趋势（getTaskFindDay）
+
 - **功能概述**
   - 对两个指定日期的任务数据进行小时粒度聚合，生成两条 24 小时序列，以及整体最大值
 - **请求参数**
@@ -225,13 +240,16 @@ Resp --> End(["结束"])
 ```
 
 **图表来源**
+
 - [apps/backend-mock/api/statistics/dev/getTaskFindDay.ts:1-75](file://apps/backend-mock/api/statistics/dev/getTaskFindDay.ts#L1-L75)
 
 **章节来源**
+
 - [apps/backend-mock/api/statistics/dev/getTaskFindDay.ts:1-75](file://apps/backend-mock/api/statistics/dev/getTaskFindDay.ts#L1-L75)
 - [apps/backend-mock/api/dev/task/list.ts:1-156](file://apps/backend-mock/api/dev/task/list.ts#L1-L156)
 
 ### 按年统计任务趋势（getTaskFindYear）
+
 - **功能概述**
   - 对指定年份的任务按月聚合，使用实际工时作为聚合值，生成 12 个月的序列
 - **请求参数**
@@ -256,13 +274,16 @@ M --> R(["返回{list,max}"])
 ```
 
 **图表来源**
+
 - [apps/backend-mock/api/statistics/dev/getTaskFindYear.ts:1-64](file://apps/backend-mock/api/statistics/dev/getTaskFindYear.ts#L1-L64)
 
 **章节来源**
+
 - [apps/backend-mock/api/statistics/dev/getTaskFindYear.ts:1-64](file://apps/backend-mock/api/statistics/dev/getTaskFindYear.ts#L1-L64)
 - [apps/backend-mock/api/dev/task/list.ts:1-156](file://apps/backend-mock/api/dev/task/list.ts#L1-L156)
 
 ### 工作空间枚举（getWorkspaceEnum）
+
 - **功能概述**
   - 返回故事、任务、缺陷、版本的总量概览（当前版本为 Mock 数据长度）
 - **请求参数**
@@ -284,9 +305,11 @@ C --> D(["返回枚举数据"])
 ```
 
 **图表来源**
+
 - [apps/backend-mock/api/statistics/dev/getWorkspaceEnum.ts:1-25](file://apps/backend-mock/api/statistics/dev/getWorkspaceEnum.ts#L1-L25)
 
 **章节来源**
+
 - [apps/backend-mock/api/statistics/dev/getWorkspaceEnum.ts:1-25](file://apps/backend-mock/api/statistics/dev/getWorkspaceEnum.ts#L1-L25)
 - [apps/backend-mock/api/dev/story/list.ts:1-149](file://apps/backend-mock/api/dev/story/list.ts#L1-L149)
 - [apps/backend-mock/api/dev/task/list.ts:1-156](file://apps/backend-mock/api/dev/task/list.ts#L1-L156)
@@ -296,9 +319,11 @@ C --> D(["返回枚举数据"])
 ## 版本统计功能
 
 ### 版本统计概述
+
 版本统计功能提供了完整的版本级统计分析能力，支持从开发进度到团队绩效的全方位统计分析。该功能基于版本维度对需求、任务、缺陷等数据进行全面分析，为版本管理提供数据支撑。
 
 ### 核心统计维度
+
 - **开发进度趋势**：按日期统计任务完成数和Bug修复数，展示版本开发进展
 - **团队绩效分析**：按人员维度统计任务完成量、需求参与度、工时贡献
 - **模块分布分析**：统计各模块的任务数量分布，识别热点模块
@@ -309,38 +334,43 @@ C --> D(["返回枚举数据"])
 ### 数据模型与响应格式
 
 #### 版本统计摘要
-| 字段名 | 类型 | 描述 | 示例 |
-|--------|------|------|------|
-| storyTotal | number | 需求数量总计 | 50 |
-| storyDone | number | 已完成需求数 | 45 |
-| taskTotal | number | 任务数量总计 | 120 |
-| taskDone | number | 已完成任务数 | 110 |
-| bugTotal | number | Bug数量总计 | 25 |
-| bugFixed | number | 已修复Bug数 | 20 |
+
+| 字段名     | 类型   | 描述         | 示例 |
+| ---------- | ------ | ------------ | ---- |
+| storyTotal | number | 需求数量总计 | 50   |
+| storyDone  | number | 已完成需求数 | 45   |
+| taskTotal  | number | 任务数量总计 | 120  |
+| taskDone   | number | 已完成任务数 | 110  |
+| bugTotal   | number | Bug数量总计  | 25   |
+| bugFixed   | number | 已修复Bug数  | 20   |
 
 #### 开发进度趋势
+
 | 字段名 | 类型 | 描述 | 示例 |
-|--------|------|------|------|
+| --- | --- | --- | --- |
 | dates | string[] | 日期数组（最近30天） | ["2026-01-01", "2026-01-02", ...] |
 | taskDone | number[] | 每日任务完成数 | [5, 3, 8, ...] |
 | bugFixed | number[] | 每日Bug修复数 | [2, 1, 3, ...] |
 
 #### 人员维度统计
-| 字段名 | 类型 | 描述 | 示例 |
-|--------|------|------|------|
-| name | string | 人员姓名 | "张三" |
-| value | number | 统计数值 | 15 |
+
+| 字段名 | 类型   | 描述     | 示例   |
+| ------ | ------ | -------- | ------ |
+| name   | string | 人员姓名 | "张三" |
+| value  | number | 统计数值 | 15     |
 
 #### 任务工作量
-| 字段名 | 类型 | 描述 | 示例 |
-|--------|------|------|------|
-| categories | string[] | 任务类型分类 | ["开发任务", "测试任务", "UI设计"] |
-| planHours | number[] | 计划工时数组 | [40, 20, 15] |
-| actualHours | number[] | 实际工时数组 | [38, 22, 12] |
+
+| 字段名      | 类型     | 描述         | 示例                               |
+| ----------- | -------- | ------------ | ---------------------------------- |
+| categories  | string[] | 任务类型分类 | ["开发任务", "测试任务", "UI设计"] |
+| planHours   | number[] | 计划工时数组 | [40, 20, 15]                       |
+| actualHours | number[] | 实际工时数组 | [38, 22, 12]                       |
 
 ### 统计计算逻辑
 
 #### 开发进度趋势计算
+
 ```mermaid
 flowchart TD
 Start(["开始"]) --> FilterTasks["过滤版本任务<br/>taskStatus=99且存在createDate"]
@@ -354,12 +384,14 @@ Sort --> Result["返回进度趋势数据"]
 ```
 
 #### 团队绩效分析
+
 - **人员任务数量占比**：统计每个成员完成的任务数量
 - **人员需求参与占比**：统计每个成员参与的需求数量（展开userList）
 - **人员工时占比**：统计每个成员的实际工时贡献
 - **模块任务占比**：统计各模块的任务数量分布
 
 #### 需求/任务/Bug分析
+
 - **需求类型分布**：按需求类型统计数量
 - **需求来源分布**：按需求来源统计数量
 - **需求状态漏斗**：按状态顺序统计需求流转
@@ -369,6 +401,7 @@ Sort --> Result["返回进度趋势数据"]
 ### 前端集成与使用
 
 #### API封装
+
 版本统计API通过 `getVersionStatistics` 方法提供，支持传入版本ID参数：
 
 ```typescript
@@ -381,6 +414,7 @@ export const getVersionStatistics = async (versionId: string) => {
 ```
 
 #### 页面集成示例
+
 在版本详情页面中，同时获取版本详情和统计数据，并渲染多个统计图表：
 
 ```typescript
@@ -404,7 +438,9 @@ onMounted(async () => {
 ```
 
 #### 图表渲染实现
+
 页面支持多种图表类型的渲染，包括：
+
 - 开发进度趋势图（折线图）
 - 人员维度占比图表（饼图/环形图）
 - 需求分析图表（柱状图/饼图）
@@ -412,11 +448,13 @@ onMounted(async () => {
 - Bug分析图表（柱状图/饼图）
 
 **章节来源**
+
 - [apps/backend-mock/api/dev/versions/statistics.ts:110-357](file://apps/backend-mock/api/dev/versions/statistics.ts#L110-L357)
 - [apps/web-antd/src/api/dev/versions.ts:139-144](file://apps/web-antd/src/api/dev/versions.ts#L139-L144)
 - [apps/web-antd/src/views/dev/versions/detail.vue:289-305](file://apps/web-antd/src/views/dev/versions/detail.vue#L289-L305)
 
 ## 依赖关系分析
+
 - **前端依赖**
   - 统一请求客户端负责：
     - 注入 Authorization 头（Bearer Token）
@@ -455,6 +493,7 @@ HND4 --> MOCK_V
 ```
 
 **图表来源**
+
 - [apps/web-antd/src/api/statistics/dev.ts:1-24](file://apps/web-antd/src/api/statistics/dev.ts#L1-L24)
 - [apps/web-antd/src/api/dev/versions.ts:1-145](file://apps/web-antd/src/api/dev/versions.ts#L1-L145)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
@@ -466,6 +505,7 @@ HND4 --> MOCK_V
 - [apps/backend-mock/api/dev/versions/list.ts:1-109](file://apps/backend-mock/api/dev/versions/list.ts#L1-L109)
 
 **章节来源**
+
 - [apps/web-antd/src/api/statistics/dev.ts:1-24](file://apps/web-antd/src/api/statistics/dev.ts#L1-L24)
 - [apps/web-antd/src/api/dev/versions.ts:1-145](file://apps/web-antd/src/api/dev/versions.ts#L1-L145)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
@@ -473,6 +513,7 @@ HND4 --> MOCK_V
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 ## 性能与缓存策略
+
 - **当前实现特征**
   - 所有统计端点均为内存计算，直接读取 Mock 数据，未引入数据库或外部缓存
   - 按日/按年统计涉及字符串解析与数组遍历，复杂度近似 O(n)
@@ -490,6 +531,7 @@ HND4 --> MOCK_V
   - 版本统计可考虑分页返回大数据集，前端按需加载
 
 ## 故障排查指南
+
 - **401 未授权**
   - 现象：返回 Unauthorized Exception
   - 排查：确认请求头 Authorization 是否为 Bearer Token，且 Token 有效
@@ -510,6 +552,7 @@ HND4 --> MOCK_V
   - 验证用户权限是否能够访问目标版本数据
 
 **章节来源**
+
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 - [apps/backend-mock/api/statistics/dev/getTaskFindDay.ts:1-75](file://apps/backend-mock/api/statistics/dev/getTaskFindDay.ts#L1-L75)
@@ -517,6 +560,7 @@ HND4 --> MOCK_V
 - [apps/backend-mock/api/dev/versions/statistics.ts:116-120](file://apps/backend-mock/api/dev/versions/statistics.ts#L116-L120)
 
 ## 结论
+
 - **统计能力完整性**：本统计 API 提供了从基础开发统计到高级版本统计的完整统计体系，满足日常看板、概览、深度分析等多层次需求
 - **版本统计价值**：新增的版本统计功能提供了全面的版本级分析能力，包括开发进度、团队绩效、质量分析等多个维度，为版本管理提供数据支撑
 - **扩展性优势**：当前实现基于 Mock 数据，具备良好的扩展性：可快速替换为真实数据源与缓存层，支持更多统计维度和更复杂的分析场景
@@ -527,6 +571,7 @@ HND4 --> MOCK_V
 ### API 定义与调用示例
 
 #### 开发统计API
+
 - **按日统计任务趋势**
   - 方法：GET
   - 路径：/statistics/dev/getTaskFindDay
@@ -552,6 +597,7 @@ HND4 --> MOCK_V
   - 调用封装：见 [apps/web-antd/src/api/statistics/dev.ts:19-23](file://apps/web-antd/src/api/statistics/dev.ts#L19-L23)
 
 #### 版本统计API
+
 - **版本统计数据**
   - 方法：GET
   - 路径：/dev/versions/statistics
@@ -561,11 +607,13 @@ HND4 --> MOCK_V
   - 调用封装：见 [apps/web-antd/src/api/dev/versions.ts:139-144](file://apps/web-antd/src/api/dev/versions.ts#L139-L144)
 
 **章节来源**
+
 - [apps/web-antd/src/api/statistics/dev.ts:1-24](file://apps/web-antd/src/api/statistics/dev.ts#L1-L24)
 - [apps/web-antd/src/api/dev/versions.ts:1-145](file://apps/web-antd/src/api/dev/versions.ts#L1-L145)
 - [apps/web-antd/src/api/statistics/index.ts:1-2](file://apps/web-antd/src/api/statistics/index.ts#L1-L2)
 
 ### 认证与安全
+
 - **Token 校验**
   - 后端通过 verifyAccessToken 校验 Authorization 头
   - 失败返回 401
@@ -575,11 +623,13 @@ HND4 --> MOCK_V
   - 认证通过后可获取用户上下文（用于权限控制）
 
 **章节来源**
+
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/backend-mock/api/system/user/list.ts:1-120](file://apps/backend-mock/api/system/user/list.ts#L1-L120)
 
 ### 数据模型与Mock来源
+
 - **任务（Task）**
   - 字段包含创建时间、计划/实际工时、项目/版本/需求关联等
   - Mock 数据由任务列表生成
@@ -589,6 +639,7 @@ HND4 --> MOCK_V
   - 基于版本ID过滤相关数据，支持多维度统计分析
 
 **章节来源**
+
 - [apps/backend-mock/api/dev/task/list.ts:1-156](file://apps/backend-mock/api/dev/task/list.ts#L1-L156)
 - [apps/backend-mock/api/dev/story/list.ts:1-149](file://apps/backend-mock/api/dev/story/list.ts#L1-L149)
 - [apps/backend-mock/api/dev/bug/list.ts:1-166](file://apps/backend-mock/api/dev/bug/list.ts#L1-L166)

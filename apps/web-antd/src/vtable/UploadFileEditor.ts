@@ -7,18 +7,19 @@ import type {
 } from '@visactor/vtable-editors';
 import type {
   UploadChangeParam,
-  UploadProps,
   UploadFile,
+  UploadProps,
 } from 'ant-design-vue';
-
-import { message, Upload } from 'ant-design-vue';
 
 import type { ComponentPublicInstance } from 'vue';
 
 import { createApp, onMounted, ref } from 'vue';
 
-import { UploadDragger } from 'ant-design-vue';
 import { useVbenDrawer } from '@vben/common-ui';
+
+import { message, Upload } from 'ant-design-vue';
+import { UploadDragger } from 'ant-design-vue';
+
 import { upload_file } from '#/api/examples/upload';
 import { filesToUrlString, urlStringToFiles } from '#/utils';
 /**
@@ -43,16 +44,17 @@ export class UploadFileEditor implements IEditor {
   editorConfig: UploadEditorConfig;
   /** 当前列绑定的字段名 */
   field: string = '';
-  /** 表格当前行数据对象 */
-  rowData: any = {};
-  /** 组件实例 */
-  uploadFileInstance: ComponentPublicInstance | null = null;
-  /** 结束编辑回调函数 */
-  successCallback: Function | null = null;
-  /** 编辑器包装元素 */
-  wrapperElement: HTMLDivElement | null = null;
   /** 已上传的文件Url地址 */
   fileUrls: UploadProps['fileList'] = [];
+  /** 表格当前行数据对象 */
+  rowData: any = {};
+  /** 结束编辑回调函数 */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  successCallback: Function | null = null;
+  /** 组件实例 */
+  uploadFileInstance: ComponentPublicInstance | null = null;
+  /** 编辑器包装元素 */
+  wrapperElement: HTMLDivElement | null = null;
 
   // ==================== 构造函数 ====================
   /**
@@ -136,11 +138,7 @@ export class UploadFileEditor implements IEditor {
     // 初始化基本属性
     this.container = container;
     this.successCallback = endEdit;
-    if (value) {
-      this.fileUrls = urlStringToFiles(value);
-    } else {
-      this.fileUrls = [];
-    }
+    this.fileUrls = value ? urlStringToFiles(value) : [];
     this.rowData = table.records[row - 1] || {};
     this.field = table.options.columns[col]?.field || '';
 
@@ -213,6 +211,7 @@ export class UploadFileEditor implements IEditor {
    * 创建并挂载Vue应用
    */
   private mountVueApp() {
+    // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias
     const that = this;
 
     this.app = createApp({
@@ -229,7 +228,7 @@ export class UploadFileEditor implements IEditor {
           title: '上传',
           class: 'w-[800px]',
           onConfirm() {
-            let successNum = fileList.value?.filter(
+            const successNum = fileList.value?.filter(
               (item: any) => item.status === 'done',
             ).length;
 
@@ -250,7 +249,7 @@ export class UploadFileEditor implements IEditor {
         const handleChange = (info: UploadChangeParam) => {};
 
         const beforeUpload = (file: UploadFile, files: UploadFile[]) => {
-          if (file.size && file.size > 1024 * 1024 * 100) {
+          if (file.size > 0 && file.size > 1024 * 1024 * 100) {
             message.error('文件大小不能超过100MB');
             return Upload.LIST_IGNORE;
           }

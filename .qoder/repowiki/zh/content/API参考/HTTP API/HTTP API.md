@@ -21,6 +21,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -33,10 +34,13 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件为 Vben Admin 的 HTTP API 文档，覆盖认证、开发管理、系统管理与统计相关接口。文档基于仓库中的 Nitro 后端 Mock 实现与前端请求封装，提供端点清单、请求/响应规范、错误处理、认证与权限、版本控制与兼容性、最佳实践与性能优化建议。
 
 ## 项目结构
+
 后端采用 Nitro 路由风格，按功能域划分目录：
+
 - 认证：apps/backend-mock/api/auth
 - 系统管理：apps/backend-mock/api/system/{user,dept,menu}
 - 开发管理：apps/backend-mock/api/dev/{project,story,task}
@@ -77,6 +81,7 @@ STAT_TASK --> UTIL_JWT
 ```
 
 图表来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
 - [apps/backend-mock/api/auth/refresh.post.ts:1-36](file://apps/backend-mock/api/auth/refresh.post.ts#L1-L36)
@@ -94,6 +99,7 @@ STAT_TASK --> UTIL_JWT
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
 - [apps/backend-mock/api/auth/refresh.post.ts:1-36](file://apps/backend-mock/api/auth/refresh.post.ts#L1-L36)
@@ -111,6 +117,7 @@ STAT_TASK --> UTIL_JWT
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 
 ## 核心组件
+
 - 认证与令牌
   - JWT 访问令牌与刷新令牌生成与校验
   - Cookie 存储刷新令牌
@@ -120,11 +127,13 @@ STAT_TASK --> UTIL_JWT
   - 用户、部门、项目、需求、任务、菜单等实体模型
 
 章节来源
+
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 ## 架构总览
+
 后端以 Nitro 事件处理器实现 REST 接口；前端通过统一请求客户端发送请求，自动注入 Authorization 头与语言头，并在鉴权失败时触发刷新或重新登录流程。
 
 ```mermaid
@@ -145,6 +154,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
@@ -154,6 +164,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
 ## 详细组件分析
 
 ### 认证 API
+
 - 登录
   - 方法与路径: POST /api/auth/login
   - 请求体(JSON)
@@ -175,6 +186,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 行为: 清除刷新令牌 Cookie
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
 - [apps/backend-mock/api/auth/refresh.post.ts:1-36](file://apps/backend-mock/api/auth/refresh.post.ts#L1-L36)
@@ -184,6 +196,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
 ### 系统管理 API
 
 #### 用户管理
+
 - 获取用户列表
   - 方法与路径: GET /api/system/user/list
   - 查询参数
@@ -197,11 +210,13 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 数据模型: 见“附录-数据模型”
 
 章节来源
+
 - [apps/backend-mock/api/system/user/list.ts:1-120](file://apps/backend-mock/api/system/user/list.ts#L1-L120)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 #### 部门管理
+
 - 获取部门树
   - 方法与路径: GET /api/system/dept/list
   - 成功响应: 树形结构数组
@@ -216,6 +231,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 权限: 需要有效访问令牌
 
 章节来源
+
 - [apps/backend-mock/api/system/dept/list.ts:1-62](file://apps/backend-mock/api/system/dept/list.ts#L1-L62)
 - [apps/backend-mock/api/system/dept/[id].put.ts](file://apps/backend-mock/api/system/dept/[id].put.ts#L1-L17)
 - [apps/backend-mock/api/system/dept/[id].delete.ts](file://apps/backend-mock/api/system/dept/[id].delete.ts#L1-L17)
@@ -223,12 +239,14 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 #### 菜单管理
+
 - 获取菜单树
   - 方法与路径: GET /api/system/menu/list
   - 成功响应: 树形菜单结构
   - 权限: 需要有效访问令牌
 
 章节来源
+
 - [apps/backend-mock/api/system/menu/list.ts:1-13](file://apps/backend-mock/api/system/menu/list.ts#L1-L13)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
@@ -236,17 +254,20 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
 ### 开发管理 API
 
 #### 项目管理
+
 - 获取项目列表
   - 方法与路径: GET /api/dev/project/list
   - 成功响应: 数组
   - 权限: 需要有效访问令牌
 
 章节来源
+
 - [apps/backend-mock/api/dev/project/list.ts:1-51](file://apps/backend-mock/api/dev/project/list.ts#L1-L51)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 #### 需求管理
+
 - 获取需求列表
   - 方法与路径: GET /api/dev/story/list
   - 查询参数
@@ -260,11 +281,13 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 权限: 需要有效访问令牌
 
 章节来源
+
 - [apps/backend-mock/api/dev/story/list.ts:1-149](file://apps/backend-mock/api/dev/story/list.ts#L1-L149)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 #### 任务管理
+
 - 获取任务列表
   - 方法与路径: GET /api/dev/task/list
   - 查询参数
@@ -277,6 +300,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 权限: 需要有效访问令牌
 
 章节来源
+
 - [apps/backend-mock/api/dev/task/list.ts:1-156](file://apps/backend-mock/api/dev/task/list.ts#L1-L156)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
@@ -284,6 +308,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
 ### 统计 API
 
 #### 任务按日统计
+
 - 按小时统计任务数量
   - 方法与路径: GET /api/statistics/dev/getTaskFindDay
   - 查询参数
@@ -293,11 +318,13 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 权限: 需要有效访问令牌
 
 章节来源
+
 - [apps/backend-mock/api/statistics/dev/getTaskFindDay.ts:1-75](file://apps/backend-mock/api/statistics/dev/getTaskFindDay.ts#L1-L75)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 ### 响应格式与状态码
+
 - 统一响应结构
   - 成功: { code: 0, data: any, message: string, error: null }
   - 错误: { code: -1, data: null, message: string, error: any }
@@ -309,9 +336,11 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 403: 禁止访问/令牌无效
 
 章节来源
+
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 
 ### 认证机制与权限
+
 - 认证方式
   - 访问令牌: Bearer Token，随 Authorization 头发送
   - 刷新令牌: 通过 HttpOnly Cookie 存储，有效期 24 小时
@@ -323,11 +352,13 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 登录成功后写入刷新令牌 Cookie，用于刷新访问令牌
 
 章节来源
+
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 
 ### 版本控制与兼容性
+
 - 版本号比较
   - 工具函数支持语义化版本比较，便于接口演进与兼容判断
 - 兼容性建议
@@ -335,9 +366,11 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 对于破坏性变更，提供迁移指引与过渡期
 
 章节来源
+
 - [apps/backend-mock/utils/jwt-utils.ts:77-114](file://apps/backend-mock/utils/jwt-utils.ts#L77-L114)
 
 ### 最佳实践与性能优化
+
 - 请求侧
   - 自动注入 Authorization 与语言头
   - 统一错误提示与重认证策略
@@ -348,6 +381,7 @@ Note over RC,API : 刷新令牌接口读取Cookie并返回新访问令牌
   - 控制并发与批量操作频率
 
 章节来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/backend-mock/api/system/user/list.ts:114-116](file://apps/backend-mock/api/system/user/list.ts#L114-L116)
 - [apps/backend-mock/api/dev/story/list.ts:139-144](file://apps/backend-mock/api/dev/story/list.ts#L139-L144)
@@ -392,6 +426,7 @@ STAT --> JWT
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
@@ -410,6 +445,7 @@ STAT --> JWT
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 
 ## 性能考量
+
 - 分页与过滤
   - 建议服务端对高频查询建立索引，避免全表扫描
 - 缓存策略
@@ -420,6 +456,7 @@ STAT --> JWT
   - 合理使用本地状态与懒加载，减少重复请求
 
 ## 故障排查指南
+
 - 401 未授权
   - 检查 Authorization 头是否正确携带 Bearer 令牌
   - 核对令牌是否过期或被撤销
@@ -431,12 +468,14 @@ STAT --> JWT
   - 结合后端日志与前端拦截器输出
 
 章节来源
+
 - [apps/backend-mock/utils/response.ts:1-71](file://apps/backend-mock/utils/response.ts#L1-L71)
 - [apps/backend-mock/utils/jwt-utils.ts:1-115](file://apps/backend-mock/utils/jwt-utils.ts#L1-L115)
 - [apps/backend-mock/utils/cookie-utils.ts:1-29](file://apps/backend-mock/utils/cookie-utils.ts#L1-L29)
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 
 ## 结论
+
 本文档梳理了 Vben Admin 的认证、系统管理、开发管理与统计相关 API，明确了请求/响应规范、认证与权限、版本控制与兼容性、以及最佳实践与性能优化建议。建议在生产环境中替换为安全的密钥与持久化存储，并完善鉴权与审计日志。
 
 ## 附录
@@ -528,6 +567,7 @@ number percent
 ```
 
 图表来源
+
 - [apps/backend-mock/api/system/user/list.ts:7-15](file://apps/backend-mock/api/system/user/list.ts#L7-L15)
 - [apps/backend-mock/api/system/dept/list.ts:16-49](file://apps/backend-mock/api/system/dept/list.ts#L16-L49)
 - [apps/backend-mock/api/dev/project/list.ts:20-33](file://apps/backend-mock/api/dev/project/list.ts#L20-L33)
@@ -535,6 +575,7 @@ number percent
 - [apps/backend-mock/api/dev/task/list.ts:64-112](file://apps/backend-mock/api/dev/task/list.ts#L64-L112)
 
 ### TypeScript 接口定义
+
 - 用户信息
   - 定义位置: [apps/backend-mock/api/system/user/list.ts:7-15](file://apps/backend-mock/api/system/user/list.ts#L7-L15)
 - JWT 载荷
@@ -578,6 +619,7 @@ number percent
     - Body: { "code": 0, "data": { "date1": [0..23], "date2": [0..23], "max": N }, "message": "ok", "error": null }
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:14-42](file://apps/backend-mock/api/auth/login.post.ts#L14-L42)
 - [apps/backend-mock/api/system/user/list.ts:85-116](file://apps/backend-mock/api/system/user/list.ts#L85-L116)
 - [apps/backend-mock/api/dev/task/list.ts:120-152](file://apps/backend-mock/api/dev/task/list.ts#L120-L152)

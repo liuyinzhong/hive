@@ -1,12 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
-import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 import { mockUserData } from '~/api/system/user/list';
-import { mockProjectData } from '../project/list';
+import { verifyAccessToken } from '~/utils/jwt-utils';
+import { unAuthorizedResponse } from '~/utils/response';
+
 import { mockModuleData } from '../module/list';
-import { mockVersionData } from '../versions/list';
+import { mockProjectData } from '../project/list';
 import { mockStoryData } from '../story/list';
+import { mockVersionData } from '../versions/list';
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -22,42 +23,42 @@ function generateMockDataList(count: number) {
 
   for (let i = 0; i < count; i++) {
     /* 随机从项目表中取一个项目 */
-    let projectInfo: any = faker.helpers.arrayElement(mockProjectData);
+    const projectInfo: any = faker.helpers.arrayElement(mockProjectData);
 
     /* 从版本表中取当前项目的版本 */
-    let versionList: any = mockVersionData.filter(
+    const versionList: any = mockVersionData.filter(
       (item) => item.projectId === projectInfo.projectId,
     );
     /* 随机从版本表中取一个版本 */
     let versionInfo: any = {};
-    if (versionList.length) {
+    if (versionList.length > 0) {
       versionInfo = faker.helpers.arrayElement(versionList);
     }
 
     /* 从模块表中取当前项目的模块 */
-    let moduleList: any = mockModuleData.filter(
+    const moduleList: any = mockModuleData.filter(
       (item) => item.projectId === projectInfo.projectId,
     );
     /* 随机从模块表中取一个模块 */
     let moduleInfo: any = {};
-    if (moduleList.length) {
+    if (moduleList.length > 0) {
       moduleInfo = faker.helpers.arrayElement(moduleList);
     }
 
     /* 从需求表里取当前项目的需求 */
-    let storyList: any = mockStoryData.filter(
+    const storyList: any = mockStoryData.filter(
       (item) =>
         item.projectId === projectInfo.projectId &&
         item.versionId === versionInfo.versionId,
     );
     /* 随机从需求表里取一个需求 */
     let storyInfo: any = {};
-    if (storyList.length) {
+    if (storyList.length > 0) {
       storyInfo = faker.helpers.arrayElement(storyList);
     }
 
     /* 随机从用户表中取一个用户 */
-    let userInfo: any = faker.helpers.arrayElement(
+    const userInfo: any = faker.helpers.arrayElement(
       mockUserData.filter((item) => item.status === 1),
     );
 
@@ -116,7 +117,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-export const mockTaskData = generateMockDataList(10000);
+export const mockTaskData = generateMockDataList(10_000);
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
   if (!userinfo) {

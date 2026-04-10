@@ -1,22 +1,23 @@
 <script lang="ts" setup>
-import addFormModal from './add-modal.vue';
-import addModuleModal from './add-moduleModal.vue';
+import type { Recordable } from '@vben/types';
+
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+import type { DevModuleApi, DevProjectApi } from '#/api/dev';
+
+import { onMounted, ref } from 'vue';
+
 import { EllipsisText } from '@vben/common-ui';
 import { Page, useVbenModal } from '@vben/common-ui';
-import { onMounted, reactive, ref, h } from 'vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getModulesList, getProjectsList } from '#/api/dev';
+
+import addFormModal from './add-modal.vue';
+import addModuleModal from './add-moduleModal.vue';
 import { useColumns } from './data';
-import {
-  useVbenVxeGrid,
-  type VxeTableGridOptions,
-  type OnActionClickParams,
-} from '#/adapter/vxe-table';
-import {
-  type DevModuleApi,
-  type DevProjectApi,
-  getProjectsList,
-  getModulesList,
-} from '#/api/dev';
-import type { Recordable } from '@vben/types';
 
 // #region 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -37,6 +38,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       autoLoad: false,
       ajax: {
+        // eslint-disable-next-line unused-imports/no-unused-vars
         query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getModulesList({
             projectId: activeProjectId.value,
@@ -46,6 +48,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions<DevModuleApi.DevModuleFace>,
   gridEvents: {
+    // eslint-disable-next-line unused-imports/no-unused-vars
     rowDragstart: (e: any) => {},
     rowDragend: ({ oldRow, _index }: any) => {
       console.log(
@@ -69,7 +72,7 @@ function onActionClick({
     }
   }
 }
-//#endregion
+// #endregion
 
 const items = ref<DevProjectApi.DevProjectFace[]>([]);
 
@@ -84,7 +87,7 @@ const setActiveProjectId = (id: string) => {
   gridApi.query();
 };
 
-//#region 弹窗
+// #region 弹窗
 
 const [AddProjectModal, AddProjectModalApi] = useVbenModal({
   title: '新增项目',
@@ -117,7 +120,7 @@ const [AddModuleModal, AddModuleModalApi] = useVbenModal({
 function openAddModuleModal(row: any) {
   AddModuleModalApi.setData(row).open();
 }
-//#endregion
+// #endregion
 </script>
 
 <template>
@@ -144,14 +147,13 @@ function openAddModuleModal(row: any) {
                   :size="45"
                   :src="item.projectLogo"
                   style="min-width: 45px"
-                >
-                </a-avatar>
+                />
                 <span class="ml-4 text-lg font-medium">
                   {{ item.projectTitle }}
                 </span>
               </div>
               <div class="mt-4">
-                <EllipsisText :max-width="500" :line="2" tooltipWhenEllipsis>
+                <EllipsisText :max-width="500" :line="2" tooltip-when-ellipsis>
                   {{ item.description }}
                 </EllipsisText>
               </div>

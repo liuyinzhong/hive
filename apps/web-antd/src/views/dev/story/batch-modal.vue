@@ -1,27 +1,21 @@
 <script lang="ts" setup>
+import type { DevStoryApi } from '#/api/dev';
+
 import { ref } from 'vue';
 
 import { useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
 
 import * as VTable from '@visactor/vtable';
 import { message } from 'ant-design-vue';
-import { upload_file } from '#/api/examples/upload';
 
+import { getModulesList, getProjectsList, getVersionsList } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import {
   InputEditor,
   RichTextEditor,
   SelectEditor,
-  TextAreaEditor,
   UploadFileEditor,
 } from '#/vtable';
-
-import {
-  getVersionsList,
-  getModulesList,
-  getProjectsList,
-  type DevStoryApi,
-} from '#/api/dev';
 
 defineOptions({
   name: 'StoryBatchFormModel',

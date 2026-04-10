@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
+import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
 import { mockProjectData } from '../project/list';
@@ -15,7 +15,7 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
-let projectIds = mockProjectData.map((item) => item.projectId);
+const projectIds = mockProjectData.map((item) => item.projectId);
 
 function generateMockDataList(count: number) {
   const dataList = [];

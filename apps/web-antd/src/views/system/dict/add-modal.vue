@@ -1,13 +1,16 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import type { SystemDictApi } from '#/api/system';
 
-import { useVbenModal, z } from '@vben/common-ui';
+import { ref } from 'vue';
+
+import { useVbenModal } from '@vben/common-ui';
 
 import { Button } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
+import { createDict, updateDict } from '#/api/system';
 import { $t } from '#/locales';
-import { type SystemDictApi, createDict, updateDict } from '#/api/system';
+
 import { useFormSchema } from './data';
 
 const emit = defineEmits(['success']);

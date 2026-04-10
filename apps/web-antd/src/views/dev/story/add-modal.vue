@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
-import { useFormSchema } from './data';
 import { createStory, updateStory } from '#/api/dev';
-import { filesToUrlString, urlStringToFiles, deepClone } from '#/utils';
+import { deepClone, filesToUrlString, urlStringToFiles } from '#/utils';
+
+import { useFormSchema } from './data';
 
 defineOptions({
   name: 'StoryAddFormModel',
@@ -39,7 +40,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = deepClone(modalApi.getData());
+      const data = deepClone(modalApi.getData());
       data.files = urlStringToFiles(data.files || '');
       data.userList = (data.userList ||= []).map((item: any) => item.userId);
       if (data.storyId) {

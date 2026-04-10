@@ -1,30 +1,32 @@
 <script lang="ts" setup>
+import type { Recordable } from '@vben/types';
+
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+import type { DevStoryApi } from '#/api/dev';
+
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
+import { LucidePlus, LucideTableProperties } from '@vben/icons';
 
-import {
-  useVbenVxeGrid,
-  type VxeTableGridOptions,
-  type OnActionClickParams,
-} from '#/adapter/vxe-table';
+import { Button, message } from 'ant-design-vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getStoryList } from '#/api/dev';
+import { sleep } from '#/utils';
+import addBugModal from '#/views/dev/bug/add-modal.vue';
+import addTaskModal from '#/views/dev/task/add-modal.vue';
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
-import nextModal from './next-modal.vue';
+import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
-
-import addTaskModal from '#/views/dev/task/add-modal.vue';
-import addBugModal from '#/views/dev/bug/add-modal.vue';
-
-import { getStoryList, type DevStoryApi } from '#/api/dev';
-import { useGridFormSchema, useColumns } from './data';
-import { message, Button } from 'ant-design-vue';
-import { Plus, LucideTableProperties, LucidePlus } from '@vben/icons';
-import { sleep } from '#/utils';
-import type { Recordable } from '@vben/types';
-import { h } from 'vue';
+import nextModal from './next-modal.vue';
 // 跳转路由
+// eslint-disable-next-line unused-imports/no-unused-vars
 const router = useRouter();
 
 // 表格分页
@@ -77,12 +79,14 @@ function onActionClick({
   row,
 }: OnActionClickParams<DevStoryApi.DevStoryFace>) {
   switch (code) {
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
+    case 'addBug': {
+      AddBugModalApi.setData({
+        storyId: row.storyId,
+        projectId: row.projectId,
+        versionId: row.versionId,
+        moduleId: row.moduleId,
+        openModalSource: 'storyListAddBtn',
+      }).open();
       break;
     }
     case 'addTask': {
@@ -95,14 +99,12 @@ function onActionClick({
       }).open();
       break;
     }
-    case 'addBug': {
-      AddBugModalApi.setData({
-        storyId: row.storyId,
-        projectId: row.projectId,
-        versionId: row.versionId,
-        moduleId: row.moduleId,
-        openModalSource: 'storyListAddBtn',
-      }).open();
+    case 'delete': {
+      onDelete(row);
+      break;
+    }
+    case 'edit': {
+      onEdit(row);
       break;
     }
     case 'next': {
@@ -127,7 +129,7 @@ function onEdit(row: DevStoryApi.DevStoryFace) {
   AddFormModalApi.setData(row).open();
 }
 
-async function onDelete(row: DevStoryApi.DevStoryFace) {
+async function onDelete(_row: DevStoryApi.DevStoryFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,
@@ -145,7 +147,7 @@ async function onDelete(row: DevStoryApi.DevStoryFace) {
   hideLoading();
   gridApi.query();
 }
-//#endregion
+// #endregion
 
 // #region 批量添加需求
 

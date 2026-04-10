@@ -1,23 +1,15 @@
-<template>
-  <div class="aiEditorBox" :style="{ width, height }">
-    <div ref="divRef" class="h-full w-full"></div>
-  </div>
-</template>
-
+<!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
-import { AiEditor } from 'aieditor';
-import 'aieditor/dist/style.css';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
+
 import { usePreferences } from '@vben/preferences';
-import { getUserListAll } from '#/api/system';
+
+import { AiEditor } from 'aieditor';
+
 import { upload_file } from '#/api/examples/upload';
-const emit = defineEmits(['update:modelValue', 'update:text']); // 用于触发 v-model 更新
+import { getUserListAll } from '#/api/system';
 
-const { isDark } = usePreferences();
-const divRef = ref();
-
-let aiEditor: AiEditor | null = null;
-
+import 'aieditor/dist/style.css';
 const {
   modelValue,
   defaultHtml,
@@ -33,6 +25,13 @@ const {
   placeholder: String, // 新增占位符属性
   showToolbar: Boolean, // 新增工具栏按钮属性
 });
+const emit = defineEmits(['update:modelValue', 'update:text']); // 用于触发 v-model 更新
+
+const { isDark } = usePreferences();
+const divRef = ref();
+
+let aiEditor: AiEditor | null = null;
+
 onMounted(() => {
   aiEditor = new AiEditor({
     element: divRef.value as Element,
@@ -61,7 +60,7 @@ onMounted(() => {
         return new Promise((resolve, reject) => {
           upload_file({
             file,
-            onSuccess: (data: any, file: File) => {
+            onSuccess: (data: any, _file: File) => {
               resolve({
                 errorCode: 0,
                 data: {
@@ -129,7 +128,7 @@ watch(
 
 /* 获取用户列表 */
 const _getUserListAll = async (query: string) => {
-  let a = await getUserListAll({ realName: query });
+  const a = await getUserListAll({ realName: query });
   // return a;
   return a.map((item) => ({
     label: item.realName,
@@ -143,6 +142,12 @@ defineExpose({
   aiEditor: () => aiEditor,
 });
 </script>
+
+<template>
+  <div class="aiEditorBox" :style="{ width, height }">
+    <div ref="divRef" class="h-full w-full"></div>
+  </div>
+</template>
 
 <style>
 .aiEditorBox .tippy-box .tippy-content {

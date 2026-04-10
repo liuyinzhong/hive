@@ -1,11 +1,15 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
+
 import { useVbenModal } from '@vben/common-ui';
-import { useVbenForm } from '#/adapter/form';
-import { useNextFormSchema } from './data';
+
 import { message } from 'ant-design-vue';
-import { getLocalDictList } from '#/dicts';
+
+import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
+import { getLocalDictList } from '#/dicts';
+
+import { useNextFormSchema } from './data';
 defineOptions({
   name: 'TaskNextModal',
 });
@@ -40,7 +44,7 @@ const [Modal, modalApi] = useVbenModal({
     if (isOpen) {
       formApi.setValues(modalApi.getData());
 
-      let taskStatus = modalApi.getData().taskStatus;
+      const taskStatus = modalApi.getData().taskStatus;
       current.value = stepsItems.findIndex(
         (item: any) => item.value === taskStatus,
       );
@@ -85,8 +89,8 @@ function setChangeRichText(value: string) {
         />
         <a-divider dashed>常用语(双击)</a-divider>
         <CommonPhrase
-          :textList="['已完成，已更新至测试环境']"
-          @dblClick="setChangeRichText"
+          :text-list="['已完成，已更新至测试环境']"
+          @dbl-click="setChangeRichText"
         />
       </a-col>
       <a-col :span="18">

@@ -15,6 +15,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -27,9 +28,11 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件系统梳理 Vben Admin 项目中通用 UI 组件的设计与实现，重点覆盖以下组件：AiEditor 富文本编辑器、CellProgress 单元格进度条、CellSteps 步骤组件、ColorSelect 颜色选择器、CommonPhrase 常用短语、CopyButton 复制按钮、DictTag 字典标签、UserAvatar 用户头像、UserAvatarGroup 用户头像组。文档从属性配置、事件处理、插槽使用、样式定制、响应式与可访问性、跨浏览器兼容性、最佳实践与常见问题等方面进行说明，并通过图示与路径指引帮助读者快速定位源码与示例。
 
 ## 项目结构
+
 这些通用组件位于 Web Antd 应用的组件目录下，采用按功能分层的组织方式，便于复用与维护。组件之间通过字典服务、偏好设置、用户状态等共享模块进行协作。
 
 ```mermaid
@@ -63,6 +66,7 @@ I --> K
 ```
 
 **图表来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
 - [DictTag/index.vue:1-20](file://apps/web-antd/src/components/DictTag/index.vue#L1-L20)
@@ -71,6 +75,7 @@ I --> K
 - [dicts/index.ts:1-76](file://apps/web-antd/src/dicts/index.ts#L1-L76)
 
 **章节来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 - [CellProgress/index.vue:1-56](file://apps/web-antd/src/components/CellProgress/index.vue#L1-L56)
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
@@ -83,6 +88,7 @@ I --> K
 - [dicts/index.ts:1-76](file://apps/web-antd/src/dicts/index.ts#L1-L76)
 
 ## 核心组件
+
 本节对各组件的关键能力进行概述，便于快速了解其职责与适用场景。
 
 - AiEditor 富文本编辑器：基于 aieditor 封装，支持提及用户、图片上传、占位符、工具栏开关、深浅主题切换、文本计数与双向绑定。
@@ -96,6 +102,7 @@ I --> K
 - UserAvatarGroup 用户头像组：展示用户列表的头像组，支持最大数量限制与悬浮提示。
 
 **章节来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 - [CellProgress/index.vue:1-56](file://apps/web-antd/src/components/CellProgress/index.vue#L1-L56)
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
@@ -107,6 +114,7 @@ I --> K
 - [UserAvatarGroup/index.vue:1-31](file://apps/web-antd/src/components/UserAvatarGroup/index.vue#L1-L31)
 
 ## 架构概览
+
 下图展示了通用组件与共享服务之间的交互关系，突出 AiEditor 与字典、用户、偏好设置的耦合，以及 DictTag、CellSteps 对字典服务的依赖。
 
 ```mermaid
@@ -138,6 +146,7 @@ UAG --> USR
 ```
 
 **图表来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
 - [DictTag/index.vue:1-20](file://apps/web-antd/src/components/DictTag/index.vue#L1-L20)
@@ -148,6 +157,7 @@ UAG --> USR
 ## 详细组件分析
 
 ### AiEditor 富文本编辑器
+
 - 属性配置
   - modelValue：双向绑定的 HTML 内容
   - defaultHtml：初始化默认 HTML
@@ -187,12 +197,15 @@ C-->>P : 触发 update : modelValue/update : text
 ```
 
 **图表来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 
 **章节来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 
 ### CellProgress 单元格进度条
+
 - 属性配置
   - value：当前值（Number），必填
 - 事件处理
@@ -220,12 +233,15 @@ Render --> End(["结束"])
 ```
 
 **图表来源**
+
 - [CellProgress/index.vue:1-56](file://apps/web-antd/src/components/CellProgress/index.vue#L1-L56)
 
 **章节来源**
+
 - [CellProgress/index.vue:1-56](file://apps/web-antd/src/components/CellProgress/index.vue#L1-L56)
 
 ### CellSteps 步骤组件
+
 - 属性配置
   - status：当前状态值
   - dictType：字典类型
@@ -255,12 +271,15 @@ Map --> Render["渲染步骤条"]
 ```
 
 **图表来源**
+
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
 
 **章节来源**
+
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
 
 ### ColorSelect 颜色选择器
+
 - 属性配置
   - value：当前选中颜色值（String）
 - 事件处理
@@ -289,12 +308,15 @@ class ColorSelect {
 ```
 
 **图表来源**
+
 - [ColorSelect/index.vue:1-76](file://apps/web-antd/src/components/ColorSelect/index.vue#L1-L76)
 
 **章节来源**
+
 - [ColorSelect/index.vue:1-76](file://apps/web-antd/src/components/ColorSelect/index.vue#L1-L76)
 
 ### CommonPhrase 常用短语
+
 - 属性配置
   - textList：文本数组（必填）
 - 事件处理
@@ -308,9 +330,11 @@ class ColorSelect {
   - 遍历文本列表，逐项绑定双击事件
 
 **章节来源**
+
 - [CommonPhrase/index.vue:1-31](file://apps/web-antd/src/components/CommonPhrase/index.vue#L1-L31)
 
 ### CopyButton 复制按钮
+
 - 属性配置
   - text：要复制的文本
   - showIcon：是否显示图标
@@ -344,12 +368,15 @@ end
 ```
 
 **图表来源**
+
 - [CopyButton/index.vue:1-75](file://apps/web-antd/src/components/CopyButton/index.vue#L1-L75)
 
 **章节来源**
+
 - [CopyButton/index.vue:1-75](file://apps/web-antd/src/components/CopyButton/index.vue#L1-L75)
 
 ### DictTag 字典标签
+
 - 属性配置
   - dictType：字典类型
   - value：字典值
@@ -363,10 +390,12 @@ end
   - 通过字典服务获取行数据并渲染标签
 
 **章节来源**
+
 - [DictTag/index.vue:1-20](file://apps/web-antd/src/components/DictTag/index.vue#L1-L20)
 - [dicts/index.ts:1-76](file://apps/web-antd/src/dicts/index.ts#L1-L76)
 
 ### UserAvatar 用户头像
+
 - 属性配置
   - avatar：头像地址
   - name：显示姓名
@@ -382,9 +411,11 @@ end
   - 名称存在时显示并启用省略提示
 
 **章节来源**
+
 - [UserAvatar/index.vue:1-33](file://apps/web-antd/src/components/UserAvatar/index.vue#L1-L33)
 
 ### UserAvatarGroup 用户头像组
+
 - 属性配置
   - userList：用户数组（必填）
   - maxCount：最大显示数量
@@ -399,9 +430,11 @@ end
   - 遍历用户列表渲染头像，首字母作为占位字符
 
 **章节来源**
+
 - [UserAvatarGroup/index.vue:1-31](file://apps/web-antd/src/components/UserAvatarGroup/index.vue#L1-L31)
 
 ## 依赖分析
+
 - 组件间耦合
   - AiEditor 与字典、用户、偏好设置存在直接依赖
   - CellSteps、DictTag 依赖字典服务
@@ -426,6 +459,7 @@ UAG["UserAvatarGroup"] --> USR
 ```
 
 **图表来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
 - [DictTag/index.vue:1-20](file://apps/web-antd/src/components/DictTag/index.vue#L1-L20)
@@ -434,6 +468,7 @@ UAG["UserAvatarGroup"] --> USR
 - [dicts/index.ts:1-76](file://apps/web-antd/src/dicts/index.ts#L1-L76)
 
 **章节来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
 - [DictTag/index.vue:1-20](file://apps/web-antd/src/components/DictTag/index.vue#L1-L20)
@@ -442,6 +477,7 @@ UAG["UserAvatarGroup"] --> USR
 - [dicts/index.ts:1-76](file://apps/web-antd/src/dicts/index.ts#L1-L76)
 
 ## 性能考虑
+
 - 渲染优化
   - CellProgress 与 DictTag 仅做简单计算与渲染，开销低
   - CellSteps 仅在当前状态或字典类型变化时重算步骤列表
@@ -456,6 +492,7 @@ UAG["UserAvatarGroup"] --> USR
 [本节为通用指导，无需列出具体文件来源]
 
 ## 故障排查指南
+
 - AiEditor
   - 无法显示工具栏：检查 showToolbar 与 toolbarExcludeKeys 配置
   - 图片上传失败：确认上传接口返回结构与字段一致
@@ -471,6 +508,7 @@ UAG["UserAvatarGroup"] --> USR
   - 复制失败：确认浏览器权限与安全上下文（HTTPS）
 
 **章节来源**
+
 - [AiEditor/index.vue:1-153](file://apps/web-antd/src/components/AiEditor/index.vue#L1-L153)
 - [CellSteps/index.vue:1-93](file://apps/web-antd/src/components/CellSteps/index.vue#L1-L93)
 - [DictTag/index.vue:1-20](file://apps/web-antd/src/components/DictTag/index.vue#L1-L20)
@@ -478,11 +516,13 @@ UAG["UserAvatarGroup"] --> USR
 - [CopyButton/index.vue:1-75](file://apps/web-antd/src/components/CopyButton/index.vue#L1-L75)
 
 ## 结论
+
 上述通用组件围绕“易用、可复用、可扩展”的设计目标构建，通过与字典、用户、偏好设置等共享模块解耦，满足多场景下的 UI 需求。建议在实际业务中遵循组件的属性与事件约定，结合样式定制与错误处理，确保一致性与稳定性。
 
 [本节为总结性内容，无需列出具体文件来源]
 
 ## 附录
+
 - 最佳实践
   - 使用 v-model 与受控组件模式，避免直接操作 DOM
   - 对异步操作（上传、查询）提供加载与错误反馈

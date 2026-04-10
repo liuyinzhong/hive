@@ -12190,11 +12190,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -12375,11 +12371,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -12560,11 +12552,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -12745,11 +12733,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -12930,11 +12914,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -13115,11 +13095,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -13300,11 +13276,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -13594,11 +13566,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -13814,11 +13782,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -13999,11 +13963,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -14213,9 +14173,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14268,9 +14226,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14323,9 +14279,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14378,9 +14332,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14433,9 +14385,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14488,9 +14438,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14543,9 +14491,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14598,9 +14544,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14653,9 +14597,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14708,9 +14650,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14763,9 +14703,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14818,9 +14756,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -14873,9 +14809,7 @@
               "name": "manhattan",
               "args": {
                 "padding": 30,
-                "excludeShapes": [
-                  "group"
-                ]
+                "excludeShapes": ["group"]
               }
             },
             "cellType": "edge",
@@ -15219,11 +15153,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -15404,11 +15334,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -15589,11 +15515,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -15774,11 +15696,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -15959,11 +15877,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -16147,11 +16061,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -16437,11 +16347,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {
@@ -16857,11 +16763,7 @@
               }
             },
             "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
+              "items": ["node-size", "highlight-node", "link-node"]
             },
             "ports": {
               "groups": {

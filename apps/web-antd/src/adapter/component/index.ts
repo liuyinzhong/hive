@@ -141,6 +141,10 @@ const ColorSelect = defineAsyncComponent(
   () => import('#/components/ColorSelect/index.vue'),
 );
 
+const Editor = defineAsyncComponent(
+  () => import('#/components/Editor/index.vue'),
+);
+
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
   type: 'input' | 'select',
@@ -619,6 +623,7 @@ export type ComponentType =
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
+  | 'Editor'
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
@@ -664,6 +669,7 @@ export interface ComponentPropsMap {
   RangePicker: RangePickerProps;
   Rate: RateProps;
   RichEditor: TipTapProps;
+  Editor: TipTapProps;
   Select: SelectProps;
   Space: SpaceProps;
   Switch: SwitchProps;
@@ -728,6 +734,7 @@ async function initComponentAdapter() {
     RangePicker,
     Rate,
     RichEditor: withDefaultPlaceholder(VbenTiptap, 'input'),
+    Editor: withDefaultPlaceholder(VbenTiptap, 'input'),
     Select: withDefaultPlaceholder(Select, 'select'),
     Space,
     Switch,

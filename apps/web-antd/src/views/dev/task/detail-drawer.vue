@@ -1,11 +1,15 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
-import { type DevTaskApi } from '#/api/dev';
+import type { DevTaskApi } from '#/api/dev';
+
+import { computed, ref } from 'vue';
+
 import { useVbenDrawer } from '@vben/common-ui';
-import TaskDetail from './components/task-detail.vue';
-import CopyButton from '#/components/CopyButton/index.vue';
+
 import AiEditor from '#/components/AiEditor/index.vue';
+import CopyButton from '#/components/CopyButton/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
+
+import TaskDetail from './components/task-detail.vue';
 defineOptions({
   name: 'StoryTrackDrawer',
 });
@@ -34,7 +38,7 @@ const changeRichTextRef = ref<any>();
 const submit = () => {
   DrawerApi.lock();
   setTimeout(() => {
-    let params = {
+    const params = {
       businessId: taskInfo.value.taskId,
       businessType: 10,
       changeBehavior: 20,
@@ -59,15 +63,15 @@ const submit = () => {
         </a-button>
       </a-space>
     </template>
-    <TaskDetail :taskNum="taskInfo.taskNum" :showBtn="false" />
+    <TaskDetail :task-num="taskInfo.taskNum" :show-btn="false" />
     <template #prepend-footer>
       <div class="w-full">
         <a-flex align="start" :gap="5" class="w-full mb-2">
-          <UserAvatar></UserAvatar>
+          <UserAvatar />
           <AiEditor
             width="100%"
             height="100%"
-            :showToolbar="false"
+            :show-toolbar="false"
             ref="changeRichTextRef"
           />
         </a-flex>

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
 import { createProject, updateProject } from '#/api/dev';
-import { useFormProjectSchema } from './data';
-
 import { filesToUrlString, urlStringToFiles } from '#/utils';
+
+import { useFormProjectSchema } from './data';
 defineOptions({
   name: 'AddProjectModal',
 });
@@ -28,7 +28,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = modalApi.getData();
+      const data = modalApi.getData();
       data.projectLogo = urlStringToFiles(data.projectLogo);
       formApi.setValues(data);
       modalApi.setState({ title: data.projectId ? '编辑项目' : '添加项目' });

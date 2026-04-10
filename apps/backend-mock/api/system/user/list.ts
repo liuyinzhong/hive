@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
-import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 import { mockDeptData } from '~/api/system/dept/list';
+import { verifyAccessToken } from '~/utils/jwt-utils';
+import { unAuthorizedResponse } from '~/utils/response';
 
 export interface UserInfo {
   userId: string;
@@ -14,7 +14,7 @@ export interface UserInfo {
   [key: string]: any;
 }
 
-let deptIds = mockDeptData.map((item) => item.id);
+const deptIds = mockDeptData.map((item) => item.id);
 
 export const mockUserData: UserInfo[] = [
   {

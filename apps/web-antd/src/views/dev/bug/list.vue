@@ -1,21 +1,25 @@
 <script lang="ts" setup>
-import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
+import type { Recordable } from '@vben/types';
 
-import {
-  useVbenVxeGrid,
-  type VxeTableGridOptions,
-  type OnActionClickParams,
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
 } from '#/adapter/vxe-table';
+import type { DevBugApi } from '#/api/dev';
+
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
+import { Plus } from '@vben/icons';
+
+import { Button, message } from 'ant-design-vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getBugList } from '#/api/dev';
+import { sleep } from '#/utils';
 
 import addFormModal from './add-modal.vue';
+import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
-import { getBugList, type DevBugApi } from '#/api/dev';
-import { useGridFormSchema, useColumns } from './data';
-import { message, Button } from 'ant-design-vue';
-import { Plus } from '@vben/icons';
-import { sleep } from '#/utils';
-import type { Recordable } from '@vben/types';
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
     wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
@@ -57,6 +61,18 @@ function onActionClick({
   row,
 }: OnActionClickParams<DevBugApi.DevBugFace>) {
   switch (code) {
+    case 'addTask': {
+      break;
+    }
+    case 'bugTitle': {
+      DetailDrawerApi.setData(row).open();
+      break;
+    }
+    case 'confirmBug': {
+      row.openModalSource = 'confirmBug';
+      NextModalApi.setData(row).open();
+      break;
+    }
     case 'delete': {
       onDelete(row);
       break;
@@ -65,21 +81,9 @@ function onActionClick({
       onEdit(row);
       break;
     }
-    case 'addTask': {
-      break;
-    }
     case 'next': {
       row.openModalSource = 'next';
       NextModalApi.setData(row).open();
-      break;
-    }
-    case 'confirmBug': {
-      row.openModalSource = 'confirmBug';
-      NextModalApi.setData(row).open();
-      break;
-    }
-    case 'bugTitle': {
-      DetailDrawerApi.setData(row).open();
       break;
     }
   }
@@ -93,7 +97,7 @@ function onEdit(row: DevBugApi.DevBugFace) {
   AddFormModalApi.setData(row).open();
 }
 
-async function onDelete(row: DevBugApi.DevBugFace) {
+async function onDelete(_row: DevBugApi.DevBugFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,
@@ -111,7 +115,7 @@ async function onDelete(row: DevBugApi.DevBugFace) {
   hideLoading();
   gridApi.query();
 }
-//#endregion
+// #endregion
 
 // #region 单个添加
 const [AddFormModal, AddFormModalApi] = useVbenModal({
@@ -136,7 +140,7 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
 </script>
 
 <template>
-  <Page autoContentHeight>
+  <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
         <Button class="mr-2" type="primary" @click="onCreate()">

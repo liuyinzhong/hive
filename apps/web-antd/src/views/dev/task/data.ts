@@ -2,6 +2,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
+import type { DevTaskApi } from '#/api/dev';
 
 import { h, nextTick, ref } from 'vue';
 
@@ -9,7 +10,6 @@ import { useDebounceFn } from '@vueuse/core';
 import { Flex, Tag, TypographyText } from 'ant-design-vue';
 
 import {
-  type DevTaskApi,
   getModulesList,
   getProjectsList,
   getStoryList,
@@ -86,7 +86,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '项目',
       rules: 'required',
       formItemClass: 'col-span-1',
-      componentProps: (value: any, formApi: any) => {
+      componentProps: (_value: any, _formApi: any) => {
         return {
           api: () => getProjectsList(),
           labelField: 'projectTitle',

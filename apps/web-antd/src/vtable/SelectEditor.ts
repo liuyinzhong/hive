@@ -170,52 +170,6 @@ export class SelectEditor implements IEditor {
   }
 
   /**
-   * 处理选项数据
-   * 如果配置了api，则从api获取数据，否则使用本地options
-   */
-  private async processOptions(rowData: any) {
-    // 如果配置了api，则从api获取数据
-    if (JSON.stringify(this.editorConfig.api) !== '{}') {
-      try {
-        const data = await this.editorConfig.api(rowData);
-        // 根据resultField提取列表数据
-        let listData = data;
-        if (this.editorConfig.resultField) {
-          listData = data[this.editorConfig.resultField] || [];
-        }
-        // 转换数据格式
-        this.options = this.transformOptions(listData);
-      } catch (error) {
-        console.error('获取选项数据失败:', error);
-        this.options = [];
-      }
-    } else {
-      // 使用本地配置的options
-      this.options = this.editorConfig.options || [];
-    }
-  }
-
-  /**
-   * 转换选项数据格式
-   * 将api返回的数据转换为标准的label-value格式
-   * @param data api返回的原始数据
-   * @returns 转换后的选项数组
-   */
-  private transformOptions(data: any[]): any[] {
-    if (!Array.isArray(data)) {
-      return [];
-    }
-
-    let labelKey = this.editorConfig.labelField as string;
-    let valueKey = this.editorConfig.valueField as string;
-
-    return data.map((item) => ({
-      [labelKey]: item[labelKey],
-      [valueKey]: item[valueKey],
-    }));
-  }
-
-  /**
    * 验证输入值的有效性
    * 支持通过 label 验证选项，解决复制粘贴时的验证问题
    */
@@ -285,9 +239,11 @@ export class SelectEditor implements IEditor {
    * 创建并挂载Vue应用
    */
   private mountVueApp() {
+    // eslint-disable-next-line unicorn/no-this-assignment
     const that = this;
 
     this.app = createApp({
+      // eslint-disable-next-line vue/no-reserved-component-names
       components: { Select },
       setup() {
         const fieldNames = {
@@ -361,6 +317,32 @@ export class SelectEditor implements IEditor {
   }
 
   /**
+   * 处理选项数据
+   * 如果配置了api，则从api获取数据，否则使用本地options
+   */
+  private async processOptions(rowData: any) {
+    // 如果配置了api，则从api获取数据
+    if (JSON.stringify(this.editorConfig.api) === '{}') {
+      // 使用本地配置的options
+      this.options = this.editorConfig.options || [];
+    } else {
+      try {
+        const data = await this.editorConfig.api(rowData);
+        // 根据resultField提取列表数据
+        let listData = data;
+        if (this.editorConfig.resultField) {
+          listData = data[this.editorConfig.resultField] || [];
+        }
+        // 转换数据格式
+        this.options = this.transformOptions(listData);
+      } catch (error) {
+        console.error('获取选项数据失败:', error);
+        this.options = [];
+      }
+    }
+  }
+
+  /**
    * 移除包装元素
    */
   private removeWrapperElement() {
@@ -376,5 +358,25 @@ export class SelectEditor implements IEditor {
   private resetReferences() {
     this.container = null;
     this.successCallback = null;
+  }
+
+  /**
+   * 转换选项数据格式
+   * 将api返回的数据转换为标准的label-value格式
+   * @param data api返回的原始数据
+   * @returns 转换后的选项数组
+   */
+  private transformOptions(data: any[]): any[] {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    const labelKey = this.editorConfig.labelField as string;
+    const valueKey = this.editorConfig.valueField as string;
+
+    return data.map((item) => ({
+      [labelKey]: item[labelKey],
+      [valueKey]: item[valueKey],
+    }));
   }
 }

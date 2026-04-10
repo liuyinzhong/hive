@@ -1,11 +1,15 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import type { DevStoryApi } from '#/api/dev';
+
+import { computed, ref } from 'vue';
+
 import { useVbenDrawer } from '@vben/common-ui';
-import StoryDetail from './components/story-detail.vue';
-import { type DevStoryApi } from '#/api/dev';
-import CopyButton from '#/components/CopyButton/index.vue';
+
 import AiEditor from '#/components/AiEditor/index.vue';
+import CopyButton from '#/components/CopyButton/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
+
+import StoryDetail from './components/story-detail.vue';
 
 defineOptions({
   name: 'StoryTrackDrawer',
@@ -41,7 +45,7 @@ const changeRichTextRef = ref<any>();
 const submit = () => {
   DrawerApi.lock();
   setTimeout(() => {
-    let params = {
+    const params = {
       businessId: storyInfo.value.storyId,
       businessType: 0,
       changeBehavior: 20,
@@ -66,15 +70,15 @@ const submit = () => {
         </a-button>
       </a-space>
     </template>
-    <StoryDetail :storyNum="storyInfo.storyNum" :showBtn="false" />
+    <StoryDetail :story-num="storyInfo.storyNum" :show-btn="false" />
     <template #prepend-footer>
       <div class="w-full">
         <a-flex align="start" :gap="5" class="w-full mb-2">
-          <UserAvatar></UserAvatar>
+          <UserAvatar />
           <AiEditor
             width="100%"
             height="100%"
-            :showToolbar="false"
+            :show-toolbar="false"
             ref="changeRichTextRef"
           />
         </a-flex>

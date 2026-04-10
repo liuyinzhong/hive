@@ -23,6 +23,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -35,7 +36,9 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件面向“状态包（stores）”的使用与维护，系统阐述基于 Pinia 的状态管理设计理念与模块化组织方式。重点覆盖以下方面：
+
 - Store 模块的职责划分：认证态、用户态、访问控制态等
 - Store 的创建与注册流程、模块间依赖与通信机制
 - 状态订阅、状态更新与副作用处理
@@ -45,7 +48,9 @@
 本仓库采用多应用工程（monorepo），各 Web 应用（Ant Design、Element Plus、Naive UI、TDesign）均提供一致的 store 组织与能力封装，便于跨框架复用。
 
 ## 项目结构
+
 stores 包在本仓库中并非以独立包形式存在，而是通过“共享层 + 各应用层”的方式实现：
+
 - 共享层：在 @core/base/shared 下导出统一的 store 导出入口，内部再转出 @tanstack/vue-store，确保 Pinia 能力在各应用中一致可用
 - 应用层：每个 Web 应用在各自 src/store 下提供模块化的 Store 实现，并通过 index.ts 汇总导出
 
@@ -71,6 +76,7 @@ AppTDesign --> SharedStore
 ```
 
 图表来源
+
 - [packages/@core/base/shared/src/store.ts:1-2](file://packages/@core/base/shared/src/store.ts#L1-L2)
 - [packages/@core/base/shared/dist/store.d.ts:1-2](file://packages/@core/base/shared/dist/store.d.ts#L1-L2)
 - [apps/web-antd/src/store/index.ts:1-2](file://apps/web-antd/src/store/index.ts#L1-L2)
@@ -80,6 +86,7 @@ AppTDesign --> SharedStore
 - [apps/web-tdesign/src/store/index.ts:1-2](file://apps/web-tdesign/src/store/index.ts#L1-L2)
 
 章节来源
+
 - [packages/@core/base/shared/src/store.ts:1-2](file://packages/@core/base/shared/src/store.ts#L1-L2)
 - [packages/@core/base/shared/dist/store.d.ts:1-2](file://packages/@core/base/shared/dist/store.d.ts#L1-L2)
 - [apps/web-antd/src/store/index.ts:1-2](file://apps/web-antd/src/store/index.ts#L1-L2)
@@ -89,6 +96,7 @@ AppTDesign --> SharedStore
 - [apps/web-tdesign/src/store/index.ts:1-2](file://apps/web-tdesign/src/store/index.ts#L1-L2)
 
 ## 核心组件
+
 本节聚焦于认证态（Auth）与用户态（User）、访问控制态（Access）等关键 Store 模块，说明其职责边界与协作关系。
 
 - 认证态（Auth）
@@ -116,6 +124,7 @@ AppTDesign --> SharedStore
   - 职责：类型定义与通用工具（如 Recordable、UserInfo）
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 - [apps/web-antdv-next/src/store/auth.ts:1-118](file://apps/web-antdv-next/src/store/auth.ts#L1-L118)
 - [apps/web-ele/src/store/auth.ts:1-118](file://apps/web-ele/src/store/auth.ts#L1-L118)
@@ -127,6 +136,7 @@ AppTDesign --> SharedStore
 - [packages/utils/src/index.ts](file://packages/utils/src/index.ts)
 
 ## 架构总览
+
 下图展示了认证流程中各 Store 的交互与数据流：
 
 ```mermaid
@@ -156,6 +166,7 @@ AS-->>C : "返回 { userInfo }"
 ```
 
 图表来源
+
 - [apps/web-antd/src/store/auth.ts:28-78](file://apps/web-antd/src/store/auth.ts#L28-L78)
 - [apps/web-antd/src/store/auth.ts:43-51](file://apps/web-antd/src/store/auth.ts#L43-L51)
 - [apps/web-antd/src/store/auth.ts:58-61](file://apps/web-antd/src/store/auth.ts#L58-L61)
@@ -165,6 +176,7 @@ AS-->>C : "返回 { userInfo }"
 ## 详细组件分析
 
 ### 认证态（Auth）分析
+
 - 设计要点
   - 使用组合式 API（ref、defineStore）管理本地状态与副作用
   - 并发请求用户信息与权限码，提升登录速度
@@ -208,6 +220,7 @@ AuthStore --> AccessStore : "写入令牌/权限码/过期标记"
 ```
 
 图表来源
+
 - [apps/web-antd/src/store/auth.ts:16-118](file://apps/web-antd/src/store/auth.ts#L16-L118)
 - [apps/web-antdv-next/src/store/auth.ts:16-118](file://apps/web-antdv-next/src/store/auth.ts#L16-L118)
 - [apps/web-ele/src/store/auth.ts:16-118](file://apps/web-ele/src/store/auth.ts#L16-L118)
@@ -215,6 +228,7 @@ AuthStore --> AccessStore : "写入令牌/权限码/过期标记"
 - [apps/web-tdesign/src/store/auth.ts:16-118](file://apps/web-tdesign/src/store/auth.ts#L16-L118)
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 - [apps/web-antdv-next/src/store/auth.ts:1-118](file://apps/web-antdv-next/src/store/auth.ts#L1-L118)
 - [apps/web-ele/src/store/auth.ts:1-118](file://apps/web-ele/src/store/auth.ts#L1-L118)
@@ -222,6 +236,7 @@ AuthStore --> AccessStore : "写入令牌/权限码/过期标记"
 - [apps/web-tdesign/src/store/auth.ts:1-118](file://apps/web-tdesign/src/store/auth.ts#L1-L118)
 
 ### 用户态（User）与访问控制态（Access）分析
+
 - 用户态（User）
   - 职责：保存当前用户信息，支持重置
   - 典型字段：用户 ID、昵称、头像、角色等（由 UserInfo 类型约束）
@@ -249,14 +264,17 @@ Navigate --> End(["完成"])
 ```
 
 图表来源
+
 - [apps/web-antd/src/store/auth.ts:34-78](file://apps/web-antd/src/store/auth.ts#L34-L78)
 - [apps/web-antd/src/store/auth.ts:43-51](file://apps/web-antd/src/store/auth.ts#L43-L51)
 - [apps/web-antd/src/store/auth.ts:58-61](file://apps/web-antd/src/store/auth.ts#L58-L61)
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 
 ### Store 创建与注册流程
+
 - 入口导出
   - 各应用的 src/store/index.ts 统一导出各模块 Store，便于组件按需引入
 - Pinia 集成
@@ -277,6 +295,7 @@ M-->>M : "将 store 注入应用实例"
 ```
 
 图表来源
+
 - [apps/web-antd/src/store/index.ts:1-2](file://apps/web-antd/src/store/index.ts#L1-L2)
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 - [apps/web-antd/src/main.ts](file://apps/web-antd/src/main.ts)
@@ -284,6 +303,7 @@ M-->>M : "将 store 注入应用实例"
 - [packages/@core/base/shared/src/store.ts:1-2](file://packages/@core/base/shared/src/store.ts#L1-L2)
 
 章节来源
+
 - [apps/web-antd/src/store/index.ts:1-2](file://apps/web-antd/src/store/index.ts#L1-L2)
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 - [apps/web-antd/src/main.ts](file://apps/web-antd/src/main.ts)
@@ -291,6 +311,7 @@ M-->>M : "将 store 注入应用实例"
 - [packages/@core/base/shared/src/store.ts:1-2](file://packages/@core/base/shared/src/store.ts#L1-L2)
 
 ## 依赖分析
+
 - 内部依赖
   - @vben/preferences：提供应用默认行为（如默认首页路径）
   - @vben/constants：提供全局常量（如登录页路径）
@@ -313,6 +334,7 @@ Auth --> Router["vue-router"]
 ```
 
 图表来源
+
 - [apps/web-antd/src/store/auth.ts:7-14](file://apps/web-antd/src/store/auth.ts#L7-L14)
 - [packages/preferences/src/index.ts](file://packages/preferences/src/index.ts)
 - [packages/constants/src/index.ts](file://packages/constants/src/index.ts)
@@ -321,6 +343,7 @@ Auth --> Router["vue-router"]
 - [packages/@core/base/shared/src/store.ts:1-2](file://packages/@core/base/shared/src/store.ts#L1-L2)
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 - [packages/preferences/src/index.ts](file://packages/preferences/src/index.ts)
 - [packages/constants/src/index.ts](file://packages/constants/src/index.ts)
@@ -329,6 +352,7 @@ Auth --> Router["vue-router"]
 - [packages/@core/base/shared/src/store.ts:1-2](file://packages/@core/base/shared/src/store.ts#L1-L2)
 
 ## 性能考虑
+
 - 并发请求
   - 登录成功后并发获取用户信息与权限码，减少总等待时间
 - 状态粒度
@@ -339,6 +363,7 @@ Auth --> Router["vue-router"]
   - 登录成功后根据用户首页或默认首页进行跳转，减少二次请求
 
 ## 故障排除指南
+
 - 登录后未跳转
   - 检查用户首页路径与默认首页路径是否正确
   - 确认 Access Store 的登录过期标记是否被正确清除
@@ -350,12 +375,15 @@ Auth --> Router["vue-router"]
   - 确认路由守卫与权限校验逻辑
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:53-98](file://apps/web-antd/src/store/auth.ts#L53-L98)
 
 ## 结论
+
 本仓库通过“共享层 + 应用层”的方式实现了可复用、可扩展的状态管理方案。认证态、用户态与访问控制态职责清晰，配合并发请求与统一的 Pinia 能力，既保证了开发效率，也兼顾了运行时性能。建议在新增 Store 时遵循“单一职责、最小耦合、明确依赖”的原则，并在组件中通过组合式 API 以最小代价读取与更新状态。
 
 ## 附录
+
 - 在组件中使用 Store 的最佳实践
   - 仅在需要时引入对应 Store，避免全局导入造成包体膨胀
   - 使用组合式 API（如 computed、watch）监听状态变化，触发副作用

@@ -1,33 +1,27 @@
 <script lang="ts" setup>
-import { ref, watch, onMounted } from 'vue';
+import type { DevBugApi } from '#/api/dev';
+
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
 import {
-  getBugDetail,
-  getChangeList,
-  type DevBugApi,
-  type DevChangeApi,
-} from '#/api/dev';
-import { message } from 'ant-design-vue';
-import { useTabs } from '@vben/hooks';
-import {
-  VbenButton,
-  VbenButtonGroup,
-  useVbenModal,
   confirm,
   prompt,
+  useVbenModal,
+  VbenButton,
+  VbenButtonGroup,
 } from '@vben/common-ui';
+import { useTabs } from '@vben/hooks';
 
+import { message } from 'ant-design-vue';
+
+import { getBugDetail } from '#/api/dev';
 import AiEditor from '#/components/AiEditor/index.vue';
-import BaseInfo from './base-info.vue';
+import addFormModal from '#/views/dev/bug/add-modal.vue';
+import nextModal from '#/views/dev/bug/next-modal.vue';
 import ChangeLog from '#/views/dev/story/components/change-log.vue';
 
-import nextModal from '#/views/dev/bug/next-modal.vue';
-import addFormModal from '#/views/dev/bug/add-modal.vue';
-
-const { closeCurrentTab } = useTabs();
-
-// 跳转路由
-const router = useRouter();
+import BaseInfo from './base-info.vue';
 
 /**
  * 缺陷详情组件
@@ -42,6 +36,11 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { closeCurrentTab } = useTabs();
+
+// 跳转路由
+const router = useRouter();
 
 // 组件挂载时加载详情
 onMounted(() => {
@@ -87,34 +86,10 @@ const loadBugDetail = () => {
     });
 };
 
-//#region 按钮点击事件
+// #region 按钮点击事件
 const onBtnClick = (btnType: string) => {
   switch (btnType) {
-    case '添加评论':
-      prompt({
-        component: AiEditor,
-        content: '',
-        title: '添加评论',
-        modelPropName: 'modelValue',
-      }).then((val) => {
-        let params = {
-          businessId: detail.value.bugId,
-          businessType: 20,
-          changeBehavior: 20,
-          changeRichText: val,
-        };
-        console.log(params);
-
-        loadBugDetail();
-      });
-      break;
-    case '流转按钮':
-      NextModalApi.setData(detail.value).open();
-      break;
-    case '编辑按钮':
-      AddFormModalApi.setData(detail.value).open();
-      break;
-    case '删除按钮':
+    case '删除按钮': {
       confirm({
         title: '删除确认',
         content: '删除该任务吗?',
@@ -139,14 +114,43 @@ const onBtnClick = (btnType: string) => {
           message.error('取消删除');
         });
       break;
-    default:
+    }
+    case '流转按钮': {
+      NextModalApi.setData(detail.value).open();
+      break;
+    }
+    case '添加评论': {
+      prompt({
+        component: AiEditor,
+        content: '',
+        title: '添加评论',
+        modelPropName: 'modelValue',
+      }).then((val) => {
+        const params = {
+          businessId: detail.value.bugId,
+          businessType: 20,
+          changeBehavior: 20,
+          changeRichText: val,
+        };
+        console.log(params);
+
+        loadBugDetail();
+      });
+      break;
+    }
+    case '编辑按钮': {
+      AddFormModalApi.setData(detail.value).open();
+      break;
+    }
+    default: {
       message.error('未知操作');
       break;
+    }
   }
 };
-//#endregion
+// #endregion
 
-//#region 弹窗引用
+// #region 弹窗引用
 const [AddFormModal, AddFormModalApi] = useVbenModal({
   title: '添加任务',
   connectedComponent: addFormModal,
@@ -158,7 +162,7 @@ const [NextModal, NextModalApi] = useVbenModal({
   connectedComponent: nextModal,
   destroyOnClose: true,
 });
-//#endregion
+// #endregion
 
 // 暴露方法
 defineExpose({
@@ -183,12 +187,12 @@ defineExpose({
           <div v-html="detail.bugRichText" style="min-height: 300px"></div>
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
-          <a-tabs v-model:activeKey="activeKey">
+          <a-tabs v-model:active-key="activeKey">
             <a-tab-pane key="变更日志" tab="变更日志">
-              <ChangeLog :businessId="detail.bugId ?? ''" />
+              <ChangeLog :business-id="detail.bugId ?? ''" />
             </a-tab-pane>
             <a-tab-pane key="基本信息" tab="基本信息">
-              <BaseInfo :bugInfo="detail" />
+              <BaseInfo :bug-info="detail" />
             </a-tab-pane>
           </a-tabs>
         </a-col>
@@ -204,14 +208,14 @@ defineExpose({
           <VbenButton
             @click="onBtnClick('流转按钮')"
             class="cursor-pointer"
-            :disabled="detail.bugStatus == 99"
+            :disabled="detail.bugStatus === 99"
           >
             <span class="icon-[lucide--redo-dot]"></span>
           </VbenButton>
           <VbenButton
             @click="onBtnClick('编辑按钮')"
             class="cursor-pointer"
-            :disabled="detail.bugStatus == 99"
+            :disabled="detail.bugStatus === 99"
           >
             <span class="icon-[lucide--pencil-line]"></span>
           </VbenButton>

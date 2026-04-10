@@ -1,6 +1,6 @@
 import { eventHandler, getQuery } from 'h3';
-import { useResponseSuccess } from '~/utils/response';
 import { mockTaskData } from '~/api/dev/task/list';
+import { useResponseSuccess } from '~/utils/response';
 
 /**
  * 按月份分组统计任务数量
@@ -9,14 +9,14 @@ import { mockTaskData } from '~/api/dev/task/list';
  */
 function groupByMonth(data: any[]) {
   // 初始化12个月数组，默认为0
-  const monthArray = new Array(12).fill(0);
+  const monthArray = Array.from({ length: 12 }).fill(0);
 
   // 遍历数据，按月份统计
   data.forEach((item) => {
     const createDate = item.createDate;
     if (createDate) {
       // 从创建时间中提取月份 (格式: YYYY/MM/DD)
-      const month = parseInt(createDate.split('/')[1]) - 1; // 转换为0-11的索引
+      const month = Number.parseInt(createDate.split('/')[1]) - 1; // 转换为0-11的索引
       if (month >= 0 && month < 12) {
         monthArray[month] += item.actualHours;
       }
@@ -45,7 +45,7 @@ function filterByYear(data: any[], year: string) {
 }
 
 export default eventHandler(async (event) => {
-  let listData = structuredClone(mockTaskData);
+  const listData = structuredClone(mockTaskData);
 
   const { year } = getQuery(event);
 
@@ -58,6 +58,6 @@ export default eventHandler(async (event) => {
 
   return useResponseSuccess({
     list: result,
-    max: max,
+    max,
   });
 });

@@ -15,6 +15,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -27,16 +28,19 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件聚焦于 Vben Admin 的 Store 类型定义与使用规范，系统性梳理基于 Pinia 的组合式 Store 模块化组织、类型安全的定义方式、与 Vue 3 Composition API 的集成模式，并给出类型推断与泛型使用的高级技巧、扩展与自定义指南。内容以仓库中实际存在的 Store 文件与入口为依据，避免臆测，确保可追溯。
 
 ## 项目结构
+
 Vben Admin 在多套 UI 框架（Ant Design、Element Plus、Naive UI、TDesign）下提供了统一的 Store 入口与初始化逻辑，同时在各应用内提供独立的业务 Store 实现。关键位置如下：
+
 - 统一 Store 入口与导出：packages/stores/src/index.ts
 - Pinia 初始化与持久化插件注入：packages/stores/src/setup.ts
 - Pinia HMR 类型增强：packages/stores/shim-pinia.d.ts
 - 共享层对底层 Store 库的再导出：packages/@core/base/shared/src/store.ts
-- 各应用的认证 Store 实现：apps/web-*/src/store/auth.ts
-- 各应用 Store 导出聚合：apps/web-*/src/store/index.ts
+- 各应用的认证 Store 实现：apps/web-\*/src/store/auth.ts
+- 各应用 Store 导出聚合：apps/web-\*/src/store/index.ts
 
 ```mermaid
 graph TB
@@ -65,6 +69,7 @@ AUTH_tdesign --> IDX_antd
 ```
 
 图表来源
+
 - [packages/stores/src/index.ts:1-4](file://packages/stores/src/index.ts#L1-L4)
 - [packages/stores/src/setup.ts:39-81](file://packages/stores/src/setup.ts#L39-L81)
 - [packages/stores/shim-pinia.d.ts:1-9](file://packages/stores/shim-pinia.d.ts#L1-L9)
@@ -77,6 +82,7 @@ AUTH_tdesign --> IDX_antd
 - [apps/web-tdesign/src/store/auth.ts:16-117](file://apps/web-tdesign/src/store/auth.ts#L16-L117)
 
 章节来源
+
 - [packages/stores/src/index.ts:1-4](file://packages/stores/src/index.ts#L1-L4)
 - [packages/stores/src/setup.ts:39-81](file://packages/stores/src/setup.ts#L39-L81)
 - [packages/stores/shim-pinia.d.ts:1-9](file://packages/stores/shim-pinia.d.ts#L1-L9)
@@ -89,9 +95,10 @@ AUTH_tdesign --> IDX_antd
 - [apps/web-tdesign/src/store/auth.ts:16-117](file://apps/web-tdesign/src/store/auth.ts#L16-L117)
 
 ## 核心组件
+
 - Store 入口与导出
   - 统一导出模块与工具：packages/stores/src/index.ts 提供模块聚合导出与 Pinia 工具函数再导出。
-  - 关键导出：export * from './modules'; export * from './setup'; export { defineStore, storeToRefs } from 'pinia';
+  - 关键导出：export _ from './modules'; export _ from './setup'; export { defineStore, storeToRefs } from 'pinia';
 
 - Pinia 初始化与持久化
   - 初始化函数：initStores(app, options) 创建 Pinia 实例并安装持久化插件；支持开发环境使用 localStorage，生产环境使用加密存储封装。
@@ -104,13 +111,16 @@ AUTH_tdesign --> IDX_antd
   - packages/@core/base/shared/src/store.ts 对底层 Store 库进行再导出，便于上层按需引入。
 
 章节来源
+
 - [packages/stores/src/index.ts:1-4](file://packages/stores/src/index.ts#L1-L4)
 - [packages/stores/src/setup.ts:39-81](file://packages/stores/src/setup.ts#L39-L81)
 - [packages/stores/shim-pinia.d.ts:1-9](file://packages/stores/shim-pinia.d.ts#L1-L9)
 - [packages/@core/base/shared/src/store.ts:1-1](file://packages/@core/base/shared/src/store.ts#L1-L1)
 
 ## 架构总览
+
 Vben Admin 的 Store 架构围绕“统一入口 + 多框架适配”的思路设计：
+
 - 统一入口负责 Pinia 初始化、持久化策略与类型增强；
 - 各应用层 Store 负责业务域 Store 的具体实现；
 - 通过 defineStore 返回的 Store 实例，结合 Composition API 的响应式能力，完成状态管理与 UI 更新。
@@ -131,11 +141,13 @@ App->>Pinia : 使用 Pinia 运行时注册 Store
 ```
 
 图表来源
+
 - [packages/stores/src/setup.ts:39-81](file://packages/stores/src/setup.ts#L39-L81)
 
 ## 详细组件分析
 
 ### 认证 Store（useAuthStore）类型与行为
+
 - Store 名称与返回值
   - Store 名称：'auth'
   - 返回对象包含：$reset、authLogin(params, onSuccess?)、fetchUserInfo()、loginLoading（ref）、logout(redirect?)
@@ -182,11 +194,13 @@ Auth-->>View : 返回 { userInfo }
 ```
 
 图表来源
+
 - [apps/web-antd/src/store/auth.ts:28-78](file://apps/web-antd/src/store/auth.ts#L28-L78)
 - [apps/web-antd/src/store/auth.ts:100-104](file://apps/web-antd/src/store/auth.ts#L100-L104)
 - [apps/web-antd/src/store/auth.ts:80-98](file://apps/web-antd/src/store/auth.ts#L80-L98)
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:16-118](file://apps/web-antd/src/store/auth.ts#L16-L118)
 - [apps/web-antdv-next/src/store/auth.ts:16-118](file://apps/web-antdv-next/src/store/auth.ts#L16-L118)
 - [apps/web-ele/src/store/auth.ts:16-119](file://apps/web-ele/src/store/auth.ts#L16-L119)
@@ -194,10 +208,11 @@ Auth-->>View : 返回 { userInfo }
 - [apps/web-tdesign/src/store/auth.ts:16-117](file://apps/web-tdesign/src/store/auth.ts#L16-L117)
 
 ### Store 模块化组织与导入导出机制
+
 - 统一入口导出
   - packages/stores/src/index.ts 聚合导出 modules 与 setup，并再导出 defineStore 与 storeToRefs。
 - 应用层导出
-  - 各应用的 apps/web-*/src/store/index.ts 仅导出该应用内的业务 Store（如 useAuthStore），形成“按应用聚合”的模块边界。
+  - 各应用的 apps/web-\*/src/store/index.ts 仅导出该应用内的业务 Store（如 useAuthStore），形成“按应用聚合”的模块边界。
 - 共享依赖
   - 各应用 Store 通过 @vben/stores 引用统一入口，从而获得统一的 Pinia 实例与工具。
 
@@ -214,6 +229,7 @@ AUTH_tdesign["apps/web-tdesign/src/store/auth.ts"] --> |使用| IDX
 ```
 
 图表来源
+
 - [packages/stores/src/index.ts:1-4](file://packages/stores/src/index.ts#L1-L4)
 - [apps/web-antd/src/store/index.ts:1-2](file://apps/web-antd/src/store/index.ts#L1-L2)
 - [apps/web-antdv-next/src/store/index.ts:1-2](file://apps/web-antdv-next/src/store/index.ts#L1-L2)
@@ -222,6 +238,7 @@ AUTH_tdesign["apps/web-tdesign/src/store/auth.ts"] --> |使用| IDX
 - [apps/web-tdesign/src/store/index.ts:1-2](file://apps/web-tdesign/src/store/index.ts#L1-L2)
 
 章节来源
+
 - [packages/stores/src/index.ts:1-4](file://packages/stores/src/index.ts#L1-L4)
 - [apps/web-antd/src/store/index.ts:1-2](file://apps/web-antd/src/store/index.ts#L1-L2)
 - [apps/web-antdv-next/src/store/index.ts:1-2](file://apps/web-antdv-next/src/store/index.ts#L1-L2)
@@ -230,6 +247,7 @@ AUTH_tdesign["apps/web-tdesign/src/store/auth.ts"] --> |使用| IDX
 - [apps/web-tdesign/src/store/index.ts:1-2](file://apps/web-tdesign/src/store/index.ts#L1-L2)
 
 ### 类型安全与 Composition API 集成
+
 - defineStore 返回值的类型推断
   - 返回值为一个包含状态与方法的对象，其类型由返回值字面量推断；在 TypeScript 中可直接获得方法签名与状态类型。
 - storeToRefs 的作用
@@ -238,11 +256,13 @@ AUTH_tdesign["apps/web-tdesign/src/store/auth.ts"] --> |使用| IDX
   - loginLoading 为 ref<boolean>，在登录流程中作为加载态标志；$reset 将其复位，保证组件卸载或重新进入时的状态一致性。
 
 章节来源
+
 - [packages/stores/src/index.ts:3-3](file://packages/stores/src/index.ts#L3-L3)
 - [apps/web-antd/src/store/auth.ts:21-21](file://apps/web-antd/src/store/auth.ts#L21-L21)
 - [apps/web-antd/src/store/auth.ts:106-108](file://apps/web-antd/src/store/auth.ts#L106-L108)
 
 ### 类型推断与泛型使用高级技巧
+
 - 使用返回值字面量推断
   - defineStore 的回调返回对象即为 Store 实例的类型来源，可直接获得状态与方法的完整类型信息。
 - 结合 storeToRefs 解构
@@ -251,10 +271,12 @@ AUTH_tdesign["apps/web-tdesign/src/store/auth.ts"] --> |使用| IDX
   - 参数 params 使用 Recordable<any> 表达“可索引对象”，在不牺牲灵活性的同时保留基本的键值访问能力；若需更强约束，可在业务 Store 层进一步细化为具体接口。
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:28-31](file://apps/web-antd/src/store/auth.ts#L28-L31)
 - [apps/web-antd/src/store/auth.ts:110-116](file://apps/web-antd/src/store/auth.ts#L110-L116)
 
 ### 扩展方法与自定义类型创建指南
+
 - 新增业务 Store
   - 在对应应用的 store 目录下新增文件，使用 defineStore 定义 Store，并在该应用的 store/index.ts 中导出。
   - 若需跨应用共享，建议在 @vben/stores 下新增模块并在 index.ts 中聚合导出。
@@ -266,10 +288,12 @@ AUTH_tdesign["apps/web-tdesign/src/store/auth.ts"] --> |使用| IDX
   - 生产环境使用加密存储封装，开发环境使用 localStorage，确保本地调试与线上一致性的平衡。
 
 章节来源
+
 - [packages/stores/src/setup.ts:32-37](file://packages/stores/src/setup.ts#L32-L37)
 - [packages/stores/src/setup.ts:52-67](file://packages/stores/src/setup.ts#L52-L67)
 
 ## 依赖分析
+
 - 组件耦合与内聚
   - 认证 Store 内聚于登录、登出、用户信息获取等业务逻辑，与路由、通知、偏好设置等存在横向依赖，但通过 @vben/stores 与 @vben/preferences 等统一入口解耦。
 - 直接与间接依赖
@@ -302,14 +326,17 @@ PERSIST --> SECURE
 ```
 
 图表来源
+
 - [apps/web-antd/src/store/auth.ts:6-14](file://apps/web-antd/src/store/auth.ts#L6-L14)
 - [packages/stores/src/setup.ts:42-67](file://packages/stores/src/setup.ts#L42-L67)
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:6-14](file://apps/web-antd/src/store/auth.ts#L6-L14)
 - [packages/stores/src/setup.ts:42-67](file://packages/stores/src/setup.ts#L42-L67)
 
 ## 性能考虑
+
 - 并发请求优化
   - 登录成功后并发拉取用户信息与访问码，减少总耗时，提升用户体验。
 - 状态粒度控制
@@ -320,10 +347,12 @@ PERSIST --> SECURE
   - 使用 storeToRefs 将状态解构为独立 ref，降低不必要的响应式追踪开销。
 
 章节来源
+
 - [apps/web-antd/src/store/auth.ts:43-46](file://apps/web-antd/src/store/auth.ts#L43-L46)
 - [packages/stores/src/setup.ts:56-67](file://packages/stores/src/setup.ts#L56-L67)
 
 ## 故障排查指南
+
 - Pinia 未安装
   - resetAllStores() 在未安装 Pinia 时会输出错误日志，需确认 initStores 是否正确执行。
 - 持久化键冲突
@@ -332,14 +361,17 @@ PERSIST --> SECURE
   - 使用 shim-pinia.d.ts 为 Pinia 增强 acceptHMRUpdate 的类型签名，确保热更新场景类型正确。
 
 章节来源
+
 - [packages/stores/src/setup.ts:72-81](file://packages/stores/src/setup.ts#L72-L81)
 - [packages/stores/src/setup.ts:32-37](file://packages/stores/src/setup.ts#L32-L37)
 - [packages/stores/shim-pinia.d.ts:1-9](file://packages/stores/shim-pinia.d.ts#L1-L9)
 
 ## 结论
+
 Vben Admin 的 Store 类型定义遵循“统一入口 + 多框架适配 + 类型安全”的设计原则。通过 defineStore 的返回值字面量推断、storeToRefs 的响应式解构、以及 Pinia 初始化与持久化策略的统一管理，实现了高内聚、低耦合且易于扩展的状态管理体系。结合各应用层 Store 的业务实现，开发者可以在保证类型安全的前提下快速扩展新的业务 Store，并通过统一入口与共享类型库实现跨应用复用。
 
 ## 附录
+
 - 最佳实践清单
   - 使用 defineStore 的返回值字面量定义状态与方法，确保类型推断准确。
   - 使用 storeToRefs 解构响应式状态，提升模板与组合函数的可读性。

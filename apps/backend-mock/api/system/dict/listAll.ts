@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
+import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+
 import { mockDictData } from './list';
 
 export default eventHandler(async (event) => {
@@ -10,7 +10,7 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  let listData = structuredClone(mockDictData);
+  const listData = structuredClone(mockDictData);
 
   /* 全量响应 */
   return useResponseSuccess(listData);

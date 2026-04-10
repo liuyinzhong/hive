@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
-import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-import { mockUserData } from '~/api/system/user/list';
 import { mockBugData } from '~/api/dev/bug/list';
-import { mockVersionData } from '~/api/dev/versions/list';
 import { mockStoryData } from '~/api/dev/story/list';
 import { mockTaskData } from '~/api/dev/task/list';
+import { mockVersionData } from '~/api/dev/versions/list';
+import { mockUserData } from '~/api/system/user/list';
+import { verifyAccessToken } from '~/utils/jwt-utils';
+import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   timeZone: 'Asia/Shanghai',
   year: 'numeric',
@@ -21,22 +21,36 @@ function generateMockDataList(count: number) {
   const dataList = [];
 
   /* 随机从用户表中取一个用户 */
-  let userInfo: any = faker.helpers.arrayElement(
+  const userInfo: any = faker.helpers.arrayElement(
     mockUserData.filter((item) => item.status === 1),
   );
 
   for (let i = 0; i < count; i++) {
-    let businessType: number = faker.helpers.arrayElement([0, 10, 20, 30]);
+    const businessType: number = faker.helpers.arrayElement([0, 10, 20, 30]);
 
     let businessId: string = '';
-    if (businessType === 0) {
-      businessId = faker.helpers.arrayElement(mockStoryData).storyId;
-    } else if (businessType === 10) {
-      businessId = faker.helpers.arrayElement(mockTaskData).taskId;
-    } else if (businessType === 20) {
-      businessId = faker.helpers.arrayElement(mockBugData).bugId;
-    } else if (businessType === 30) {
-      businessId = faker.helpers.arrayElement(mockVersionData).versionId;
+    switch (businessType) {
+      case 0: {
+        businessId = faker.helpers.arrayElement(mockStoryData).storyId;
+
+        break;
+      }
+      case 10: {
+        businessId = faker.helpers.arrayElement(mockTaskData).taskId;
+
+        break;
+      }
+      case 20: {
+        businessId = faker.helpers.arrayElement(mockBugData).bugId;
+
+        break;
+      }
+      case 30: {
+        businessId = faker.helpers.arrayElement(mockVersionData).versionId;
+
+        break;
+      }
+      // No default
     }
 
     const dataItem: Record<string, any> = {

@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { taskListByStoryId, type DevTaskApi } from '#/api/dev';
-import DictTag from '#/components/DictTag/index.vue';
+import type { DevTaskApi } from '#/api/dev';
+
 import { ref } from 'vue';
+
+import { taskListByStoryId } from '#/api/dev';
+import DictTag from '#/components/DictTag/index.vue';
 
 /**
  * 基本信息组件
@@ -14,14 +17,14 @@ const props = defineProps({
   },
 });
 
-//#region 获取任务列表
+// #region 获取任务列表
 const taskList = ref<DevTaskApi.DevTaskFace[]>([]);
 taskListByStoryId({
   storyId: props.storyId,
 }).then((res: DevTaskApi.DevTaskFace[]) => {
   taskList.value = res || [];
 });
-//#endregion
+// #endregion
 </script>
 <template>
   <div>
@@ -35,14 +38,14 @@ taskListByStoryId({
         <a-list-item>
           <a-list-item-meta>
             <template #title>
-              <a :href="'/dev/task/detail/' + item.taskNum">
+              <a :href="`/dev/task/detail/${item.taskNum}`">
                 {{ item.taskTitle }}
               </a>
             </template>
 
             <template #description>
-              <DictTag dictType="TASK_STATUS" :value="item.taskStatus" />
-              <DictTag dictType="TASK_TYPE" :value="item.taskType" />
+              <DictTag dict-type="TASK_STATUS" :value="item.taskStatus" />
+              <DictTag dict-type="TASK_TYPE" :value="item.taskType" />
               <a-tag>{{ item.percent }}%</a-tag>
               <a-tag>{{ item.endDate }}</a-tag>
             </template>

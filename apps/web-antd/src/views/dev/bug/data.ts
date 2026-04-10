@@ -2,6 +2,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
+import type { DevBugApi } from '#/api/dev';
 
 import { h, nextTick, ref } from 'vue';
 
@@ -9,7 +10,6 @@ import { useDebounceFn } from '@vueuse/core';
 import { Flex, Tag, TypographyText } from 'ant-design-vue';
 
 import {
-  type DevBugApi,
   getModulesList,
   getProjectsList,
   getStoryList,
@@ -300,6 +300,18 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'richEditor',
       label: '富文本',
       formItemClass: 'col-span-3 items-baseline',
+      componentProps: {
+        editable: true,
+      },
+    },
+    {
+      component: 'Editor',
+      fieldName: 'richEditorA',
+      label: '富文本',
+      formItemClass: 'col-span-3 items-baseline',
+      componentProps: {
+        editable: true,
+      },
     },
   ];
 }

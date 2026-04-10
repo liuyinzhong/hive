@@ -1,16 +1,21 @@
-import { getDictListAll, type SystemDictApi } from '#/api/system';
-import { Tag } from 'ant-design-vue';
-import { h } from 'vue';
+import type { SystemDictApi } from '#/api/system';
+
+import { getDictListAll } from '#/api/system';
 
 const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
 
-getDictListAll().then((res) => {
-  res.forEach((item: SystemDictApi.SystemDictFace) => {
-    if (item.type != null) {
-      dictionaryData[item.type] = item.children || [];
-    }
+// 初始化字典数据，使用 void 操作符标记 Promise 为有意忽略
+void getDictListAll()
+  .then((res) => {
+    res.forEach((item: SystemDictApi.SystemDictFace) => {
+      if (item.type !== undefined && item.type !== null) {
+        dictionaryData[item.type] = item.children || [];
+      }
+    });
+  })
+  .catch((error) => {
+    console.error('Failed to load dictionary data:', error);
   });
-});
 
 /** 获取本地字典列表 */
 export const getLocalDictList = (
@@ -70,6 +75,6 @@ export const getLocalDictRow = (
     return {};
   }
   const list: any = dictionaryData[type];
-  const item: any = list?.find((a: any) => a[key || 'value'] == value);
+  const item: any = list?.find((a: any) => a[key || 'value'] === value);
   return item || {};
 };

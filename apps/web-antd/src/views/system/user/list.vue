@@ -1,41 +1,31 @@
 <script lang="ts" setup>
-import { useUserStore } from '@vben/stores';
+import type { Recordable } from '@vben/types';
 
-import { getUsersList, type SystemUserApi } from '#/api/system';
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+import type { SystemUserApi } from '#/api/system';
 
-import { useVbenDrawer, Page } from '@vben/common-ui';
+import { onMounted } from 'vue';
 
-import { message, Button } from 'ant-design-vue';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import {
-  useVbenVxeGrid,
-  type OnActionClickParams,
-  type VxeTableGridOptions,
-} from '#/adapter/vxe-table';
+import { Button, message } from 'ant-design-vue';
 
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getUsersList } from '#/api/system';
 import { sleep } from '#/utils';
+
+import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useRefresh } from '@vben/hooks';
-import { useGridFormSchema, useColumns } from './data';
-import type { Recordable } from '@vben/types';
-import { onMounted } from 'vue';
 
 onMounted(() => {
   console.log('onMounted');
 });
 
-const userStore = useUserStore();
-
-// 刷新路由
-const { refresh } = useRefresh();
-// 页面参数
-const route = useRoute();
-// 跳转路由
-const router = useRouter();
-
-//#region 表格搜索,配置
+// #region 表格搜索,配置
 
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -86,7 +76,7 @@ function onActionClick({
   }
 }
 
-//#region 抽屉组件
+// #region 抽屉组件
 
 const [Drawer, drawerApi] = useVbenDrawer({
   // 连接抽离的组件
@@ -121,7 +111,7 @@ async function onDelete(row: SystemUserApi.SystemUserFace) {
   gridApi.query();
 }
 
-//#endregion
+// #endregion
 </script>
 
 <template>

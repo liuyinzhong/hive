@@ -1,19 +1,23 @@
 <script lang="ts" setup>
+import type { Recordable } from '@vben/types';
+
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+import type { SystemDictApi } from '#/api/system';
+
 import { Page, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
+
 import { Button, message } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  type VxeTableGridOptions,
-  type OnActionClickParams,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getDictListApi } from '#/api/system';
 import { $t } from '#/locales';
-import { getDictListApi, type SystemDictApi } from '#/api/system';
-import { useColumns, useGridFormSchema } from './data';
 
 import addFormModal from './add-modal.vue';
-import type { Recordable } from '@vben/types';
+import { useColumns, useGridFormSchema } from './data';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: addFormModal,

@@ -1,23 +1,26 @@
 <script lang="ts" setup>
-import type { VbenFormProps } from '#/adapter/form';
-import { Page, useVbenModal, useVbenDrawer } from '@vben/common-ui';
-import { message, Button } from 'ant-design-vue';
-import { Plus } from '@vben/icons';
-import { getTaskList, type DevTaskApi } from '#/api/dev';
-import detailDrawer from './detail-drawer.vue';
-import {
-  useVbenVxeGrid,
-  type VxeGridProps,
-  type VxeTableGridOptions,
-  type OnActionClickParams,
+import type { Recordable } from '@vben/types';
+
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
 } from '#/adapter/vxe-table';
+import type { DevTaskApi } from '#/api/dev';
+
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
+import { Plus } from '@vben/icons';
+
+import { Button, message } from 'ant-design-vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getTaskList } from '#/api/dev';
+import { sleep } from '#/utils';
 
 import addFormModal from './add-modal.vue';
-import nextModal from './next-modal.vue';
 import batchFormModal from './batch-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
-import { sleep } from '#/utils';
-import type { Recordable } from '@vben/types';
+import detailDrawer from './detail-drawer.vue';
+import nextModal from './next-modal.vue';
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
@@ -88,7 +91,7 @@ function onEdit(row: DevTaskApi.DevTaskFace) {
   AddFormModalApi.setData(row).open();
 }
 
-async function onDelete(row: DevTaskApi.DevTaskFace) {
+async function onDelete(_row: DevTaskApi.DevTaskFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,
@@ -106,7 +109,7 @@ async function onDelete(row: DevTaskApi.DevTaskFace) {
   hideLoading();
   gridApi.query();
 }
-//#endregion
+// #endregion
 
 // #region 单个添加
 const [AddFormModal, AddFormModalApi] = useVbenModal({

@@ -15,6 +15,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -27,10 +28,13 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件为 Vben Admin 项目的工具函数API文档，覆盖应用层与内部工具库中的实用函数，提供函数签名、参数、返回值、功能描述、适用场景、注意事项、TypeScript 类型定义与泛型使用、性能特征、组合使用模式、最佳实践、错误处理与边界情况、单元测试示例与验证方法，以及版本历史与迁移指南。内容以仓库中实际实现为准，并通过“章节来源”与“图表来源”标注具体文件位置。
 
 ## 项目结构
+
 工具函数主要分布在以下位置：
+
 - 应用层工具：apps/web-antd/src/utils
 - 内部 Node 工具：internal/node-utils/src
 - 核心共享工具：packages/@core/base/shared/src/utils
@@ -62,6 +66,7 @@ N1 --> N5
 ```
 
 **图表来源**
+
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 - [apps/web-antd/src/utils/enumUtils.ts:1-27](file://apps/web-antd/src/utils/enumUtils.ts#L1-L27)
 - [apps/web-antd/src/utils/versionUtils.ts:1-130](file://apps/web-antd/src/utils/versionUtils.ts#L1-L130)
@@ -73,6 +78,7 @@ N1 --> N5
 - [packages/@core/base/shared/src/utils/index.ts:1-21](file://packages/@core/base/shared/src/utils/index.ts#L1-L21)
 
 **章节来源**
+
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 - [apps/web-antd/src/utils/enumUtils.ts:1-27](file://apps/web-antd/src/utils/enumUtils.ts#L1-L27)
 - [apps/web-antd/src/utils/versionUtils.ts:1-130](file://apps/web-antd/src/utils/versionUtils.ts#L1-L130)
@@ -84,6 +90,7 @@ N1 --> N5
 - [packages/@core/base/shared/src/utils/index.ts:1-21](file://packages/@core/base/shared/src/utils/index.ts#L1-L21)
 
 ## 核心组件
+
 本节对各工具模块的核心函数进行概览性说明，便于快速定位与查阅。
 
 - 应用层工具（web-antd）
@@ -100,6 +107,7 @@ N1 --> N5
   - 工具聚合：导出 cn、date、diff、dom、download、inference、letter、merge、nprogress、resources、stack、state-handler、to、tree、unique、update-css-variables、util、window 等
 
 **章节来源**
+
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 - [apps/web-antd/src/utils/enumUtils.ts:1-27](file://apps/web-antd/src/utils/enumUtils.ts#L1-L27)
 - [apps/web-antd/src/utils/versionUtils.ts:1-130](file://apps/web-antd/src/utils/versionUtils.ts#L1-L130)
@@ -111,6 +119,7 @@ N1 --> N5
 - [packages/@core/base/shared/src/utils/index.ts:1-21](file://packages/@core/base/shared/src/utils/index.ts#L1-L21)
 
 ## 架构总览
+
 工具函数在项目中的角色与交互如下：
 
 ```mermaid
@@ -128,6 +137,7 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
 ```
 
 **图表来源**
+
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 - [apps/web-antd/src/utils/enumUtils.ts:1-27](file://apps/web-antd/src/utils/enumUtils.ts#L1-L27)
 - [apps/web-antd/src/utils/versionUtils.ts:1-130](file://apps/web-antd/src/utils/versionUtils.ts#L1-L130)
@@ -142,6 +152,7 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
 ### 应用层工具（apps/web-antd/src/utils）
 
 #### 通用工具
+
 - 函数：sleep(ms: number)
   - 功能：等待指定毫秒数
   - 参数：ms（等待时间，毫秒）
@@ -213,9 +224,11 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
   - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 
 #### 枚举工具
+
 - 函数：enumToOptions(enumObj: any, options?: { labelField?: string; valueField?: string }): Array<{ [key: string]: any }>
   - 功能：将数字枚举转换为选项数组
   - 参数：
@@ -234,9 +247,11 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
   - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [apps/web-antd/src/utils/enumUtils.ts:1-27](file://apps/web-antd/src/utils/enumUtils.ts#L1-L27)
 
 #### 版本工具
+
 - 函数：changeVersionType(oldVersion: string, type: VersionUpdateType): string
   - 功能：根据更新类型递增版本号
   - 参数：
@@ -268,11 +283,13 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
   - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [apps/web-antd/src/utils/versionUtils.ts:1-130](file://apps/web-antd/src/utils/versionUtils.ts#L1-L130)
 
 ### 内部 Node 工具（internal/node-utils/src）
 
 #### 聚合导出（index.ts）
+
 - 功能：统一导出常量、日期、格式化、文件系统、Git、路径、Spinner 等
 - 使用场景：开发脚本、构建工具、CI/CD
 - 注意事项：注意导出符号的可用性与版本差异
@@ -285,9 +302,11 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
 - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [internal/node-utils/src/index.ts:1-20](file://internal/node-utils/src/index.ts#L1-L20)
 
 #### 格式化工具（formatter.ts）
+
 - 函数：formatFile(filepath: string): Promise<string>
   - 功能：调用外部格式化工具（oxfmt）格式化文件并读取结果
   - 参数：filepath（文件路径）
@@ -303,9 +322,11 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
   - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [internal/node-utils/src/formatter.ts:1-14](file://internal/node-utils/src/formatter.ts#L1-L14)
 
 #### 日期工具（date.ts）
+
 - 功能：基于 dayjs 扩展 UTC 与时区插件，默认时区设为 Asia/Shanghai
 - 使用场景：统一日期处理、时区转换
 - 注意事项：全局默认时区会影响依赖 dayjs 的模块
@@ -318,9 +339,11 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
 - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [internal/node-utils/src/date.ts:1-13](file://internal/node-utils/src/date.ts#L1-L13)
 
 #### 文件系统工具（fs.ts）
+
 - 函数：outputJSON(filePath: string, data: any, spaces?: number): Promise<void>
   - 功能：确保目录存在并写入 JSON 文件
   - 参数：filePath、data、spaces（缩进空格数，默认 2）
@@ -364,9 +387,11 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
   - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [internal/node-utils/src/fs.ts:1-40](file://internal/node-utils/src/fs.ts#L1-L40)
 
 #### Git 工具（git.ts）
+
 - 函数：getStagedFiles(): Promise<string[]>
   - 功能：获取 Git 暂存区文件列表（绝对路径去重）
   - 参数：无
@@ -382,6 +407,7 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
   - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [internal/node-utils/src/git.ts:1-35](file://internal/node-utils/src/git.ts#L1-L35)
 
 ### 核心共享工具（@core/base/shared/src/utils）
@@ -398,6 +424,7 @@ NODE_INDEX --> DATE_NODE["dateUtil"]
 - 版本历史与迁移：无重大变更记录
 
 **章节来源**
+
 - [packages/@core/base/shared/src/utils/index.ts:1-21](file://packages/@core/base/shared/src/utils/index.ts#L1-L21)
 
 ## 依赖分析
@@ -429,6 +456,7 @@ N1 --> N5
 ```
 
 **图表来源**
+
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 - [apps/web-antd/src/utils/enumUtils.ts:1-27](file://apps/web-antd/src/utils/enumUtils.ts#L1-L27)
 - [apps/web-antd/src/utils/versionUtils.ts:1-130](file://apps/web-antd/src/utils/versionUtils.ts#L1-L130)
@@ -440,6 +468,7 @@ N1 --> N5
 - [packages/@core/base/shared/src/utils/index.ts:1-21](file://packages/@core/base/shared/src/utils/index.ts#L1-L21)
 
 **章节来源**
+
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 - [apps/web-antd/src/utils/enumUtils.ts:1-27](file://apps/web-antd/src/utils/enumUtils.ts#L1-L27)
 - [apps/web-antd/src/utils/versionUtils.ts:1-130](file://apps/web-antd/src/utils/versionUtils.ts#L1-L130)
@@ -451,6 +480,7 @@ N1 --> N5
 - [packages/@core/base/shared/src/utils/index.ts:1-21](file://packages/@core/base/shared/src/utils/index.ts#L1-L21)
 
 ## 性能考虑
+
 - I/O 密集型函数（formatFile、outputJSON、ensureFile、readJSON、getStagedFiles）应避免在热路径频繁调用，建议：
   - 合理缓存中间结果
   - 批量处理而非逐个处理
@@ -464,6 +494,7 @@ N1 --> N5
   - dayjs、execa、chalk、consola 等库的版本升级可能影响行为，建议锁定版本并定期审计
 
 ## 故障排除指南
+
 - 格式化失败（formatFile）
   - 现象：抛错或返回空内容
   - 排查：确认 oxfmt 安装与 PATH；检查文件权限
@@ -486,6 +517,7 @@ N1 --> N5
   - 修复：使用专用深拷贝库或移除不可序列化成员
 
 **章节来源**
+
 - [internal/node-utils/src/formatter.ts:1-14](file://internal/node-utils/src/formatter.ts#L1-L14)
 - [internal/node-utils/src/fs.ts:1-40](file://internal/node-utils/src/fs.ts#L1-L40)
 - [internal/node-utils/src/git.ts:1-35](file://internal/node-utils/src/git.ts#L1-L35)
@@ -493,11 +525,13 @@ N1 --> N5
 - [apps/web-antd/src/utils/index.ts:1-65](file://apps/web-antd/src/utils/index.ts#L1-L65)
 
 ## 结论
+
 本工具函数API文档梳理了应用层、内部 Node 工具与核心共享工具中的关键函数，提供了类型定义、使用场景、注意事项、性能与错误处理建议，并给出了组合使用模式与最佳实践。建议在团队内统一规范调用方式与错误处理策略，确保在多框架与多环境下的一致性与可靠性。
 
 ## 附录
 
 ### 单元测试示例与验证方法
+
 - 应用层工具
   - enumToOptions：验证空枚举、自定义 label/value 字段
   - changeVersionType：验证非法格式、三种类型、边界值
@@ -511,9 +545,11 @@ N1 --> N5
   - getStagedFiles：验证暂存文件列表、异常返回空数组
 
 **章节来源**
-- [packages/@core/base/shared/src/utils/__tests__/date.test.ts:1-55](file://packages/@core/base/shared/src/utils/__tests__/date.test.ts#L1-L55)
+
+- [packages/@core/base/shared/src/utils/**tests**/date.test.ts:1-55](file://packages/@core/base/shared/src/utils/__tests__/date.test.ts#L1-L55)
 
 ### 版本历史与迁移指南
+
 - 当前仓库未发现针对上述工具函数的版本变更记录或迁移指南文件。建议：
   - 在新增或修改函数时补充变更日志
   - 对破坏性变更提供迁移步骤

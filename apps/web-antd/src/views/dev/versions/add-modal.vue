@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
 import { createVersion, updateVersion } from '#/api/dev';
+
 import { useFormSchema } from './data';
 
 defineOptions({
@@ -34,7 +35,7 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
       formApi.resetForm();
-      let data = modalApi.getData();
+      const data = modalApi.getData();
       if (data.versionId) {
         modalApi.setState({
           title: '编辑版本',

@@ -1,11 +1,15 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+
 import type { VbenFormSchema } from '#/adapter/form';
-import { $t } from '#/locales';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
-import { type SystemUserApi, getRoleList, getDeptList } from '#/api/system';
+import type { SystemUserApi } from '#/api/system';
 
 import { h } from 'vue';
+
 import { Flex } from 'ant-design-vue';
+
+import { getDeptList, getRoleList } from '#/api/system';
+import { $t } from '#/locales';
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
   return [

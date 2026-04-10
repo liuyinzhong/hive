@@ -1,6 +1,6 @@
 import { eventHandler, getQuery } from 'h3';
-import { useResponseSuccess } from '~/utils/response';
 import { mockTaskData } from '~/api/dev/task/list';
+import { useResponseSuccess } from '~/utils/response';
 
 /**
  * 按小时分组统计任务数量
@@ -9,14 +9,14 @@ import { mockTaskData } from '~/api/dev/task/list';
  */
 function groupByHour(data: any[]) {
   // 初始化24小时数组，默认为0
-  const hourArray = new Array(24).fill(0);
+  const hourArray = Array.from({ length: 24 }).fill(0);
 
   // 遍历数据，按小时统计
   data.forEach((item) => {
     const createDate = item.createDate;
     if (createDate) {
       // 从创建时间中提取小时
-      const hour = parseInt(createDate.split(' ')[1].split(':')[0]);
+      const hour = Number.parseInt(createDate.split(' ')[1].split(':')[0]);
       if (hour >= 0 && hour < 24) {
         hourArray[hour]++;
       }
@@ -50,7 +50,7 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  let listData = structuredClone(mockTaskData);
+  const listData = structuredClone(mockTaskData);
 
   const { date1, date2 } = getQuery(event);
 
@@ -69,6 +69,6 @@ export default eventHandler(async (event) => {
   return useResponseSuccess({
     date1: date1Result,
     date2: date2Result,
-    max: max,
+    max,
   });
 });

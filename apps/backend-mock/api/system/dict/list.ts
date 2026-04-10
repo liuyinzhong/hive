@@ -1,9 +1,8 @@
-import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
-import { verifyAccessToken, compareVersion } from '~/utils/jwt-utils';
-import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
+import { verifyAccessToken } from '~/utils/jwt-utils';
+import { unAuthorizedResponse } from '~/utils/response';
 
-let datalist = [
+const datalist = [
   {
     id: 'a4fed3fb-137c-4e93-99f2-1595ca3e6209',
     pid: null,
@@ -1339,7 +1338,7 @@ let datalist = [
 ];
 
 function generateMockDataList() {
-  let list: any[] = datalist.filter((item) => item.pid === null);
+  const list: any[] = datalist.filter((item) => item.pid === null);
   list.forEach((item) => {
     item.children = datalist.filter((child) => child.pid === item.id);
   });

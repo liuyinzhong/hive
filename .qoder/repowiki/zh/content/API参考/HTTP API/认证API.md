@@ -16,6 +16,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -28,11 +29,14 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件面向 Vben Admin 的认证子系统，提供后端认证 API 的完整文档与前端对接说明。内容覆盖登录、登出、刷新令牌、权限码获取等端点，明确请求/响应格式、状态码、JWT 使用方式、过期与刷新机制，并给出 TypeScript 接口定义与数据模型、实际调用示例与安全最佳实践。
 
 ## 项目结构
+
 认证相关能力由“后端 Mock 服务”与“前端 Web 应用”两部分组成：
-- 后端 Mock 服务：提供 /auth/* 认证端点、JWT 工具、Cookie 工具、统一响应封装与模拟用户数据。
+
+- 后端 Mock 服务：提供 /auth/\* 认证端点、JWT 工具、Cookie 工具、统一响应封装与模拟用户数据。
 - 前端 Web 应用：提供认证 API 客户端、认证状态管理、路由守卫与权限控制。
 
 ```mermaid
@@ -74,6 +78,7 @@ AUTH_CODES --> USERS
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 - [apps/web-antd/src/router/guard.ts:1-133](file://apps/web-antd/src/router/guard.ts#L1-L133)
@@ -87,6 +92,7 @@ AUTH_CODES --> USERS
 - [apps/backend-mock/api/system/user/list.ts:1-120](file://apps/backend-mock/api/system/user/list.ts#L1-L120)
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
 - [apps/backend-mock/api/auth/refresh.post.ts:1-36](file://apps/backend-mock/api/auth/refresh.post.ts#L1-L36)
@@ -100,6 +106,7 @@ AUTH_CODES --> USERS
 - [apps/web-antd/src/router/guard.ts:1-133](file://apps/web-antd/src/router/guard.ts#L1-L133)
 
 ## 核心组件
+
 - 认证 API 客户端：封装登录、登出、刷新令牌、获取权限码四个端点，统一请求配置（含凭据传递）。
 - 认证状态管理：负责登录流程、设置/清除 accessToken、拉取用户信息与权限码、登出清理。
 - 路由守卫：在访问受保护路由前校验 accessToken 并按需生成动态路由。
@@ -109,6 +116,7 @@ AUTH_CODES --> USERS
 - 模拟用户数据：提供测试用用户集合与角色/部门等扩展属性。
 
 章节来源
+
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/web-antd/src/store/auth.ts:1-118](file://apps/web-antd/src/store/auth.ts#L1-L118)
 - [apps/web-antd/src/router/guard.ts:1-133](file://apps/web-antd/src/router/guard.ts#L1-L133)
@@ -118,6 +126,7 @@ AUTH_CODES --> USERS
 - [apps/backend-mock/api/system/user/list.ts:1-120](file://apps/backend-mock/api/system/user/list.ts#L1-L120)
 
 ## 架构总览
+
 下图展示了从前端发起认证请求到后端处理与返回的关键交互：
 
 ```mermaid
@@ -153,6 +162,7 @@ API-->>FE : "处理响应并更新状态"
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/core/auth.ts:21-51](file://apps/web-antd/src/api/core/auth.ts#L21-L51)
 - [apps/backend-mock/api/auth/login.post.ts:14-42](file://apps/backend-mock/api/auth/login.post.ts#L14-L42)
 - [apps/backend-mock/api/auth/logout.post.ts:8-17](file://apps/backend-mock/api/auth/logout.post.ts#L8-L17)
@@ -165,6 +175,7 @@ API-->>FE : "处理响应并更新状态"
 ## 详细组件分析
 
 ### 登录 /auth/login
+
 - 方法与路径
   - 方法：POST
   - 路径：/auth/login
@@ -183,6 +194,7 @@ API-->>FE : "处理响应并更新状态"
   - 返回包含 accessToken 的用户信息
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:14-42](file://apps/backend-mock/api/auth/login.post.ts#L14-L42)
 - [apps/backend-mock/utils/jwt-utils.ts:17-25](file://apps/backend-mock/utils/jwt-utils.ts#L17-L25)
 - [apps/backend-mock/utils/cookie-utils.ts:13-23](file://apps/backend-mock/utils/cookie-utils.ts#L13-L23)
@@ -190,6 +202,7 @@ API-->>FE : "处理响应并更新状态"
 - [apps/backend-mock/utils/response.ts:44-50](file://apps/backend-mock/utils/response.ts#L44-L50)
 
 ### 刷新令牌 /auth/refresh
+
 - 方法与路径
   - 方法：POST
   - 路径：/auth/refresh
@@ -206,12 +219,14 @@ API-->>FE : "处理响应并更新状态"
   - 更新刷新令牌 Cookie（保持有效期）
 
 章节来源
+
 - [apps/backend-mock/api/auth/refresh.post.ts:11-35](file://apps/backend-mock/api/auth/refresh.post.ts#L11-L35)
 - [apps/backend-mock/utils/jwt-utils.ts:58-75](file://apps/backend-mock/utils/jwt-utils.ts#L58-L75)
 - [apps/backend-mock/utils/cookie-utils.ts:25-28](file://apps/backend-mock/utils/cookie-utils.ts#L25-L28)
 - [apps/backend-mock/utils/response.ts:44-50](file://apps/backend-mock/utils/response.ts#L44-L50)
 
 ### 登出 /auth/logout
+
 - 方法与路径
   - 方法：POST
   - 路径：/auth/logout
@@ -226,11 +241,13 @@ API-->>FE : "处理响应并更新状态"
   - 返回成功
 
 章节来源
+
 - [apps/backend-mock/api/auth/logout.post.ts:8-17](file://apps/backend-mock/api/auth/logout.post.ts#L8-L17)
 - [apps/backend-mock/utils/cookie-utils.ts:5-11](file://apps/backend-mock/utils/cookie-utils.ts#L5-L11)
 - [apps/backend-mock/utils/response.ts:5-12](file://apps/backend-mock/utils/response.ts#L5-L12)
 
 ### 权限码 /auth/codes
+
 - 方法与路径
   - 方法：GET
   - 路径：/auth/codes
@@ -245,11 +262,13 @@ API-->>FE : "处理响应并更新状态"
   - 根据用户的角色 ID 过滤菜单，提取权限码并去重
 
 章节来源
+
 - [apps/backend-mock/api/auth/codes.ts:8-28](file://apps/backend-mock/api/auth/codes.ts#L8-L28)
 - [apps/backend-mock/utils/jwt-utils.ts:27-56](file://apps/backend-mock/utils/jwt-utils.ts#L27-L56)
 - [apps/backend-mock/utils/response.ts:52-55](file://apps/backend-mock/utils/response.ts#L52-L55)
 
 ### 前端对接与使用
+
 - 认证 API 客户端
   - 登录：loginApi(params)
   - 刷新：refreshTokenApi()
@@ -263,11 +282,13 @@ API-->>FE : "处理响应并更新状态"
   - 登录成功后根据用户角色生成可访问菜单与路由
 
 章节来源
+
 - [apps/web-antd/src/api/core/auth.ts:21-51](file://apps/web-antd/src/api/core/auth.ts#L21-L51)
 - [apps/web-antd/src/store/auth.ts:28-78](file://apps/web-antd/src/store/auth.ts#L28-L78)
 - [apps/web-antd/src/router/guard.ts:47-118](file://apps/web-antd/src/router/guard.ts#L47-L118)
 
 ### 数据模型与接口定义（TypeScript）
+
 - 登录参数
   - 接口名：AuthApi.LoginParams
   - 字段：username（字符串，必填）、password（字符串，必填）
@@ -282,10 +303,12 @@ API-->>FE : "处理响应并更新状态"
   - 字段：userId、username、realName、roles、roleIds、email、deptIds、status 等（详见后端定义）
 
 章节来源
+
 - [apps/web-antd/src/api/core/auth.ts:3-19](file://apps/web-antd/src/api/core/auth.ts#L3-L19)
 - [apps/backend-mock/api/system/user/list.ts:7-15](file://apps/backend-mock/api/system/user/list.ts#L7-L15)
 
 ### JWT 令牌使用、过期与刷新机制
+
 - 访问令牌（Access Token）
   - 用途：携带在 Authorization: Bearer 头中用于受保护资源访问
   - 生成：登录成功时签发，有效期 7 天
@@ -300,12 +323,14 @@ API-->>FE : "处理响应并更新状态"
   - 刷新令牌过期：需要重新登录获取新的访问/刷新令牌
 
 章节来源
+
 - [apps/backend-mock/utils/jwt-utils.ts:17-25](file://apps/backend-mock/utils/jwt-utils.ts#L17-L25)
 - [apps/backend-mock/utils/jwt-utils.ts:27-56](file://apps/backend-mock/utils/jwt-utils.ts#L27-L56)
 - [apps/backend-mock/utils/jwt-utils.ts:58-75](file://apps/backend-mock/utils/jwt-utils.ts#L58-L75)
 - [apps/backend-mock/utils/cookie-utils.ts:13-23](file://apps/backend-mock/utils/cookie-utils.ts#L13-L23)
 
 ### 实际调用示例
+
 - 用户名密码登录
   - 请求
     - 方法：POST
@@ -329,12 +354,14 @@ API-->>FE : "处理响应并更新状态"
     - data：权限码数组
 
 章节来源
+
 - [apps/web-antd/src/api/core/auth.ts:24-51](file://apps/web-antd/src/api/core/auth.ts#L24-L51)
 - [apps/backend-mock/api/auth/login.post.ts:14-42](file://apps/backend-mock/api/auth/login.post.ts#L14-L42)
 - [apps/backend-mock/api/auth/refresh.post.ts:11-35](file://apps/backend-mock/api/auth/refresh.post.ts#L11-L35)
 - [apps/backend-mock/api/auth/codes.ts:8-28](file://apps/backend-mock/api/auth/codes.ts#L8-L28)
 
 ### 安全考虑与最佳实践
+
 - 使用 HTTPS 与 secure Cookie
   - 刷新令牌 Cookie 必须标记 secure，防止在非 HTTPS 下泄露
 - httpOnly Cookie 阻止 XSS
@@ -351,6 +378,7 @@ API-->>FE : "处理响应并更新状态"
   - 在访问受保护路由前检查 accessToken，避免无谓的后端请求
 
 章节来源
+
 - [apps/backend-mock/utils/cookie-utils.ts:13-23](file://apps/backend-mock/utils/cookie-utils.ts#L13-L23)
 - [apps/web-antd/src/router/guard.ts:47-118](file://apps/web-antd/src/router/guard.ts#L47-L118)
 
@@ -378,6 +406,7 @@ CODES --> USERS
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
@@ -389,6 +418,7 @@ CODES --> USERS
 - [apps/backend-mock/api/system/user/list.ts:1-120](file://apps/backend-mock/api/system/user/list.ts#L1-L120)
 
 章节来源
+
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
@@ -400,6 +430,7 @@ CODES --> USERS
 - [apps/backend-mock/api/system/user/list.ts:1-120](file://apps/backend-mock/api/system/user/list.ts#L1-L120)
 
 ## 性能考量
+
 - 响应体大小
   - 登录返回包含用户信息与 accessToken，建议仅返回必要字段
 - 并发优化
@@ -412,6 +443,7 @@ CODES --> USERS
 [本节为通用指导，无需列出具体文件来源]
 
 ## 故障排查指南
+
 - 400 错误（登录）
   - 检查请求体是否包含 username 与 password
 - 403 错误（登录/刷新）
@@ -424,11 +456,13 @@ CODES --> USERS
   - 检查前端是否正确设置 accessToken，路由守卫是否生效
 
 章节来源
+
 - [apps/backend-mock/utils/response.ts:35-55](file://apps/backend-mock/utils/response.ts#L35-L55)
 - [apps/backend-mock/utils/cookie-utils.ts:5-28](file://apps/backend-mock/utils/cookie-utils.ts#L5-L28)
 - [apps/web-antd/src/router/guard.ts:47-118](file://apps/web-antd/src/router/guard.ts#L47-L118)
 
 ## 结论
+
 本文档梳理了 Vben Admin 认证子系统的后端 API 与前端对接方式，明确了各端点的请求/响应规范、JWT 使用与刷新机制、Cookie 安全策略以及前端路由守卫与状态管理的协作。遵循本文档与安全最佳实践，可在开发与生产环境中稳定地实现认证与权限控制。
 
 [本节为总结性内容，无需列出具体文件来源]
@@ -436,6 +470,7 @@ CODES --> USERS
 ## 附录
 
 ### 端点一览与状态码
+
 - POST /auth/login
   - 请求体：username、password
   - 成功：200，data 包含 accessToken 与用户信息
@@ -453,6 +488,7 @@ CODES --> USERS
   - 失败：401
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:14-42](file://apps/backend-mock/api/auth/login.post.ts#L14-L42)
 - [apps/backend-mock/api/auth/logout.post.ts:8-17](file://apps/backend-mock/api/auth/logout.post.ts#L8-L17)
 - [apps/backend-mock/api/auth/refresh.post.ts:11-35](file://apps/backend-mock/api/auth/refresh.post.ts#L11-L35)

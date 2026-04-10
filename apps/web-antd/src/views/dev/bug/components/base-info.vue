@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import UserAvatar from '#/components/UserAvatar/index.vue';
-import { type DevBugApi } from '#/api/dev';
+import type { DevBugApi } from '#/api/dev';
+
 import DictTag from '#/components/DictTag/index.vue';
+import UserAvatar from '#/components/UserAvatar/index.vue';
 /**
  * 基本信息组件
  * @property {Object} bugInfo - 缺陷信息对象
  */
+// eslint-disable-next-line unused-imports/no-unused-vars
 const props = defineProps({
   bugInfo: {
     type: Object as () => DevBugApi.DevBugFace,
@@ -28,19 +30,19 @@ const props = defineProps({
       {{ bugInfo.moduleTitle || '-' }}
     </a-descriptions-item>
     <a-descriptions-item label="缺陷状态">
-      <DictTag dictType="BUG_STATUS" :value="bugInfo.bugStatus" />
+      <DictTag dict-type="BUG_STATUS" :value="bugInfo.bugStatus" />
     </a-descriptions-item>
     <a-descriptions-item label="BUG级别">
-      <DictTag dictType="BUG_LEVEL" :value="bugInfo.bugLevel" />
+      <DictTag dict-type="BUG_LEVEL" :value="bugInfo.bugLevel" />
     </a-descriptions-item>
     <a-descriptions-item label="BUG环境">
-      <DictTag dictType="BUG_ENV" :value="bugInfo.bugEnv" />
+      <DictTag dict-type="BUG_ENV" :value="bugInfo.bugEnv" />
     </a-descriptions-item>
     <a-descriptions-item label="缺陷类型">
-      <DictTag dictType="BUG_TYPE" :value="bugInfo.bugType" />
+      <DictTag dict-type="BUG_TYPE" :value="bugInfo.bugType" />
     </a-descriptions-item>
     <a-descriptions-item label="缺陷来源">
-      <DictTag dictType="BUG_SOURCE" :value="bugInfo.bugSource" />
+      <DictTag dict-type="BUG_SOURCE" :value="bugInfo.bugSource" />
     </a-descriptions-item>
 
     <a-descriptions-item label="修复人">

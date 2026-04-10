@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { createBug, updateBug } from '#/api/dev';
+
 import { useVbenModal } from '@vben/common-ui';
+
 import { useVbenForm } from '#/adapter/form';
-import { useNextFormSchema } from './data';
-import { getLocalDictList } from '#/dicts';
+import { createBug, updateBug } from '#/api/dev';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
+import { getLocalDictList } from '#/dicts';
+
+import { useNextFormSchema } from './data';
 defineOptions({
   name: 'BugNextModal',
 });
@@ -26,7 +29,7 @@ const changeCurrent = (index: number) => {
   formApi.setFieldValue('bugStatus', stepsItems[index].value);
 };
 
-//#region
+// #region
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   schema: useNextFormSchema(),
@@ -40,7 +43,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = modalApi.getData();
+      const data = modalApi.getData();
       formData.value = data;
       if (formData.value.openModalSource === 'confirmBug') {
         modalApi.setState({ title: '缺陷确认' });
@@ -73,7 +76,7 @@ function onSubmit(values: Record<string, any>) {
     });
   emit('success');
 }
-//#endregion
+// #endregion
 
 function setChangeRichText(value: string) {
   formApi.setFieldValue('changeRichText', value);
@@ -97,12 +100,12 @@ function setChangeRichText(value: string) {
 
           <a-divider dashed>常用语(双击)</a-divider>
           <CommonPhrase
-            :textList="[
+            :text-list="[
               '已修复，已更新至测试环境',
               '测试验证完毕，已关闭',
               '非BUG，已关闭',
             ]"
-            @dblClick="setChangeRichText"
+            @dbl-click="setChangeRichText"
           />
         </div>
       </a-col>

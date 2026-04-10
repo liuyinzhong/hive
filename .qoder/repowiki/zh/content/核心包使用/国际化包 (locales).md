@@ -17,6 +17,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -29,7 +30,9 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件面向“国际化包（locales）”的使用者与维护者，系统性阐述其多语言支持架构与 i18n 集成方案。内容涵盖：
+
 - 语言包结构与翻译键值管理
 - 动态语言切换机制
 - 新语言添加流程（翻译文件创建、键命名规范、上下文相关翻译）
@@ -38,7 +41,9 @@
 - 本地化最佳实践（日期格式化、数字格式化、货币显示、文本方向处理）
 
 ## 项目结构
+
 国际化能力由两部分组成：
+
 - 核心包：提供 i18n 初始化、语言包加载与动态切换能力
 - 应用扩展层：在核心之上扩展第三方组件库（如 Ant Design Vue、Day.js）的本地化，并合并应用自身的语言包
 
@@ -62,6 +67,7 @@ AReadme --> AIndex
 ```
 
 图表来源
+
 - [packages/locales/src/index.ts:1-31](file://packages/locales/src/index.ts#L1-L31)
 - [packages/locales/src/i18n.ts:1-148](file://packages/locales/src/i18n.ts#L1-L148)
 - [packages/locales/src/typing.ts:1-26](file://packages/locales/src/typing.ts#L1-L26)
@@ -69,6 +75,7 @@ AReadme --> AIndex
 - [apps/web-antd/src/locales/README.md:1-4](file://apps/web-antd/src/locales/README.md#L1-L4)
 
 章节来源
+
 - [packages/locales/src/index.ts:1-31](file://packages/locales/src/index.ts#L1-L31)
 - [packages/locales/src/i18n.ts:1-148](file://packages/locales/src/i18n.ts#L1-L148)
 - [packages/locales/src/typing.ts:1-26](file://packages/locales/src/typing.ts#L1-L26)
@@ -76,6 +83,7 @@ AReadme --> AIndex
 - [apps/web-antd/src/locales/README.md:1-4](file://apps/web-antd/src/locales/README.md#L1-L4)
 
 ## 核心组件
+
 - i18n 实例与全局注入
   - 使用 vue-i18n 创建 i18n 实例，开启全局注入与组合式 API 模式，初始 locale 为空，消息体为空
   - 提供 $t、$te 快捷访问全局翻译函数
@@ -91,6 +99,7 @@ AReadme --> AIndex
   - LocaleSetupOptions 提供默认语言、加载函数、缺失键告警等配置项
 
 章节来源
+
 - [packages/locales/src/i18n.ts:16-21](file://packages/locales/src/i18n.ts#L16-L21)
 - [packages/locales/src/i18n.ts:23-30](file://packages/locales/src/i18n.ts#L23-L30)
 - [packages/locales/src/i18n.ts:37-47](file://packages/locales/src/i18n.ts#L37-L47)
@@ -101,6 +110,7 @@ AReadme --> AIndex
 - [packages/locales/src/typing.ts:1-26](file://packages/locales/src/typing.ts#L1-L26)
 
 ## 架构总览
+
 下图展示了从应用启动到语言切换的完整流程，以及核心包与应用扩展层的协作关系。
 
 ```mermaid
@@ -124,6 +134,7 @@ Locales->>I18n : "合并第三方与应用语言包"
 ```
 
 图表来源
+
 - [apps/web-antd/src/bootstrap.ts:44-45](file://apps/web-antd/src/bootstrap.ts#L44-L45)
 - [apps/web-antd/src/locales/index.ts:93-100](file://apps/web-antd/src/locales/index.ts#L93-L100)
 - [packages/locales/src/i18n.ts:102-117](file://packages/locales/src/i18n.ts#L102-L117)
@@ -132,6 +143,7 @@ Locales->>I18n : "合并第三方与应用语言包"
 ## 详细组件分析
 
 ### 核心包（@vben/locales）
+
 - 导出 API
   - $t、$te：全局翻译与存在性检查
   - i18n：i18n 实例
@@ -163,10 +175,12 @@ I18nModule --> Typings : "使用类型"
 ```
 
 图表来源
+
 - [packages/locales/src/i18n.ts:1-148](file://packages/locales/src/i18n.ts#L1-L148)
 - [packages/locales/src/typing.ts:1-26](file://packages/locales/src/typing.ts#L1-L26)
 
 章节来源
+
 - [packages/locales/src/index.ts:1-31](file://packages/locales/src/index.ts#L1-L31)
 - [packages/locales/src/i18n.ts:16-21](file://packages/locales/src/i18n.ts#L16-L21)
 - [packages/locales/src/i18n.ts:23-30](file://packages/locales/src/i18n.ts#L23-L30)
@@ -177,6 +191,7 @@ I18nModule --> Typings : "使用类型"
 - [packages/locales/src/typing.ts:1-26](file://packages/locales/src/typing.ts#L1-L26)
 
 ### 应用扩展层（apps/web-antd）
+
 - 扩展职责
   - 加载第三方组件库语言包（Ant Design Vue、Day.js）
   - 合并应用自身语言包（从 langs 目录按需加载）
@@ -203,6 +218,7 @@ SetLang --> End(["结束"])
 ```
 
 图表来源
+
 - [apps/web-antd/src/locales/index.ts:93-100](file://apps/web-antd/src/locales/index.ts#L93-L100)
 - [apps/web-antd/src/locales/index.ts:33-39](file://apps/web-antd/src/locales/index.ts#L33-L39)
 - [apps/web-antd/src/locales/index.ts:45-47](file://apps/web-antd/src/locales/index.ts#L45-L47)
@@ -211,11 +227,13 @@ SetLang --> End(["结束"])
 - [packages/locales/src/i18n.ts:123-139](file://packages/locales/src/i18n.ts#L123-L139)
 
 章节来源
+
 - [apps/web-antd/src/locales/index.ts:1-103](file://apps/web-antd/src/locales/index.ts#L1-L103)
 - [apps/web-antd/src/locales/README.md:1-4](file://apps/web-antd/src/locales/README.md#L1-L4)
 - [apps/web-antd/src/bootstrap.ts:44-45](file://apps/web-antd/src/bootstrap.ts#L44-L45)
 
 ### 语言包结构与键值管理
+
 - 结构规范
   - 目录：apps/web-antd/src/locales/langs/<语言>/<模块>.json
   - 模块命名：按功能域拆分（如 page、system、flow、demos 等），避免键冲突
@@ -225,12 +243,14 @@ SetLang --> End(["结束"])
   - 多语言对照：zh-CN 与 en-US 对应模块保持相同键结构
 
 章节来源
+
 - [apps/web-antd/src/locales/langs/zh-CN/page.json:1-23](file://apps/web-antd/src/locales/langs/zh-CN/page.json#L1-L23)
 - [apps/web-antd/src/locales/langs/en-US/page.json:1-19](file://apps/web-antd/src/locales/langs/en-US/page.json#L1-L19)
 - [apps/web-antd/src/locales/langs/zh-CN/system.json:1-107](file://apps/web-antd/src/locales/langs/zh-CN/system.json#L1-L107)
 - [apps/web-antd/src/locales/langs/en-US/system.json:1-107](file://apps/web-antd/src/locales/langs/en-US/system.json#L1-L107)
 
 ### 动态语言切换机制
+
 - 触发时机
   - 用户在偏好设置或语言选择器中切换语言
   - 应用启动时根据偏好设置加载默认语言
@@ -242,11 +262,13 @@ SetLang --> End(["结束"])
   - 并行加载第三方与应用语言包，减少等待时间
 
 章节来源
+
 - [packages/locales/src/i18n.ts:123-139](file://packages/locales/src/i18n.ts#L123-L139)
 - [apps/web-antd/src/locales/index.ts:33-39](file://apps/web-antd/src/locales/index.ts#L33-L39)
 - [apps/web-antd/src/locales/index.ts:45-47](file://apps/web-antd/src/locales/index.ts#L45-L47)
 
 ### 在组件中使用国际化 API
+
 - 全局翻译
   - 通过 $t 访问全局翻译函数，支持层级键与参数占位
   - 通过 $te 检查键是否存在
@@ -257,24 +279,28 @@ SetLang --> End(["结束"])
   - 在路由元信息中以国际化键作为标题来源
 
 章节来源
+
 - [packages/locales/src/index.ts:9-14](file://packages/locales/src/index.ts#L9-L14)
 - [apps/web-antd/src/bootstrap.ts:72-79](file://apps/web-antd/src/bootstrap.ts#L72-L79)
 
 ### 添加新语言支持
+
 - 步骤
-  1) 在 apps/web-antd/src/locales/langs 下新增语言目录（如 fr-FR）
-  2) 为每个现有模块复制一份对应 JSON 文件，并完成翻译
-  3) 在应用扩展层的 loadMessages 中增加对新语言的第三方语言包加载（如 Day.js）
-  4) 如需核心包层面支持，可在 SupportedLanguagesType 中扩展受支持语言集合
+  1. 在 apps/web-antd/src/locales/langs 下新增语言目录（如 fr-FR）
+  2. 为每个现有模块复制一份对应 JSON 文件，并完成翻译
+  3. 在应用扩展层的 loadMessages 中增加对新语言的第三方语言包加载（如 Day.js）
+  4. 如需核心包层面支持，可在 SupportedLanguagesType 中扩展受支持语言集合
 - 键命名与上下文
   - 坚持层级式命名，避免重复键
   - 对于同一语义在不同上下文（菜单、表单、弹窗）出现的翻译，建议使用不同键或在上层封装统一键空间
 
 章节来源
+
 - [packages/locales/src/typing.ts](file://packages/locales/src/typing.ts#L1)
 - [apps/web-antd/src/locales/index.ts:53-74](file://apps/web-antd/src/locales/index.ts#L53-L74)
 
 ### 语言包组织与加载策略
+
 - 组织结构
   - 语言/模块：按功能域拆分，便于维护与按需加载
   - 模块名即文件名，键空间清晰
@@ -284,12 +310,14 @@ SetLang --> End(["结束"])
   - 并行加载：第三方与应用语言包并行，缩短切换耗时
 
 章节来源
+
 - [packages/locales/src/i18n.ts:23-30](file://packages/locales/src/i18n.ts#L23-L30)
 - [packages/locales/src/i18n.ts:55-90](file://packages/locales/src/i18n.ts#L55-L90)
 - [apps/web-antd/src/locales/index.ts:22-27](file://apps/web-antd/src/locales/index.ts#L22-L27)
 - [apps/web-antd/src/locales/index.ts:33-39](file://apps/web-antd/src/locales/index.ts#L33-L39)
 
 ### 本地化最佳实践
+
 - 日期格式化
   - 使用 Day.js 的本地化模块，按语言切换 locale
   - 在应用扩展层中根据语言动态导入对应语言包
@@ -301,9 +329,11 @@ SetLang --> End(["结束"])
   - 在应用扩展层中根据语言动态调整布局与样式
 
 章节来源
+
 - [apps/web-antd/src/locales/index.ts:53-74](file://apps/web-antd/src/locales/index.ts#L53-L74)
 
 ## 依赖关系分析
+
 - 核心包依赖
   - vue-i18n：提供 i18n 实例与 API
   - @vben-core/composables：提供简单语言设置能力
@@ -324,14 +354,17 @@ App --> Pref["@vben/preferences"]
 ```
 
 图表来源
+
 - [packages/locales/package.json:22-27](file://packages/locales/package.json#L22-L27)
 - [apps/web-antd/src/locales/index.ts:16-18](file://apps/web-antd/src/locales/index.ts#L16-L18)
 
 章节来源
+
 - [packages/locales/package.json:1-29](file://packages/locales/package.json#L1-L29)
 - [apps/web-antd/src/locales/index.ts:1-103](file://apps/web-antd/src/locales/index.ts#L1-L103)
 
 ## 性能考量
+
 - 按需加载与懒加载
   - 仅在切换语言或进入页面时加载对应语言包，降低首屏体积
 - 并行加载
@@ -343,6 +376,7 @@ App --> Pref["@vben/preferences"]
   - 对高频使用的模块可考虑预加载策略
 
 ## 故障排查指南
+
 - 未找到翻译键
   - 开启 missingWarn 后，会在控制台输出缺失键告警，便于定位
 - 语言切换无效
@@ -353,14 +387,17 @@ App --> Pref["@vben/preferences"]
   - 检查语言码是否与第三方库支持的语言码一致
 
 章节来源
+
 - [packages/locales/src/i18n.ts:110-116](file://packages/locales/src/i18n.ts#L110-L116)
 - [apps/web-antd/src/locales/index.ts:33-39](file://apps/web-antd/src/locales/index.ts#L33-L39)
 - [apps/web-antd/src/locales/index.ts:45-47](file://apps/web-antd/src/locales/index.ts#L45-L47)
 
 ## 结论
+
 本国际化包通过“核心包 + 应用扩展层”的分层设计，实现了灵活、可扩展且高性能的多语言支持。核心包负责 i18n 初始化与语言包加载，应用扩展层负责第三方组件库与应用语言包的整合。遵循本文档的结构规范、加载策略与最佳实践，可快速添加新语言并保证良好的用户体验。
 
 ## 附录
+
 - 初始化入口
   - 应用入口会先初始化偏好设置，再调用引导逻辑完成国际化初始化
 - 使用示例（路径）
@@ -368,5 +405,6 @@ App --> Pref["@vben/preferences"]
   - 在路由元信息中以国际化键作为标题来源
 
 章节来源
+
 - [apps/web-antd/src/main.ts:16-25](file://apps/web-antd/src/main.ts#L16-L25)
 - [apps/web-antd/src/bootstrap.ts:72-79](file://apps/web-antd/src/bootstrap.ts#L72-L79)

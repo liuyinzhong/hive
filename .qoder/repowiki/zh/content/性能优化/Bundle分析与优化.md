@@ -18,6 +18,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -30,7 +31,9 @@
 10. [附录](#附录)
 
 ## 简介
+
 本指南聚焦于Vben Admin在多应用（web-antd、web-ele、web-naive、web-tdesign、web-antdv-next）场景下的Bundle分析与优化实践。内容涵盖：
+
 - 使用rollup-plugin-visualizer进行Bundle可视化分析与报告解读
 - 第三方依赖优化：外部化、按需引入、替代方案选择
 - 代码分割最佳实践：路由级、组件级与动态导入
@@ -39,8 +42,10 @@
 - 实战案例：从分析到优化再到效果验证的完整闭环
 
 ## 项目结构
+
 Vben Admin采用Monorepo与Turbo并行构建，各Web应用共享统一的Vite配置与插件体系。关键结构如下：
-- 应用层：apps/web-*/（多UI框架适配）
+
+- 应用层：apps/web-\*/（多UI框架适配）
 - 构建层：internal/vite-config（统一的Vite配置与插件工厂）
 - 工作流：turbo.json（任务编排与缓存）
 - 脚本：package.json（构建与分析脚本）
@@ -82,6 +87,7 @@ T1 --> P1
 ```
 
 图表来源
+
 - [internal/vite-config/src/config/application.ts:17-99](file://internal/vite-config/src/config/application.ts#L17-L99)
 - [internal/vite-config/src/config/common.ts:3-11](file://internal/vite-config/src/config/common.ts#L3-L11)
 - [internal/vite-config/src/plugins/index.ts:94-223](file://internal/vite-config/src/plugins/index.ts#L94-L223)
@@ -90,22 +96,26 @@ T1 --> P1
 - [package.json:27-66](file://package.json#L27-L66)
 
 章节来源
+
 - [package.json:27-66](file://package.json#L27-L66)
 - [turbo.json:15-32](file://turbo.json#L15-L32)
 
 ## 核心组件
+
 - 统一应用配置：defineApplicationConfig负责合并通用配置与应用配置，注入插件、服务器与构建参数。
 - 插件工厂：loadApplicationPlugins按条件加载插件，包括rollup-plugin-visualizer、压缩、PWA、ImportMap等。
 - 体积预算与警告阈值：通过chunkSizeWarningLimit与reportCompressedSize控制体积报告行为。
 - 外部化与CDN：ImportMap插件在构建阶段解析依赖并注入HTML，实现第三方库外部化。
 
 章节来源
+
 - [internal/vite-config/src/config/application.ts:17-99](file://internal/vite-config/src/config/application.ts#L17-L99)
 - [internal/vite-config/src/plugins/index.ts:94-223](file://internal/vite-config/src/plugins/index.ts#L94-L223)
 - [internal/vite-config/src/config/common.ts:3-11](file://internal/vite-config/src/config/common.ts#L3-L11)
 - [internal/vite-config/src/plugins/importmap.ts:44-153](file://internal/vite-config/src/plugins/importmap.ts#L44-L153)
 
 ## 架构总览
+
 下图展示了从应用入口到最终产物的关键流程，以及Bundle分析与优化的切入点。
 
 ```mermaid
@@ -127,12 +137,14 @@ Build-->>Dev : 展示Bundle体积与分块情况
 ```
 
 图表来源
+
 - [internal/vite-config/src/config/application.ts:17-99](file://internal/vite-config/src/config/application.ts#L17-L99)
 - [internal/vite-config/src/plugins/index.ts:79-87](file://internal/vite-config/src/plugins/index.ts#L79-L87)
 
 ## 详细组件分析
 
 ### 组件A：Bundle可视化分析（rollup-plugin-visualizer）
+
 - 启用方式：在应用插件加载时，当isBuild为true且visualizer为真值时，注入visualizer插件。
 - 配置要点：
   - 输出文件：默认生成至node_modules/.cache/visualizer/stats.html
@@ -156,12 +168,15 @@ Skip --> End
 ```
 
 图表来源
+
 - [internal/vite-config/src/plugins/index.ts:79-87](file://internal/vite-config/src/plugins/index.ts#L79-L87)
 
 章节来源
+
 - [internal/vite-config/src/plugins/index.ts:79-87](file://internal/vite-config/src/plugins/index.ts#L79-L87)
 
 ### 组件B：第三方依赖优化（外部化、按需引入、替代方案）
+
 - 外部化（CDN/ImportMap）：
   - 在构建阶段通过importmap插件解析指定依赖，标记为external，并在HTML中注入importmap。
   - 默认提供esm.sh/jspm.io/jsdelivr等CDN源，便于稳定引入。
@@ -185,14 +200,17 @@ Dist --> E(["结束"])
 ```
 
 图表来源
+
 - [internal/vite-config/src/plugins/importmap.ts:100-153](file://internal/vite-config/src/plugins/importmap.ts#L100-L153)
 - [internal/vite-config/src/options.ts:28-45](file://internal/vite-config/src/options.ts#L28-L45)
 
 章节来源
+
 - [internal/vite-config/src/plugins/importmap.ts:44-153](file://internal/vite-config/src/plugins/importmap.ts#L44-L153)
 - [internal/vite-config/src/options.ts:28-45](file://internal/vite-config/src/options.ts#L28-L45)
 
 ### 组件C：代码分割最佳实践
+
 - 路由级分割：
   - 将路由对应的页面组件使用动态导入，实现按需加载与分块。
   - 结合路由模块合并逻辑，确保动态导入的模块能被正确识别与打包。
@@ -215,12 +233,15 @@ Chunk-->>Router : 渲染页面
 ```
 
 图表来源
-- [packages/utils/src/helpers/__tests__/merge-route-modules.test.ts:10-47](file://packages/utils/src/helpers/__tests__/merge-route-modules.test.ts#L10-L47)
+
+- [packages/utils/src/helpers/**tests**/merge-route-modules.test.ts:10-47](file://packages/utils/src/helpers/__tests__/merge-route-modules.test.ts#L10-L47)
 
 章节来源
-- [packages/utils/src/helpers/__tests__/merge-route-modules.test.ts:10-47](file://packages/utils/src/helpers/__tests__/merge-route-modules.test.ts#L10-L47)
+
+- [packages/utils/src/helpers/**tests**/merge-route-modules.test.ts:10-47](file://packages/utils/src/helpers/__tests__/merge-route-modules.test.ts#L10-L47)
 
 ### 组件D：Tree Shaking优化
+
 - 无用代码删除：
   - 使用ESM模块格式，确保静态导入/导出结构清晰。
   - 避免sideEffects导致摇树失效；对纯工具库保持无副作用。
@@ -229,9 +250,11 @@ Chunk-->>Router : 渲染页面
   - 对样式文件与polyfill进行显式管理，避免被误判为副作用。
 
 章节来源
+
 - [internal/vite-config/src/plugins/license.ts:17-61](file://internal/vite-config/src/plugins/license.ts#L17-L61)
 
 ### 组件E：Bundle体积分析与预算
+
 - webpack-bundle-analyzer集成建议：
   - 在本地开发或CI中运行分析器，生成交互式报告，定位大体积模块。
   - 设置体积预算阈值，超过阈值触发失败，保障体积健康。
@@ -249,12 +272,15 @@ D --> |否| F["通过"]
 ```
 
 图表来源
+
 - [internal/vite-config/src/config/common.ts:3-11](file://internal/vite-config/src/config/common.ts#L3-L11)
 
 章节来源
+
 - [internal/vite-config/src/config/common.ts:3-11](file://internal/vite-config/src/config/common.ts#L3-L11)
 
 ### 组件F：构建产物与元数据注入
+
 - 版权与元数据：
   - 构建完成后为入口分块注入版权信息与版本元数据，便于追踪与合规。
 - PWA与压缩：
@@ -279,14 +305,17 @@ MetadataPlugin ..> PWAPlugin : "补充元数据"
 ```
 
 图表来源
+
 - [internal/vite-config/src/plugins/license.ts:17-61](file://internal/vite-config/src/plugins/license.ts#L17-L61)
 - [internal/vite-config/src/plugins/inject-metadata.ts:70-86](file://internal/vite-config/src/plugins/inject-metadata.ts#L70-L86)
 
 章节来源
+
 - [internal/vite-config/src/plugins/license.ts:17-61](file://internal/vite-config/src/plugins/license.ts#L17-L61)
 - [internal/vite-config/src/plugins/inject-metadata.ts:70-86](file://internal/vite-config/src/plugins/inject-metadata.ts#L70-L86)
 
 ## 依赖关系分析
+
 - 插件依赖：
   - visualizer依赖rollup/rolldown生态，版本需与构建器匹配。
   - ImportMap插件依赖@jspm/generator与html-minifier-terser。
@@ -307,18 +336,21 @@ TURBO["turbo.json"] --> PKG["package.json"]
 ```
 
 图表来源
+
 - [pnpm-lock.yaml:9687-9711](file://pnpm-lock.yaml#L9687-L9711)
 - [internal/vite-config/src/plugins/index.ts:14-30](file://internal/vite-config/src/plugins/index.ts#L14-L30)
 - [turbo.json:15-32](file://turbo.json#L15-L32)
 - [package.json:27-66](file://package.json#L27-L66)
 
 章节来源
+
 - [pnpm-lock.yaml:9687-9711](file://pnpm-lock.yaml#L9687-L9711)
 - [internal/vite-config/src/plugins/index.ts:14-30](file://internal/vite-config/src/plugins/index.ts#L14-L30)
 - [turbo.json:15-32](file://turbo.json#L15-L32)
 - [package.json:27-66](file://package.json#L27-L66)
 
 ## 性能考量
+
 - 首屏优化：
   - 路由与组件动态导入，减少初始包体；关键资源内联或预加载。
 - 缓存与压缩：
@@ -329,6 +361,7 @@ TURBO["turbo.json"] --> PKG["package.json"]
   - 对稳定、体积大的依赖采用CDN外部化，显著降低包体。
 
 ## 故障排查指南
+
 - 可视化分析报告未生成：
   - 确认构建模式与visualizer开关；检查输出路径权限。
 - ImportMap安装失败：
@@ -339,14 +372,17 @@ TURBO["turbo.json"] --> PKG["package.json"]
   - 设置体积阈值与失败策略；对超限变更进行拦截与回滚。
 
 章节来源
+
 - [internal/vite-config/src/plugins/importmap.ts:138-144](file://internal/vite-config/src/plugins/importmap.ts#L138-L144)
 
 ## 结论
+
 通过统一的Vite配置与插件体系，Vben Admin在多应用场景下实现了可复用的Bundle分析与优化能力。结合可视化分析、外部化、代码分割与Tree Shaking，可在保证功能完整性的同时显著优化包体与性能。建议在CI中强制体积预算与分析报告，形成持续优化闭环。
 
 ## 附录
 
 ### 实战案例：从分析到优化再到效果验证
+
 - 步骤一：启用可视化分析
   - 在应用插件配置中开启visualizer，构建后打开stats.html，记录当前分块与体积。
 - 步骤二：识别大体积模块
@@ -358,6 +394,7 @@ TURBO["turbo.json"] --> PKG["package.json"]
   - 在CI中设置体积阈值，确保回归问题及时发现。
 
 章节来源
+
 - [internal/vite-config/src/plugins/index.ts:79-87](file://internal/vite-config/src/plugins/index.ts#L79-L87)
 - [internal/vite-config/src/plugins/importmap.ts:44-153](file://internal/vite-config/src/plugins/importmap.ts#L44-L153)
 - [internal/vite-config/src/config/common.ts:3-11](file://internal/vite-config/src/config/common.ts#L3-L11)

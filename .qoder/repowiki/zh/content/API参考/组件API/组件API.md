@@ -15,6 +15,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -27,9 +28,11 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件为 Vben Admin 可复用 UI 组件的全面 API 文档，覆盖属性、事件、插槽、方法、TypeScript 接口、默认值、可选配置、使用示例与最佳实践、样式定制与主题支持、响应式行为与无障碍特性、组件间组合与集成模式、性能特性与优化建议、生命周期钩子与事件处理等。目标是帮助开发者快速理解并正确使用各组件，同时提供面向生产的集成与优化指导。
 
 ## 项目结构
+
 - 通用 UI 组件集中于 effects/common-ui 包，导出入口统一在 components/index.ts。
 - 弹出类组件（如抽屉）位于 @core/ui-kit/popup-ui，提供跨 UI 框架的统一能力。
 - 各前端应用（web-antd、web-ele、web-tdesign 等）通过 adapter 层对底层组件库进行适配与占位符注入。
@@ -58,27 +61,32 @@ E --> G
 ```
 
 图表来源
+
 - [packages/effects/common-ui/src/components/index.ts:1-37](file://packages/effects/common-ui/src/components/index.ts#L1-L37)
 - [packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue:1-62](file://packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue#L1-L62)
 - [apps/web-ele/src/adapter/component/index.ts:121-173](file://apps/web-ele/src/adapter/component/index.ts#L121-L173)
 - [apps/web-tdesign/src/adapter/component/index.ts:66-127](file://apps/web-tdesign/src/adapter/component/index.ts#L66-L127)
 
 章节来源
+
 - [packages/effects/common-ui/src/components/index.ts:1-37](file://packages/effects/common-ui/src/components/index.ts#L1-L37)
 
 ## 核心组件
+
 - ApiComponent：将任意受控组件与远程数据源对接，自动拉取、转换、绑定选项，并支持懒加载、自动选择、参数合并与生命周期钩子。
 - CountTo：数值过渡动画组件，支持起止值、小数位、分隔符、延迟与缓动曲线。
 - EllipsisText：多行/单行文本省略与提示，支持点击展开、仅在截断时显示提示、提示样式定制。
 - Drawer：跨 UI 框架的抽屉容器，支持销毁策略、提交态、移动端适配、无障碍标签等。
 
 章节来源
+
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 - [packages/effects/common-ui/src/components/count-to/count-to.vue:1-124](file://packages/effects/common-ui/src/components/count-to/count-to.vue#L1-L124)
 - [packages/effects/common-ui/src/components/ellipsis-text/ellipsis-text.vue:1-233](file://packages/effects/common-ui/src/components/ellipsis-text/ellipsis-text.vue#L1-L233)
 - [packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue:1-62](file://packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue#L1-L62)
 
 ## 架构总览
+
 下图展示了通用组件与弹出组件的协作关系，以及应用层适配的作用。
 
 ```mermaid
@@ -99,6 +107,7 @@ Drawer-->>App : 用户交互反馈(提交/关闭)
 ```
 
 图表来源
+
 - [packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue:1-62](file://packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue#L1-L62)
 - [apps/web-ele/src/adapter/component/index.ts:121-173](file://apps/web-ele/src/adapter/component/index.ts#L121-L173)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:161-209](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L161-L209)
@@ -106,6 +115,7 @@ Drawer-->>App : 用户交互反馈(提交/关闭)
 ## 组件详细分析
 
 ### ApiComponent 组件
+
 - 功能概述
   - 将任意受控组件（如 Select/TreeSelect）与远程 API 对接，自动拉取并转换为组件所需的 options 结构。
   - 支持懒加载（基于可见事件）、立即加载、每次可见刷新、参数合并与防抖式并发控制。
@@ -146,14 +156,17 @@ EmitChange --> End
 ```
 
 图表来源
+
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:161-209](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L161-L209)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:239-270](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L239-L270)
 
 章节来源
+
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 - [docs/src/en/components/common-ui/vben-api-component.md:48-70](file://docs/src/en/components/common-ui/vben-api-component.md#L48-L70)
 
 属性定义（ApiComponent）
+
 - component: 被包裹的目标组件（必填）
 - api: 远程请求函数，返回数组或对象（可选）
 - params: 传递给 api 的额外参数（默认：空对象）
@@ -167,16 +180,19 @@ EmitChange --> End
 - immediate/alwaysLoad/options: 控制加载时机与回退选项（默认：见源码）
 
 事件与插槽
+
 - 事件：optionsChange([...])
 - 插槽：透传所有插槽；支持 loadingSlot
 
 暴露方法
+
 - getOptions(): 返回当前可用选项
 - getValue(): 返回当前绑定值
 - getComponentRef<T>(): 返回被包裹组件实例
 - updateParam(newParams): 合并并更新请求参数
 
 ### CountTo 组件
+
 - 功能概述
   - 数值过渡动画，支持起始值、结束值、小数位、分隔符、延迟、缓动曲线与开始/结束事件。
 - 属性与默认值
@@ -200,9 +216,11 @@ EmitChange --> End
   - 建议在不可见时禁用过渡以节省资源。
 
 章节来源
+
 - [packages/effects/common-ui/src/components/count-to/count-to.vue:1-124](file://packages/effects/common-ui/src/components/count-to/count-to.vue#L1-L124)
 
 ### EllipsisText 组件
+
 - 功能概述
   - 单行或多行文本省略，支持 Tooltip 提示、点击展开、仅在截断时显示提示、提示样式定制。
 - 属性与默认值
@@ -224,9 +242,11 @@ EmitChange --> End
   - 点击展开时提供视觉反馈；建议在可展开场景提供明确的语义提示。
 
 章节来源
+
 - [packages/effects/common-ui/src/components/ellipsis-text/ellipsis-text.vue:1-233](file://packages/effects/common-ui/src/components/ellipsis-text/ellipsis-text.vue#L1-L233)
 
 ### Drawer 抽屉组件
+
 - 功能概述
   - 跨 UI 框架的抽屉容器，支持销毁策略、提交态、移动端适配、无障碍标签与全局共享组件注册。
 - 关键属性与默认值
@@ -238,9 +258,11 @@ EmitChange --> End
   - 在抽屉内使用 ApiSelect/ApiTreeSelect 时，结合懒加载与参数合并，提升交互体验。
 
 章节来源
+
 - [packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue:1-62](file://packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue#L1-L62)
 
 ## 依赖关系分析
+
 - 导出聚合
   - @vben/common-ui 统一导出通用组件与 @vben-core/form-ui、@vben-core/popup-ui。
 - 应用适配
@@ -259,16 +281,19 @@ Drawer["@core drawer"] --> Shadcn
 ```
 
 图表来源
+
 - [packages/effects/common-ui/src/components/index.ts:1-37](file://packages/effects/common-ui/src/components/index.ts#L1-L37)
 - [apps/web-ele/src/adapter/component/index.ts:121-173](file://apps/web-ele/src/adapter/component/index.ts#L121-L173)
 - [apps/web-tdesign/src/adapter/component/index.ts:66-127](file://apps/web-tdesign/src/adapter/component/index.ts#L66-L127)
 
 章节来源
+
 - [packages/effects/common-ui/src/components/index.ts:1-37](file://packages/effects/common-ui/src/components/index.ts#L1-L37)
 - [apps/web-ele/src/adapter/component/index.ts:121-173](file://apps/web-ele/src/adapter/component/index.ts#L121-L173)
 - [apps/web-tdesign/src/adapter/component/index.ts:66-127](file://apps/web-tdesign/src/adapter/component/index.ts#L66-L127)
 
 ## 性能考量
+
 - 请求去抖与并发控制
   - ApiComponent 内部对并发请求进行标记与重试，避免丢失请求且减少重复网络开销。
 - 渲染优化
@@ -281,6 +306,7 @@ Drawer["@core drawer"] --> Shadcn
   - Drawer 与 EllipsisText 均具备移动端适配与尺寸监听，减少布局抖动。
 
 ## 故障排查指南
+
 - ApiComponent 无数据或加载异常
   - 检查 api 返回结构是否符合预期；确认 resultField 是否正确；查看 beforeFetch/afterFetch 是否修改了参数或结果。
   - 若出现并发请求丢失，确认 hasPendingRequest 逻辑是否被触发。
@@ -292,16 +318,19 @@ Drawer["@core drawer"] --> Shadcn
   - 检查 tooltipWhenEllipsis 与 ellipsisThreshold；确认 ResizeObserver 可用且元素已挂载。
 
 章节来源
+
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:161-209](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L161-L209)
 - [packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue:1-62](file://packages/@core/ui-kit/popup-ui/src/drawer/drawer.vue#L1-L62)
 - [packages/effects/common-ui/src/components/ellipsis-text/ellipsis-text.vue:134-161](file://packages/effects/common-ui/src/components/ellipsis-text/ellipsis-text.vue#L134-L161)
 
 ## 结论
+
 Vben Admin 的通用 UI 组件围绕“数据-视图-交互”三段式设计，通过 ApiComponent 实现组件与数据源的解耦，配合 Drawer 等弹出组件构建完整的业务流程。借助 adapter 层与跨 UI 框架的共享组件，项目在多框架环境下实现了高度一致的开发体验与可维护性。遵循本文的属性与最佳实践，可在保证性能与可访问性的前提下，高效完成复杂业务界面的搭建。
 
 ## 附录
 
 ### 组件间组合与集成模式
+
 - 表格与抽屉联动
   - 在用户列表页中，抽屉连接独立的编辑/详情组件，通过 setData/open 与 gridApi.query 完成数据同步与刷新。
 - 模态与抽屉混用
@@ -310,6 +339,7 @@ Vben Admin 的通用 UI 组件围绕“数据-视图-交互”三段式设计，
   - 通过 adapter/component/index.ts 的 withDefaultPlaceholder 为输入/选择类组件注入默认占位符，统一用户体验。
 
 章节来源
+
 - [apps/web-antd/src/views/system/user/list.vue:38-103](file://apps/web-antd/src/views/system/user/list.vue#L38-L103)
 - [apps/web-antd/src/views/dev/bug/list.vue:124-151](file://apps/web-antd/src/views/dev/bug/list.vue#L124-L151)
 - [apps/web-ele/src/adapter/component/index.ts:121-173](file://apps/web-ele/src/adapter/component/index.ts#L121-L173)

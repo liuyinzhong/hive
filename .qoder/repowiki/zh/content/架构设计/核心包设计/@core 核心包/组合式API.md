@@ -17,6 +17,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -29,14 +30,18 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件系统性梳理并阐述组合式API在本项目中的设计与实践，重点覆盖以下方面：
+
 - 设计思想：以“可复用逻辑”为核心，将状态、副作用、行为抽取为可组合的函数，提升代码内聚性与可测试性。
 - 应用范围：涵盖布局样式、交互控制、国际化、分页、标签页、滚动锁定、拖拽排序、水印等高频场景。
 - 使用方式：统一导出入口，按需引入；参数配置清晰，返回值结构稳定；错误处理明确。
 - 性能与内存：利用响应式与防抖、懒加载、生命周期钩子与资源释放，降低开销并避免泄漏。
 
 ## 项目结构
+
 组合式API主要分布在两个包中：
+
 - @core/composables：通用型组合式函数，如布局样式、命名空间、滚动锁定、移动端检测、优先级值透传、国际化等。
 - effects/hooks：业务增强型组合式函数，如分页、刷新、标签页、水印等。
 
@@ -68,6 +73,7 @@ H --> G
 ```
 
 图表来源
+
 - [packages/@core/composables/src/index.ts:1-14](file://packages/@core/composables/src/index.ts#L1-L14)
 - [packages/@core/composables/src/use-layout-style.ts:1-88](file://packages/@core/composables/src/use-layout-style.ts#L1-L88)
 - [packages/@core/composables/src/use-namespace.ts:1-107](file://packages/@core/composables/src/use-namespace.ts#L1-L107)
@@ -82,9 +88,11 @@ H --> G
 - [packages/effects/hooks/src/use-watermark.ts:1-85](file://packages/effects/hooks/src/use-watermark.ts#L1-L85)
 
 章节来源
+
 - [packages/@core/composables/src/index.ts:1-14](file://packages/@core/composables/src/index.ts#L1-L14)
 
 ## 核心组件
+
 - 布局样式与尺寸：useLayoutContentStyle/useLayoutHeaderStyle/useLayoutFooterStyle，基于CSS变量与ResizeObserver，提供内容区可见尺寸、头部/底部高度读写能力。
 - 命名空间与样式变量：useNamespace，生成BEM风格类名与CSS变量，便于主题化与样式隔离。
 - 滚动锁定：useScrollLock，结合滚动条宽度与布局固定节点，安全地锁定页面滚动并处理过渡动画。
@@ -97,6 +105,7 @@ H --> G
 - 水印：useWatermark，延迟初始化水印实例，支持更新选项与销毁，仅在首次挂载时注册卸载钩子。
 
 章节来源
+
 - [packages/@core/composables/src/use-layout-style.ts:1-88](file://packages/@core/composables/src/use-layout-style.ts#L1-L88)
 - [packages/@core/composables/src/use-namespace.ts:1-107](file://packages/@core/composables/src/use-namespace.ts#L1-L107)
 - [packages/@core/composables/src/use-scroll-lock.ts:1-55](file://packages/@core/composables/src/use-scroll-lock.ts#L1-L55)
@@ -110,7 +119,9 @@ H --> G
 - [packages/effects/hooks/src/use-watermark.ts:1-85](file://packages/effects/hooks/src/use-watermark.ts#L1-L85)
 
 ## 架构总览
+
 组合式API遵循“单一职责 + 聚合导出”的设计原则：
+
 - 单个功能封装为独立组合式函数，内部使用Vue响应式与VueUse工具，确保生命周期与副作用可控。
 - 通过入口文件统一导出，便于按需引入与Tree Shaking。
 - 业务增强型组合式函数依赖状态存储与路由，形成“UI层 -> 组合式API -> 状态/路由”的清晰链路。
@@ -132,6 +143,7 @@ EFFECTS --> WATERMARK["use-watermark"]
 ```
 
 图表来源
+
 - [packages/@core/composables/src/index.ts:1-14](file://packages/@core/composables/src/index.ts#L1-L14)
 - [packages/@core/composables/src/use-layout-style.ts:1-88](file://packages/@core/composables/src/use-layout-style.ts#L1-L88)
 - [packages/@core/composables/src/use-namespace.ts:1-107](file://packages/@core/composables/src/use-namespace.ts#L1-L107)
@@ -147,6 +159,7 @@ EFFECTS --> WATERMARK["use-watermark"]
 ## 详细组件分析
 
 ### useLayoutContentStyle/useLayoutHeaderStyle/useLayoutFooterStyle
+
 - 设计要点
   - 基于CSS变量维护布局关键尺寸，减少DOM查询与重排。
   - 使用ResizeObserver监听内容区尺寸变化，配合防抖降低频繁计算。
@@ -170,12 +183,15 @@ Unmount --> |否| Observe
 ```
 
 图表来源
+
 - [packages/@core/composables/src/use-layout-style.ts:1-88](file://packages/@core/composables/src/use-layout-style.ts#L1-L88)
 
 章节来源
+
 - [packages/@core/composables/src/use-layout-style.ts:1-88](file://packages/@core/composables/src/use-layout-style.ts#L1-L88)
 
 ### useNamespace
+
 - 设计要点
   - 生成BEM风格类名，支持块、元素、修饰符组合。
   - 提供CSS变量生成器，便于主题化与样式隔离。
@@ -203,12 +219,15 @@ class UseNamespace {
 ```
 
 图表来源
+
 - [packages/@core/composables/src/use-namespace.ts:1-107](file://packages/@core/composables/src/use-namespace.ts#L1-L107)
 
 章节来源
+
 - [packages/@core/composables/src/use-namespace.ts:1-107](file://packages/@core/composables/src/use-namespace.ts#L1-L107)
 
 ### useScrollLock
+
 - 设计要点
   - 锁定body滚动，同时补偿滚动条宽度，避免页面跳变。
   - 对特定固定节点应用paddingRight补偿，保证布局一致性。
@@ -232,12 +251,15 @@ Hook->>DOM : "移除节点补偿与过渡恢复"
 ```
 
 图表来源
+
 - [packages/@core/composables/src/use-scroll-lock.ts:1-55](file://packages/@core/composables/src/use-scroll-lock.ts#L1-L55)
 
 章节来源
+
 - [packages/@core/composables/src/use-scroll-lock.ts:1-55](file://packages/@core/composables/src/use-scroll-lock.ts#L1-L55)
 
 ### useIsMobile
+
 - 设计要点
   - 基于断点判断是否移动端视图，返回布尔值。
 - 参数与返回
@@ -246,9 +268,11 @@ Hook->>DOM : "移除节点补偿与过渡恢复"
   - 在布局切换、交互策略调整时使用该值。
 
 章节来源
+
 - [packages/@core/composables/src/use-is-mobile.ts:1-8](file://packages/@core/composables/src/use-is-mobile.ts#L1-L8)
 
 ### usePriorityValue/usePriorityValues/useForwardPriorityValues
+
 - 设计要点
   - 解析优先级：插槽 > attrs > props > state，确保灵活性与可覆盖性。
   - 支持批量解析与一次性解包透传，便于组件属性转发。
@@ -266,12 +290,15 @@ C --> |否| E["返回 undefined 或默认值"]
 ```
 
 图表来源
+
 - [packages/@core/composables/src/use-priority-value.ts:1-95](file://packages/@core/composables/src/use-priority-value.ts#L1-L95)
 
 章节来源
+
 - [packages/@core/composables/src/use-priority-value.ts:1-95](file://packages/@core/composables/src/use-priority-value.ts#L1-L95)
 
 ### useSimpleLocale
+
 - 设计要点
   - 共享语言状态与翻译函数，支持动态切换语言。
   - 基于共享组合式函数，确保全局一致的语言上下文。
@@ -281,9 +308,11 @@ C --> |否| E["返回 undefined 或默认值"]
   - 在多语言组件中统一使用$t进行文本渲染。
 
 章节来源
+
 - [packages/@core/composables/src/use-simple-locale/index.ts:1-28](file://packages/@core/composables/src/use-simple-locale/index.ts#L1-L28)
 
 ### useSortable
+
 - 设计要点
   - 动态导入SortableJS，按需加载，减少首屏体积。
   - 默认配置包含动画、延时与触摸设备适配，可扩展自定义选项。
@@ -305,12 +334,15 @@ Hook-->>Comp : "返回初始化方法"
 ```
 
 图表来源
+
 - [packages/@core/composables/src/use-sortable.ts:1-30](file://packages/@core/composables/src/use-sortable.ts#L1-L30)
 
 章节来源
+
 - [packages/@core/composables/src/use-sortable.ts:1-30](file://packages/@core/composables/src/use-sortable.ts#L1-L30)
 
 ### usePagination
+
 - 设计要点
   - 对列表进行分页切片，计算总页数与当前页。
   - 在总数变化时自动回到第一页，避免无效页码。
@@ -331,12 +363,15 @@ Reset --> End
 ```
 
 图表来源
+
 - [packages/effects/hooks/src/use-pagination.ts:1-73](file://packages/effects/hooks/src/use-pagination.ts#L1-L73)
 
 章节来源
+
 - [packages/effects/hooks/src/use-pagination.ts:1-73](file://packages/effects/hooks/src/use-pagination.ts#L1-L73)
 
 ### useRefresh/useTabs
+
 - 设计要点
   - useRefresh：通过标签栏存储刷新当前路由。
   - useTabs：封装标签页的关闭、固定/取消固定、刷新、新窗口打开、标题设置与禁用状态判断。
@@ -361,14 +396,17 @@ Tabs-->>Page : "返回可用方法"
 ```
 
 图表来源
+
 - [packages/effects/hooks/src/use-refresh.ts:1-17](file://packages/effects/hooks/src/use-refresh.ts#L1-L17)
 - [packages/effects/hooks/src/use-tabs.ts:1-134](file://packages/effects/hooks/src/use-tabs.ts#L1-L134)
 
 章节来源
+
 - [packages/effects/hooks/src/use-refresh.ts:1-17](file://packages/effects/hooks/src/use-refresh.ts#L1-L17)
 - [packages/effects/hooks/src/use-tabs.ts:1-134](file://packages/effects/hooks/src/use-tabs.ts#L1-L134)
 
 ### useWatermark
+
 - 设计要点
   - 延迟初始化水印实例，支持更新选项与销毁。
   - 仅在首次挂载时注册卸载钩子，避免重复注册导致的资源提前释放。
@@ -389,12 +427,15 @@ WM->>WInst : "销毁实例"
 ```
 
 图表来源
+
 - [packages/effects/hooks/src/use-watermark.ts:1-85](file://packages/effects/hooks/src/use-watermark.ts#L1-L85)
 
 章节来源
+
 - [packages/effects/hooks/src/use-watermark.ts:1-85](file://packages/effects/hooks/src/use-watermark.ts#L1-L85)
 
 ## 依赖分析
+
 - 内部依赖
   - @core/composables内部依赖Vue响应式与@vueuse/core提供的工具函数，确保生命周期与副作用可控。
   - effects/hooks依赖vue-router与状态存储，形成“UI层 -> 组合式API -> 状态/路由”的调用链。
@@ -417,6 +458,7 @@ EFFECTS --> WATERMARK["watermark-js-plus"]
 ```
 
 图表来源
+
 - [packages/@core/composables/src/index.ts:1-14](file://packages/@core/composables/src/index.ts#L1-L14)
 - [packages/@core/composables/src/use-sortable.ts:1-30](file://packages/@core/composables/src/use-sortable.ts#L1-L30)
 - [packages/effects/hooks/src/use-watermark.ts:1-85](file://packages/effects/hooks/src/use-watermark.ts#L1-L85)
@@ -424,6 +466,7 @@ EFFECTS --> WATERMARK["watermark-js-plus"]
 - [packages/effects/hooks/src/use-tabs.ts:1-134](file://packages/effects/hooks/src/use-tabs.ts#L1-L134)
 
 ## 性能考虑
+
 - 懒加载与按需导入
   - useSortable与useWatermark均采用动态导入，减少首屏体积与初次渲染压力。
 - 防抖与节流
@@ -434,6 +477,7 @@ EFFECTS --> WATERMARK["watermark-js-plus"]
   - 通过computed与ref组合，仅在依赖变化时更新；批量透传使用一次性解包，避免多次解包开销。
 
 ## 故障排查指南
+
 - 分页异常
   - 现象：页码越界或页大小小于1报错。
   - 排查：检查传入的页码与页大小是否合法；确认总数变化后是否自动回到第一页。
@@ -461,6 +505,7 @@ EFFECTS --> WATERMARK["watermark-js-plus"]
     - [packages/effects/hooks/src/use-tabs.ts:88-115](file://packages/effects/hooks/src/use-tabs.ts#L88-L115)
 
 章节来源
+
 - [packages/effects/hooks/src/use-pagination.ts:1-73](file://packages/effects/hooks/src/use-pagination.ts#L1-L73)
 - [packages/@core/composables/src/use-scroll-lock.ts:1-55](file://packages/@core/composables/src/use-scroll-lock.ts#L1-L55)
 - [packages/@core/composables/src/use-sortable.ts:1-30](file://packages/@core/composables/src/use-sortable.ts#L1-L30)
@@ -468,9 +513,11 @@ EFFECTS --> WATERMARK["watermark-js-plus"]
 - [packages/effects/hooks/src/use-tabs.ts:88-115](file://packages/effects/hooks/src/use-tabs.ts#L88-L115)
 
 ## 结论
+
 本项目的组合式API以“可复用逻辑”为中心，围绕布局、交互、国际化、分页、标签页、滚动锁定、拖拽排序与水印等场景构建了完善的工具集。通过统一导出、清晰的参数与返回值结构、完善的生命周期管理与错误处理，既提升了开发效率，也保障了运行时性能与稳定性。建议在实际项目中遵循“单一职责、按需引入、生命周期可控”的原则，结合本文档的使用示例与最佳实践，快速落地高质量的组合式API。
 
 ## 附录
+
 - 常用组合式函数速览
   - 布局与样式：useLayoutContentStyle、useLayoutHeaderStyle、useLayoutFooterStyle、useNamespace、useScrollLock
   - 交互与行为：useIsMobile、usePriorityValue、useSimpleLocale、useSortable

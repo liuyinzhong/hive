@@ -33,6 +33,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -45,7 +46,9 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件为 Vben Admin 的 API 参考文档，覆盖后端 Mock API、前端请求客户端与拦截器、以及通用 UI 组件 API。内容包括：
+
 - HTTP API：鉴权、菜单、用户、系统与开发相关接口
 - 组件 API：ApiComponent（远程选项加载与表单联动）
 - 工具函数 API：请求客户端、拦截器、JWT/Cookie 工具与响应封装
@@ -56,7 +59,9 @@
 - 实际使用示例与集成指南
 
 ## 项目结构
+
 Vben Admin 的 API 分布在多个应用与包中：
+
 - 后端 Mock API：位于 apps/backend-mock/api 下，按功能域划分（auth、dev、system、menu 等），采用 Nitro H3 路由风格
 - 前端请求层：apps/web-antd/src/api 下定义业务 API；packages/effects/request 提供统一请求客户端与拦截器
 - 通用 UI 组件：packages/effects/common-ui 提供 ApiComponent，支持将任意组件与远程数据源对接
@@ -83,6 +88,7 @@ FE_REQ --> BE_MENU
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [packages/effects/request/src/request-client/request-client.ts:1-165](file://packages/effects/request/src/request-client/request-client.ts#L1-L165)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
@@ -92,12 +98,14 @@ FE_REQ --> BE_MENU
 - [apps/backend-mock/api/menu/menuJSON.ts](file://apps/backend-mock/api/menu/menuJSON.ts)
 
 章节来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [packages/effects/request/src/request-client/request-client.ts:1-165](file://packages/effects/request/src/request-client/request-client.ts#L1-L165)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 
 ## 核心组件
+
 本节概述前端请求客户端与拦截器、通用 UI 组件，以及它们如何协同工作。
 
 - 请求客户端 RequestClient
@@ -114,11 +122,13 @@ FE_REQ --> BE_MENU
   - 支持 beforeFetch/afterFetch 钩子、visibleEvent 懒加载、autoSelect 自动选择策略
 
 章节来源
+
 - [packages/effects/request/src/request-client/request-client.ts:1-165](file://packages/effects/request/src/request-client/request-client.ts#L1-L165)
 - [packages/effects/request/src/request-client/preset-interceptors.ts:1-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L166)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 
 ## 架构总览
+
 下图展示从前端业务 API 到后端 Mock API 的调用链路，以及拦截器对认证与错误的处理。
 
 ```mermaid
@@ -146,6 +156,7 @@ API-->>C : 返回业务结果
 ```
 
 图表来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [packages/effects/request/src/request-client/preset-interceptors.ts:1-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L166)
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
@@ -198,6 +209,7 @@ API-->>C : 返回业务结果
     - 返回用户所有菜单路由
 
 章节来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
 - [apps/backend-mock/api/auth/refresh.post.ts:1-36](file://apps/backend-mock/api/auth/refresh.post.ts#L1-L36)
@@ -215,6 +227,7 @@ API-->>C : 返回业务结果
 - [apps/web-antd/src/api/core/menu.ts:1-11](file://apps/web-antd/src/api/core/menu.ts#L1-L11)
 
 ### 组件 API 参考：ApiComponent
+
 - 作用
   - 将任意组件与远程 API 对接，自动拉取选项、处理 loading、支持 v-model 绑定
 - 主要属性（Props）
@@ -241,10 +254,12 @@ API-->>C : 返回业务结果
   - getValue()：返回当前绑定值
 
 章节来源
+
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 - [docs/src/components/common-ui/vben-api-component.md:130-154](file://docs/src/components/common-ui/vben-api-component.md#L130-L154)
 
 ### 工具函数 API 参考
+
 - 请求客户端 RequestClient
   - 方法：get/post/put/delete/request
   - 属性：addRequestInterceptor/addResponseInterceptor、upload/download、postSSE/requestSSE
@@ -255,10 +270,12 @@ API-->>C : 返回业务结果
   - errorMessageResponseInterceptor(makeErrorMessage?)
 
 章节来源
+
 - [packages/effects/request/src/request-client/request-client.ts:1-165](file://packages/effects/request/src/request-client/request-client.ts#L1-L165)
 - [packages/effects/request/src/request-client/preset-interceptors.ts:1-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L166)
 
 ### 类型定义与接口说明
+
 - 鉴权 API 类型
   - LoginParams：username/password
   - LoginResult：accessToken
@@ -272,19 +289,23 @@ API-->>C : 返回业务结果
   - exposed 方法类型：getComponentRef/getOptions/getValue/updateParam
 
 章节来源
+
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [apps/web-antd/src/api/core/user.ts:1-11](file://apps/web-antd/src/api/core/user.ts#L1-L11)
 - [apps/web-antd/src/api/core/menu.ts:1-11](file://apps/web-antd/src/api/core/menu.ts#L1-L11)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:14-73](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L14-L73)
 
 ### 版本历史与变更记录
+
 - ApiComponent 新增 autoSelect 策略（first/last/one/函数/false），用于自动选择首个/末个/唯一选项或自定义选择逻辑
 - 文档补充了 props 与 exposed 方法的详细说明与版本要求
 
 章节来源
+
 - [docs/src/components/common-ui/vben-api-component.md:130-154](file://docs/src/components/common-ui/vben-api-component.md#L130-L154)
 
 ### 使用限制与最佳实践
+
 - 鉴权
   - 所有受保护端点需携带有效的访问令牌
   - 刷新令牌机制仅在启用时生效，避免重复刷新导致的风暴
@@ -297,11 +318,13 @@ API-->>C : 返回业务结果
   - autoSelect 仅在首次加载且 modelValue 未设置时生效
 
 章节来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [packages/effects/request/src/request-client/preset-interceptors.ts:1-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L166)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 
 ### 错误码与异常处理
+
 - HTTP 状态码映射
   - 400：请求参数错误
   - 401：未授权/令牌无效
@@ -315,11 +338,13 @@ API-->>C : 返回业务结果
   - errorMessageResponseInterceptor：根据状态码与网络错误生成本地化提示
 
 章节来源
+
 - [packages/effects/request/src/request-client/preset-interceptors.ts:112-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L112-L166)
 
 ### API 调用流程与序列图
 
 #### 鉴权流程（登录/刷新/登出）
+
 ```mermaid
 sequenceDiagram
 participant U as "用户"
@@ -341,6 +366,7 @@ API-->>FE : 返回空字符串
 ```
 
 图表来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/logout.post.ts:1-18](file://apps/backend-mock/api/auth/logout.post.ts#L1-L18)
 - [apps/backend-mock/api/auth/refresh.post.ts:1-36](file://apps/backend-mock/api/auth/refresh.post.ts#L1-L36)
@@ -348,6 +374,7 @@ API-->>FE : 返回空字符串
 - [apps/backend-mock/utils/cookie-utils.ts](file://apps/backend-mock/utils/cookie-utils.ts)
 
 #### 请求拦截器流程（认证与错误）
+
 ```mermaid
 flowchart TD
 Start(["请求发起"]) --> AddHeaders["注入Authorization/语言等"]
@@ -364,9 +391,11 @@ ThrowErr --> Done
 ```
 
 图表来源
+
 - [packages/effects/request/src/request-client/preset-interceptors.ts:9-45](file://packages/effects/request/src/request-client/preset-interceptors.ts#L9-L45)
 
 ### 性能特征与使用建议
+
 - 请求客户端
   - 默认超时 10 秒，可根据环境调整
   - 支持多种 paramsSerializer（brackets/comma/indices/repeat），按需选择以适配后端
@@ -378,11 +407,13 @@ ThrowErr --> Done
   - 使用 numberToString 可避免数值/字符串混用问题
 
 章节来源
+
 - [packages/effects/request/src/request-client/request-client.ts:15-37](file://packages/effects/request/src/request-client/request-client.ts#L15-L37)
 - [packages/effects/request/src/request-client/preset-interceptors.ts:47-110](file://packages/effects/request/src/request-client/preset-interceptors.ts#L47-L110)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 
 ### 测试与验证方法
+
 - 单元测试
   - 使用 Vitest 编写请求拦截器与工具函数的单元测试
   - 对鉴权 API 的 401/403 场景进行断言
@@ -393,10 +424,12 @@ ThrowErr --> Done
   - 使用 apps/backend-mock/utils/mock-data.ts 与各模块列表数据进行集成测试
 
 章节来源
-- [playground/__tests__/e2e/auth-login.spec.ts](file://playground/__tests__/e2e/auth-login.spec.ts)
+
+- [playground/**tests**/e2e/auth-login.spec.ts](file://playground/__tests__/e2e/auth-login.spec.ts)
 - [apps/backend-mock/utils/response.ts](file://apps/backend-mock/utils/response.ts)
 
 ### 实际使用示例与集成指南
+
 - 集成请求客户端
   - 在前端应用中创建 RequestClient 实例，注册拦截器，注入 Authorization 头
   - 通过 baseRequestClient 与 requestClient 区分是否需要自动解析响应体
@@ -409,11 +442,13 @@ ThrowErr --> Done
   - 通过 beforeFetch/afterFetch 做参数与结果处理
 
 章节来源
+
 - [apps/web-antd/src/api/request.ts:1-124](file://apps/web-antd/src/api/request.ts#L1-L124)
 - [apps/web-antd/src/api/core/auth.ts:1-52](file://apps/web-antd/src/api/core/auth.ts#L1-L52)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:1-300](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L1-L300)
 
 ## 依赖关系分析
+
 - 前端业务 API 依赖请求客户端与拦截器
 - 请求客户端依赖拦截器管理器、上传/下载与 SSE 模块
 - 鉴权 API 依赖 JWT 与 Cookie 工具
@@ -432,6 +467,7 @@ INT --> ERR_INT["错误拦截器"]
 ```
 
 图表来源
+
 - [apps/backend-mock/api/auth/login.post.ts:1-43](file://apps/backend-mock/api/auth/login.post.ts#L1-L43)
 - [apps/backend-mock/api/auth/codes.ts:1-29](file://apps/backend-mock/api/auth/codes.ts#L1-L29)
 - [apps/backend-mock/utils/jwt-utils.ts](file://apps/backend-mock/utils/jwt-utils.ts)
@@ -440,12 +476,14 @@ INT --> ERR_INT["错误拦截器"]
 - [packages/effects/request/src/request-client/preset-interceptors.ts:1-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L166)
 
 ## 性能考量
+
 - 合理设置超时与重试策略，避免长时间阻塞
 - 使用 paramsSerializer 优化数组参数编码
 - 在高并发场景下启用 authenticateResponseInterceptor 的队列机制
 - 对长列表使用懒加载与分页，减少一次性渲染压力
 
 ## 故障排查指南
+
 - 401 未授权
   - 检查访问令牌是否过期或格式是否正确
   - 若启用刷新令牌，确认刷新流程是否成功
@@ -458,13 +496,16 @@ INT --> ERR_INT["错误拦截器"]
   - 检查 params 是否深度监听，immediate/alwaysLoad/visibleEvent 配置是否正确
 
 章节来源
+
 - [packages/effects/request/src/request-client/preset-interceptors.ts:112-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L112-L166)
 - [packages/effects/common-ui/src/components/api-component/api-component.vue:228-237](file://packages/effects/common-ui/src/components/api-component/api-component.vue#L228-L237)
 
 ## 结论
+
 本文档提供了 Vben Admin 的 API 参考，涵盖后端 Mock API、前端请求客户端与拦截器、以及通用 UI 组件的使用说明。通过统一的请求客户端与拦截器，结合鉴权与错误处理机制，能够快速构建稳定可靠的前端应用。建议在生产环境中替换为真实后端服务，并完善鉴权与安全策略。
 
 ## 附录
+
 - 常用工具函数
   - JWT 工具：生成/校验访问令牌与刷新令牌
   - Cookie 工具：读取/设置/清除刷新令牌
@@ -472,6 +513,7 @@ INT --> ERR_INT["错误拦截器"]
   - 数组扩展：去重等工具函数
 
 章节来源
+
 - [apps/backend-mock/utils/jwt-utils.ts](file://apps/backend-mock/utils/jwt-utils.ts)
 - [apps/backend-mock/utils/cookie-utils.ts](file://apps/backend-mock/utils/cookie-utils.ts)
 - [apps/backend-mock/utils/response.ts](file://apps/backend-mock/utils/response.ts)

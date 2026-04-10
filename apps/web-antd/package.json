@@ -28,6 +28,7 @@
   "dependencies": {
     "@faker-js/faker": "catalog:",
     "@tanstack/vue-query": "catalog:",
+    "@tiptap/extension-mention": "catalog:",
     "@vben-core/composables": "workspace:*",
     "@vben-core/menu-ui": "workspace:*",
     "@vben/access": "workspace:*",

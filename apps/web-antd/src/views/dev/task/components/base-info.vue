@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import UserAvatar from '#/components/UserAvatar/index.vue';
-import { type DevTaskApi } from '#/api/dev';
+import type { DevTaskApi } from '#/api/dev';
+
 import DictTag from '#/components/DictTag/index.vue';
+import UserAvatar from '#/components/UserAvatar/index.vue';
 /**
  * 基本信息组件
  * @property {Object} taskInfo - 任务信息对象
  */
+// eslint-disable-next-line unused-imports/no-unused-vars
 const props = defineProps({
   taskInfo: {
     type: Object as () => DevTaskApi.DevTaskFace,
@@ -28,10 +30,10 @@ const props = defineProps({
       {{ taskInfo.moduleTitle || '-' }}
     </a-descriptions-item>
     <a-descriptions-item label="任务状态">
-      <DictTag dictType="TASK_STATUS" :value="taskInfo.taskStatus" />
+      <DictTag dict-type="TASK_STATUS" :value="taskInfo.taskStatus" />
     </a-descriptions-item>
     <a-descriptions-item label="任务类型">
-      <DictTag dictType="TASK_TYPE" :value="taskInfo.taskType" />
+      <DictTag dict-type="TASK_TYPE" :value="taskInfo.taskType" />
     </a-descriptions-item>
     <a-descriptions-item label="执行人">
       <UserAvatar :avatar="taskInfo.avatar" :name="taskInfo.realName" />

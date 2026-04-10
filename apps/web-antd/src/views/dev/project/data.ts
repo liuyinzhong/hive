@@ -1,8 +1,9 @@
-import { type VxeTableGridOptions } from '@vben/plugins/vxe-table';
+import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
-import { type VbenFormSchema } from '#/adapter/form';
-import { type OnActionClickFn } from '#/adapter/vxe-table';
-import { type DevModuleApi } from '#/api/dev';
+import type { VbenFormSchema } from '#/adapter/form';
+import type { OnActionClickFn } from '#/adapter/vxe-table';
+import type { DevModuleApi } from '#/api/dev';
+
 import { upload_file } from '#/api/examples/upload';
 /** 新增项目表单配置 */
 export function useFormProjectSchema(): VbenFormSchema[] {

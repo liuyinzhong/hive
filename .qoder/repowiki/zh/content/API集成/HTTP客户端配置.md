@@ -16,6 +16,7 @@
 </cite>
 
 ## 目录
+
 1. [简介](#简介)
 2. [项目结构](#项目结构)
 3. [核心组件](#核心组件)
@@ -28,9 +29,11 @@
 10. [附录](#附录)
 
 ## 简介
+
 本文件系统性阐述HTTP客户端配置，重点围绕RequestClient类的创建与配置流程，涵盖baseURL设置、超时配置、请求头设置、transformResponse函数的职责与实现细节（尤其是JSONBigInt对大整数的处理）、客户端实例的创建方式（requestClient与baseRequestClient的区别与适用场景）、以及responseReturn配置项的作用与影响。文末提供实际配置示例与最佳实践建议。
 
 ## 项目结构
+
 本仓库在多个应用框架（Ant Design、Element Plus、Naive UI、TDesign等）下提供了统一的HTTP客户端封装，核心位于effects包的request模块；各前端应用通过各自API层的请求配置文件创建具体客户端实例，并注入拦截器与业务逻辑。
 
 ```mermaid
@@ -54,6 +57,7 @@ PG --> RC
 ```
 
 图表来源
+
 - [request-client.ts:39-94](file://packages/effects/request/src/request-client/request-client.ts#L39-L94)
 - [types.ts:1-91](file://packages/effects/request/src/request-client/types.ts#L1-L91)
 - [preset-interceptors.ts:1-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L166)
@@ -63,6 +67,7 @@ PG --> RC
 - [playground 请求配置:26-134](file://playground/src/api/request.ts#L26-L134)
 
 章节来源
+
 - [request-client.ts:39-94](file://packages/effects/request/src/request-client/request-client.ts#L39-L94)
 - [types.ts:1-91](file://packages/effects/request/src/request-client/types.ts#L1-L91)
 - [preset-interceptors.ts:1-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L166)
@@ -72,18 +77,21 @@ PG --> RC
 - [playground 请求配置:26-134](file://playground/src/api/request.ts#L26-L134)
 
 ## 核心组件
+
 - RequestClient类：基于Axios封装的HTTP客户端，负责创建Axios实例、注册拦截器、提供通用请求方法（get/post/put/delete）、以及扩展能力（上传、下载、SSE）。
 - 类型系统：RequestClientOptions、RequestClientConfig、HttpResponse等，定义配置项与响应结构。
 - 预置拦截器：defaultResponseInterceptor、authenticateResponseInterceptor、errorMessageResponseInterceptor，分别处理响应解构、鉴权刷新、错误消息映射。
 - 下载器模块：FileDownloader，提供文件下载能力，默认返回Blob并支持自定义responseReturn策略。
 
 章节来源
+
 - [request-client.ts:39-165](file://packages/effects/request/src/request-client/request-client.ts#L39-L165)
 - [types.ts:1-91](file://packages/effects/request/src/request-client/types.ts#L1-L91)
 - [preset-interceptors.ts:9-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L9-L166)
 - [downloader.ts:1-60](file://packages/effects/request/src/request-client/modules/downloader.ts#L1-L60)
 
 ## 架构总览
+
 RequestClient在构造时合并默认配置与用户配置，创建Axios实例，并绑定拦截器管理器、上传/下载/SSE模块。请求通过instance发送，响应经由拦截器链处理，最终按responseReturn策略返回给调用方。
 
 ```mermaid
@@ -105,6 +113,7 @@ RC-->>App : 返回最终结果
 ```
 
 图表来源
+
 - [request-client.ts:58-94](file://packages/effects/request/src/request-client/request-client.ts#L58-L94)
 - [request-client.ts:145-161](file://packages/effects/request/src/request-client/request-client.ts#L145-L161)
 - [preset-interceptors.ts:20-45](file://packages/effects/request/src/request-client/preset-interceptors.ts#L20-L45)
@@ -112,6 +121,7 @@ RC-->>App : 返回最终结果
 ## 详细组件分析
 
 ### RequestClient类与配置流程
+
 - 构造参数与默认配置
   - 默认Content-Type为application/json;charset=utf-8
   - 默认responseReturn为'raw'
@@ -165,14 +175,17 @@ RequestClient --> SSE : "组合"
 ```
 
 图表来源
+
 - [request-client.ts:39-94](file://packages/effects/request/src/request-client/request-client.ts#L39-L94)
 
 章节来源
+
 - [request-client.ts:58-94](file://packages/effects/request/src/request-client/request-client.ts#L58-L94)
 - [request-client.ts:115-161](file://packages/effects/request/src/request-client/request-client.ts#L115-L161)
 - [types.ts:15-30](file://packages/effects/request/src/request-client/types.ts#L15-L30)
 
 ### transformResponse函数：JSONBigInt大整数处理
+
 - 作用
   - 在响应拦截阶段对JSON字符串进行解析，将可能超出安全整数范围的大整数转换为字符串，避免精度丢失
   - 仅对Content-Type为application/json且数据为字符串时生效
@@ -195,16 +208,19 @@ Return --> End
 ```
 
 图表来源
+
 - [playground 请求配置:30-42](file://playground/src/api/request.ts#L30-L42)
 - [web-antd 请求配置:30-38](file://apps/web-antd/src/api/request.ts#L30-L38)
 - [web-antdv-next 请求配置:24-29](file://apps/web-antdv-next/src/api/request.ts#L24-L29)
 
 章节来源
+
 - [playground 请求配置:30-42](file://playground/src/api/request.ts#L30-L42)
 - [web-antd 请求配置:30-38](file://apps/web-antd/src/api/request.ts#L30-L38)
 - [web-antdv-next 请求配置:24-29](file://apps/web-antdv-next/src/api/request.ts#L24-L29)
 
 ### 客户端实例：requestClient与baseRequestClient
+
 - requestClient
   - 通过createRequestClient工厂函数创建，内置transformResponse、鉴权拦截器、错误处理拦截器
   - 默认responseReturn为'data'，适合大多数业务场景，直接返回业务数据
@@ -227,16 +243,19 @@ RC --> ER
 ```
 
 图表来源
+
 - [playground 请求配置:119-134](file://playground/src/api/request.ts#L119-L134)
 - [web-antd 请求配置:119-124](file://apps/web-antd/src/api/request.ts#L119-L124)
 - [web-antdv-next 请求配置:109-114](file://apps/web-antdv-next/src/api/request.ts#L109-L114)
 
 章节来源
+
 - [playground 请求配置:119-134](file://playground/src/api/request.ts#L119-L134)
 - [web-antd 请求配置:119-124](file://apps/web-antd/src/api/request.ts#L119-L124)
 - [web-antdv-next 请求配置:109-114](file://apps/web-antdv-next/src/api/request.ts#L109-L114)
 
 ### responseReturn配置项：行为与影响
+
 - 取值与含义
   - 'raw'：返回完整的AxiosResponse对象（包含headers、status等），不做业务成功校验
   - 'body'：返回响应数据的body部分（通常为对象），仅校验HTTP状态码
@@ -247,10 +266,12 @@ RC --> ER
   - 'data'：最贴近业务的默认选择，统一错误处理与成功数据提取
 
 章节来源
+
 - [types.ts:23-29](file://packages/effects/request/src/request-client/types.ts#L23-L29)
 - [preset-interceptors.ts:20-45](file://packages/effects/request/src/request-client/preset-interceptors.ts#L20-L45)
 
 ### 预置拦截器详解
+
 - defaultResponseInterceptor
   - 根据responseReturn与业务code/data字段规则，自动解构响应
   - 支持传入codeField/dataField/successCode自定义业务约定
@@ -262,17 +283,21 @@ RC --> ER
   - 支持自定义错误消息生成函数
 
 章节来源
+
 - [preset-interceptors.ts:9-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L9-L166)
 
 ### 下载器模块：文件下载
+
 - 默认responseReturn为'body'，返回Blob
 - 自动设置responseType为'blob'
 - 支持通过finalConfig覆盖默认策略
 
 章节来源
+
 - [downloader.ts:25-43](file://packages/effects/request/src/request-client/modules/downloader.ts#L25-L43)
 
 ## 依赖关系分析
+
 - RequestClient依赖Axios与内部模块（拦截器、上传、下载、SSE）
 - 应用层通过各自的API配置文件创建客户端实例，注入拦截器与业务逻辑
 - 预置拦截器依赖国际化与工具库，保证错误消息与工具函数可用
@@ -308,6 +333,7 @@ PG --> PR
 ```
 
 图表来源
+
 - [request-client.ts:1-14](file://packages/effects/request/src/request-client/request-client.ts#L1-L14)
 - [preset-interceptors.ts:1-8](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L8)
 - [web-antd 请求配置:1-22](file://apps/web-antd/src/api/request.ts#L1-L22)
@@ -315,6 +341,7 @@ PG --> PR
 - [playground 请求配置:1-22](file://playground/src/api/request.ts#L1-L22)
 
 章节来源
+
 - [index.ts:1-3](file://packages/effects/request/src/index.ts#L1-L3)
 - [request-client.ts:1-14](file://packages/effects/request/src/request-client/request-client.ts#L1-L14)
 - [preset-interceptors.ts:1-8](file://packages/effects/request/src/request-client/preset-interceptors.ts#L1-L8)
@@ -323,12 +350,14 @@ PG --> PR
 - [playground 请求配置:1-22](file://playground/src/api/request.ts#L1-L22)
 
 ## 性能考量
+
 - 请求超时：合理设置timeout，避免长时间阻塞
 - 参数序列化：根据后端要求选择合适的paramsSerializer，减少不必要的数据传输
 - 响应处理：优先使用'data'模式，减少上层重复处理
 - 大整数解析：transformResponse仅在JSON字符串场景生效，避免对非JSON内容造成额外开销
 
 ## 故障排查指南
+
 - 网络错误与超时
   - 检查errorMessageResponseInterceptor映射，确认本地化文案与网络环境
   - 调整timeout与重试策略
@@ -343,16 +372,19 @@ PG --> PR
   - 检查Content-Type是否为application/json
 
 章节来源
+
 - [preset-interceptors.ts:112-166](file://packages/effects/request/src/request-client/preset-interceptors.ts#L112-L166)
 - [request-client.ts:145-161](file://packages/effects/request/src/request-client/request-client.ts#L145-L161)
 - [playground 请求配置:30-42](file://playground/src/api/request.ts#L30-L42)
 
 ## 结论
+
 RequestClient提供了标准化、可扩展的HTTP客户端能力。通过合理的baseURL、超时、请求头配置与预置拦截器组合，能够满足大多数业务需求。transformResponse的JSONBigInt处理确保了大整数的安全解析；responseReturn的选择直接影响调用侧的复杂度与一致性。推荐优先使用requestClient，必要时以baseRequestClient进行深度定制。
 
 ## 附录
 
 ### 实际配置示例与最佳实践
+
 - 基础配置（含baseURL、超时、请求头）
   - 参考路径：[playground 请求配置:26-86](file://playground/src/api/request.ts#L26-L86)
   - 参考路径：[web-antd 请求配置:26-82](file://apps/web-antd/src/api/request.ts#L26-L82)

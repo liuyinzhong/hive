@@ -15,6 +15,7 @@ defineOptions({
   name: 'TaskBatchFormModel',
 });
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const { CHANGE_CELL_VALUE, COPY_DATA, PASTED_DATA, DROPDOWN_MENU_CLICK } =
   VTable.ListTable.EVENT_TYPE;
 
@@ -93,7 +94,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
-      change: (rowData: DevTaskApi.DevTaskFace, e: any) => {},
+      change: (_rowData: DevTaskApi.DevTaskFace, _e: any) => {},
     }),
   },
   {
@@ -102,7 +103,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       options: getLocalDictList('STORY_STATUS'),
-      change: (rowData: DevTaskApi.DevTaskFace, e: any) => {},
+      change: (_rowData: DevTaskApi.DevTaskFace, _e: any) => {},
     }),
   },
 ];
@@ -174,7 +175,7 @@ const initTable = () => {
             const columnConfig = columns[item.col];
 
             const data = ListTableApi.getRecordByCell(item.col, item.row);
-            // @ts-ignore
+            // @ts-expect-error
             columnConfig?.editor?.changeCallback?.(data, {
               label: '',
               value: '',

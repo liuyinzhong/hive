@@ -27,17 +27,7 @@ import { $t } from '#/locales';
 export default {
   renderTableDefault(
     { attrs, options, props }: any,
-    {
-      row,
-      rowIndex,
-      $rowIndex,
-      column,
-      columnIndex,
-      $columnIndex,
-      _columnIndex,
-      $table,
-      level,
-    }: any,
+    { row, column, level }: any,
   ) {
     const defaultProps = { size: 'small', type: 'link', ...props };
     let align: string;

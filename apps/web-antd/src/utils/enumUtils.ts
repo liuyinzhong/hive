@@ -6,21 +6,21 @@
  * @param options.valueField value字段名，默认 'value'
  * @returns 格式化后的选项数组
  */
-export function enumToOptions(enumObj: any, options: {
-  labelField?: string;
-  valueField?: string;
-} = {}): Array<{
+export function enumToOptions(
+  enumObj: any,
+  options: {
+    labelField?: string;
+    valueField?: string;
+  } = {},
+): Array<{
   [key: string]: any;
 }> {
-  const {
-    labelField = 'label',
-    valueField = 'value'
-  } = options;
+  const { labelField = 'label', valueField = 'value' } = options;
 
   return Object.entries(enumObj)
-    .filter(([key]) => isNaN(Number(key)))
+    .filter(([key]) => Number.isNaN(Number(key)))
     .map(([label, value]) => ({
       [labelField]: label,
-      [valueField]: value
+      [valueField]: value,
     }));
 }

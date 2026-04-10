@@ -2,15 +2,11 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
+import type { DevStoryApi } from '#/api/dev';
 
 import { message } from 'ant-design-vue';
 
-import {
-  type DevStoryApi,
-  getModulesList,
-  getProjectsList,
-  getVersionsList,
-} from '#/api/dev';
+import { getModulesList, getProjectsList, getVersionsList } from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
 import { getUserListAll } from '#/api/system';
 import { getLocalDictList } from '#/dicts';
@@ -482,7 +478,7 @@ export function useColumns(
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return row.storyStatus == 99;
+              return row.storyStatus === 99;
             },
           },
           {
@@ -491,7 +487,7 @@ export function useColumns(
             text: '',
             tips: '编辑按钮',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return row.storyStatus == 99;
+              return row.storyStatus === 99;
             },
           },
           {

@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { bugListByStoryId, type DevBugApi } from '#/api/dev';
-import DictTag from '#/components/DictTag/index.vue';
+import type { DevBugApi } from '#/api/dev';
+
 import { ref } from 'vue';
+
+import { bugListByStoryId } from '#/api/dev';
+import DictTag from '#/components/DictTag/index.vue';
 
 /**
  * 基本信息组件
@@ -14,14 +17,14 @@ const props = defineProps({
   },
 });
 
-//#region 获取任务列表
+// #region 获取任务列表
 const bugList = ref<DevBugApi.DevBugFace[]>([]);
 bugListByStoryId({
   storyId: props.storyId,
 }).then((res: DevBugApi.DevBugFace[]) => {
   bugList.value = res || [];
 });
-//#endregion
+// #endregion
 </script>
 <template>
   <div>
@@ -35,15 +38,15 @@ bugListByStoryId({
         <a-list-item>
           <a-list-item-meta>
             <template #title>
-              <a :href="'/dev/bug/detail/' + item.bugNum">
+              <a :href="`/dev/bug/detail/${item.bugNum}`">
                 {{ item.bugTitle }}
               </a>
             </template>
 
             <template #description>
-              <DictTag dictType="BUG_STATUS" :value="item.bugStatus" />
-              <DictTag dictType="BUG_LEVEL" :value="item.bugLevel" />
-              <DictTag dictType="BUG_ENV" :value="item.bugEnv" />
+              <DictTag dict-type="BUG_STATUS" :value="item.bugStatus" />
+              <DictTag dict-type="BUG_LEVEL" :value="item.bugLevel" />
+              <DictTag dict-type="BUG_ENV" :value="item.bugEnv" />
             </template>
 
             <template #avatar>

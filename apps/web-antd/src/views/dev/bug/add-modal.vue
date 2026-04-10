@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
-import { useFormSchema } from './data';
 import { createBug, updateBug } from '#/api/dev';
 import { deepClone } from '#/utils';
+
+import { useFormSchema } from './data';
 defineOptions({
   name: 'BugAddFormModel',
 });
@@ -44,7 +45,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = deepClone(modalApi.getData());
+      const data = deepClone(modalApi.getData());
       if (data.bugId) {
         modalApi.setState({ title: '编辑缺陷' });
       }

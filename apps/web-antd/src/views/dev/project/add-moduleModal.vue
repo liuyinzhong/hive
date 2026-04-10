@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
+
 import { useVbenForm } from '#/adapter/form';
 import { createModule, updateModule } from '#/api/dev';
+
 import { useFormModuleSchema } from './data';
 defineOptions({
   name: 'AddModuleModal',
@@ -30,7 +32,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = modalApi.getData();
+      const data = modalApi.getData();
       formApi.setValues(data);
       modalApi.setState({ title: data.moduleId ? '编辑模块' : '添加模块' });
     } else {

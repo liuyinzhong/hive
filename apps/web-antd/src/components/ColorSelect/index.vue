@@ -1,15 +1,3 @@
-<template>
-  <a-select v-model:value="selectedValue" @change="handleChange" class="w-full">
-    <a-select-option
-      v-for="option in colorOptions"
-      :key="option.value"
-      :value="option.value"
-    >
-      <a-tag :color="option.value">{{ option.label }} {{ option.value }}</a-tag>
-    </a-select-option>
-  </a-select>
-</template>
-
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
@@ -25,11 +13,11 @@ interface Emits {
   (e: 'change', value: string): void;
 }
 
-const emit = defineEmits<Emits>();
-
 const props = withDefaults(defineProps<Props>(), {
   value: '',
 });
+
+const emit = defineEmits<Emits>();
 
 // 使用ref来管理选中的值，便于后续扩展
 const selectedValue = ref(props.value);
@@ -71,5 +59,17 @@ const handleChange = (value: string) => {
   emit('change', value);
 };
 </script>
+
+<template>
+  <a-select v-model:value="selectedValue" @change="handleChange" class="w-full">
+    <a-select-option
+      v-for="option in colorOptions"
+      :key="option.value"
+      :value="option.value"
+    >
+      <a-tag :color="option.value">{{ option.label }} {{ option.value }}</a-tag>
+    </a-select-option>
+  </a-select>
+</template>
 
 <style scoped></style>

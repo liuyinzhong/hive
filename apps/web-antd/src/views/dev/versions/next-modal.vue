@@ -1,11 +1,15 @@
 <script lang="ts" setup>
-import { ref, reactive, nextTick } from 'vue';
-import { useVbenModal, EllipsisText } from '@vben/common-ui';
-import { useVbenForm } from '#/adapter/form';
-import { useNextFormSchema } from './data';
+import { ref } from 'vue';
+
+import { useVbenModal } from '@vben/common-ui';
+
 import { message } from 'ant-design-vue';
-import { getLocalDictList } from '#/dicts';
+
+import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
+import { getLocalDictList } from '#/dicts';
+
+import { useNextFormSchema } from './data';
 defineOptions({
   name: 'VersionNextModal',
 });
@@ -36,7 +40,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = modalApi.getData();
+      const data = modalApi.getData();
 
       formApi.setValues(data);
 
@@ -87,14 +91,14 @@ function setChangeRichText(value: string) {
         />
         <a-divider dashed>常用语(双击)</a-divider>
         <CommonPhrase
-          :textList="[
+          :text-list="[
             '已更新至测试环境',
             '需求开发完成，转由测试验证，已更新至测试环境',
             '测试通过，转由产品验收',
             '产品验收通过，转由业务验收',
             '业务验收通过，可安排发版',
           ]"
-          @dblClick="setChangeRichText"
+          @dbl-click="setChangeRichText"
         />
       </a-col>
       <a-col :span="18">

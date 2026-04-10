@@ -1,21 +1,27 @@
 <script lang="ts" setup>
-import {
-  useVbenVxeGrid,
-  type OnActionClickParams,
-  type VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-import { Page } from '@vben/common-ui';
-import { getVersionsList, type DevVersionApi } from '#/api/dev';
-import { useVbenModal } from '@vben/common-ui';
-import { message } from 'ant-design-vue';
-import { sleep } from '#/utils';
-import { $t } from '#/locales';
-
-import { useColumns, useGridFormSchema } from './data';
-import addFormModal from './add-modal.vue';
-import nextFormModal from './next-modal.vue';
 import type { Recordable } from '@vben/types';
+
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+import type { DevVersionApi } from '#/api/dev';
+
 import { useRouter } from 'vue-router';
+
+import { Page } from '@vben/common-ui';
+import { useVbenModal } from '@vben/common-ui';
+
+import { message } from 'ant-design-vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getVersionsList } from '#/api/dev';
+import { $t } from '#/locales';
+import { sleep } from '#/utils';
+
+import addFormModal from './add-modal.vue';
+import { useColumns, useGridFormSchema } from './data';
+import nextFormModal from './next-modal.vue';
 const router = useRouter();
 
 // 表格分页
@@ -66,18 +72,18 @@ function onActionClick({
       onDelete(row);
       break;
     }
+    case 'detail': {
+      router.push({
+        path: '/dev/versions/detail/' + row.versionId,
+      });
+      break;
+    }
     case 'edit': {
       onEdit(row);
       break;
     }
     case 'next': {
       NextModalApi.setData(row).open();
-      break;
-    }
-    case 'detail': {
-      router.push({
-        path: '/dev/versions/detail/' + row.versionId,
-      });
       break;
     }
   }

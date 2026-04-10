@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { type DevChangeApi, getChangeList } from '#/api/dev';
+import type { DevChangeApi } from '#/api/dev';
+
+import { ref, watch } from 'vue';
+
+import { getChangeList } from '#/api/dev';
 import DictTag from '#/components/DictTag/index.vue';
-import { watch, ref } from 'vue';
 /**
  * 变更记录组件
  * @property {String} businessId - 关联id
@@ -13,7 +16,7 @@ const props = defineProps({
   },
 });
 
-//#region 变更记录
+// #region 变更记录
 const changeLogList = ref<DevChangeApi.DevChangeFace[]>([]);
 watch(
   () => props.businessId,
@@ -27,7 +30,7 @@ watch(
     }
   },
 );
-//#endregion
+// #endregion
 </script>
 <template>
   <div>
@@ -37,8 +40,8 @@ watch(
         <div>
           {{ item.createDate }}
           <span style="margin-right: 8px">{{ item.creatorName }}</span>
-          <DictTag :dictType="'CHANGE_BEHAVIOR'" :value="item.changeBehavior" />
-          <DictTag :dictType="'CHANGE_TYPE'" :value="item.businessType" />
+          <DictTag dict-type="CHANGE_BEHAVIOR" :value="item.changeBehavior" />
+          <DictTag dict-type="CHANGE_TYPE" :value="item.businessType" />
         </div>
 
         <div v-html="item.changeRichText"></div>
