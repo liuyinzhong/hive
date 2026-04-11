@@ -85,7 +85,6 @@ catalog:
   '@vueuse/core': ^14.2.1
   '@vueuse/integrations': ^14.2.1
   '@vueuse/motion': ^3.0.3
-  aieditor: ^1.4.2
   ant-design-vue: ^4.2.6
   archiver: ^7.0.1
   axios: ^1.14.0

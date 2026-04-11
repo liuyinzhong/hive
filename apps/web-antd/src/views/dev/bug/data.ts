@@ -77,12 +77,13 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'AiEditor',
+      component: 'RichEditor',
       fieldName: 'bugRichText',
       label: '',
       labelWidth: 0,
       formItemClass: 'col-span-2 row-span-12',
       componentProps: {
+        editable: true,
         defaultHtml: bugRichTemplateText,
       },
     },
@@ -298,15 +299,6 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'RichEditor',
       fieldName: 'richEditor',
-      label: '富文本',
-      formItemClass: 'col-span-3 items-baseline',
-      componentProps: {
-        editable: true,
-      },
-    },
-    {
-      component: 'Editor',
-      fieldName: 'richEditorA',
       label: '富文本',
       formItemClass: 'col-span-3 items-baseline',
       componentProps: {
@@ -624,9 +616,9 @@ export function useNextFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'AiEditor',
+      component: 'RichEditor',
       fieldName: 'changeRichText',
-      label: '',
+      label: '富文本',
     },
   ];
 }

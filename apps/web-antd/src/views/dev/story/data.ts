@@ -66,12 +66,13 @@ export function useFormSchema(): VbenFormSchema[] {
     },
 
     {
-      component: 'AiEditor',
+      component: 'RichEditor',
       fieldName: 'storyRichText',
       label: '',
       labelWidth: 0,
       formItemClass: 'col-span-2 row-span-9',
       componentProps: {
+        editable: true,
         defaultHtml: storyRichTemplateText,
       },
     },
@@ -516,7 +517,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'AiEditor',
+      component: 'RichEditor',
       fieldName: 'changeRichText',
       label: '',
       labelWidth: 30,

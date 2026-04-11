@@ -301,7 +301,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'AiEditor',
+      component: 'RichEditor',
       fieldName: 'changeRichText',
       label: '',
       labelWidth: 30,

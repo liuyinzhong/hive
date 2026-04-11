@@ -133,16 +133,8 @@ const PreviewGroup = defineAsyncComponent(() =>
   import('ant-design-vue/es/image').then((res) => res.ImagePreviewGroup),
 );
 
-const AiEditor = defineAsyncComponent(
-  () => import('#/components/AiEditor/index.vue'),
-);
-
 const ColorSelect = defineAsyncComponent(
   () => import('#/components/ColorSelect/index.vue'),
-);
-
-const Editor = defineAsyncComponent(
-  () => import('#/components/Editor/index.vue'),
 );
 
 const withDefaultPlaceholder = <T extends Component>(
@@ -611,7 +603,6 @@ const withPreviewUpload = () => {
 
 // 这里需要自行根据业务组件库进行适配，需要用到的组件都需要在这里类型说明
 export type ComponentType =
-  | 'AiEditor'
   | 'ApiCascader'
   | 'ApiSelect'
   | 'ApiTreeSelect'
@@ -623,7 +614,6 @@ export type ComponentType =
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
-  | 'Editor'
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
@@ -669,7 +659,6 @@ export interface ComponentPropsMap {
   RangePicker: RangePickerProps;
   Rate: RateProps;
   RichEditor: TipTapProps;
-  Editor: TipTapProps;
   Select: SelectProps;
   Space: SpaceProps;
   Switch: SwitchProps;
@@ -734,7 +723,6 @@ async function initComponentAdapter() {
     RangePicker,
     Rate,
     RichEditor: withDefaultPlaceholder(VbenTiptap, 'input'),
-    Editor: withDefaultPlaceholder(Editor, 'input'),
     Select: withDefaultPlaceholder(Select, 'select'),
     Space,
     Switch,
@@ -742,7 +730,6 @@ async function initComponentAdapter() {
     TimePicker,
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload: withPreviewUpload(),
-    AiEditor,
     ColorSelect: withDefaultPlaceholder(ColorSelect, 'select'),
   };
 

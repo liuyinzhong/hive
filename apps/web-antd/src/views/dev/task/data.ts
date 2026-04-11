@@ -102,12 +102,13 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'AiEditor',
+      component: 'RichEditor',
       fieldName: 'taskRichText',
       label: '',
       labelWidth: 0,
       formItemClass: 'col-span-2 row-span-8',
       componentProps: {
+        editable: true,
         defaultHtml: taskRichTemplateText,
       },
     },
@@ -529,7 +530,7 @@ export function useNextFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'AiEditor',
+      component: 'RichEditor',
       fieldName: 'changeRichText',
       label: '',
     },

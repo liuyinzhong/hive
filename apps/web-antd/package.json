@@ -50,7 +50,6 @@
     "@visactor/vtable-gantt": "catalog:",
     "@vue-flow/core": "catalog:",
     "@vueuse/core": "catalog:",
-    "aieditor": "catalog:",
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",
     "json-bigint": "catalog:",
