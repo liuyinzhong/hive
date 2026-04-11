@@ -125,6 +125,9 @@ const onBtnClick = (btnType: string) => {
         content: '',
         title: '添加评论',
         modelPropName: 'modelValue',
+        componentProps: {
+          placeholder: '请输入内容',
+        },
       }).then((val) => {
         const _params = {
           businessId: detail.value.bugId,
