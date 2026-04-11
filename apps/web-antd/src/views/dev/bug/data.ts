@@ -84,7 +84,8 @@ export function useFormSchema(): VbenFormSchema[] {
       formItemClass: 'col-span-2 row-span-12',
       componentProps: {
         editable: true,
-        defaultHtml: bugRichTemplateText,
+        minHeight: 410,
+        modelValue: bugRichTemplateText,
       },
     },
     {
@@ -295,15 +296,6 @@ export function useFormSchema(): VbenFormSchema[] {
       disabled: true,
       defaultValue: navigator.userAgent,
       formItemClass: 'col-span-1',
-    },
-    {
-      component: 'RichEditor',
-      fieldName: 'richEditor',
-      label: '富文本',
-      formItemClass: 'col-span-3 items-baseline',
-      componentProps: {
-        editable: true,
-      },
     },
   ];
 }

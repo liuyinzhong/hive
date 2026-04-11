@@ -4,8 +4,8 @@ import type { DevBugApi } from '#/api/dev';
 import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
+import { VbenTiptap } from '@vben/plugins/tiptap';
 
-import AiEditor from '#/components/AiEditor/index.vue';
 import CopyButton from '#/components/CopyButton/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 
@@ -33,7 +33,6 @@ const newTab = () => {
   window.open(bugLink.value);
 };
 
-const changeRichTextRef = ref<any>();
 const submit = () => {
   DrawerApi.lock();
   setTimeout(() => {
@@ -41,7 +40,7 @@ const submit = () => {
       businessId: bugInfo.value.bugId,
       businessType: 20,
       changeBehavior: 20,
-      changeRichText: changeRichTextRef.value?.aiEditor()?.getHtml() || '',
+      changeRichText: bugInfo.value.changeRichText || '',
     };
     DrawerApi.unlock();
     DrawerApi.close();
@@ -66,11 +65,12 @@ const submit = () => {
       <div class="w-full">
         <a-flex align="start" :gap="5" class="w-full mb-2">
           <UserAvatar />
-          <AiEditor
-            width="100%"
-            height="100%"
-            :show-toolbar="false"
-            ref="changeRichTextRef"
+          <VbenTiptap
+            v-model="bugInfo.changeRichText"
+            :toolbar="false"
+            placeholder="请输入内容"
+            class="w-full"
+            :min-height="100"
           />
         </a-flex>
         <div class="w-full flex justify-end">

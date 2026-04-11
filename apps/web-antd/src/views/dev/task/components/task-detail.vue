@@ -12,11 +12,11 @@ import {
   VbenButtonGroup,
 } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
+import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import { message } from 'ant-design-vue';
 
 import { getTaskDetail } from '#/api/dev';
-import AiEditor from '#/components/AiEditor/index.vue';
 import ChangeLog from '#/views/dev/story/components/change-log.vue';
 import addFormModal from '#/views/dev/task/add-modal.vue';
 import nextModal from '#/views/dev/task/next-modal.vue';
@@ -122,7 +122,7 @@ const onBtnClick = (btnType: string) => {
     }
     case '添加评论': {
       prompt({
-        component: AiEditor,
+        component: VbenTiptap,
         content: '',
         title: '添加评论',
         modelPropName: 'modelValue',

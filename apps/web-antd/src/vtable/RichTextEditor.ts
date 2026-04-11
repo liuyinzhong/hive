@@ -12,8 +12,7 @@ import type { ComponentPublicInstance } from 'vue';
 import { createApp, onMounted, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
-
-import AiEditor from '#/components/AiEditor/index.vue';
+import { VbenTiptap } from '@vben/plugins/tiptap';
 
 /**
  * 富文本编辑器配置接口
@@ -200,7 +199,7 @@ export class RichTextEditor implements IEditor {
     const that = this;
 
     this.app = createApp({
-      components: { AiEditor },
+      components: { VbenTiptap },
       setup() {
         // 响应式数据
         const htmlValue = ref<string>(that.editorHtml);
@@ -235,7 +234,7 @@ export class RichTextEditor implements IEditor {
       },
       template: `
         <component :is="Drawer">
-          <AiEditor v-model="htmlValue" :defaultHtml="defaultHtml" />
+          <VbenTiptap v-model="htmlValue" :defaultHtml="defaultHtml" />
         </component>
       `,
     });

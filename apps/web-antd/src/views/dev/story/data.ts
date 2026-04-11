@@ -73,7 +73,8 @@ export function useFormSchema(): VbenFormSchema[] {
       formItemClass: 'col-span-2 row-span-9',
       componentProps: {
         editable: true,
-        defaultHtml: storyRichTemplateText,
+        minHeight: 410,
+        modelValue: storyRichTemplateText,
       },
     },
     {
