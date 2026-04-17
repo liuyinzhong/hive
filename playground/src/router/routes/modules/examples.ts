@@ -38,6 +38,14 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            name: 'FormValueFormatExample',
+            path: '/examples/form/value-format',
+            component: () => import('#/views/examples/form/value-format.vue'),
+            meta: {
+              title: $t('examples.form.valueFormat'),
+            },
+          },
+          {
             name: 'FormRulesExample',
             path: '/examples/form/rules',
             component: () => import('#/views/examples/form/rules.vue'),
@@ -92,6 +100,14 @@ const routes: RouteRecordRaw[] = [
               import('#/views/examples/form/scroll-to-error-test.vue'),
             meta: {
               title: $t('examples.form.scrollToError'),
+            },
+          },
+          {
+            name: 'FormCollapsibleExample',
+            path: '/examples/form/collapsible-test',
+            component: () => import('#/views/examples/form/collapsible.vue'),
+            meta: {
+              title: $t('examples.form.collapsible'),
             },
           },
         ],
