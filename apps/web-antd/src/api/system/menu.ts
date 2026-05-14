@@ -91,28 +91,14 @@ export namespace SystemMenuApi {
 }
 
 /**
- * 获取所有菜单
- */
-export const getAllMenusApi = async () => {
-  return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
-    '/system/menu/list',
-    {
-      params: {
-        hasButton: 0,
-      },
-    },
-  );
-};
-
-/**
  * 获取菜单数据列表
  */
-export const getMenuList = async () => {
+export const getMenuList = async (hasButton: boolean) => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
     '/system/menu/list',
     {
       params: {
-        hasButton: 1,
+        hasButton: hasButton ? 1 : 0,
       },
     },
   );

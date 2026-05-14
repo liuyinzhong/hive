@@ -9,7 +9,7 @@ import { mapTree } from '@vben/utils';
 
 import { message } from 'ant-design-vue';
 
-import { getAllMenusApi } from '#/api/system';
+import { getMenuList } from '#/api/system/menu';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
@@ -30,7 +30,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         content: `${$t('common.loadingMenu')}...`,
         duration: 1.5,
       });
-      let res: any = await getAllMenusApi();
+      let res: any = await getMenuList(false);
       res = mapTree(res, (node: any) => {
         return {
           ...node,
