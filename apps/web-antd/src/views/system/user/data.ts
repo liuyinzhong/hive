@@ -162,8 +162,6 @@ export function useColumns(
       title: '状态',
     },
     { field: 'desc', title: '描述' },
-    { field: 'lastLoginIp', title: '最后登录IP' },
-    { field: 'lastLoginDate', title: '最后登录时间' },
     {
       align: 'right',
       field: 'operation',

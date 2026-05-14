@@ -13,8 +13,6 @@ export namespace SystemUserApi {
     desc: string;
     password?: string;
     disabled: boolean;
-    lastLoginIp: string;
-    lastLoginDate: string;
     createDate: string;
     updateDate: string;
   }

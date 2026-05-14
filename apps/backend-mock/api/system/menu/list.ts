@@ -7,6 +7,11 @@ export default eventHandler(async (event) => {
   if (!userinfo) {
     return unAuthorizedResponse(event);
   }
-
-  return useResponseSuccess(convertMenuToTree(MOCK_MENU_LIST_V2, true));
+  const { hasButton } = getQuery(event);
+  return useResponseSuccess(
+    convertMenuToTree(
+      MOCK_MENU_LIST_V2,
+      Number(hasButton) === 1 ? true : false,
+    ),
+  );
 });

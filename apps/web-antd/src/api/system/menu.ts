@@ -96,6 +96,11 @@ export namespace SystemMenuApi {
 export const getMenuList = async () => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
     '/system/menu/list',
+    {
+      params: {
+        hasButton: 1,
+      },
+    },
   );
 };
 
