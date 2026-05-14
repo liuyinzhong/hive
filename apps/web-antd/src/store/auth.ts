@@ -10,7 +10,7 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { notification } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, loginApi, logoutApi } from '#/api';
+import { getAccessCodesApi, loginApi, logoutApi } from '#/api/auth';
 import { getUserInfoApi } from '#/api/system/user';
 import { $t } from '#/locales';
 

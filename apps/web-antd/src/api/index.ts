@@ -1,4 +1,4 @@
-export * from './core';
+export * from './auth';
 export * from './dev';
 export * from './examples';
 export * from './statistics';
