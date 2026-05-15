@@ -45,6 +45,12 @@ const schema: VbenFormSchema[] = [
     fieldName: 'type',
     formItemClass: 'col-span-2 md:col-span-2',
     label: $t('system.menu.type'),
+    dependencies: {
+      disabled: (values) => {
+        return !!formData.value?.id;
+      },
+      triggerFields: ['id'],
+    },
   },
   {
     component: 'Input',
@@ -331,7 +337,9 @@ const schema: VbenFormSchema[] = [
       max: 9999,
       step: 1,
       allowClear: true,
-      class: 'w-full',
+      style: {
+        width: '100%',
+      },
     },
     dependencies: {
       show: (values) => {
@@ -351,7 +359,9 @@ const schema: VbenFormSchema[] = [
       max: 10,
       step: 1,
       allowClear: true,
-      class: 'w-full',
+      style: {
+        width: '100%',
+      },
     },
     dependencies: {
       show: (values) => {

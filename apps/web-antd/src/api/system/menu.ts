@@ -119,8 +119,8 @@ export const isMenuNameExists = async (
 };
 
 /**
- * 检查菜单路径是否存在
- * @param path 菜单路径
+ * 检查菜单路由地址是否存在
+ * @param path 菜单路由地址
  * @param id 菜单 ID（可选）
  */
 export const isMenuPathExists = async (
