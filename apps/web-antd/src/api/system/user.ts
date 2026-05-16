@@ -19,13 +19,6 @@ export namespace SystemUserApi {
 }
 
 /**
- * 获取用户信息
- */
-export const getUserInfoApi = async () => {
-  return requestClient.get<SystemUserApi.SystemUserFace>('/system/user/info');
-};
-
-/**
  * 获取用户列表数据
  */
 export const getUsersList = async (params: Recordable<any>) => {

@@ -1,4 +1,5 @@
 import { baseRequestClient, requestClient } from '#/api/request';
+import type { SystemMenuApi, SystemUserApi } from '../system';
 
 export namespace AuthApi {
   /** 登录接口参数 */
@@ -48,4 +49,18 @@ export const logoutApi = async () => {
  */
 export const getAccessCodesApi = async () => {
   return requestClient.get<string[]>('/auth/codes');
+};
+
+/**
+ * 获取当前登录用户信息
+ */
+export const getProfile = async () => {
+  return requestClient.get<SystemUserApi.SystemUserFace>('/auth/profile');
+};
+
+/**
+ * 获取当前登录用户菜单
+ */
+export const getMyMenus = async () => {
+  return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>('/auth/menus');
 };

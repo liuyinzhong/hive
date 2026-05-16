@@ -93,13 +93,11 @@ export namespace SystemMenuApi {
 /**
  * 获取菜单数据列表
  */
-export const getMenuList = async (hasButton: boolean) => {
+export const getMenuList = async (params?: Recordable<any>) => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
     '/system/menu/list',
     {
-      params: {
-        hasButton: hasButton ? 1 : 0,
-      },
+      params,
     },
   );
 };

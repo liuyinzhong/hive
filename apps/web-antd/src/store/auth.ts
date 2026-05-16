@@ -10,8 +10,7 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { notification } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, loginApi, logoutApi } from '#/api/auth';
-import { getUserInfoApi } from '#/api/system/user';
+import { getAccessCodesApi, loginApi, logoutApi, getProfile } from '#/api/auth';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -99,7 +98,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function fetchUserInfo() {
-    const userInfo = await getUserInfoApi();
+    const userInfo = await getProfile();
     userStore.setUserInfo(userInfo);
     return userInfo;
   }
