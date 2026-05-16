@@ -7,17 +7,16 @@ import type {
 } from '#/adapter/vxe-table';
 import type { SystemUserApi } from '#/api/system';
 
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button, message } from 'ant-design-vue';
+import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getUsersList } from '#/api/system';
-import { sleep } from '#/utils';
-
+import { getUsersList, deleteUser, updateUserStatus } from '#/api/system';
+import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
 
@@ -36,7 +35,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(onActionClick, onStatusChange),
     toolbarConfig: {
       zoom: true,
       custom: true,
@@ -94,24 +93,74 @@ function onCreate() {
 
 async function onDelete(row: SystemUserApi.SystemUserFace) {
   const hideLoading = message.loading({
-    content: `正在删除用户:${row.username}`,
+    content: $t('ui.actionMessage.deleting', [row.realName]),
     duration: 0,
     key: 'action_process_msg',
   });
+  deleteUser([row.userId])
+    .then(() => {
+      message.success({
+        content: $t('ui.actionMessage.deleteSuccess', [row.realName]),
+        key: 'action_process_msg',
+      });
+      onRefresh();
+    })
+    .catch(() => {
+      hideLoading();
+    });
+}
 
-  await sleep(1000);
-
-  message.success({
-    content: `删除用户:${row.username}成功`,
-    key: 'action_process_msg',
+/**
+ * 将Antd的Modal.confirm封装为promise，方便在异步函数中调用。
+ * @param content 提示内容
+ * @param title 提示标题
+ */
+function confirm(content: string, title: string) {
+  return new Promise((reslove, reject) => {
+    Modal.confirm({
+      content,
+      onCancel() {
+        reject(new Error('已取消'));
+      },
+      onOk() {
+        reslove(true);
+      },
+      title,
+    });
   });
+}
 
-  await sleep(1000);
-  hideLoading();
-  gridApi.query();
+/**
+ * 状态开关即将改变
+ * @param newStatus 期望改变的状态值
+ * @param row 行数据
+ * @returns 返回false则中止改变，返回其他值（undefined、true）则允许改变
+ */
+async function onStatusChange(
+  newStatus: number,
+  row: SystemUserApi.SystemUserFace,
+) {
+  const status: Recordable<string> = {
+    0: '禁用',
+    1: '启用',
+  };
+  try {
+    await confirm(
+      `你要将${row.realName}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
+      `切换状态`,
+    );
+    await updateUserStatus(row.userId, { status: newStatus });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // #endregion
+
+function onRefresh() {
+  gridApi.query();
+}
 </script>
 
 <template>
@@ -124,6 +173,6 @@ async function onDelete(row: SystemUserApi.SystemUserFace) {
         </Button>
       </template>
     </Grid>
-    <Drawer @success="gridApi.query" />
+    <Drawer @success="onRefresh" />
   </Page>
 </template>

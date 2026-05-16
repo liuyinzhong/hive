@@ -13,7 +13,7 @@ import { Plus } from '@vben/icons';
 import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteRole, getRoleList } from '#/api/system';
+import { deleteRole, getRoleList, updateRoleStatus } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
@@ -47,7 +47,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
     rowConfig: {
-      keyField: 'id',
+      keyField: 'roleId',
     },
 
     toolbarConfig: {
@@ -107,10 +107,10 @@ async function onStatusChange(
   };
   try {
     await confirm(
-      `你要将${row.name}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
+      `你要将${row.roleTitle}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
       `切换状态`,
     );
-    // await updateRole(row.id, { status: newStatus });
+    await updateRoleStatus(row.roleId, { status: newStatus });
     return true;
   } catch {
     return false;
@@ -123,11 +123,11 @@ function onEdit(row: SystemRoleApi.SystemRoleFace) {
 
 function onDelete(row: SystemRoleApi.SystemRoleFace) {
   const hideLoading = message.loading({
-    content: $t('ui.actionMessage.deleting', [row.name]),
+    content: $t('ui.actionMessage.deleting', [row.roleTitle]),
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteRole(row.id)
+  deleteRole([row.roleId])
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),

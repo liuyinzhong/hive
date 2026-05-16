@@ -15,7 +15,7 @@ export function useSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
+      fieldName: 'deptTitle',
       label: $t('system.dept.deptName'),
       rules: z
         .string()
@@ -31,8 +31,8 @@ export function useSchema(): VbenFormSchema[] {
         allowClear: true,
         api: getDeptList,
         class: 'w-full',
-        labelField: 'name',
-        valueField: 'id',
+        labelField: 'deptTitle',
+        valueField: 'deptId',
         childrenField: 'children',
       },
       fieldName: 'pid',
@@ -80,7 +80,7 @@ export function useColumns(
   return [
     {
       align: 'left',
-      field: 'name',
+      field: 'deptTitle',
       fixed: 'left',
       title: $t('system.dept.deptName'),
       treeNode: true,
@@ -105,7 +105,7 @@ export function useColumns(
       align: 'right',
       cellRender: {
         attrs: {
-          nameField: 'name',
+          nameField: 'deptTitle',
           nameTitle: $t('system.dept.name'),
           onClick: onActionClick,
         },

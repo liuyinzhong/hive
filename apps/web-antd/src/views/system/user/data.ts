@@ -8,7 +8,8 @@ import { h } from 'vue';
 
 import { Flex } from 'ant-design-vue';
 
-import { getDeptList, getRoleList } from '#/api/system';
+import { z } from '#/adapter/form';
+import { getAllDeptList, getAllRoleList } from '#/api/system';
 import { $t } from '#/locales';
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -27,7 +28,13 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Input',
       fieldName: 'username',
       label: '登录名',
-      rules: 'required',
+      rules: z
+        .string()
+        .min(1, { message: '请输入登录名' })
+        .regex(/^[A-Za-z]+$/, { message: '登录名只能输入英文字母' })
+        .refine((value) => value.toLowerCase() !== 'superadmin', {
+          message: '登录名不能为 superAdmin',
+        }),
     },
     {
       component: 'Input',
@@ -40,6 +47,10 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'password',
       label: '密码',
       rules: 'required',
+      dependencies: {
+        triggerFields: ['userId'],
+        if: (values) => !values.userId,
+      },
     },
     {
       component: 'Textarea',
@@ -67,12 +78,12 @@ export function useFormSchema(): VbenFormSchema[] {
         },
       }),
       componentProps: {
-        api: getDeptList,
+        api: getAllDeptList,
         optionFilterProp: 'label',
-        labelField: 'name',
-        valueField: 'id',
+        labelField: 'deptTitle',
+        valueField: 'deptId',
         mode: 'multiple',
-        resultField: 'items',
+        resultField: '',
       },
     },
     {
@@ -89,12 +100,12 @@ export function useFormSchema(): VbenFormSchema[] {
         },
       }),
       componentProps: {
-        api: getRoleList,
+        api: getAllRoleList,
         optionFilterProp: 'label',
-        labelField: 'name',
-        valueField: 'id',
+        labelField: 'roleTitle',
+        valueField: 'roleId',
         mode: 'multiple',
-        resultField: 'items',
+        resultField: '',
       },
     },
   ];
@@ -140,9 +151,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * 获取表格列配置
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns(
-  onActionClick?: OnActionClickFn<SystemUserApi.SystemUserFace>,
-): VxeTableGridOptions<SystemUserApi.SystemUserFace>['columns'] {
+export function useColumns<T = SystemUserApi.SystemUserFace>(
+  onActionClick?: OnActionClickFn<T>,
+  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
+): VxeTableGridOptions<T>['columns'] {
   return [
     {
       field: 'avatar',
@@ -157,9 +169,13 @@ export function useColumns(
     },
     { field: 'username', title: '登录名' },
     {
-      cellRender: { name: 'CellSwitch' },
+      cellRender: {
+        attrs: { beforeChange: onStatusChange },
+        name: 'CellSwitch',
+      },
       field: 'status',
-      title: '状态',
+      title: $t('system.role.status'),
+      width: 100,
     },
     { field: 'desc', title: '描述' },
     {

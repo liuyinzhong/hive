@@ -2,7 +2,6 @@
 import { useVbenDrawer, useVbenForm } from '@vben/common-ui';
 
 import { createUser, updateUser } from '#/api/system';
-
 import { useFormSchema } from './data';
 
 defineOptions({
@@ -13,6 +12,7 @@ const emit = defineEmits<{
 }>();
 
 const [Drawer, drawerApi] = useVbenDrawer({
+  title: '添加用户',
   onConfirm: async () => {
     const { valid } = await formApi.validate();
     if (valid) {
@@ -24,13 +24,19 @@ const [Drawer, drawerApi] = useVbenDrawer({
         })
         .catch(() => {
           drawerApi.unlock();
+        })
+        .finally(() => {
+          emit('success');
         });
-      emit('success');
     }
   },
   onOpenChange: (isOpen: boolean) => {
     if (isOpen) {
-      formApi.setValues(drawerApi.getData());
+      const data = drawerApi.getData();
+      formApi.setValues(data);
+      if (data.userId) {
+        drawerApi.setState({ title: '修改用户' });
+      }
     }
   },
 });
@@ -50,7 +56,7 @@ const [Form, formApi] = useVbenForm({
 });
 </script>
 <template>
-  <Drawer title="添加人员" class="w-[600px]">
+  <Drawer class="w-[600px]">
     <Form />
   </Drawer>
 </template>

@@ -35,7 +35,7 @@ function onEdit(row: SystemDeptApi.SystemDeptFace) {
  * @param row
  */
 function onAppend(row: SystemDeptApi.SystemDeptFace) {
-  formModalApi.setData({ pid: row.id }).open();
+  formModalApi.setData({ pid: row.deptId }).open();
 }
 
 /**
@@ -55,7 +55,7 @@ function onDelete(row: SystemDeptApi.SystemDeptFace) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteDept(row.id)
+  deleteDept([row.deptId])
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),
@@ -115,7 +115,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     treeConfig: {
       parentField: 'pid',
-      rowField: 'id',
+      rowField: 'deptId',
       transform: false,
     },
   } as VxeTableGridOptions<SystemDeptApi.SystemDeptFace>,

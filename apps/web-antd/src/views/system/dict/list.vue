@@ -50,6 +50,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
       transform: false,
     },
     proxyConfig: {
+      response: {
+        result: '',
+      },
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getDictListApi({

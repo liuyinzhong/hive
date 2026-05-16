@@ -8,7 +8,7 @@ export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
+      fieldName: 'roleTitle',
       label: $t('system.role.roleName'),
       rules: 'required',
     },
@@ -45,10 +45,9 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
+      fieldName: 'roleTitle',
       label: $t('system.role.roleName'),
     },
-    { component: 'Input', fieldName: 'id', label: $t('system.role.id') },
     {
       component: 'Select',
       componentProps: {
@@ -80,13 +79,8 @@ export function useColumns<T = SystemRoleApi.SystemRoleFace>(
 ): VxeTableGridOptions['columns'] {
   return [
     {
-      field: 'name',
+      field: 'roleTitle',
       title: $t('system.role.roleName'),
-      width: 200,
-    },
-    {
-      field: 'id',
-      title: $t('system.role.id'),
       width: 200,
     },
     {
@@ -112,7 +106,7 @@ export function useColumns<T = SystemRoleApi.SystemRoleFace>(
       align: 'center',
       cellRender: {
         attrs: {
-          nameField: 'name',
+          nameField: 'roleTitle',
           nameTitle: $t('system.role.name'),
           onClick: onActionClick,
         },

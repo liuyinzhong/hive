@@ -95,7 +95,7 @@ export namespace SystemMenuApi {
  */
 export const getMenuList = async (params?: Recordable<any>) => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
-    '/system/menu/list',
+    '/system/menus',
     {
       params,
     },

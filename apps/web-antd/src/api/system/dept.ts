@@ -4,8 +4,9 @@ export namespace SystemDeptApi {
   export interface SystemDeptFace {
     [key: string]: any;
     children?: SystemDeptFace[];
-    id: string;
-    name: string;
+    deptId: string;
+    deptTitle: string;
+    pid?: string;
     remark?: string;
     status: 0 | 1;
   }
@@ -16,7 +17,7 @@ export namespace SystemDeptApi {
  */
 export const getDeptList = async () => {
   return requestClient.get<Array<SystemDeptApi.SystemDeptFace>>(
-    '/system/dept/list',
+    '/system/depts',
   );
 };
 
@@ -25,28 +26,37 @@ export const getDeptList = async () => {
  * @param data 部门数据
  */
 export const createDept = async (
-  data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'id'>,
+  data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'deptId'>,
 ) => {
-  return requestClient.post('/system/dept', data);
+  return requestClient.post('/system/depts', data);
 };
 
 /**
  * 更新部门
- *
- * @param id 部门 ID
  * @param data 部门数据
  */
 export const updateDept = async (
-  id: string,
-  data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'id'>,
+  deptId: string,
+  data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'deptId'>,
 ) => {
-  return requestClient.put(`/system/dept/${id}`, data);
+  return requestClient.put(`/system/depts/${deptId}`, data);
 };
 
 /**
  * 删除部门
- * @param id 部门 ID
+ * @param deptIds 部门ID数组
  */
-export const deleteDept = async (id: string) => {
-  return requestClient.delete(`/system/dept/${id}`);
+export const deleteDept = async (deptIds: string[]) => {
+  return requestClient.delete('/system/depts', {
+    data: deptIds,
+  });
+};
+
+/**
+ * 获取所有启用的部门列表
+ */
+export const getAllDeptList = async () => {
+  return requestClient.get<Array<SystemDeptApi.SystemDeptFace>>(
+    '/system/depts/all',
+  );
 };

@@ -35,7 +35,7 @@ export namespace SystemDictApi {
  */
 export const getDictListApi = async (params: Recordable<any>) => {
   return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
-    '/system/dict/list',
+    '/system/dicts',
     { params },
   );
 };
@@ -45,30 +45,27 @@ export const getDictListApi = async (params: Recordable<any>) => {
  */
 export const getDictListAll = async () => {
   return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
-    '/system/dict/listAll',
+    '/system/dicts/all',
   );
 };
 
 /**
  * 创建字典
- * @param data 字典数据
  */
 export const createDict = async (
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
 ) => {
   const newData = objectOmit(data, ['children', 'id']);
-  return requestClient.post('/system/dict', newData);
+  return requestClient.post('/system/dicts', newData);
 };
 
 /**
  * 更新字典
- * @param id 字典 ID
- * @param data 字典数据
  */
 export const updateDict = async (
   id: number | string,
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
 ) => {
   const newData = objectOmit(data, ['children', 'id']);
-  return requestClient.put(`/system/dict/${id}`, newData);
+  return requestClient.put(`/system/dicts/${id}`, newData);
 };
