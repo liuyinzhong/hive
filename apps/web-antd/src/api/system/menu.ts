@@ -93,7 +93,7 @@ export namespace SystemMenuApi {
 /**
  * 获取菜单数据列表
  */
-export const getMenuList = async () => {
+export const getMenuListApi = async () => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
     '/system/menus',
   );
@@ -104,7 +104,7 @@ export const getMenuList = async () => {
  * @param name 菜单名称
  * @param id 菜单 ID（可选）
  */
-export const isMenuNameExists = async (
+export const isMenuNameExistsApi = async (
   name: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
 ) => {
@@ -118,7 +118,7 @@ export const isMenuNameExists = async (
  * @param path 菜单路由地址
  * @param id 菜单 ID（可选）
  */
-export const isMenuPathExists = async (
+export const isMenuPathExistsApi = async (
   path: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
 ) => {
@@ -131,7 +131,7 @@ export const isMenuPathExists = async (
  * 创建菜单
  * @param data 菜单数据
  */
-export const createMenu = async (
+export const createMenuApi = async (
   data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
 ) => {
   return requestClient.post('/system/menus', data);
@@ -143,7 +143,7 @@ export const createMenu = async (
  * @param id 菜单 ID
  * @param data 菜单数据
  */
-export const updateMenu = async (
+export const updateMenuApi = async (
   id: string,
   data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
 ) => {
@@ -154,6 +154,6 @@ export const updateMenu = async (
  * 删除菜单
  * @param id 菜单 ID
  */
-export const deleteMenu = async (ids: string[]) => {
+export const deleteMenuApi = async (ids: string[]) => {
   return requestClient.delete(`/system/menus`, { data: ids });
 };

@@ -8,7 +8,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { Button } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { createDept, updateDept } from '#/api/system';
+import { createDeptApi, updateDeptApi } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useSchema } from '../data';
@@ -40,8 +40,8 @@ const [Modal, modalApi] = useVbenModal({
       const data = await formApi.getValues();
       try {
         await (formData.value?.id
-          ? updateDept(formData.value.id, data)
-          : createDept(data));
+          ? updateDeptApi(formData.value.id, data)
+          : createDeptApi(data));
         modalApi.close();
         emit('success');
       } finally {

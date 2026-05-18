@@ -21,7 +21,7 @@ export namespace SystemUserApi {
 /**
  * 获取用户列表数据
  */
-export const getUsersList = async (params: Recordable<any>) => {
+export const getUsersListApi = async (params: Recordable<any>) => {
   return requestClient.get<Array<SystemUserApi.SystemUserFace>>(
     '/system/users',
     {
@@ -30,21 +30,21 @@ export const getUsersList = async (params: Recordable<any>) => {
   );
 };
 
-export const getUserListAll = async (params?: Recordable<any>) => {
+export const getUserListAllApi = async (params?: Recordable<any>) => {
   return requestClient.get<Array<SystemUserApi.SystemUserFace>>(
     '/system/users/all',
     { params },
   );
 };
 
-export const createUser = async (
+export const createUserApi = async (
   data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
 ) => {
   const newData = objectOmit(data, ['userId']);
   return requestClient.post('/system/users', newData);
 };
 
-export const updateUser = async (
+export const updateUserApi = async (
   userId: number | string,
   data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
 ) => {
@@ -55,7 +55,7 @@ export const updateUser = async (
 /**
  * 删除用户
  */
-export const deleteUser = async (userIds: string[]) => {
+export const deleteUserApi = async (userIds: string[]) => {
   return requestClient.delete('/system/users', {
     data: userIds,
   });
@@ -64,7 +64,7 @@ export const deleteUser = async (userIds: string[]) => {
 /**
  * 更新用户状态
  */
-export const updateUserStatus = async (
+export const updateUserStatusApi = async (
   userId: number | string,
   data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
 ) => {

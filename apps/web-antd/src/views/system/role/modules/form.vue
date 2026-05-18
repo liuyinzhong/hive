@@ -13,7 +13,7 @@ import { IconifyIcon } from '@vben/icons';
 import { Spin } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { createRole, getMenuList, updateRole } from '#/api/system';
+import { createRoleApi, getMenuListApi, updateRoleApi } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';
@@ -37,7 +37,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     if (!valid) return;
     const values = await formApi.getValues();
     drawerApi.lock();
-    (roleId.value ? updateRole(roleId.value, values) : createRole(values))
+    (roleId.value ? updateRoleApi(roleId.value, values) : createRoleApi(values))
       .then(() => {
         emits('success');
         drawerApi.close();
@@ -68,7 +68,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
 async function loadPermissions() {
   loadingPermissions.value = true;
   try {
-    const res = await getMenuList();
+    const res = await getMenuListApi();
     permissions.value = res as unknown as DataNode[];
   } finally {
     loadingPermissions.value = false;

@@ -15,7 +15,7 @@ import {
   getStoryList,
   getVersionsList,
 } from '#/api/dev';
-import { getUserListAll } from '#/api/system';
+import { getUserListAllApi } from '#/api/system';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 import { getLocalDictList } from '#/dicts';
@@ -224,7 +224,7 @@ export function useFormSchema(): VbenFormSchema[] {
         };
       },
       componentProps: {
-        api: () => getUserListAll(),
+        api: () => getUserListAllApi(),
         labelField: 'realName',
         valueField: 'userId',
         resultField: 'items',

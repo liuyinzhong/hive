@@ -5,7 +5,7 @@ import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { SystemDeptApi } from '#/api/system';
 
 import { z } from '#/adapter/form';
-import { getDeptList } from '#/api/system';
+import { getDeptListApi } from '#/api/system';
 import { $t } from '#/locales';
 
 /**
@@ -29,7 +29,7 @@ export function useSchema(): VbenFormSchema[] {
       component: 'ApiTreeSelect',
       componentProps: {
         allowClear: true,
-        api: getDeptList,
+        api: getDeptListApi,
         class: 'w-full',
         labelField: 'name',
         valueField: 'id',

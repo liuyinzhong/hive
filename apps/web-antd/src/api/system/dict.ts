@@ -8,9 +8,9 @@ export namespace SystemDictApi {
   export interface SystemDictFace {
     [key: string]: any;
     /** 字典id,; */
-    id?: number | string;
+    id: string;
     /** 字典父id,; */
-    pid?: null | number | string;
+    pid?: string;
     /** 字典标题,; */
     label?: string;
     /** 字典值,; */
@@ -43,7 +43,7 @@ export const getDictListApi = async (params: Recordable<any>) => {
 /**
  * 获取字典全量数据
  */
-export const getDictListAll = async () => {
+export const getDictListAllApi = async () => {
   return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
     '/system/dicts/all',
   );
@@ -52,7 +52,7 @@ export const getDictListAll = async () => {
 /**
  * 创建字典
  */
-export const createDict = async (
+export const createDictApi = async (
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
 ) => {
   const newData = objectOmit(data, ['children', 'id']);
@@ -62,10 +62,16 @@ export const createDict = async (
 /**
  * 更新字典
  */
-export const updateDict = async (
+export const updateDictApi = async (
   id: number | string,
   data: Omit<SystemDictApi.SystemDictFace, 'children' | 'id'>,
 ) => {
   const newData = objectOmit(data, ['children', 'id']);
   return requestClient.put(`/system/dicts/${id}`, newData);
+};
+
+export const deleteDictApi = async (ids: string[]) => {
+  return requestClient.delete(`/system/dicts`, {
+    data: ids,
+  });
 };

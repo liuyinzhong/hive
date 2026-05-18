@@ -15,7 +15,7 @@ import { Plus } from '@vben/icons';
 import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getUsersList, deleteUser, updateUserStatus } from '#/api/system';
+import { getUsersListApi, deleteUser, updateUserStatus } from '#/api/system';
 import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
@@ -44,7 +44,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getUsersList({
+          return await getUsersListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,

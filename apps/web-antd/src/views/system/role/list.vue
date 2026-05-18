@@ -13,7 +13,11 @@ import { Plus } from '@vben/icons';
 import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteRole, getRoleList, updateRoleStatus } from '#/api/system';
+import {
+  deleteRoleApi,
+  getRoleListApi,
+  updateRoleStatusApi,
+} from '#/api/system';
 import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
@@ -38,7 +42,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getRoleList({
+          return await getRoleListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
@@ -110,7 +114,7 @@ async function onStatusChange(
       `你要将${row.roleTitle}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
       `切换状态`,
     );
-    await updateRoleStatus(row.roleId, { status: newStatus });
+    await updateRoleStatusApi(row.roleId, { status: newStatus });
     return true;
   } catch {
     return false;
@@ -127,7 +131,7 @@ function onDelete(row: SystemRoleApi.SystemRoleFace) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteRole([row.roleId])
+  deleteRoleApi([row.roleId])
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),

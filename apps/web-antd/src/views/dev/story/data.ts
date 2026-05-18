@@ -8,7 +8,7 @@ import { message } from 'ant-design-vue';
 
 import { getModulesList, getProjectsList, getVersionsList } from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
-import { getUserListAll } from '#/api/system';
+import { getUserListAllApi } from '#/api/system';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { storyRichTemplateText } from '#/template/richText';
@@ -43,7 +43,7 @@ export function useFormSchema(): VbenFormSchema[] {
         allowClear: true,
         mode: 'multiple',
         maxTagCount: 6,
-        api: () => getUserListAll(),
+        api: () => getUserListAllApi(),
         labelField: 'realName',
         valueField: 'userId',
         resultField: 'items',

@@ -7,7 +7,7 @@ import { ApiComponent } from '@vben/common-ui';
 import { Select } from 'ant-design-vue';
 
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
-import { getUserListAll } from '#/api/system';
+import { getUserListAllApi } from '#/api/system';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 
 export default {
@@ -31,7 +31,7 @@ export default {
         ApiComponent,
         {
           ...props,
-          api: getUserListAll,
+          api: getUserListAllApi,
           labelField: 'realName',
           valueField: 'userId',
           optionFilterProp: 'label',

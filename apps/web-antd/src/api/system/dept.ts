@@ -15,7 +15,7 @@ export namespace SystemDeptApi {
 /**
  * 获取部门列表数据
  */
-export const getDeptList = async () => {
+export const getDeptListApi = async () => {
   return requestClient.get<Array<SystemDeptApi.SystemDeptFace>>(
     '/system/depts',
   );
@@ -25,7 +25,7 @@ export const getDeptList = async () => {
  * 创建部门
  * @param data 部门数据
  */
-export const createDept = async (
+export const createDeptApi = async (
   data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'deptId'>,
 ) => {
   return requestClient.post('/system/depts', data);
@@ -35,7 +35,7 @@ export const createDept = async (
  * 更新部门
  * @param data 部门数据
  */
-export const updateDept = async (
+export const updateDeptApi = async (
   deptId: string,
   data: Omit<SystemDeptApi.SystemDeptFace, 'children' | 'deptId'>,
 ) => {
@@ -46,7 +46,7 @@ export const updateDept = async (
  * 删除部门
  * @param deptIds 部门ID数组
  */
-export const deleteDept = async (deptIds: string[]) => {
+export const deleteDeptApi = async (deptIds: string[]) => {
   return requestClient.delete('/system/depts', {
     data: deptIds,
   });
@@ -55,7 +55,7 @@ export const deleteDept = async (deptIds: string[]) => {
 /**
  * 获取所有启用的部门列表
  */
-export const getAllDeptList = async () => {
+export const getAllDeptListApi = async () => {
   return requestClient.get<Array<SystemDeptApi.SystemDeptFace>>(
     '/system/depts/all',
   );

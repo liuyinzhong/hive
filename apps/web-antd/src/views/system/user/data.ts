@@ -9,7 +9,7 @@ import { h } from 'vue';
 import { Flex } from 'ant-design-vue';
 
 import { z } from '#/adapter/form';
-import { getAllDeptList, getAllRoleList } from '#/api/system';
+import { getAllDeptListApi, getAllRoleListApi } from '#/api/system';
 import { $t } from '#/locales';
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -78,7 +78,7 @@ export function useFormSchema(): VbenFormSchema[] {
         },
       }),
       componentProps: {
-        api: getAllDeptList,
+        api: getAllDeptListApi,
         optionFilterProp: 'label',
         labelField: 'deptTitle',
         valueField: 'deptId',
@@ -100,7 +100,7 @@ export function useFormSchema(): VbenFormSchema[] {
         },
       }),
       componentProps: {
-        api: getAllRoleList,
+        api: getAllRoleListApi,
         optionFilterProp: 'label',
         labelField: 'roleTitle',
         valueField: 'roleId',

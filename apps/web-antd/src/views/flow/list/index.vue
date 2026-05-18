@@ -11,7 +11,7 @@ import { Plus } from '@vben/icons';
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteDept, getDeptList } from '#/api/system';
+import { deleteDeptApi, getDeptListApi } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useColumns } from './data';
@@ -55,7 +55,7 @@ function onDelete(row: SystemDeptApi.SystemDeptFace) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteDept(row.id)
+  deleteDeptApi(row.id)
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),
@@ -103,7 +103,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async (_params) => {
-          return await getDeptList();
+          return await getDeptListApi();
         },
       },
     },

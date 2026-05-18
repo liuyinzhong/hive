@@ -8,7 +8,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { Button } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { createDict, updateDict } from '#/api/system';
+import { createDictApi, updateDictApi } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useFormSchema } from './data';
@@ -39,7 +39,7 @@ const [Modal, modalApi] = useVbenModal({
       modalApi.lock();
       const data = await formApi.getValues();
 
-      (data.id ? updateDict(data.id, data) : createDict(data))
+      (data.id ? updateDictApi(data.id, data) : createDictApi(data))
         .then(() => {
           modalApi.close();
         })

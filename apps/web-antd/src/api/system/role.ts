@@ -16,7 +16,7 @@ export namespace SystemRoleApi {
 /**
  * 获取角色列表数据
  */
-export const getRoleList = async (params: Recordable<any>) => {
+export const getRoleListApi = async (params: Recordable<any>) => {
   return requestClient.get<Array<SystemRoleApi.SystemRoleFace>>(
     '/system/roles',
     { params },
@@ -27,7 +27,7 @@ export const getRoleList = async (params: Recordable<any>) => {
  * 创建角色
  * @param data 角色数据
  */
-export const createRole = async (
+export const createRoleApi = async (
   data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
 ) => {
   return requestClient.post('/system/roles', data);
@@ -38,7 +38,7 @@ export const createRole = async (
  *
  * @param data 角色数据
  */
-export const updateRole = async (
+export const updateRoleApi = async (
   roleId: string,
   data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
 ) => {
@@ -48,7 +48,7 @@ export const updateRole = async (
 /**
  * 删除角色
  */
-export const deleteRole = async (roleIds: string[]) => {
+export const deleteRoleApi = async (roleIds: string[]) => {
   return requestClient.delete('/system/roles', {
     data: roleIds,
   });
@@ -57,7 +57,7 @@ export const deleteRole = async (roleIds: string[]) => {
 /**
  * 切换角色状态
  */
-export const updateRoleStatus = async (
+export const updateRoleStatusApi = async (
   roleId: string,
   data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
 ) => {
@@ -67,7 +67,7 @@ export const updateRoleStatus = async (
 /**
  * 获取所有启用的角色列表
  */
-export const getAllRoleList = async () => {
+export const getAllRoleListApi = async () => {
   return requestClient.get<Array<SystemRoleApi.SystemRoleFace>>(
     '/system/roles/all',
   );

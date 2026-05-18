@@ -1,11 +1,11 @@
 import type { SystemDictApi } from '#/api/system';
 
-import { getDictListAll } from '#/api/system';
+import { getDictListAllApi } from '#/api/system';
 
 const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
 
 // 初始化字典数据，使用 void 操作符标记 Promise 为有意忽略
-void getDictListAll()
+void getDictListAllApi()
   .then((res) => {
     res.forEach((item: SystemDictApi.SystemDictFace) => {
       if (item.type !== undefined && item.type !== null) {

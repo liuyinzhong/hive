@@ -13,7 +13,7 @@ import { Plus } from '@vben/icons';
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getDictListApi } from '#/api/system';
+import { getDictListApi, deleteDictApi } from '#/api/system';
 import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
@@ -100,7 +100,17 @@ function onDelete(row: SystemDictApi.SystemDictFace) {
     duration: 0,
     key: 'action_process_msg',
   });
-  hideLoading();
+  deleteDictApi([row.id])
+    .then(() => {
+      message.success({
+        content: $t('ui.actionMessage.deleteSuccess', [row.label]),
+        key: 'action_process_msg',
+      });
+      refreshGrid();
+    })
+    .catch(() => {
+      hideLoading();
+    });
 }
 
 /**

@@ -54,13 +54,13 @@ export const getAccessCodesApi = async () => {
 /**
  * 获取当前登录用户信息
  */
-export const getProfile = async () => {
+export const getProfileApi = async () => {
   return requestClient.get<SystemUserApi.SystemUserFace>('/auth/profile');
 };
 
 /**
  * 获取当前登录用户菜单
  */
-export const getMyMenus = async () => {
+export const getMyMenusApi = async () => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>('/auth/menus');
 };
