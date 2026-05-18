@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useVbenDrawer, useVbenForm } from '@vben/common-ui';
 
-import { createUser, updateUser } from '#/api/system';
+import { createUserApi, updateUserApi } from '#/api/system';
 import { useFormSchema } from './data';
 
 defineOptions({
@@ -18,7 +18,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     if (valid) {
       const data = await formApi.getValues();
       drawerApi.lock();
-      (data.userId ? updateUser(data.userId, data) : createUser(data))
+      (data.userId ? updateUserApi(data.userId, data) : createUserApi(data))
         .then(() => {
           drawerApi.close();
         })

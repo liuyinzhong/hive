@@ -15,7 +15,7 @@ import { Plus } from '@vben/icons';
 import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getUsersListApi, deleteUser, updateUserStatus } from '#/api/system';
+import { getUsersListApi, deleteUserApi, updateUserStatusApi } from '#/api/system';
 import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
@@ -97,7 +97,7 @@ async function onDelete(row: SystemUserApi.SystemUserFace) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteUser([row.userId])
+  deleteUserApi([row.userId])
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.realName]),
@@ -149,7 +149,7 @@ async function onStatusChange(
       `你要将${row.realName}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
       `切换状态`,
     );
-    await updateUserStatus(row.userId, { status: newStatus });
+    await updateUserStatusApi(row.userId, { status: newStatus });
     return true;
   } catch {
     return false;
