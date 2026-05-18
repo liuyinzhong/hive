@@ -48,6 +48,12 @@ export function useColumns(
     },
     {
       align: 'left',
+      field: 'name',
+      title: $t('system.menu.pathName'),
+      width: 100,
+    },
+    {
+      align: 'left',
       field: 'path',
       title: $t('system.menu.path'),
       width: 200,

@@ -55,19 +55,20 @@ const schema: VbenFormSchema[] = [
   {
     component: 'Input',
     fieldName: 'name',
-    label: $t('system.menu.menuName'),
-    help: $t('system.menu.menuNameHelp'),
+    label: $t('system.menu.pathName'),
+    help: $t('system.menu.pathNameHelp'),
     rules: z
       .string()
-      .min(2, $t('ui.formRules.minLength', [$t('system.menu.menuName'), 2]))
-      .max(30, $t('ui.formRules.maxLength', [$t('system.menu.menuName'), 30]))
+      .min(2, $t('ui.formRules.minLength', [$t('system.menu.pathName'), 2]))
+      .max(30, $t('ui.formRules.maxLength', [$t('system.menu.pathName'), 30]))
+      .regex(/^[A-Za-z]+$/, { message: '只能输入英文字母' })
       .refine(
         async (value: string) => {
           return !(await isMenuNameExists(value, formData.value?.id));
         },
         (value) => ({
           message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.menuName'),
+            $t('system.menu.pathName'),
             value,
           ]),
         }),

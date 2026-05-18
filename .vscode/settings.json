@@ -211,11 +211,7 @@
 
   "cssVariables.lookupFiles": ["packages/@core/base/design/src/**/*.css"],
 
-  "i18n-ally.localesPaths": [
-    "packages/locales/src/langs",
-    "playground/src/locales/langs",
-    "apps/web-antd/src/locales/langs"
-  ],
+  "i18n-ally.localesPaths": ["apps/web-antd/src/locales/langs"],
   "i18n-ally.pathMatcher": "{locale}/{namespace}.{ext}",
   "i18n-ally.enabledParsers": ["json"],
   "i18n-ally.sourceLanguage": "en",

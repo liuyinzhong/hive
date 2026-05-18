@@ -93,12 +93,9 @@ export namespace SystemMenuApi {
 /**
  * 获取菜单数据列表
  */
-export const getMenuList = async (params?: Recordable<any>) => {
+export const getMenuList = async () => {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
     '/system/menus',
-    {
-      params,
-    },
   );
 };
 
@@ -111,7 +108,7 @@ export const isMenuNameExists = async (
   name: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
 ) => {
-  return requestClient.get<boolean>('/system/menu/name-exists', {
+  return requestClient.get<boolean>('/system/menus/name-exists', {
     params: { id, name },
   });
 };
@@ -125,7 +122,7 @@ export const isMenuPathExists = async (
   path: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
 ) => {
-  return requestClient.get<boolean>('/system/menu/path-exists', {
+  return requestClient.get<boolean>('/system/menus/path-exists', {
     params: { id, path },
   });
 };
@@ -137,7 +134,7 @@ export const isMenuPathExists = async (
 export const createMenu = async (
   data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
 ) => {
-  return requestClient.post('/system/menu', data);
+  return requestClient.post('/system/menus', data);
 };
 
 /**
@@ -150,13 +147,13 @@ export const updateMenu = async (
   id: string,
   data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
 ) => {
-  return requestClient.put(`/system/menu/${id}`, data);
+  return requestClient.put(`/system/menus/${id}`, data);
 };
 
 /**
  * 删除菜单
  * @param id 菜单 ID
  */
-export const deleteMenu = async (id: string) => {
-  return requestClient.delete(`/system/menu/${id}`);
+export const deleteMenu = async (ids: string[]) => {
+  return requestClient.delete(`/system/menus`, { data: ids });
 };

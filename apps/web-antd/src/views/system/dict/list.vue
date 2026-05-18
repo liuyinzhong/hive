@@ -42,6 +42,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
       trigger: 'click',
       mode: 'cell',
     },
+    pagerConfig: {
+      enabled: false,
+    },
     treeConfig: {
       parentField: 'pid',
       rowField: 'id',
@@ -50,9 +53,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       transform: false,
     },
     proxyConfig: {
-      response: {
-        result: '',
-      },
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
           return await getDictListApi({

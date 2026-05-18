@@ -34,7 +34,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async (_params: any) => {
-          return await getMenuList(_params);
+          return await getMenuList();
         },
       },
     },
@@ -97,7 +97,7 @@ function onDelete(row: SystemMenuApi.SystemMenuFace) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteMenu(row.id)
+  deleteMenu([row.id])
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),
