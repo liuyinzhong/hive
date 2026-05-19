@@ -1,4 +1,4 @@
-import { requestClient } from '#/api/request';
+import { baseRequestClient, requestClient } from '#/api/request';
 import type { SystemMenuApi, SystemUserApi } from '../system';
 
 export namespace AuthApi {
@@ -22,34 +22,40 @@ export namespace AuthApi {
 /**
  * 登录
  */
-export const loginApi = async (data: AuthApi.LoginParams) => {
-  return requestClient.post<AuthApi.LoginResult>('/auth/login', data);
-};
+export async function loginApi(data: AuthApi.LoginParams) {
+  return requestClient.post<AuthApi.LoginResult>('/auth/login', data, {
+    withCredentials: true,
+  });
+}
 
 /**
  * 刷新accessToken
  */
-export const refreshTokenApi = async () => {
-  return requestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', {
-    withCredentials: true,
-  });
-};
+export async function refreshTokenApi() {
+  return baseRequestClient.post<AuthApi.RefreshTokenResult>(
+    '/auth/refresh',
+    null,
+    {
+      withCredentials: true,
+    },
+  );
+}
 
 /**
  * 退出登录
  */
-export const logoutApi = async () => {
-  return requestClient.post('/auth/logout', {
+export async function logoutApi() {
+  return baseRequestClient.post('/auth/logout', null, {
     withCredentials: true,
   });
-};
+}
 
 /**
  * 获取用户权限码
  */
-export const getAccessCodesApi = async () => {
+export async function getAccessCodesApi() {
   return requestClient.get<string[]>('/auth/codes');
-};
+}
 
 /**
  * 获取当前登录用户信息

@@ -120,10 +120,12 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   return client;
 }
 
+/* 使用 vben基本请求又一次封装适配业务的方法 */
 export const requestClient = createRequestClient(apiURL, {
   responseReturn: 'data',
 });
 
+/* 直接使用 vben的基本请求 */
 export const baseRequestClient = new RequestClient({ baseURL: apiURL });
 
 export interface PageFetchParams {
