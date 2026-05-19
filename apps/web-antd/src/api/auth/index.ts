@@ -1,4 +1,4 @@
-import { baseRequestClient, requestClient } from '#/api/request';
+import { requestClient } from '#/api/request';
 import type { SystemMenuApi, SystemUserApi } from '../system';
 
 export namespace AuthApi {
@@ -32,20 +32,16 @@ export async function loginApi(data: AuthApi.LoginParams) {
  * 刷新accessToken
  */
 export async function refreshTokenApi() {
-  return baseRequestClient.post<AuthApi.RefreshTokenResult>(
-    '/auth/refresh',
-    null,
-    {
-      withCredentials: true,
-    },
-  );
+  return requestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', null, {
+    withCredentials: true,
+  });
 }
 
 /**
  * 退出登录
  */
 export async function logoutApi() {
-  return baseRequestClient.post('/auth/logout', null, {
+  return requestClient.post('/auth/logout', null, {
     withCredentials: true,
   });
 }
@@ -58,15 +54,15 @@ export async function getAccessCodesApi() {
 }
 
 /**
- * 获取当前登录用户信息
+ * 获取用户信息
  */
-export const getProfileApi = async () => {
+export async function getProfileApi() {
   return requestClient.get<SystemUserApi.SystemUserFace>('/auth/profile');
-};
+}
 
 /**
  * 获取当前登录用户菜单
  */
-export const getMyMenusApi = async () => {
+export async function getMyMenusApi() {
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>('/auth/menus');
-};
+}

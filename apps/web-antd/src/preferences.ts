@@ -32,7 +32,6 @@ export const overridesPreferences = defineOverridesPreferences({
     // accessMode: 'frontend', // 默认值
     accessMode: 'mixed',
     // accessMode: 'mixed',
-    defaultHomePath: '/dashboard',
   },
   widget: {
     languageToggle: true,
