@@ -95,6 +95,7 @@ catalog:
   '@vitejs/plugin-vue': ^6.0.7
   '@vitejs/plugin-vue-jsx': ^5.1.5
   '@vue/shared': ^3.5.34
+  '@vue-flow/core': ^1.47.0
   '@vue/test-utils': ^2.4.10
   '@vueuse/core': ^14.3.0
   '@vueuse/integrations': ^14.3.0
