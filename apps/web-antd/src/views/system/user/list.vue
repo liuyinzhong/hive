@@ -23,6 +23,7 @@ import {
 import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
+import { formatSorts } from '#/utils';
 
 onMounted(() => {
   // console.log('onMounted');
@@ -52,11 +53,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async (_pager: any, formValues: Recordable<any>) => {
-          debugger;
+        query: async (
+          { page, sorts, filters }: any,
+          formValues: Recordable<any>,
+        ) => {
           return await getUsersListApi({
-            page: _pager.page.currentPage,
-            pageSize: _pager.page.pageSize,
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            sorts: formatSorts(sorts),
             ...formValues,
           });
         },

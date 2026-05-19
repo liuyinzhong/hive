@@ -1,4 +1,4 @@
-import { baseRequestClient, requestClient } from '#/api/request';
+import { requestClient } from '#/api/request';
 import type { SystemMenuApi, SystemUserApi } from '../system';
 
 export namespace AuthApi {
@@ -30,7 +30,7 @@ export const loginApi = async (data: AuthApi.LoginParams) => {
  * 刷新accessToken
  */
 export const refreshTokenApi = async () => {
-  return baseRequestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', {
+  return requestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', {
     withCredentials: true,
   });
 };
@@ -39,7 +39,7 @@ export const refreshTokenApi = async () => {
  * 退出登录
  */
 export const logoutApi = async () => {
-  return baseRequestClient.post('/auth/logout', {
+  return requestClient.post('/auth/logout', {
     withCredentials: true,
   });
 };

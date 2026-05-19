@@ -21,7 +21,7 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   // overrides
   app: {
-    enableRefreshToken: true /* 是否开启刷新accessToken功能 */,
+    enableRefreshToken: false /* 是否开启刷新accessToken功能 */,
     name: import.meta.env.VITE_APP_TITLE,
     // 检查更新的时间间隔，单位为分钟
     checkUpdatesInterval: 60,

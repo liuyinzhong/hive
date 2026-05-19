@@ -82,6 +82,8 @@ export function useColumns<T = SystemRoleApi.SystemRoleFace>(
       field: 'roleTitle',
       title: $t('system.role.roleName'),
       width: 200,
+      sortable: true,
+      sortBy: 'roleTitle',
     },
     {
       cellRender: {
@@ -101,6 +103,8 @@ export function useColumns<T = SystemRoleApi.SystemRoleFace>(
       field: 'createDate',
       title: $t('system.role.createDate'),
       width: 200,
+      sortable: true,
+      sortBy: 'createDate',
     },
     {
       align: 'center',

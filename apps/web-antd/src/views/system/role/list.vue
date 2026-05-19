@@ -22,6 +22,7 @@ import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
+import { formatSorts } from '#/utils';
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
@@ -39,12 +40,18 @@ const [Grid, gridApi] = useVbenVxeGrid({
     columns: useColumns(onActionClick, onStatusChange),
     height: 'auto',
     keepSource: true,
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
+      sort: true,
       ajax: {
-        query: async ({ page }: any, formValues: Recordable<any>) => {
+        query: async ({ page, sorts }: any, formValues: Recordable<any>) => {
           return await getRoleListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
+            sorts: formatSorts(sorts),
             ...formValues,
           });
         },
