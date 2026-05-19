@@ -142,8 +142,9 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * 获取表格列配置
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns(
+export function useColumns<T = SystemDictApi.SystemDictFace>(
   onActionClick?: OnActionClickFn<SystemDictApi.SystemDictFace>,
+  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<SystemDictApi.SystemDictFace>['columns'] {
   return [
     {
@@ -164,9 +165,13 @@ export function useColumns(
       align: 'left',
     },
     {
-      cellRender: { name: 'CellSwitch' },
+      cellRender: {
+        attrs: { beforeChange: onStatusChange },
+        name: 'CellSwitch',
+      },
       field: 'status',
-      title: $t('system.dept.status'),
+      title: $t('system.role.status'),
+      width: 100,
     },
 
     {

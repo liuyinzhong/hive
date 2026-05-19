@@ -41,15 +41,6 @@ export const getDictListApi = async (params: Recordable<any>) => {
 };
 
 /**
- * 获取字典全量数据
- */
-export const getDictListAllApi = async () => {
-  return requestClient.get<Array<SystemDictApi.SystemDictFace>>(
-    '/system/dicts/all',
-  );
-};
-
-/**
  * 创建字典
  */
 export const createDictApi = async (
@@ -74,4 +65,11 @@ export const deleteDictApi = async (ids: string[]) => {
   return requestClient.delete(`/system/dicts`, {
     data: ids,
   });
+};
+
+export const updateDictStatusApi = async (
+  id: number | string,
+  data: Omit<SystemDictApi.SystemDictFace, 'id'>,
+) => {
+  return requestClient.put(`/system/dicts/${id}/status`, data);
 };

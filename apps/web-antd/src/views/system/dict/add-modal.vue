@@ -45,8 +45,10 @@ const [Modal, modalApi] = useVbenModal({
         })
         .catch(() => {
           modalApi.unlock();
+        }).finally(() => {
+          emit('success');
         });
-      emit('success');
+      
     }
   },
   onOpenChange(isOpen) {

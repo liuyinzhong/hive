@@ -159,6 +159,8 @@ export function useColumns<T = SystemUserApi.SystemUserFace>(
     {
       field: 'avatar',
       title: '真实姓名',
+      sortable: true,
+      sortBy: 'realName',
       cellRender: {
         name: 'UserAvatar',
         props: {
@@ -167,7 +169,7 @@ export function useColumns<T = SystemUserApi.SystemUserFace>(
         },
       },
     },
-    { field: 'username', title: '登录名' },
+    { field: 'username', title: '登录名', sortable: true },
     {
       cellRender: {
         attrs: { beforeChange: onStatusChange },
@@ -178,6 +180,7 @@ export function useColumns<T = SystemUserApi.SystemUserFace>(
       width: 100,
     },
     { field: 'desc', title: '描述' },
+    { field: 'createDate', title: '创建时间' },
     {
       align: 'right',
       field: 'operation',

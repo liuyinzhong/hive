@@ -1,11 +1,11 @@
 import type { SystemDictApi } from '#/api/system';
 
-import { getDictListAllApi } from '#/api/system';
+import { getDictListApi } from '#/api/system';
 
 const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
 
 // 初始化字典数据，使用 void 操作符标记 Promise 为有意忽略
-void getDictListAllApi()
+void getDictListApi({ status: 1 })
   .then((res) => {
     res.forEach((item: SystemDictApi.SystemDictFace) => {
       if (item.type !== undefined && item.type !== null) {
@@ -72,7 +72,7 @@ export const getLocalDictRow = (
   key?: string,
 ): SystemDictApi.SystemDictFace => {
   if (['', null, undefined].includes(value)) {
-    return {};
+    return {} as SystemDictApi.SystemDictFace;
   }
   const list: any = dictionaryData[type];
   const item: any = list?.find((a: any) => a[key || 'value'] === value);

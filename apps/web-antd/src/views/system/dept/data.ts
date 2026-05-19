@@ -93,13 +93,13 @@ export function useColumns(
       width: 100,
     },
     {
+      field: 'remark',
+      title: $t('system.dept.remark'),
+    },
+    {
       field: 'createDate',
       title: $t('system.dept.createDate'),
       width: 180,
-    },
-    {
-      field: 'remark',
-      title: $t('system.dept.remark'),
     },
     {
       align: 'right',

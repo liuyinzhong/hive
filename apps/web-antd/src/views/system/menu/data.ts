@@ -86,7 +86,6 @@ export function useColumns(
       title: $t('system.menu.status'),
       width: 100,
     },
-
     {
       align: 'right',
       cellRender: {

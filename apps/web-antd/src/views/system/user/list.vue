@@ -15,7 +15,11 @@ import { Plus } from '@vben/icons';
 import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getUsersListApi, deleteUserApi, updateUserStatusApi } from '#/api/system';
+import {
+  getUsersListApi,
+  deleteUserApi,
+  updateUserStatusApi,
+} from '#/api/system';
 import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
@@ -41,12 +45,18 @@ const [Grid, gridApi] = useVbenVxeGrid({
       custom: true,
       refresh: true,
     },
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
+      sort: true,
       ajax: {
-        query: async ({ page }: any, formValues: Recordable<any>) => {
+        query: async (_pager: any, formValues: Recordable<any>) => {
+          debugger;
           return await getUsersListApi({
-            page: page.currentPage,
-            pageSize: page.pageSize,
+            page: _pager.page.currentPage,
+            pageSize: _pager.page.pageSize,
             ...formValues,
           });
         },
