@@ -4021,7 +4021,7 @@
             "fixed": ""
           },
           "defName": {
-            "width": 230,
+            "width": 369,
             "fixed": ""
           },
           "primaryKey": {
@@ -4061,7 +4061,7 @@
             "fixed": ""
           },
           "stndDictId": {
-            "width": 230,
+            "width": 400,
             "fixed": ""
           },
           "stndFieldId": {
@@ -4076,8 +4076,8 @@
             "width": 100,
             "fixed": ""
           },
-          "dictFrom": {
-            "width": 120,
+          "fieldTier": {
+            "width": 100,
             "fixed": ""
           }
         }
@@ -5724,7 +5724,7 @@
           {
             "id": "4A975B2C-0CDE-430F-AB87-1B8D3ABCDDFD",
             "defKey": "task_status",
-            "defName": "任务生命周期状态,字典值",
+            "defName": "任务生命周期状态,字典TASK_STATUS的值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -5838,7 +5838,7 @@
           {
             "id": "41B5346E-2EB5-4BE1-BD0C-DA4DE0E3B945",
             "defKey": "task_type",
-            "defName": "任务类型,字典",
+            "defName": "任务类型,字典TASK_TYPE值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -6831,7 +6831,7 @@
           {
             "id": "9E405EE3-22E8-499C-8318-22A12A3A2A2B",
             "defKey": "version_type",
-            "defName": "更新类型,字典值",
+            "defName": "更新类型,字典VERSION_TYPE值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -7021,7 +7021,7 @@
           {
             "id": "A0F46A9B-292F-4AD3-95D6-48F59E519702",
             "defKey": "release_status",
-            "defName": "发布状态",
+            "defName": "发布状态 字典RELEASE_STATUS值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -7577,7 +7577,7 @@
           {
             "id": "5904FC3B-E2F9-428A-B9EF-D75DEF343803",
             "defKey": "story_type",
-            "defName": "需求类型",
+            "defName": "需求类型 字典STORY_TYPE的值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -7615,7 +7615,7 @@
           {
             "id": "025BE580-B660-4A5A-B7CF-F8043604698D",
             "defKey": "story_status",
-            "defName": "需求生命周期状态,字典值",
+            "defName": "需求生命周期状态,字典STORY_STATUS的值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -7653,7 +7653,7 @@
           {
             "id": "4366A518-0DF6-4DDD-8585-AA8E8F420200",
             "defKey": "story_level",
-            "defName": "需求优先级",
+            "defName": "需求优先级 字典STORY_LEVEL的值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -7805,7 +7805,7 @@
           {
             "id": "CBB5E90E-30DA-4198-A9DB-56CDF21F0B1B",
             "defKey": "source",
-            "defName": "需求来源,字典",
+            "defName": "需求来源,字典STORY_SOURCE值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -8155,7 +8155,7 @@
           {
             "id": "767C564D-A78D-4D96-84AF-7FFC67783333",
             "defKey": "bug_status",
-            "defName": "bug生命周期状态,字典值",
+            "defName": "bug生命周期状态,字典BUG_STATUS值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -8239,7 +8239,7 @@
           {
             "id": "7AA2D72E-19DE-4B69-96A9-BA7084B03096",
             "defKey": "bug_level",
-            "defName": "bug级别",
+            "defName": "bug级别 字典BUG_LEVEL值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -8277,7 +8277,7 @@
           {
             "id": "0119903F-62C5-4D86-8E8D-328CD3697B46",
             "defKey": "bug_env",
-            "defName": "bug环境",
+            "defName": "bug环境 字典 BUG_ENV 值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -8315,7 +8315,7 @@
           {
             "id": "6CB5F311-752C-4D27-9E54-460FB02BEC40",
             "defKey": "bug_source",
-            "defName": "bug来源",
+            "defName": "bug来源 字典BUG_SOURCE值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -8353,7 +8353,7 @@
           {
             "id": "885218DC-48FA-4AFD-8F5A-3BEDF934ADC4",
             "defKey": "bug_type",
-            "defName": "bug类型",
+            "defName": "bug类型 字典BUG_TYPE值",
             "intro": "",
             "baseDataType": "TINYINT",
             "bizDomainType": "",
@@ -17511,7 +17511,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1778912054206,
-  "signature": "c0feb1fd8ab47ebf0c3df51938e49662",
+  "updateTime": 1779249061766,
+  "signature": "6a0f2a9173fcc32513d8ab88d83591b5",
   "branchId": "1111"
 }
