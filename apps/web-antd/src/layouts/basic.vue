@@ -226,6 +226,7 @@ watch(
         :description="userStore.userInfo?.email"
         :tag-text="userStore.userInfo?.desc"
         @logout="handleLogout"
+        @clear-preferences-and-logout="handleLogout"
       />
     </template>
     <template #notification>
