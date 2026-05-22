@@ -12,7 +12,11 @@ import { onMounted, ref } from 'vue';
 import { EllipsisText, Page, useVbenModal } from '@vben/common-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getModulesList, getProjectsListApi } from '#/api/dev';
+import {
+  getModulesListApi,
+  getProjectsListApi,
+  deleteModuleApi,
+} from '#/api/dev';
 
 import addFormModal from './add-modal.vue';
 import addModuleModal from './add-moduleModal.vue';
@@ -39,7 +43,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       ajax: {
         // eslint-disable-next-line unused-imports/no-unused-vars
         query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getModulesList({
+          return await getModulesListApi({
             projectId: activeProjectId.value,
           });
         },
@@ -63,6 +67,7 @@ function onActionClick({
 }: OnActionClickParams<DevModuleApi.DevModuleFace>) {
   switch (code) {
     case 'delete': {
+      deleteModule(row.moduleId);
       break;
     }
     case 'edit': {
@@ -100,6 +105,7 @@ async function init() {
   if (items.value.length > 0) {
     activeProjectId.value = items.value[0]?.projectId || '';
   }
+  gridApi.query();
 }
 
 function createProject() {
@@ -115,6 +121,11 @@ const [AddModuleModal, AddModuleModalApi] = useVbenModal({
   connectedComponent: addModuleModal,
   destroyOnClose: true,
 });
+
+async function deleteModule(id: string) {
+  await deleteModuleApi([id]);
+  gridApi.query();
+}
 
 function openAddModuleModal(row: any) {
   AddModuleModalApi.setData(row).open();
@@ -185,7 +196,7 @@ function openAddModuleModal(row: any) {
           <template #extra>
             <a-button
               type="primary"
-              @click="openAddModuleModal({ projectId: activeProjectId.value })"
+              @click="openAddModuleModal({ projectId: activeProjectId })"
             >
               添加
             </a-button>

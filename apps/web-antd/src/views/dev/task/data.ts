@@ -10,7 +10,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { Flex, Tag, TypographyText } from 'ant-design-vue';
 
 import {
-  getModulesList,
+  getModulesListApi,
   getProjectsListApi,
   getStoryList,
   getVersionsList,
@@ -153,7 +153,7 @@ export function useFormSchema(): VbenFormSchema[] {
         }
         return {
           key: `moduleId_${value.projectId}`,
-          api: () => getModulesList({ projectId: value.projectId }),
+          api: () => getModulesListApi({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
           resultField: '',

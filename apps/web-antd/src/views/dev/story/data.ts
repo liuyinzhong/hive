@@ -6,7 +6,11 @@ import type { DevStoryApi } from '#/api/dev';
 
 import { message } from 'ant-design-vue';
 
-import { getModulesList, getProjectsListApi, getVersionsList } from '#/api/dev';
+import {
+  getModulesListApi,
+  getProjectsListApi,
+  getVersionsList,
+} from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
 import { getUserListAllApi } from '#/api/system';
 import { getLocalDictList } from '#/dicts';
@@ -117,7 +121,7 @@ export function useFormSchema(): VbenFormSchema[] {
         }
         return {
           key: `moduleId_${value.projectId}`,
-          api: () => getModulesList({ projectId: value.projectId }),
+          api: () => getModulesListApi({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
           resultField: '',
@@ -253,7 +257,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         }
         return {
           key: `moduleId_${value.projectId}`,
-          api: () => getModulesList({ projectId: value.projectId }),
+          api: () => getModulesListApi({ projectId: value.projectId }),
           labelField: 'moduleTitle',
           valueField: 'moduleId',
           resultField: '',

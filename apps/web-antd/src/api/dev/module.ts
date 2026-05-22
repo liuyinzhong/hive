@@ -23,13 +23,10 @@ export namespace DevModuleApi {
  *
  * @param params 查询参数
  */
-export const getModulesList = async (params: Recordable<any>) => {
-  return requestClient.get<Array<DevModuleApi.DevModuleFace>>(
-    '/dev/module/list',
-    {
-      params,
-    },
-  );
+export const getModulesListApi = async (params: Recordable<any>) => {
+  return requestClient.get<Array<DevModuleApi.DevModuleFace>>('/dev/modules', {
+    params,
+  });
 };
 
 /**
@@ -37,23 +34,27 @@ export const getModulesList = async (params: Recordable<any>) => {
  *
  * @param data 模块 数据
  */
-export const createModule = async (
+export const createModuleApi = async (
   data: Omit<DevModuleApi.DevModuleFace, 'moduleId'>,
 ) => {
   const newData = objectOmit(data, ['moduleId']);
-  return requestClient.post('/dev/module', newData);
+  return requestClient.post('/dev/modules', newData);
 };
 
 /**
  * 更新模块
- *
- * @param id 模块 ID
- * @param data 模块 数据
  */
-export const updateModule = async (
-  id: string,
+export const updateModuleApi = async (
+  moduleId: string,
   data: Omit<DevModuleApi.DevModuleFace, 'moduleId'>,
 ) => {
   const newData = objectOmit(data, ['moduleId']);
-  return requestClient.put(`/dev/module/${id}`, newData);
+  return requestClient.put(`/dev/modules/${moduleId}`, newData);
+};
+
+/**
+ * 删除模块
+ */
+export const deleteModuleApi = async (moduleIds: string[]) => {
+  return requestClient.delete(`/dev/modules`, { data: moduleIds });
 };

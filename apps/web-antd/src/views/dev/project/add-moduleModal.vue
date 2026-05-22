@@ -2,7 +2,7 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createModule, updateModule } from '#/api/dev';
+import { createModuleApi, updateModuleApi } from '#/api/dev';
 
 import { useFormModuleSchema } from './data';
 defineOptions({
@@ -44,16 +44,18 @@ const [Modal, modalApi] = useVbenModal({
 async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
   (values.moduleId
-    ? updateModule(values.moduleId, values)
-    : createModule(values)
+    ? updateModuleApi(values.moduleId, values)
+    : createModuleApi(values)
   )
     .then(() => {
       modalApi.close();
     })
     .catch(() => {
       modalApi.unlock();
+    })
+    .finally(() => {
+      emit('success');
     });
-  emit('success');
 }
 </script>
 <template>

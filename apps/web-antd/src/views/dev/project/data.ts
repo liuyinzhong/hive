@@ -10,6 +10,17 @@ export function useFormProjectSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
+      fieldName: 'projectId',
+      label: '主键id',
+      dependencies: {
+        triggerFields: ['projectId'],
+        show() {
+          return false;
+        },
+      },
+    },
+    {
+      component: 'Input',
       label: '项目标题',
       fieldName: 'projectTitle',
       rules: 'required',
@@ -58,11 +69,21 @@ export function useFormModuleSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      label: '关联项目id',
+      label: '主键id',
       fieldName: 'projectId',
       rules: 'required',
       dependencies: {
         triggerFields: ['projectId'],
+        show: false,
+      },
+    },
+    {
+      component: 'Input',
+      label: '主键id',
+      fieldName: 'moduleId',
+      rules: 'required',
+      dependencies: {
+        triggerFields: ['moduleId'],
         show: false,
       },
     },

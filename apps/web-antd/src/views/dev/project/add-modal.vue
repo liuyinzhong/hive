@@ -52,8 +52,10 @@ async function onSubmit(values: Record<string, any>) {
     })
     .catch(() => {
       modalApi.unlock();
+    })
+    .finally(() => {
+      emit('success');
     });
-  emit('success');
 }
 </script>
 <template>

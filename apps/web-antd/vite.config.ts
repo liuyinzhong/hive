@@ -14,6 +14,14 @@ export default defineConfig(async () => {
             // target: 'http://localhost:5320/api',
             ws: true,
           },
+          '/uploads': {
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/uploads/, ''),
+            // mock代理目标地址
+            target: 'http://localhost:9191/uploads',
+            // target: 'http://localhost:5320/uploads',
+            ws: true,
+          },
         },
       },
     },
