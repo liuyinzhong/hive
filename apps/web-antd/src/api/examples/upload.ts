@@ -14,7 +14,7 @@ export async function upload_file({
 }: UploadFileParams) {
   try {
     onProgress?.({ percent: 0 });
-    const data = await requestClient.upload('/upload', { file });
+    const data = await requestClient.upload('/system/upload', { file });
 
     onProgress?.({ percent: 100 });
     onSuccess?.(data, file);

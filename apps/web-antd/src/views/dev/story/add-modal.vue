@@ -53,6 +53,7 @@ const [Modal, modalApi] = useVbenModal({
 
 async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
+  debugger;
   values.files = filesToUrlString(values.files || []);
   (values.storyId ? updateStory(values.storyId, values) : createStory(values))
     .then(() => {

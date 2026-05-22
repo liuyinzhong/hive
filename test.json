@@ -1,0 +1,15 @@
+{
+  "bugLevel": 0,
+  "bugEnv": 0,
+  "bugStatus": 0,
+  "bugSource": 0,
+  "bugType": 0,
+  "bugUa": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+  "bugTitle": "缺陷标题",
+  "projectId": "d8fd7341-b5ca-4548-88c5-9b6e67143e50",
+  "bugRichText": "<p>缺陷内容</p>",
+  "versionId": "038116db-a388-4255-94da-548d706718d0",
+  "moduleId": "a15bff70-3e48-4619-8153-8c69edcf8f85",
+  "storyId": "449de555-158a-495f-b097-7653a3385d69",
+  "userId": "fd8b5f2c-77c6-4e59-b81c-306c2fb85d44"
+}

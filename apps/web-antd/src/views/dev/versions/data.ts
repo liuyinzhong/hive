@@ -5,7 +5,7 @@ import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevVersionApi } from '#/api/dev';
 
 import { z } from '#/adapter/form';
-import { getLastVersion, getProjectsList } from '#/api/dev';
+import { getLastVersion, getProjectsListApi } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { changeVersionType } from '#/utils/versionUtils';
@@ -31,7 +31,7 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
       componentProps: () => {
         return {
-          api: () => getProjectsList(),
+          api: () => getProjectsListApi(),
           labelField: 'projectTitle',
           valueField: 'projectId',
           autoSelect: 'first',
@@ -151,7 +151,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'projectId',
       label: '项目',
       componentProps: {
-        api: () => getProjectsList(),
+        api: () => getProjectsListApi(),
         labelField: 'projectTitle',
         valueField: 'projectId',
         allowClear: true,

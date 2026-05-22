@@ -12,7 +12,7 @@ export namespace DevChangeApi {
     creatorId?: string;
     creatorName?: string;
     businessId?: string;
-    /* 字典：CHANGE_TYPE */
+    /* 字典：BUSINESS_TYPE */
     businessType?: string;
     extendJson?: string;
     /** 创建时间 (在TS中通常使用字符串格式的时间，也可根据实际情况用Date) */

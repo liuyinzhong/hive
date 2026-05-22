@@ -6,7 +6,7 @@ import type { DevStoryApi } from '#/api/dev';
 
 import { message } from 'ant-design-vue';
 
-import { getModulesList, getProjectsList, getVersionsList } from '#/api/dev';
+import { getModulesList, getProjectsListApi, getVersionsList } from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
 import { getUserListAllApi } from '#/api/system';
 import { getLocalDictList } from '#/dicts';
@@ -36,7 +36,7 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      fieldName: 'userList',
+      fieldName: 'users',
       label: '参与人员',
       formItemClass: 'col-span-3',
       componentProps: {
@@ -57,7 +57,7 @@ export function useFormSchema(): VbenFormSchema[] {
       formItemClass: 'col-span-1',
       componentProps: (_value: any, _formApi: any) => {
         return {
-          api: () => getProjectsList(),
+          api: () => getProjectsListApi(),
           labelField: 'projectTitle',
           valueField: 'projectId',
           autoSelect: 'first',
@@ -206,7 +206,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: '项目',
       componentProps: () => {
         return {
-          api: () => getProjectsList(),
+          api: () => getProjectsListApi(),
           labelField: 'projectTitle',
           valueField: 'projectId',
           allowClear: true,
@@ -361,6 +361,7 @@ export function useColumns(
               storyId: row.storyId,
               userIds: val,
             };
+            console.log(_params);
             message.success(`控制台已输出`);
           },
         },

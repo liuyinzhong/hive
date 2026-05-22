@@ -41,7 +41,7 @@ watch(
           {{ item.createDate }}
           <span style="margin-right: 8px">{{ item.creatorName }}</span>
           <DictTag dict-type="CHANGE_BEHAVIOR" :value="item.changeBehavior" />
-          <DictTag dict-type="CHANGE_TYPE" :value="item.businessType" />
+          <DictTag dict-type="BUSINESS_TYPE" :value="item.businessType" />
         </div>
 
         <div v-html="item.changeRichText"></div>

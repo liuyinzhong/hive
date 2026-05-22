@@ -2,7 +2,7 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createProject, updateProject } from '#/api/dev';
+import { createProjectApi, updateProjectApi } from '#/api/dev';
 import { filesToUrlString, urlStringToFiles } from '#/utils';
 
 import { useFormProjectSchema } from './data';
@@ -44,8 +44,8 @@ async function onSubmit(values: Record<string, any>) {
   }
 
   (values.projectId
-    ? updateProject(values.projectId, values)
-    : createProject(values)
+    ? updateProjectApi(values.projectId, values)
+    : createProjectApi(values)
   )
     .then(() => {
       modalApi.close();

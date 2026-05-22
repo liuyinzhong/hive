@@ -4133,11 +4133,6 @@
             "orderValue": 7
           },
           {
-            "refObjectId": "996E311D-A997-4DF1-A75C-3B5F71B17F2F",
-            "refObjectType": "P",
-            "orderValue": 8
-          },
-          {
             "refObjectId": "B58CD3DE-77F0-4903-A9D8-57A0836C9A39",
             "refObjectType": "C",
             "orderValue": 1
@@ -4200,6 +4195,11 @@
             "refObjectId": "E1633388-E504-4B2B-A4BB-C518430E8843",
             "refObjectType": "P",
             "orderValue": 8
+          },
+          {
+            "refObjectId": "302ED7D0-442B-420C-A9BC-99451A809BAB",
+            "refObjectType": "P",
+            "orderValue": 9
           }
         ],
         "diagramRefs": [
@@ -4290,7 +4290,7 @@
           "orderValue": 15
         },
         {
-          "refObjectId": "996E311D-A997-4DF1-A75C-3B5F71B17F2F",
+          "refObjectId": "302ED7D0-442B-420C-A9BC-99451A809BAB",
           "refObjectType": "P",
           "orderValue": 16
         },
@@ -6793,7 +6793,7 @@
           {
             "id": "CD33AAA1-59C1-41B1-B1B2-084B6DBF6411",
             "defKey": "creator_id",
-            "defName": "创建人",
+            "defName": "创建人id",
             "intro": "",
             "baseDataType": "CHAR",
             "bizDomainType": "",
@@ -7271,44 +7271,6 @@
             "origin": "UI"
           },
           {
-            "id": "234CAC91-6264-485F-B490-DE678C1D2543",
-            "defKey": "pid",
-            "defName": "父级需求id",
-            "intro": "",
-            "baseDataType": "VARCHAR",
-            "bizDomainType": "",
-            "dbDataType": "VARCHAR",
-            "dataLen": 36,
-            "numScale": "",
-            "primaryKey": 0,
-            "notNull": 0,
-            "autoIncrement": 0,
-            "defaultValue": "",
-            "stndDictId": "",
-            "stndFieldId": "",
-            "attr1": "",
-            "attr2": "",
-            "attr3": "",
-            "attr4": "",
-            "attr5": "",
-            "attr6": "",
-            "attr7": "",
-            "attr8": "",
-            "attr9": "",
-            "attr10": "",
-            "attr11": "",
-            "attr12": "",
-            "attr13": "",
-            "attr14": "",
-            "attr15": "",
-            "attr16": "",
-            "attr17": "",
-            "attr18": "",
-            "attr19": "",
-            "attr20": "",
-            "origin": "UI"
-          },
-          {
             "id": "BB32A99F-E49C-4846-AD08-6836CF14EC8E",
             "defKey": "story_title",
             "defName": "需求名称",
@@ -7462,8 +7424,8 @@
           },
           {
             "id": "011CEFE4-BAD5-45E0-AC17-DE4A968AB934",
-            "defKey": "files",
-            "defName": "需求附件URL地址,逗号分隔",
+            "defKey": "file_ids",
+            "defName": "需求附件ids, 逗号分隔",
             "intro": "",
             "baseDataType": "TEXT",
             "bizDomainType": "",
@@ -7476,6 +7438,52 @@
             "defaultValue": "",
             "stndDictId": "",
             "stndFieldId": "",
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "9A9B1F93-A12B-4D48-8D84-405A77C8295B",
+            "defKey": "user_ids",
+            "defName": "参与人员ids，逗号分隔",
+            "intro": "",
+            "baseDataType": "",
+            "bizDomainType": "",
+            "dbDataType": "",
+            "dataLen": "",
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
             "attr1": "",
             "attr2": "",
             "attr3": "",
@@ -11522,7 +11530,7 @@
           {
             "id": "2653461F-232C-4DC0-A579-A9EF25C58B73",
             "defKey": "business_type",
-            "defName": "外键业务类型,字典 CHANGE_TYPE",
+            "defName": "外键业务类型,字典 BUSINESS_TYPE",
             "intro": "",
             "baseDataType": "VARCHAR",
             "bizDomainType": "",
@@ -11949,17 +11957,17 @@
         ]
       },
       {
-        "id": "996E311D-A997-4DF1-A75C-3B5F71B17F2F",
+        "id": "302ED7D0-442B-420C-A9BC-99451A809BAB",
         "schemaName": null,
-        "defKey": "dev_story_user",
-        "defName": "需求参与人员关联表",
-        "intro": "",
+        "defKey": "sys_file",
+        "defName": "系统文件表",
+        "intro": "通过上传的文件信息在这个表",
         "type": "P",
         "fields": [
           {
-            "id": "69533BE5-57B1-4002-B35B-F6675370C02D",
-            "defKey": "id",
-            "defName": "主键id",
+            "id": "B80A4F74-CB27-4815-B84F-C1D2D77AABF9",
+            "defKey": "file_id",
+            "defName": "文件id,主健",
             "intro": "",
             "baseDataType": "CHAR",
             "bizDomainType": "",
@@ -11967,11 +11975,19 @@
             "dataLen": 36,
             "numScale": "",
             "primaryKey": 1,
-            "notNull": 1,
+            "notNull": 0,
             "autoIncrement": 0,
             "defaultValue": "",
             "stndDictId": "",
             "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
             "attr1": "",
             "attr2": "",
             "attr3": "",
@@ -11995,9 +12011,469 @@
             "origin": "UI"
           },
           {
-            "id": "E56A7201-08BF-473F-B957-EA6A1E77C85C",
-            "defKey": "story_id",
-            "defName": "需求id",
+            "id": "70D3B074-4F26-41BA-8EB9-DCF632AFE2AB",
+            "defKey": "url",
+            "defName": "文件访问URL",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 512,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "0837BB0B-215B-41D6-87DB-23B1B62E316D",
+            "defKey": "name",
+            "defName": "存储文件名(UUID重命名)",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 256,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "FAE55D7D-80DC-433D-A439-C148F7717CF9",
+            "defKey": "type",
+            "defName": "MIME类型",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 64,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "E46A61E0-26C0-43F3-BE0D-AA079165D009",
+            "defKey": "size",
+            "defName": "文件大小(字节)",
+            "intro": "",
+            "baseDataType": "BIGINT",
+            "bizDomainType": "",
+            "dbDataType": "BIGINT",
+            "dataLen": "",
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "7DBF9CED-3F67-418E-A08A-DEA827CC3C7F",
+            "defKey": "file_ext",
+            "defName": "文件扩展名",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 16,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "13184D63-3616-4049-88BC-D7D4CBF1B720",
+            "defKey": "original_name",
+            "defName": "原始文件名",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 256,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "CE702A89-2E8B-429B-9B3B-B34060C672E7",
+            "defKey": "path",
+            "defName": "文件存储路径(不含文件名)",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 512,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "2685EB97-1449-4264-BC08-DE43C5F5C300",
+            "defKey": "full_path",
+            "defName": "完整路径(file_path + file_name)",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 512,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "97E42C27-59DF-487E-B630-9858888083F5",
+            "defKey": "thumbnail_path",
+            "defName": "缩略图路径 (图片专用)",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 512,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "ABDD5A68-6491-4BF4-9E00-7DB009A2758F",
+            "defKey": "thumbnail_url",
+            "defName": "缩略图URL (图片专用)",
+            "intro": "",
+            "baseDataType": "VARCHAR",
+            "bizDomainType": "",
+            "dbDataType": "VARCHAR",
+            "dataLen": 512,
+            "numScale": "",
+            "primaryKey": 0,
+            "notNull": 0,
+            "autoIncrement": 0,
+            "defaultValue": "",
+            "stndDictId": "",
+            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
+            "attr1": "",
+            "attr2": "",
+            "attr3": "",
+            "attr4": "",
+            "attr5": "",
+            "attr6": "",
+            "attr7": "",
+            "attr8": "",
+            "attr9": "",
+            "attr10": "",
+            "attr11": "",
+            "attr12": "",
+            "attr13": "",
+            "attr14": "",
+            "attr15": "",
+            "attr16": "",
+            "attr17": "",
+            "attr18": "",
+            "attr19": "",
+            "attr20": "",
+            "origin": "UI"
+          },
+          {
+            "id": "5BA66AC6-4F2E-4C1B-8847-3020A9858555",
+            "defKey": "creator_id",
+            "defName": "创建人id",
             "intro": "",
             "baseDataType": "CHAR",
             "bizDomainType": "",
@@ -12010,6 +12486,14 @@
             "defaultValue": "",
             "stndDictId": "",
             "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
             "attr1": "",
             "attr2": "",
             "attr3": "",
@@ -12033,47 +12517,9 @@
             "origin": "UI"
           },
           {
-            "id": "A94B3520-5022-4916-BD23-F6B1CEE3ADA8",
-            "defKey": "user_id",
-            "defName": "用户id",
-            "intro": "",
-            "baseDataType": "CHAR",
-            "bizDomainType": "",
-            "dbDataType": "CHAR",
-            "dataLen": 36,
-            "numScale": "",
-            "primaryKey": 0,
-            "notNull": 0,
-            "autoIncrement": 0,
-            "defaultValue": "",
-            "stndDictId": "",
-            "stndFieldId": "",
-            "attr1": "",
-            "attr2": "",
-            "attr3": "",
-            "attr4": "",
-            "attr5": "",
-            "attr6": "",
-            "attr7": "",
-            "attr8": "",
-            "attr9": "",
-            "attr10": "",
-            "attr11": "",
-            "attr12": "",
-            "attr13": "",
-            "attr14": "",
-            "attr15": "",
-            "attr16": "",
-            "attr17": "",
-            "attr18": "",
-            "attr19": "",
-            "attr20": "",
-            "origin": "UI"
-          },
-          {
-            "id": "BE867ACC-5B32-41B0-97E1-C84C2F2850F9",
+            "id": "EA5FAAAC-4077-495B-8591-75EBB790CFE1",
             "defKey": "create_date",
-            "defName": "创建时间",
+            "defName": "创建日期",
             "intro": "",
             "baseDataType": "DATETIME",
             "bizDomainType": "",
@@ -12086,82 +12532,14 @@
             "defaultValue": "",
             "stndDictId": "",
             "stndFieldId": "",
-            "attr1": "",
-            "attr2": "",
-            "attr3": "",
-            "attr4": "",
-            "attr5": "",
-            "attr6": "",
-            "attr7": "",
-            "attr8": "",
-            "attr9": "",
-            "attr10": "",
-            "attr11": "",
-            "attr12": "",
-            "attr13": "",
-            "attr14": "",
-            "attr15": "",
-            "attr16": "",
-            "attr17": "",
-            "attr18": "",
-            "attr19": "",
-            "attr20": "",
-            "origin": "UI"
-          },
-          {
-            "id": "00C56526-BB8F-4CA2-B7E8-8B5B5F86548B",
-            "defKey": "update_date",
-            "defName": "修改时间",
-            "intro": "",
-            "baseDataType": "DATETIME",
-            "bizDomainType": "",
-            "dbDataType": "DATETIME",
-            "dataLen": "",
-            "numScale": "",
-            "primaryKey": 0,
-            "notNull": 0,
-            "autoIncrement": 0,
-            "defaultValue": "",
-            "stndDictId": "",
-            "stndFieldId": "",
-            "attr1": "",
-            "attr2": "",
-            "attr3": "",
-            "attr4": "",
-            "attr5": "",
-            "attr6": "",
-            "attr7": "",
-            "attr8": "",
-            "attr9": "",
-            "attr10": "",
-            "attr11": "",
-            "attr12": "",
-            "attr13": "",
-            "attr14": "",
-            "attr15": "",
-            "attr16": "",
-            "attr17": "",
-            "attr18": "",
-            "attr19": "",
-            "attr20": "",
-            "origin": "UI"
-          },
-          {
-            "id": "AC477F56-0B03-4D2C-B08B-03CB9919E627",
-            "defKey": "del_flag",
-            "defName": "逻辑删除 0:正常 1:删除",
-            "intro": "",
-            "baseDataType": "TINYINT",
-            "bizDomainType": "",
-            "dbDataType": "TINYINT",
-            "dataLen": "",
-            "numScale": "",
-            "primaryKey": 0,
-            "notNull": 0,
-            "autoIncrement": 0,
-            "defaultValue": "0",
-            "stndDictId": "",
-            "stndFieldId": "",
+            "stndDictKey": "",
+            "stndFieldKey": "",
+            "stndComplianceLevel": "",
+            "stndComplianceType": "",
+            "dictFrom": "",
+            "dictItems": null,
+            "fieldTier": "",
+            "mark": null,
             "attr1": "",
             "attr2": "",
             "attr3": "",
@@ -12185,31 +12563,7 @@
             "origin": "UI"
           }
         ],
-        "indexes": [],
-        "refers": [
-          {
-            "type": "many-to-one",
-            "defKey": "",
-            "defName": "",
-            "intro": "",
-            "myFieldKey": "story_id",
-            "refSchemaName": null,
-            "refEntityKey": "dev_story",
-            "refFieldKey": "story_id",
-            "orderValue": 1
-          },
-          {
-            "type": "many-to-one",
-            "defKey": "",
-            "defName": "",
-            "intro": "",
-            "myFieldKey": "user_id",
-            "refSchemaName": null,
-            "refEntityKey": "sys_user",
-            "refFieldKey": "user_id",
-            "orderValue": 1
-          }
-        ]
+        "indexes": []
       }
     ],
     "diagrams": [
@@ -14021,511 +14375,6 @@
             "zIndex": 8
           },
           {
-            "position": {
-              "x": -1720,
-              "y": 10
-            },
-            "size": {
-              "width": 500,
-              "height": 310
-            },
-            "view": "react-shape-view",
-            "attrs": {
-              "body": {
-                "rx": 5
-              }
-            },
-            "shape": "physical-entity-node",
-            "id": "de611b67-c3be-43f6-a0d8-6ae4be114532",
-            "cellType": "physical-entity-node",
-            "originData": {
-              "id": "996E311D-A997-4DF1-A75C-3B5F71B17F2F"
-            },
-            "autoSize": false,
-            "entityRelationRank": "F",
-            "entityDisplay": {
-              "showFields": [
-                "defKey",
-                "defName",
-                "dbDataType",
-                "dataLen",
-                "numScale"
-              ],
-              "logicModelCompactShow": "N",
-              "logicModelCompactDelimiter": ","
-            },
-            "entitySetting": {
-              "titleText": {
-                "customValue": "{defKey}[{defName}]",
-                "optionValue": "A"
-              },
-              "titleStyle": {
-                "body": {
-                  "fill": "rgb(159, 193, 255)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "rgb(0, 0, 0)",
-                  "fontSize": "12",
-                  "font-style": "",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "contentStyle": {
-                "body": {
-                  "fill": "#ffffff",
-                  "fill-opacity": 0.9
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "italic",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "primaryKeyStyle": {
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "underline",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "foreignKeyStyle": {
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "italic",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": null,
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "fieldStyle": {
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "defaultSize": {
-                "width": 500,
-                "height": 310,
-                "optionValue": "C"
-              },
-              "borderStyle": {
-                "body": {
-                  "stroke": "rgb(179, 179, 179)",
-                  "stroke-width": 1,
-                  "stroke-opacity": 0.78695652173913,
-                  "stroke-dasharray": "0"
-                }
-              },
-              "divideLineStyle": {
-                "body": {
-                  "stroke": "rgb(214, 214, 214)",
-                  "stroke-width": 1,
-                  "stroke-opacity": 0.78695652173913,
-                  "stroke-dasharray": "0"
-                }
-              }
-            },
-            "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
-            },
-            "ports": {
-              "groups": {
-                "in": {
-                  "position": "absolute",
-                  "attrs": {
-                    "circle": {
-                      "r": 4,
-                      "magnet": true,
-                      "stroke": "#5F95FF",
-                      "strokeWidth": 1,
-                      "fill": "#fff",
-                      "style": {
-                        "visibility": "hidden"
-                      }
-                    }
-                  }
-                },
-                "out": {
-                  "position": "absolute",
-                  "attrs": {
-                    "circle": {
-                      "r": 4,
-                      "magnet": true,
-                      "stroke": "#5F95FF",
-                      "strokeWidth": 1,
-                      "fill": "#fff",
-                      "style": {
-                        "visibility": "hidden"
-                      }
-                    }
-                  }
-                }
-              },
-              "items": []
-            },
-            "zIndex": 11
-          },
-          {
-            "position": {
-              "x": -1710,
-              "y": 330
-            },
-            "size": {
-              "width": 500,
-              "height": 310
-            },
-            "view": "react-shape-view",
-            "attrs": {
-              "body": {
-                "rx": 5
-              }
-            },
-            "shape": "physical-entity-node",
-            "id": "355d50be-a9ae-486c-90b4-a47d1c307e82",
-            "cellType": "physical-entity-node",
-            "originData": {
-              "id": "E2B10654-CBC4-4BBF-A973-D0B416BC8CC1"
-            },
-            "autoSize": false,
-            "entityRelationRank": "F",
-            "entityDisplay": {
-              "showFields": [
-                "defKey",
-                "defName",
-                "dbDataType",
-                "dataLen",
-                "numScale"
-              ],
-              "logicModelCompactShow": "N",
-              "logicModelCompactDelimiter": ","
-            },
-            "entitySetting": {
-              "titleText": {
-                "customValue": "{defKey}[{defName}]",
-                "optionValue": "A"
-              },
-              "titleStyle": {
-                "body": {
-                  "fill": "rgb(159, 193, 255)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "rgb(0, 0, 0)",
-                  "fontSize": "12",
-                  "font-style": "",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "contentStyle": {
-                "body": {
-                  "fill": "#ffffff",
-                  "fill-opacity": 0.9
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "italic",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "primaryKeyStyle": {
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "underline",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "foreignKeyStyle": {
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "italic",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": null,
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "fieldStyle": {
-                "body": {
-                  "fill": "rgb(183，185，189)",
-                  "fill-opacity": 1
-                },
-                "text": {
-                  "fill": "",
-                  "fontSize": "12",
-                  "font-style": "",
-                  "fontFamily": "Arial",
-                  "textAnchor": "middle",
-                  "font-weight": "bold",
-                  "text-decoration": "",
-                  "textVerticalAnchor": "middle"
-                }
-              },
-              "defaultSize": {
-                "width": 500,
-                "height": 310,
-                "optionValue": "C"
-              },
-              "borderStyle": {
-                "body": {
-                  "stroke": "rgb(179, 179, 179)",
-                  "stroke-width": 1,
-                  "stroke-opacity": 0.78695652173913,
-                  "stroke-dasharray": "0"
-                }
-              },
-              "divideLineStyle": {
-                "body": {
-                  "stroke": "rgb(214, 214, 214)",
-                  "stroke-width": 1,
-                  "stroke-opacity": 0.78695652173913,
-                  "stroke-dasharray": "0"
-                }
-              }
-            },
-            "tools": {
-              "items": [
-                "node-size",
-                "highlight-node",
-                "link-node"
-              ]
-            },
-            "ports": {
-              "groups": {
-                "in": {
-                  "position": "absolute",
-                  "attrs": {
-                    "circle": {
-                      "r": 4,
-                      "magnet": true,
-                      "stroke": "#5F95FF",
-                      "strokeWidth": 1,
-                      "fill": "#fff",
-                      "style": {
-                        "visibility": "hidden"
-                      }
-                    }
-                  }
-                },
-                "out": {
-                  "position": "absolute",
-                  "attrs": {
-                    "circle": {
-                      "r": 4,
-                      "magnet": true,
-                      "stroke": "#5F95FF",
-                      "strokeWidth": 1,
-                      "fill": "#fff",
-                      "style": {
-                        "visibility": "hidden"
-                      }
-                    }
-                  }
-                }
-              },
-              "items": [
-                {
-                  "group": "out",
-                  "id": "more_out",
-                  "args": {
-                    "x": "100%",
-                    "y": 296
-                  },
-                  "attrs": {
-                    "circle": {
-                      "magnet": false,
-                      "style": {
-                        "pointerEvents": "none",
-                        "opacity": 0
-                      }
-                    }
-                  }
-                },
-                {
-                  "group": "in",
-                  "id": "more_in",
-                  "args": {
-                    "x": 0,
-                    "y": 296
-                  },
-                  "attrs": {
-                    "circle": {
-                      "magnet": false,
-                      "style": {
-                        "pointerEvents": "none",
-                        "opacity": 0
-                      }
-                    }
-                  }
-                }
-              ]
-            },
-            "zIndex": 12
-          },
-          {
-            "shape": "edge",
-            "attrs": {
-              "line": {
-                "stroke": "rgb(122, 167, 250)",
-                "targetMarker": {
-                  "name": "er-n",
-                  "strokeWidth": 1
-                },
-                "fill-opacity": 1,
-                "stroke-width": 1,
-                "stroke-opacity": 0.78695652173913,
-                "stroke-dasharray": "0",
-                "sourceMarker": {
-                  "name": "er-1",
-                  "strokeWidth": 1
-                }
-              },
-              "text": {
-                "textAnchor": "middle",
-                "textVerticalAnchor": "middle",
-                "fill": "#000000",
-                "fontSize": 14,
-                "font-weight": "normal",
-                "font-style": "normal",
-                "text-decoration": "none"
-              }
-            },
-            "id": "4BB3D8FC-746C-4316-9ABF-C0B0E2360A4D",
-            "connector": {
-              "name": "rounded"
-            },
-            "router": {
-              "name": "manhattan",
-              "padding": 30
-            },
-            "cellType": "edge",
-            "zIndex": 0,
-            "tools": {
-              "items": []
-            },
-            "source": {
-              "cell": "2ef5ae9a-54a8-4b01-9c61-3771a06e14d3",
-              "port": "D18908D3-DAEB-4827-A86B-0F39EA551A96_in"
-            },
-            "target": {
-              "cell": "de611b67-c3be-43f6-a0d8-6ae4be114532",
-              "port": "E56A7201-08BF-473F-B957-EA6A1E77C85C_out"
-            }
-          },
-          {
-            "shape": "edge",
-            "attrs": {
-              "line": {
-                "stroke": "rgb(122, 167, 250)",
-                "targetMarker": {
-                  "name": "er-n",
-                  "strokeWidth": 1
-                },
-                "fill-opacity": 1,
-                "stroke-width": 1,
-                "stroke-opacity": 0.78695652173913,
-                "stroke-dasharray": "0",
-                "sourceMarker": {
-                  "name": "er-1",
-                  "strokeWidth": 1
-                }
-              },
-              "text": {
-                "textAnchor": "middle",
-                "textVerticalAnchor": "middle",
-                "fill": "#000000",
-                "fontSize": 14,
-                "font-weight": "normal",
-                "font-style": "normal",
-                "text-decoration": "none"
-              }
-            },
-            "id": "C36DA537-F727-4D47-8894-AED9BB7B79B7",
-            "connector": {
-              "name": "rounded"
-            },
-            "router": {
-              "name": "manhattan",
-              "padding": 30
-            },
-            "cellType": "edge",
-            "zIndex": 0,
-            "tools": {
-              "items": []
-            },
-            "source": {
-              "cell": "355d50be-a9ae-486c-90b4-a47d1c307e82",
-              "port": "22C6757A-950E-4311-9666-209A50C461F9_out"
-            },
-            "target": {
-              "cell": "de611b67-c3be-43f6-a0d8-6ae4be114532",
-              "port": "A94B3520-5022-4916-BD23-F6B1CEE3ADA8_out"
-            }
-          },
-          {
             "shape": "edge",
             "attrs": {
               "line": {
@@ -15239,6 +15088,226 @@
               "cell": "e7149f44-073d-4e99-bec5-4415487dd0eb",
               "port": "E3E72018-EF2D-4010-B03A-1D680092A149_in"
             }
+          },
+          {
+            "position": {
+              "x": -1760,
+              "y": -220
+            },
+            "size": {
+              "width": 500,
+              "height": 450
+            },
+            "view": "react-shape-view",
+            "attrs": {
+              "body": {
+                "rx": 5
+              }
+            },
+            "shape": "physical-entity-node",
+            "id": "29f0783c-e079-4d19-87f6-f08b1d37bf7d",
+            "cellType": "physical-entity-node",
+            "originData": {
+              "id": "302ED7D0-442B-420C-A9BC-99451A809BAB"
+            },
+            "autoSize": false,
+            "entityRelationRank": "F",
+            "entityDisplay": {
+              "showFields": [
+                "defKey",
+                "defName",
+                "dbDataType",
+                "dataLen",
+                "numScale"
+              ],
+              "logicModelCompactShow": "N",
+              "logicModelCompactDelimiter": ","
+            },
+            "entitySetting": {
+              "titleText": {
+                "customValue": "{defKey}[{defName}]",
+                "optionValue": "A"
+              },
+              "titleStyle": {
+                "body": {
+                  "fill": "rgb(159, 193, 255)",
+                  "fill-opacity": 1
+                },
+                "text": {
+                  "fill": "rgb(0, 0, 0)",
+                  "fontSize": "12",
+                  "font-style": "",
+                  "fontFamily": "Arial",
+                  "textAnchor": "middle",
+                  "font-weight": "bold",
+                  "text-decoration": "",
+                  "textVerticalAnchor": "middle"
+                }
+              },
+              "contentStyle": {
+                "body": {
+                  "fill": "#ffffff",
+                  "fill-opacity": 0.9
+                },
+                "text": {
+                  "fill": "",
+                  "fontSize": "12",
+                  "font-style": "italic",
+                  "fontFamily": "Arial",
+                  "textAnchor": "middle",
+                  "font-weight": "bold",
+                  "text-decoration": "",
+                  "textVerticalAnchor": "middle"
+                }
+              },
+              "primaryKeyStyle": {
+                "body": {
+                  "fill": "rgb(183，185，189)",
+                  "fill-opacity": 1
+                },
+                "text": {
+                  "fill": "",
+                  "fontSize": "12",
+                  "font-style": "",
+                  "fontFamily": "Arial",
+                  "textAnchor": "middle",
+                  "font-weight": "bold",
+                  "text-decoration": "underline",
+                  "textVerticalAnchor": "middle"
+                }
+              },
+              "foreignKeyStyle": {
+                "body": {
+                  "fill": "rgb(183，185，189)",
+                  "fill-opacity": 1
+                },
+                "text": {
+                  "fill": "",
+                  "fontSize": "12",
+                  "font-style": "italic",
+                  "fontFamily": "Arial",
+                  "textAnchor": "middle",
+                  "font-weight": "bold",
+                  "text-decoration": null,
+                  "textVerticalAnchor": "middle"
+                }
+              },
+              "fieldStyle": {
+                "body": {
+                  "fill": "rgb(183，185，189)",
+                  "fill-opacity": 1
+                },
+                "text": {
+                  "fill": "",
+                  "fontSize": "12",
+                  "font-style": "",
+                  "fontFamily": "Arial",
+                  "textAnchor": "middle",
+                  "font-weight": "bold",
+                  "text-decoration": "",
+                  "textVerticalAnchor": "middle"
+                }
+              },
+              "defaultSize": {
+                "width": 500,
+                "height": 310,
+                "optionValue": "C"
+              },
+              "borderStyle": {
+                "body": {
+                  "stroke": "rgb(179, 179, 179)",
+                  "stroke-width": 1,
+                  "stroke-opacity": 0.78695652173913,
+                  "stroke-dasharray": "0"
+                }
+              },
+              "divideLineStyle": {
+                "body": {
+                  "stroke": "rgb(214, 214, 214)",
+                  "stroke-width": 1,
+                  "stroke-opacity": 0.78695652173913,
+                  "stroke-dasharray": "0"
+                }
+              }
+            },
+            "tools": {
+              "items": [
+                "node-size",
+                "highlight-node",
+                "link-node"
+              ]
+            },
+            "ports": {
+              "groups": {
+                "in": {
+                  "position": "absolute",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                },
+                "out": {
+                  "position": "absolute",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                }
+              },
+              "items": [
+                {
+                  "group": "out",
+                  "id": "more_out",
+                  "args": {
+                    "x": "100%",
+                    "y": 296
+                  },
+                  "attrs": {
+                    "circle": {
+                      "magnet": false,
+                      "style": {
+                        "pointerEvents": "none",
+                        "opacity": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": "in",
+                  "id": "more_in",
+                  "args": {
+                    "x": 0,
+                    "y": 296
+                  },
+                  "attrs": {
+                    "circle": {
+                      "magnet": false,
+                      "style": {
+                        "pointerEvents": "none",
+                        "opacity": 0
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "zIndex": 13
           }
         ]
       },
@@ -17389,7 +17458,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1779331653379,
-  "signature": "bcd77ee48c70561e2066a88e83ec421e",
+  "updateTime": 1779415501318,
+  "signature": "c9e1ad648215249b942b7ea376604ade",
   "branchId": "1111"
 }

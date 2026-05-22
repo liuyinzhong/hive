@@ -8,7 +8,7 @@ import { useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
 import * as VTable from '@visactor/vtable';
 import { message } from 'ant-design-vue';
 
-import { getModulesList, getProjectsList, getVersionsList } from '#/api/dev';
+import { getModulesList, getProjectsListApi, getVersionsList } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import {
   InputEditor,
@@ -42,7 +42,7 @@ const columns: VTable.ColumnsDefine = [
     title: '关联项目',
     width: 'auto',
     editor: new SelectEditor({
-      api: () => getProjectsList(),
+      api: () => getProjectsListApi(),
       labelField: 'projectTitle',
       valueField: 'projectId',
       resultField: '',

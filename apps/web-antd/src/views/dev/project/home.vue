@@ -12,7 +12,7 @@ import { onMounted, ref } from 'vue';
 import { EllipsisText, Page, useVbenModal } from '@vben/common-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getModulesList, getProjectsList } from '#/api/dev';
+import { getModulesList, getProjectsListApi } from '#/api/dev';
 
 import addFormModal from './add-modal.vue';
 import addModuleModal from './add-moduleModal.vue';
@@ -95,7 +95,7 @@ const [AddProjectModal, AddProjectModalApi] = useVbenModal({
 });
 
 async function init() {
-  const res = await getProjectsList();
+  const res = await getProjectsListApi();
   items.value = res || [];
   if (items.value.length > 0) {
     activeProjectId.value = items.value[0]?.projectId || '';

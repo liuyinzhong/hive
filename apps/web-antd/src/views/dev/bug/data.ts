@@ -11,7 +11,7 @@ import { Flex, Tag, TypographyText } from 'ant-design-vue';
 
 import {
   getModulesList,
-  getProjectsList,
+  getProjectsListApi,
   getStoryList,
   getVersionsList,
 } from '#/api/dev';
@@ -63,7 +63,7 @@ export function useFormSchema(): VbenFormSchema[] {
       formItemClass: 'col-span-1',
       componentProps: (_value: any, _formApi: any) => {
         return {
-          api: () => getProjectsList(),
+          api: () => getProjectsListApi(),
           labelField: 'projectTitle',
           valueField: 'projectId',
           autoSelect: 'first',
@@ -309,7 +309,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: '项目',
       componentProps: () => {
         return {
-          api: () => getProjectsList(),
+          api: () => getProjectsListApi(),
           labelField: 'projectTitle',
           valueField: 'projectId',
           allowClear: true,

@@ -16,9 +16,9 @@ export namespace DevProjectApi {
 /**
  * 获取项目列表
  */
-export const getProjectsList = async () => {
+export const getProjectsListApi = async () => {
   return requestClient.get<Array<DevProjectApi.DevProjectFace>>(
-    '/dev/project/list',
+    '/dev/projects',
   );
 };
 
@@ -27,23 +27,20 @@ export const getProjectsList = async () => {
  *
  * @param data 项目 数据
  */
-export const createProject = async (
+export const createProjectApi = async (
   data: Omit<DevProjectApi.DevProjectFace, 'projectId'>,
 ) => {
   const newData = objectOmit(data, ['projectId']);
-  return requestClient.post('/dev/project', newData);
+  return requestClient.post('/dev/projects', newData);
 };
 
 /**
  * 更新项目
- *
- * @param id 项目 ID
- * @param data 项目 数据
  */
-export const updateProject = async (
-  id: string,
+export const updateProjectApi = async (
+  projectId: string,
   data: Omit<DevProjectApi.DevProjectFace, 'projectId'>,
 ) => {
   const newData = objectOmit(data, ['projectId']);
-  return requestClient.put(`/dev/project/${id}`, newData);
+  return requestClient.put(`/dev/projects/${projectId}`, newData);
 };
