@@ -2,9 +2,10 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createVersion, updateVersion } from '#/api/dev';
+import { createVersionApi, updateVersionApi } from '#/api/dev';
 
 import { useFormSchema } from './data';
+import dayjs from 'dayjs';
 
 defineOptions({
   name: 'VersionsAddFormModel',
@@ -21,7 +22,19 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  fieldMappingTime: [['timeArr', ['endDate', 'startDate'], 'YYYY-MM-DD']],
+  fieldMappingTime: [
+    [
+      'timeArr',
+      ['startDate', 'endDate'],
+      (value: any, fieldName: string) => {
+        if (fieldName === 'startDate') {
+          return dayjs(value).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+        } else {
+          return dayjs(value).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+        }
+      },
+    ],
+  ],
   schema: useFormSchema(),
   showDefaultActions: false,
 });
@@ -49,16 +62,16 @@ const [Modal, modalApi] = useVbenModal({
 async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
   (values.versionId
-    ? updateVersion(values.versionId, values)
-    : createVersion(values)
+    ? updateVersionApi(values.versionId, values)
+    : createVersionApi(values)
   )
     .then(() => {
       modalApi.close();
     })
-    .catch(() => {
+    .finally(() => {
       modalApi.unlock();
+      emit('success');
     });
-  emit('success');
 }
 </script>
 <template>

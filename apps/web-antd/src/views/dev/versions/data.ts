@@ -5,7 +5,7 @@ import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevVersionApi } from '#/api/dev';
 
 import { z } from '#/adapter/form';
-import { getLastVersion, getProjectsListApi } from '#/api/dev';
+import { getLastVersionApi, getProjectsListApi } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { changeVersionType } from '#/utils/versionUtils';
@@ -58,10 +58,11 @@ export function useFormSchema(): VbenFormSchema[] {
           if (!value.projectId) {
             return {};
           }
-          const lastVersion: any = await getLastVersion({
-            projectId: value.projectId,
-          });
-          formApi.setFieldValue('firstVersion', lastVersion.version);
+          const lastVersion: any =
+            (await getLastVersionApi({
+              projectId: value.projectId,
+            })) || {};
+          formApi.setFieldValue('firstVersion', lastVersion.version || '0.0.1');
           return {};
         },
       },
@@ -74,7 +75,7 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         options: getLocalDictList('VERSION_TYPE'),
       },
-      defaultValue: 20,
+      defaultValue: '20',
       dependencies: {
         triggerFields: ['versionId', 'firstVersion'],
         componentProps: (value, formApi) => {
@@ -119,7 +120,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'releaseStatus',
       label: '发布状态',
       rules: 'required',
-      defaultValue: 0,
+      defaultValue: '0',
       disabled: false,
       componentProps: {
         options: getLocalDictList('RELEASE_STATUS'),
@@ -135,10 +136,6 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'RangePicker',
       fieldName: 'timeArr',
       label: '起止时间',
-      componentProps: {
-        format: 'YYYY-MM-DD',
-        valueFormat: 'YYYY-MM-DD',
-      },
     },
   ];
 }
@@ -188,6 +185,7 @@ export function useColumns(
     {
       field: 'version',
       title: '迭代版本',
+      sortable: true,
     },
     {
       field: 'remark',
@@ -216,10 +214,12 @@ export function useColumns(
     {
       field: 'startDate',
       title: '预计开始时间',
+      sortable: true,
     },
     {
       field: 'endDate',
       title: '预计结束时间',
+      sortable: true,
     },
     {
       field: 'releaseDate',
@@ -255,7 +255,15 @@ export function useColumns(
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
             disabled: (row: DevVersionApi.DevVersionFace) => {
-              return row.releaseStatus === 99;
+              return row.releaseStatus === '99';
+            },
+          },
+          {
+            code: 'log',
+            icon: 'lucide:logs',
+            tips: '更新日志按钮',
+            disabled: (row: DevVersionApi.DevVersionFace) => {
+              return row.releaseStatus !== '99';
             },
           },
           {
@@ -264,7 +272,7 @@ export function useColumns(
             text: '',
             tips: '编辑按钮',
             disabled: (row: DevVersionApi.DevVersionFace) => {
-              return row.releaseStatus === 99;
+              return row.releaseStatus === '99';
             },
           },
           {

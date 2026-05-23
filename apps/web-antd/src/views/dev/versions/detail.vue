@@ -19,7 +19,7 @@ import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
 
 import { Card, Col, Collapse, CollapsePanel, Row } from 'ant-design-vue';
 
-import { getVersionDetail, getVersionStatistics } from '#/api/dev';
+import { getVersionDetailApi, getVersionStatisticsApi } from '#/api/dev';
 
 defineOptions({
   name: 'VersionDetail',
@@ -290,8 +290,8 @@ onMounted(async () => {
   loading.value = true;
   try {
     const [detail, stats] = await Promise.all([
-      getVersionDetail(versionId.value),
-      getVersionStatistics(versionId.value),
+      getVersionDetailApi(versionId.value),
+      getVersionStatisticsApi(versionId.value),
     ]);
     versionInfo.value = detail;
     statistics.value = stats;

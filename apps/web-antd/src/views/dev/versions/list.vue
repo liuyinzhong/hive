@@ -14,13 +14,13 @@ import { Page, useVbenModal } from '@vben/common-ui';
 import { message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getVersionsList } from '#/api/dev';
+import { getVersionsListApi, deleteVersionApi } from '#/api/dev';
 import { $t } from '#/locales';
-import { sleep } from '#/utils';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import nextFormModal from './next-modal.vue';
+import { formatSorts } from '#/utils';
 const router = useRouter();
 
 // 表格分页
@@ -44,12 +44,21 @@ const [Grid, gridApi] = useVbenVxeGrid({
       trigger: 'click',
       mode: 'cell',
     },
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
+      sort: true,
       ajax: {
-        query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getVersionsList({
+        query: async (
+          { page, sorts, filters }: any,
+          formValues: Recordable<any>,
+        ) => {
+          return await getVersionsListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
+            sorts: formatSorts(sorts),
             ...formValues,
           });
         },
@@ -112,19 +121,13 @@ async function onDelete(row: DevVersionApi.DevVersionFace) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.version]),
     duration: 0,
-    key: 'action_process_msg',
   });
-
-  await sleep(1000);
-
-  message.success({
-    content: $t('ui.actionMessage.deleteSuccess', [row.version]),
-    key: 'action_process_msg',
-  });
-
-  await sleep(1000);
+  try {
+    await deleteVersionApi([row.versionId ?? '']);
+    message.success('删除成功');
+    gridApi.query();
+  } catch (error) {}
   hideLoading();
-  gridApi.query();
 }
 
 // #endregion

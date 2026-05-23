@@ -56,7 +56,7 @@ export namespace DevVersionApi {
     [key: string]: any;
     versionId?: string;
     version?: string;
-    versionType?: number;
+    versionType?: string;
     remark?: string;
     creatorId?: string;
     creatorName?: string;
@@ -65,7 +65,7 @@ export namespace DevVersionApi {
     startDate?: string;
     endDate?: string;
     projectId?: string;
-    releaseStatus?: number;
+    releaseStatus?: string;
     releaseDate?: string;
     changeLogRichText?: string;
     changeLog?: string;
@@ -74,33 +74,27 @@ export namespace DevVersionApi {
 
 /**
  * 获取版本列表数据
- *
- * @param params 查询参数
  */
-export const getVersionsList = async (params: Recordable<any>) => {
+export const getVersionsListApi = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevVersionApi.DevVersionFace>>(
-    '/dev/versions/list',
+    '/dev/versions',
     { params },
   );
 };
 
 /**
  * 获取版本详情数据
- *
- * @param params 查询参数
  */
-export const getVersionDetail = async (versionId: string) => {
-  return requestClient.get<DevVersionApi.DevVersionFace>('/dev/versions/get', {
-    params: { versionId },
-  });
+export const getVersionDetailApi = async (versionId: string) => {
+  return requestClient.get<DevVersionApi.DevVersionFace>(
+    `/dev/versions/${versionId}`,
+  );
 };
 
 /**
  * 创建版本
- *
- * @param data 版本 数据
  */
-export const createVersion = async (
+export const createVersionApi = async (
   data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
 ) => {
   const newData = objectOmit(data, ['versionId']);
@@ -109,24 +103,19 @@ export const createVersion = async (
 
 /**
  * 更新版本
- *
- * @param id 版本 ID
- * @param data 版本 数据
  */
-export const updateVersion = async (
-  id: string,
+export const updateVersionApi = async (
+  versionId: string,
   data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
 ) => {
   const newData = objectOmit(data, ['versionId']);
-  return requestClient.put(`/dev/versions/${id}`, newData);
+  return requestClient.put(`/dev/versions/${versionId}`, newData);
 };
 
 /**
  * 获取最新版本
- *
- * @param params 查询参数
  */
-export const getLastVersion = async (params: object) => {
+export const getLastVersionApi = async (params: object) => {
   return requestClient.get<DevVersionApi.DevVersionFace>(
     '/dev/versions/getLastVersion',
     { params },
@@ -135,12 +124,28 @@ export const getLastVersion = async (params: object) => {
 
 /**
  * 获取版本统计数据
- *
- * @param versionId 版本 ID
  */
-export const getVersionStatistics = async (versionId: string) => {
+export const getVersionStatisticsApi = async (versionId: string) => {
   return requestClient.get<DevVersionApi.VersionStatisticsFace>(
     '/dev/versions/statistics',
     { params: { versionId } },
   );
+};
+
+/**
+ * 删除版本
+ */
+export const deleteVersionApi = async (versionIds: string[]) => {
+  return requestClient.delete(`/dev/versions`, { data: versionIds });
+};
+
+/**
+ * 流转版本
+ */
+export const nextVersionApi = async (
+  versionId: string,
+  data: Omit<DevVersionApi.DevVersionFace, 'versionId'>,
+) => {
+  const newData = objectOmit(data, ['versionId']);
+  return requestClient.put(`/dev/versions/${versionId}/next`, newData);
 };

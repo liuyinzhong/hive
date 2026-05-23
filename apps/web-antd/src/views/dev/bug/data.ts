@@ -13,7 +13,7 @@ import {
   getModulesListApi,
   getProjectsListApi,
   getStoryList,
-  getVersionsList,
+  getVersionsListApi,
 } from '#/api/dev';
 import { getUserListAllApi } from '#/api/system';
 import UserAvatar from '#/components/UserAvatar/index.vue';
@@ -101,7 +101,7 @@ export function useFormSchema(): VbenFormSchema[] {
         return {
           key: `versionId_${value.projectId}`,
           api: () =>
-            getVersionsList({
+            getVersionsListApi({
               projectId: value.projectId,
               includeId: value.versionId || undefined,
             }),
@@ -327,7 +327,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         return {
           key: `versionId_${value.projectId}`,
           api: () =>
-            getVersionsList({
+            getVersionsListApi({
               projectId: value.projectId,
               page: 1,
               pageSize: 100,

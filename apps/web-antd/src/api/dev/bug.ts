@@ -15,15 +15,15 @@ export namespace DevBugApi {
     /** bug描述,富文本格式 */
     bugRichText?: string;
     /** bug状态 */
-    bugStatus?: number;
+    bugStatus?: string;
     /** bug级别 */
-    bugLevel?: number;
+    bugLevel?: string;
     /** bug环境 */
-    bugEnv?: number;
+    bugEnv?: string;
     /** bug来源 */
-    bugSource?: number;
+    bugSource?: string;
     /** bug类型 */
-    bugType?: number;
+    bugType?: string;
     /** 浏览器信息 navigator.userAgent */
     bugUa?: string;
     /** 修复人id */

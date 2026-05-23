@@ -2,11 +2,14 @@ import type { SystemDictApi } from '#/api/system';
 
 import { getDictListApi } from '#/api/system';
 
+import { sortTree } from '@vben/utils';
+
 const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
 
 // 初始化字典数据，使用 void 操作符标记 Promise 为有意忽略
 void getDictListApi({ status: 1 })
   .then((res) => {
+    res = sortTree(res, (a, b) => Number(a.value) - Number(b.value));
     res.forEach((item: SystemDictApi.SystemDictFace) => {
       if (item.type !== undefined && item.type !== null) {
         dictionaryData[item.type] = item.children || [];
@@ -39,7 +42,8 @@ export const getLocalDictText = (
     return '';
   }
   const list: any = dictionaryData[type];
-  const item: any = list?.find((a: any) => a[key || 'value'] === value);
+  // oxlint-disable-next-line eqeqeq
+  const item: any = list?.find((a: any) => a[key || 'value'] == value);
   return item?.label || '';
 };
 
@@ -57,7 +61,8 @@ export const getLocalDictColor = (
     return '';
   }
   const list: any = dictionaryData[type];
-  const item: any = list?.find((a: any) => a[key || 'value'] === value);
+  // oxlint-disable-next-line eqeqeq
+  const item: any = list?.find((a: any) => a[key || 'value'] == value);
   return item?.color || '';
 };
 
@@ -75,6 +80,7 @@ export const getLocalDictRow = (
     return {} as SystemDictApi.SystemDictFace;
   }
   const list: any = dictionaryData[type];
-  const item: any = list?.find((a: any) => a[key || 'value'] === value);
+  // oxlint-disable-next-line eqeqeq
+  const item: any = list?.find((a: any) => a[key || 'value'] == value);
   return item || {};
 };

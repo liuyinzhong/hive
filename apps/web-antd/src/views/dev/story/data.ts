@@ -9,7 +9,7 @@ import { message } from 'ant-design-vue';
 import {
   getModulesListApi,
   getProjectsListApi,
-  getVersionsList,
+  getVersionsListApi,
 } from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
 import { getUserListAllApi } from '#/api/system';
@@ -94,7 +94,7 @@ export function useFormSchema(): VbenFormSchema[] {
         return {
           key: `versionId_${value.projectId}`,
           api: () =>
-            getVersionsList({
+            getVersionsListApi({
               projectId: value.projectId,
               includeId: value.versionId || undefined,
             }),
@@ -137,7 +137,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyStatus',
       label: '需求状态',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('STORY_STATUS'),
@@ -154,7 +154,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyType',
       label: '需求类型',
       rules: 'required',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('STORY_TYPE'),
@@ -166,7 +166,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyLevel',
       label: '优先级',
       formItemClass: 'col-span-1',
-      defaultValue: 0,
+      defaultValue: '0',
       componentProps: {
         api: () => getLocalDictList('STORY_LEVEL'),
       },
@@ -175,7 +175,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'source',
       label: '需求来源',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('STORY_SOURCE'),
@@ -228,7 +228,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         return {
           key: `versionId_${value.projectId}`,
           api: () =>
-            getVersionsList({
+            getVersionsListApi({
               projectId: value.projectId,
               page: 1,
               pageSize: 100,
@@ -460,7 +460,9 @@ export function useColumns(
             icon: 'lucide:badge-plus',
             tips: '添加任务',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return !row.versionId || [0, 99].includes(row.storyStatus);
+              return (
+                !row.versionId || ['0', '99'].includes(row.storyStatus ?? '')
+              );
             },
           },
 
@@ -469,7 +471,7 @@ export function useColumns(
             icon: 'lucide:bug',
             tips: '添加缺陷',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return !row.versionId || [0].includes(row.storyStatus);
+              return !row.versionId || ['0'].includes(row.storyStatus ?? '');
             },
           },
           {
@@ -477,7 +479,7 @@ export function useColumns(
             icon: 'lucide:redo-dot',
             tips: '流转按钮',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return row.storyStatus === 99;
+              return row.storyStatus === '99';
             },
           },
           {
@@ -486,7 +488,7 @@ export function useColumns(
             text: '',
             tips: '编辑按钮',
             disabled: (row: DevStoryApi.DevStoryFace) => {
-              return row.storyStatus === 99;
+              return row.storyStatus === '99';
             },
           },
           {

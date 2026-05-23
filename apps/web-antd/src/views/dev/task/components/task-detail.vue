@@ -211,14 +211,14 @@ defineExpose({
           <VbenButton
             @click="onBtnClick('流转按钮')"
             class="cursor-pointer"
-            :disabled="detail.taskStatus === 99"
+            :disabled="detail.taskStatus === '99'"
           >
             <span class="icon-[lucide--redo-dot]"></span>
           </VbenButton>
           <VbenButton
             @click="onBtnClick('编辑按钮')"
             class="cursor-pointer"
-            :disabled="detail.taskStatus === 99"
+            :disabled="detail.taskStatus === '99'"
           >
             <span class="icon-[lucide--pencil-line]"></span>
           </VbenButton>

@@ -1,0 +1,53 @@
+1、版本管理
+列表数据：/api/dev/versions
+列表数据(全量查询)：/api/dev/versions/all
+版本详情： /api/dev/versions/{versionId}
+获取最新版本号：/api/dev/versions/getLastVersion
+修改响应：versionType、releaseStatus为字符串类型
+
+创建：/api/dev/versions
+修改：/api/dev/versions/{versionId}
+修改参数：versionType、releaseStatus为字符串类型
+
+版本流转状态：/api/dev/versions/{versionId}/next
+修改参数：releaseStatus为字符串类型
+
+2、需求管理
+列表数据： /api/dev/storys
+列表数据(全量查询)： /api/dev/storys/all
+需求详情： /api/dev/storys/{storyNum}
+修改响应：storyType、storyStatus、storyLevel、source为字符串类型
+
+创建需求： /api/dev/storys
+创建需求(批量)： /api/dev/storys/batch
+修改需求： /api/dev/storys/{storyId}
+修改参数：storyType、storyStatus、storyLevel、source为字符串类型
+
+
+3、任务管理
+列表数据： /api/dev/tasks
+列表数据(全量查询)： /api/dev/tasks/all
+任务详情： /api/dev/tasks/{taskNum}
+修改响应：taskStatus、taskType为字符串类型
+
+创建任务： /api/dev/tasks
+创建任务(批量)： /api/dev/tasks/batch
+修改任务： /api/dev/tasks/{taskId}
+修改参数：taskStatus、taskType为字符串类型
+
+
+4、缺陷管理
+列表数据： /api/dev/bugs
+列表数据(全量查询)： /api/dev/bugs/all
+缺陷详情： /api/dev/bugs/{bugNum}
+修改响应：bugStatus、bugLevel、bugSource、bugType、bugEnv为字符串类型
+修改响应：bugConfirmStatus 为布尔类型
+
+创建缺陷： /api/dev/bugs
+创建缺陷(批量)： /api/dev/bugs/batch
+修改缺陷： /api/dev/bugs/{bugId}
+修改参数：bugStatus、bugLevel、bugSource、bugType、bugEnv为字符串类型
+
+5、变更记录管理
+列表数据： /api/dev/changeHistory
+修改响应：changeBehavior、businessType为字符串类型

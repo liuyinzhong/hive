@@ -11,7 +11,7 @@ import { message } from 'ant-design-vue';
 import {
   getModulesListApi,
   getProjectsListApi,
-  getVersionsList,
+  getVersionsListApi,
 } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import {
@@ -75,7 +75,7 @@ const columns: VTable.ColumnsDefine = [
     width: 'auto',
     editor: new SelectEditor({
       api: (e: any) =>
-        getVersionsList({
+        getVersionsListApi({
           projectId: e.projectId || '',
           page: 1,
           pageSize: 100,

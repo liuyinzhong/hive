@@ -19,8 +19,8 @@ export namespace DevTaskApi {
     taskTitle?: string;
     taskNum?: any;
     taskRichText?: string;
-    taskStatus?: number;
-    taskType?: number;
+    taskStatus?: string;
+    taskType?: string;
     planHours?: number;
     actualHours?: number;
     /* 任务进度百分比 0~100 */

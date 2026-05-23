@@ -21,9 +21,9 @@ export namespace DevStoryApi {
     creatorId?: string;
     storyRichText?: string;
     files?: string;
-    storyType?: number;
-    storyStatus?: any | number;
-    storyLevel?: number;
+    storyType?: string;
+    storyStatus?: string;
+    storyLevel?: string;
     /** 关联版本id */
     versionId?: string;
     /** 关联版本名称 */
@@ -36,7 +36,7 @@ export namespace DevStoryApi {
     projectId?: string;
     /** 关联项目名称 */
     projectTitle?: string;
-    source?: number;
+    source?: string;
     createDate?: string;
     updateDate?: string;
     userList?: userListFace[];

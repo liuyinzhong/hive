@@ -256,7 +256,8 @@ defineExpose({
             @click="onBtnClick('添加任务')"
             class="cursor-pointer"
             :disabled="
-              !detail.versionId || [0, 99].includes(detail.storyStatus)
+              !detail.versionId ||
+              ['0', '99'].includes(detail.storyStatus ?? '')
             "
           >
             <span class="icon-[lucide--badge-plus]"></span>
@@ -264,21 +265,23 @@ defineExpose({
           <VbenButton
             @click="onBtnClick('添加缺陷')"
             class="cursor-pointer"
-            :disabled="!detail.versionId || [0].includes(detail.storyStatus)"
+            :disabled="
+              !detail.versionId || ['0'].includes(detail.storyStatus ?? '')
+            "
           >
             <span class="icon-[lucide--bug]"></span>
           </VbenButton>
           <VbenButton
             @click="onBtnClick('流转按钮')"
             class="cursor-pointer"
-            :disabled="detail.storyStatus === 99"
+            :disabled="detail.storyStatus === '99'"
           >
             <span class="icon-[lucide--redo-dot]"></span>
           </VbenButton>
           <VbenButton
             @click="onBtnClick('编辑按钮')"
             class="cursor-pointer"
-            :disabled="detail.storyStatus === 99"
+            :disabled="detail.storyStatus === '99'"
           >
             <span class="icon-[lucide--pencil-line]"></span>
           </VbenButton>
