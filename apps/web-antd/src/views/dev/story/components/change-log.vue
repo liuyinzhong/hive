@@ -5,6 +5,7 @@ import { ref, watch } from 'vue';
 
 import { getChangeList } from '#/api/dev';
 import DictTag from '#/components/DictTag/index.vue';
+import { getLocalDictText } from '#/dicts';
 /**
  * 变更记录组件
  * @property {String} businessId - 关联id
@@ -40,8 +41,10 @@ watch(
         <div>
           {{ item.createDate }}
           <span style="margin-right: 8px">{{ item.creatorName }}</span>
-          <DictTag dict-type="CHANGE_BEHAVIOR" :value="item.changeBehavior" />
-          <DictTag dict-type="BUSINESS_TYPE" :value="item.businessType" />
+          {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeBehavior)
+          }}{{ getLocalDictText('BUSINESS_TYPE', item.businessType) }}
+          <!-- <DictTag dict-type="CHANGE_BEHAVIOR" :value="item.changeBehavior" />
+          <DictTag dict-type="BUSINESS_TYPE" :value="item.businessType" /> -->
         </div>
 
         <div v-html="item.changeRichText"></div>

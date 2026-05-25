@@ -24,7 +24,7 @@ export namespace DevChangeApi {
 
 export const getChangeList = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevChangeApi.DevChangeFace>>(
-    '/dev/change/list',
+    '/dev/changeHistory',
     {
       params,
     },

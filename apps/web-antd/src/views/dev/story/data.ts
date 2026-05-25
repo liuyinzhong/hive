@@ -327,6 +327,7 @@ export function useColumns(
     {
       field: 'storyStatus',
       title: '需求状态',
+      sortable: true,
       width: 100,
       cellRender: {
         name: 'DictTag',
@@ -338,6 +339,7 @@ export function useColumns(
     {
       field: 'storyTitle',
       title: '需求名称',
+      sortable: true,
       minWidth: 200,
       cellRender: {
         name: 'CellLink',
@@ -361,12 +363,11 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const _params = {
-              storyId: row.storyId,
-              userIds: val,
-            };
-            console.log(_params);
-            message.success(`控制台已输出`);
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'userIds' },
+              });
           },
         },
       },
@@ -391,20 +392,21 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const _params = {
-              storyId: row.storyId,
-              storyType: val,
-            };
-            message.success(`控制台已输出`);
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'storyType' },
+              });
           },
         },
       },
     },
 
     {
-      width: 80,
+      width: 90,
       field: 'storyLevel',
       title: '优先级',
+      sortable: true,
       editRender: {
         name: 'DictSelect',
         props: {
@@ -412,11 +414,11 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const _params = {
-              storyId: row.storyId,
-              storyLevel: val,
-            };
-            message.success(`控制台已输出`);
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'storyLevel' },
+              });
           },
         },
       },
@@ -432,11 +434,11 @@ export function useColumns(
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
-            const _params = {
-              storyId: row.storyId,
-              source: val,
-            };
-            message.success(`控制台已输出`);
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'source' },
+              });
           },
         },
       },

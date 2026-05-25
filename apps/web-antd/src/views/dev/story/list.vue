@@ -15,7 +15,11 @@ import { LucidePlus, LucideTableProperties } from '@vben/icons';
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteStoryApi, getStoryListApi } from '#/api/dev';
+import {
+  deleteStoryApi,
+  getStoryListApi,
+  updateStoryFieldApi,
+} from '#/api/dev';
 import addBugModal from '#/views/dev/bug/add-modal.vue';
 import addTaskModal from '#/views/dev/task/add-modal.vue';
 
@@ -24,6 +28,7 @@ import batchFormModal from './batch-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
+import { formatSorts } from '#/utils';
 // 跳转路由
 // eslint-disable-next-line unused-imports/no-unused-vars
 const router = useRouter();
@@ -49,12 +54,21 @@ const [Grid, gridApi] = useVbenVxeGrid({
       trigger: 'click',
       mode: 'cell',
     },
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
+      sort: true,
       ajax: {
-        query: async ({ page }: any, formValues: Recordable<any>) => {
+        query: async (
+          { page, sorts, filters }: any,
+          formValues: Recordable<any>,
+        ) => {
           return await getStoryListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
+            sorts: formatSorts(sorts),
             ...formValues,
           });
         },
@@ -115,6 +129,15 @@ function onActionClick({
         path: `/dev/story/detail/${row.storyNum}`,
       }); */
       DetailDrawerApi.setData(row).open();
+      break;
+    }
+    case 'updateField': {
+      updateStoryFieldApi(row.storyId, {
+        key: row.key,
+        value: row.value,
+      }).finally(() => {
+        gridApi.query();
+      });
       break;
     }
   }

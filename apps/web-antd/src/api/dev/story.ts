@@ -13,14 +13,15 @@ interface userListFace {
 export namespace DevStoryApi {
   export interface DevStoryFace {
     [key: string]: any;
-    storyId?: string;
+    storyId: string;
     pid?: string;
     storyTitle?: any;
     storyNum?: any;
     creatorName?: string;
     creatorId?: string;
     storyRichText?: string;
-    files?: string;
+    fileIds?: string[];
+    fileList?: string[];
     storyType?: string;
     storyStatus?: string;
     storyLevel?: string;
@@ -39,7 +40,8 @@ export namespace DevStoryApi {
     source?: string;
     createDate?: string;
     updateDate?: string;
-    userList?: userListFace[];
+    userList?: userListFace[] | string[];
+    userIds?: string[];
   }
 }
 
@@ -85,4 +87,14 @@ export const getStoryDetailApi = async (storyNum: number) => {
  */
 export const deleteStoryApi = async (storyId: string[]) => {
   return requestClient.delete(`/dev/storys`, { data: storyId });
+};
+
+/**
+ * 更新需求字段
+ */
+export const updateStoryFieldApi = async (
+  storyId: string,
+  data: Recordable<any>,
+) => {
+  return requestClient.put(`/dev/storys/${storyId}/field`, data);
 };

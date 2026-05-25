@@ -116,7 +116,7 @@ const onBtnClick = (btnType: string) => {
           message.success('删除按钮');
         })
         .catch(() => {
-          message.error('取消删除');
+          // message.error('取消删除');
         });
       break;
     }
@@ -224,7 +224,6 @@ defineExpose({
           </a-typography-paragraph>
 
           <!-- 富文本内容 -->
-          <div v-html="detail.storyRichText" style="min-height: 300px"></div>
           <div v-html="detail.storyRichText" style="min-height: 300px"></div>
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">

@@ -19,6 +19,9 @@ export default {
         (item: SystemUserApi.SystemUserFace) => item.userId,
       ) || [];
 
+    // 初始化值
+    let _value: any = userIds || [];
+
     return h(
       'div',
       {
@@ -51,8 +54,11 @@ export default {
           getPopupContainer: (e: HTMLElement) => {
             return e.parentNode as HTMLElement;
           },
+          onDropdownVisibleChange(visible: boolean) {
+            events.change(_value, row);
+          },
           onChange: (value: any) => {
-            events.change(value, row);
+            _value = value;
           },
         },
         {
