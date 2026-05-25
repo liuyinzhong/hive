@@ -3,7 +3,6 @@ import type { DevBugApi } from '#/api/dev';
 
 import { ref } from 'vue';
 
-import { bugListByStoryId } from '#/api/dev';
 import DictTag from '#/components/DictTag/index.vue';
 
 /**
@@ -11,27 +10,18 @@ import DictTag from '#/components/DictTag/index.vue';
  * @property {String} storyId - 需求id
  */
 const props = defineProps({
-  storyId: {
+  bugList: {
     type: [String],
     required: true,
   },
 });
-
-// #region 获取任务列表
-const bugList = ref<DevBugApi.DevBugFace[]>([]);
-bugListByStoryId({
-  storyId: props.storyId,
-}).then((res: DevBugApi.DevBugFace[]) => {
-  bugList.value = res || [];
-});
-// #endregion
 </script>
 <template>
   <div>
     <a-list
       item-layout="horizontal"
       bordered
-      :data-source="bugList"
+      :data-source="props.bugList"
       size="small"
     >
       <template #renderItem="{ item }">

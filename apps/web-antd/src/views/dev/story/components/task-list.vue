@@ -3,7 +3,6 @@ import type { DevTaskApi } from '#/api/dev';
 
 import { ref } from 'vue';
 
-import { taskListByStoryIdApi } from '#/api/dev';
 import DictTag from '#/components/DictTag/index.vue';
 
 /**
@@ -11,27 +10,18 @@ import DictTag from '#/components/DictTag/index.vue';
  * @property {String} storyId - 需求id
  */
 const props = defineProps({
-  storyId: {
+  taskList: {
     type: [String],
     required: true,
   },
 });
-
-// #region 获取任务列表
-const taskList = ref<DevTaskApi.DevTaskFace[]>([]);
-taskListByStoryIdApi({
-  storyId: props.storyId,
-}).then((res: DevTaskApi.DevTaskFace[]) => {
-  taskList.value = res || [];
-});
-// #endregion
 </script>
 <template>
   <div>
     <a-list
       item-layout="horizontal"
       bordered
-      :data-source="taskList"
+      :data-source="props.taskList"
       size="small"
     >
       <template #renderItem="{ item }">

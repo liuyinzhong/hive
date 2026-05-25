@@ -79,20 +79,6 @@ export const getTaskDetailApi = async (taskNum: number) => {
 };
 
 /**
- * 根据storyId查询任务
- *
- * @param params 查询参数
- */
-export const taskListByStoryIdApi = async (params: Recordable<any>) => {
-  return requestClient.get<Array<DevTaskApi.DevTaskFace>>(
-    '/dev/tasks/taskListByStoryId',
-    {
-      params,
-    },
-  );
-};
-
-/**
  * 删除任务
  */
 export const deleteTaskApi = async (ids: string[]) => {

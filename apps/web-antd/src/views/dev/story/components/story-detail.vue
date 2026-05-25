@@ -239,10 +239,10 @@ defineExpose({
               <BaseInfo :story-info="detail" />
             </a-tab-pane>
             <a-tab-pane key="关联任务" tab="关联任务">
-              <TaskList :story-id="detail.storyId ?? ''" />
+              <TaskList :task-list="detail.taskList ?? ''" />
             </a-tab-pane>
             <a-tab-pane key="关联缺陷" tab="关联缺陷">
-              <BugList :story-id="detail.storyId ?? ''" />
+              <BugList :bug-list="detail.bugList ?? ''" />
             </a-tab-pane>
           </a-tabs>
         </a-col>

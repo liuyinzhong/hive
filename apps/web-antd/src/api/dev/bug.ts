@@ -84,20 +84,6 @@ export const updateBug = async (
   return requestClient.put(`/dev/bug/${id}`, newData);
 };
 
-/**
- * 根据storyId查询Bug
- *
- * @param params 查询参数
- */
-export const bugListByStoryId = async (params: Recordable<any>) => {
-  return requestClient.get<Array<DevBugApi.DevBugFace>>(
-    '/dev/bug/bugListByStoryId',
-    {
-      params,
-    },
-  );
-};
-
 export const getBugDetail = async (bugNum: number) => {
   return requestClient.get<DevBugApi.DevBugFace>('/dev/bug/get', {
     params: { bugNum },
