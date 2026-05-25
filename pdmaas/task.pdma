@@ -6292,7 +6292,23 @@
             "origin": "UI"
           }
         ],
-        "indexes": [],
+        "indexes": [
+          {
+            "id": "ECCD4AC5-91B4-4EBC-9A2C-DD6A5E461C8A",
+            "type": "UNIQUE",
+            "defKey": "index_0",
+            "defName": "",
+            "intro": "任务编号唯一索引",
+            "fields": [
+              {
+                "id": "729856E0-E430-4659-A741-A276873C0E57",
+                "fieldId": "B8501BF1-3132-44FF-929A-A5F92A85F7FF",
+                "fieldDefKey": "task_num",
+                "sortType": "DESC"
+              }
+            ]
+          }
+        ],
         "refers": [
           {
             "type": "many-to-one",
@@ -7465,10 +7481,10 @@
             "defKey": "user_ids",
             "defName": "参与人员ids，逗号分隔",
             "intro": "",
-            "baseDataType": "VARCHAR",
+            "baseDataType": "TEXT",
             "bizDomainType": "",
-            "dbDataType": "VARCHAR",
-            "dataLen": 512,
+            "dbDataType": "TEXT",
+            "dataLen": "",
             "numScale": "",
             "primaryKey": 0,
             "notNull": 0,
@@ -7887,7 +7903,23 @@
             "origin": "UI"
           }
         ],
-        "indexes": [],
+        "indexes": [
+          {
+            "id": "079D1857-6CAB-4721-BEE8-561CAEAAC0ED",
+            "type": "UNIQUE",
+            "defKey": "index_0",
+            "defName": "story_num",
+            "intro": "需求编号唯一索引",
+            "fields": [
+              {
+                "id": "21D57726-38AB-4658-A606-87F396FFF76C",
+                "fieldId": "D5EEC75E-6A60-4508-90F3-604068994279",
+                "fieldDefKey": "story_num",
+                "sortType": "DESC"
+              }
+            ]
+          }
+        ],
         "refers": [
           {
             "type": "many-to-one",
@@ -8701,7 +8733,23 @@
             "origin": "UI"
           }
         ],
-        "indexes": [],
+        "indexes": [
+          {
+            "id": "BF350D18-7010-4ED9-AFAE-B17931648E02",
+            "type": "UNIQUE",
+            "defKey": "index_0",
+            "defName": "bug_num",
+            "intro": "bug编号唯一索引",
+            "fields": [
+              {
+                "id": "2AFBD1E6-55C9-47BC-B160-812783AC0EAD",
+                "fieldId": "8F6E3E26-8901-43B9-A5B0-5E2749FA62A6",
+                "fieldDefKey": "bug_num",
+                "sortType": "DESC"
+              }
+            ]
+          }
+        ],
         "refers": [
           {
             "type": "many-to-one",
@@ -17458,7 +17506,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1779525004738,
-  "signature": "a1a0887ad7d87c5783c0cc8bdf24b30b",
+  "updateTime": 1779532898641,
+  "signature": "aef95b9bec6d89210227821d249894c6",
   "branchId": "1111"
 }

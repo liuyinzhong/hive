@@ -68,9 +68,11 @@ async function onSubmit(values: Record<string, any>) {
     message.success('流转成功');
     modalApi.close();
     emit('success');
-  } catch (error) {}
-  modalApi.unlock();
-  hideLoading();
+  } catch (error) {
+  } finally {
+    hideLoading();
+    modalApi.unlock();
+  }
 }
 
 function setChangeRichText(value: string) {

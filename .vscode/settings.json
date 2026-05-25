@@ -234,5 +234,6 @@
   },
   "commentTranslate.hover.enabled": false,
   "commentTranslate.multiLineMerge": true,
-  "vue.server.hybridMode": true
+  "vue.server.hybridMode": true,
+  "cSpell.words": ["storys"]
 }

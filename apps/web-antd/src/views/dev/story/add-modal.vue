@@ -2,9 +2,10 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createStory, updateStory } from '#/api/dev';
-import { deepClone, filesToUrlString, urlStringToFiles } from '#/utils';
-
+import { createStoryApi, updateStoryApi } from '#/api/dev';
+import { deepClone, filesToUrlString, urlStringToFiles, sleep } from '#/utils';
+import { getStoryDetailApi } from '#/api/dev/story';
+import type { DevStoryApi } from '#/api/dev/story';
 import { useFormSchema } from './data';
 
 defineOptions({
@@ -38,32 +39,40 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: async () => {
     await formApi.validateAndSubmitForm();
   },
-  onOpenChange(isOpen: boolean) {
+  async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = deepClone(modalApi.getData());
-      data.files = urlStringToFiles(data.files || '');
-      data.userList = (data.userList ||= []).map((item: any) => item.userId);
-      if (data.storyId) {
+      let storyRow: DevStoryApi.DevStoryFace = modalApi.getData();
+      if (storyRow.storyNum) {
+        storyRow = await getStoryDetailApi(storyRow.storyNum);
+        debugger;
+        storyRow.fileIds = storyRow.fileList.map((item: any) => ({
+          ...item,
+          name: item.originalName,
+          uid: item.fileId,
+          status: 'done',
+        }));
         modalApi.setState({ title: '编辑需求' });
+        formApi.setValues(storyRow);
       }
-      formApi.setValues(data);
     }
   },
 });
 
 async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
-  debugger;
-  values.files = filesToUrlString(values.files || []);
-  (values.storyId ? updateStory(values.storyId, values) : createStory(values))
+  values.fileIds = filesToUrlString(values.fileIds, 'fileId', 'array');
+  (values.storyId
+    ? updateStoryApi(values.storyId, values)
+    : createStoryApi(values)
+  )
     .then(() => {
       modalApi.close();
+      emit('success');
     })
-    .catch(() => {
+    .catch(() => {})
+    .finally(() => {
       modalApi.unlock();
     });
-
-  emit('success');
 }
 </script>
 <template>

@@ -10,14 +10,23 @@ export function sleep(ms: number) {
 /**
  * @description 将文件数组转换为逗号分隔的字符串
  * @param files 文件数组
- * @returns 逗号分隔的字符串
+ * @param key 要提取的文件属性（url或fileId）
+ * @default 'url'
+ * @param returnType 返回类型（string或array）
+ * @default 'string'
+ * @returns 转换后的字符串或数组
  */
-export function filesToUrlString(fileList: any) {
+export function filesToUrlString(
+  fileList: any,
+  key: 'url' | 'fileId' = 'url',
+  returnType: 'string' | 'array' = 'string',
+) {
   if (!fileList?.length) return '';
-  return fileList
+  const result = fileList
     .filter((file: any) => file.status === 'done')
-    .map((file: any) => file.response?.url || file.url)
-    .join(',');
+    .map((file: any) => file.response?.[key] || file[key]);
+
+  return returnType === 'string' ? result.join(',') : result;
 }
 
 /**

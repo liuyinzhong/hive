@@ -40,7 +40,7 @@ async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
   // 处理项目logo文件数组
   if (values.projectLogo?.length) {
-    values.projectLogo = filesToUrlString(values.projectLogo);
+    values.projectLogo = filesToUrlString(values.projectLogo, 'url', 'string');
   }
 
   (values.projectId
@@ -49,12 +49,11 @@ async function onSubmit(values: Record<string, any>) {
   )
     .then(() => {
       modalApi.close();
-    })
-    .catch(() => {
-      modalApi.unlock();
-    })
-    .finally(() => {
       emit('success');
+    })
+    .catch(() => {})
+    .finally(() => {
+      modalApi.unlock();
     });
 }
 </script>

@@ -49,12 +49,11 @@ async function onSubmit(values: Record<string, any>) {
   )
     .then(() => {
       modalApi.close();
-    })
-    .catch(() => {
-      modalApi.unlock();
-    })
-    .finally(() => {
       emit('success');
+    })
+    .catch(() => {})
+    .finally(() => {
+      modalApi.unlock();
     });
 }
 </script>

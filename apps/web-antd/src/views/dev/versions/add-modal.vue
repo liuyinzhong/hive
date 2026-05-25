@@ -67,10 +67,10 @@ async function onSubmit(values: Record<string, any>) {
   )
     .then(() => {
       modalApi.close();
+      emit('success');
     })
     .finally(() => {
       modalApi.unlock();
-      emit('success');
     });
 }
 </script>

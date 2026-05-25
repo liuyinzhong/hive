@@ -12,7 +12,7 @@ import { Flex, Tag, TypographyText } from 'ant-design-vue';
 import {
   getModulesListApi,
   getProjectsListApi,
-  getStoryList,
+  getStoryListApi,
   getVersionsListApi,
 } from '#/api/dev';
 import { getUserListAllApi } from '#/api/system';
@@ -196,7 +196,7 @@ export function useFormSchema(): VbenFormSchema[] {
         }
 
         return {
-          api: (_params: any) => getStoryList({ ..._params }),
+          api: (_params: any) => getStoryListApi({ ..._params }),
           /* 当params 中有值变化时，会重新触发api属性 */
           params: {
             keyword: keyword.value || undefined,

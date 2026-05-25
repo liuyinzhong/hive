@@ -92,7 +92,7 @@ export class UploadFileEditor implements IEditor {
    * @returns 当前选中的显示文本
    */
   getValue(): string {
-    return filesToUrlString(this.fileUrls || []);
+    return filesToUrlString(this.fileUrls || [], 'url', 'string');
   }
 
   /**

@@ -42,13 +42,12 @@ const [Modal, modalApi] = useVbenModal({
       (data.id ? updateDictApi(data.id, data) : createDictApi(data))
         .then(() => {
           modalApi.close();
-        })
-        .catch(() => {
-          modalApi.unlock();
-        }).finally(() => {
           emit('success');
+        })
+        .catch(() => {})
+        .finally(() => {
+          modalApi.unlock();
         });
-      
     }
   },
   onOpenChange(isOpen) {

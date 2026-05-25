@@ -236,7 +236,7 @@ export function useColumns(
       headerAlign: 'center',
       showOverflow: false,
       title: $t('system.dept.operation'),
-      width: 150,
+      width: 190,
       cellRender: {
         attrs: {
           nameField: 'version',

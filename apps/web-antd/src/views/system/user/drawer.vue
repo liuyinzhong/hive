@@ -21,12 +21,11 @@ const [Drawer, drawerApi] = useVbenDrawer({
       (data.userId ? updateUserApi(data.userId, data) : createUserApi(data))
         .then(() => {
           drawerApi.close();
-        })
-        .catch(() => {
-          drawerApi.unlock();
-        })
-        .finally(() => {
           emit('success');
+        })
+        .catch(() => {})
+        .finally(() => {
+          drawerApi.unlock();
         });
     }
   },

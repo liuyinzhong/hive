@@ -126,8 +126,9 @@ async function onDelete(row: DevVersionApi.DevVersionFace) {
     await deleteVersionApi([row.versionId ?? '']);
     message.success('删除成功');
     gridApi.query();
-  } catch (error) {}
-  hideLoading();
+  } finally {
+    hideLoading();
+  }
 }
 
 // #endregion

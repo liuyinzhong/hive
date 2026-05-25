@@ -40,7 +40,7 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      fieldName: 'users',
+      fieldName: 'userIds',
       label: '参与人员',
       formItemClass: 'col-span-3',
       componentProps: {
@@ -183,7 +183,7 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Upload',
-      fieldName: 'files',
+      fieldName: 'fileIds',
       label: '附件',
       formItemClass: 'col-span-1',
       componentProps: {

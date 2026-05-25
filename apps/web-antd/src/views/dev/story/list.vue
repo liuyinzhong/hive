@@ -15,8 +15,7 @@ import { LucidePlus, LucideTableProperties } from '@vben/icons';
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getStoryList } from '#/api/dev';
-import { sleep } from '#/utils';
+import { deleteStoryApi, getStoryListApi } from '#/api/dev';
 import addBugModal from '#/views/dev/bug/add-modal.vue';
 import addTaskModal from '#/views/dev/task/add-modal.vue';
 
@@ -53,7 +52,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getStoryList({
+          return await getStoryListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
@@ -133,19 +132,14 @@ async function onDelete(_row: DevStoryApi.DevStoryFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,
-    key: 'action_process_msg',
   });
-
-  await sleep(1000);
-
-  message.success({
-    content: '删除成功',
-    key: 'action_process_msg',
-  });
-
-  await sleep(1000);
-  hideLoading();
-  gridApi.query();
+  try {
+    await deleteStoryApi([_row.storyId ?? '']);
+    message.success('删除成功');
+    gridApi.query();
+  } finally {
+    hideLoading();
+  }
 }
 // #endregion
 

@@ -16,7 +16,7 @@ import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import { message } from 'ant-design-vue';
 
-import { getStoryDetail } from '#/api/dev';
+import { getStoryDetailApi } from '#/api/dev';
 import addBugModal from '#/views/dev/bug/add-modal.vue';
 import addFormModal from '#/views/dev/story/add-modal.vue';
 import nextModal from '#/views/dev/story/next-modal.vue';
@@ -78,7 +78,7 @@ const loadStoryDetail = () => {
   }
 
   loading.value = true;
-  getStoryDetail(Number(props.storyNum))
+  getStoryDetailApi(Number(props.storyNum))
     .then((res: DevStoryApi.DevStoryFace) => {
       if (!res) {
         router.push({ name: 'FallbackNotFound' });

@@ -42,7 +42,8 @@ const [Drawer, drawerApi] = useVbenDrawer({
         emits('success');
         drawerApi.close();
       })
-      .catch(() => {
+      .catch(() => {})
+      .finally(() => {
         drawerApi.unlock();
       });
   },
