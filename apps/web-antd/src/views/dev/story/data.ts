@@ -4,8 +4,6 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
 
-import { message } from 'ant-design-vue';
-
 import {
   getModulesListApi,
   getProjectsListApi,
@@ -508,15 +506,6 @@ export function useColumns(
 /** 流转表单配置 */
 export function useNextFormSchema(): VbenFormSchema[] {
   return [
-    {
-      component: 'Input',
-      fieldName: 'storyId',
-      label: '需求主键id',
-      dependencies: {
-        triggerFields: ['storyId'],
-        show: false,
-      },
-    },
     {
       component: 'Input',
       fieldName: 'storyStatus',

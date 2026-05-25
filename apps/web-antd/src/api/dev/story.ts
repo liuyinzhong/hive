@@ -98,3 +98,11 @@ export const updateStoryFieldApi = async (
 ) => {
   return requestClient.put(`/dev/storys/${storyId}/field`, data);
 };
+
+/**
+ * 流转
+ */
+export const nextStoryApi = async (storyId: string, data: Recordable<any>) => {
+  const newData = objectOmit(data, ['storyId']);
+  return requestClient.put(`/dev/storys/${storyId}/next`, newData);
+};

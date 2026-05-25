@@ -3,7 +3,7 @@ import type { DevTaskApi } from '#/api/dev';
 
 import { ref } from 'vue';
 
-import { taskListByStoryId } from '#/api/dev';
+import { taskListByStoryIdApi } from '#/api/dev';
 import DictTag from '#/components/DictTag/index.vue';
 
 /**
@@ -19,7 +19,7 @@ const props = defineProps({
 
 // #region 获取任务列表
 const taskList = ref<DevTaskApi.DevTaskFace[]>([]);
-taskListByStoryId({
+taskListByStoryIdApi({
   storyId: props.storyId,
 }).then((res: DevTaskApi.DevTaskFace[]) => {
   taskList.value = res || [];

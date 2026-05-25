@@ -8,6 +8,7 @@ import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
 import { getLocalDictList } from '#/dicts';
+import { nextTaskApi } from '#/api/dev/task';
 
 import { useNextFormSchema } from './data';
 defineOptions({
@@ -55,22 +56,22 @@ const [Modal, modalApi] = useVbenModal({
   },
 });
 
-function onSubmit(values: Record<string, any>) {
-  message.loading({
-    content: '正在提交中...',
+async function onSubmit(values: Record<string, any>) {
+  const hideLoading = message.loading({
+    content: '正在流转中...',
     duration: 0,
-    key: 'is-form-submitting',
   });
   modalApi.lock();
-  setTimeout(() => {
+  try {
+    await nextTaskApi(values.taskId, values);
+    message.success('流转成功');
     modalApi.close();
-    message.success({
-      content: `提交成功：${JSON.stringify(values)}`,
-      duration: 2,
-      key: 'is-form-submitting',
-    });
-  }, 3000);
-  emit('success');
+    emit('success');
+  } catch (error) {
+  } finally {
+    hideLoading();
+    modalApi.unlock();
+  }
 }
 
 function setChangeRichText(value: string) {

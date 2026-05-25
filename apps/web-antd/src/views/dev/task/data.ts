@@ -61,20 +61,16 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '开始时间',
       rules: 'required',
       formItemClass: 'col-span-2',
-      componentProps: {
-        format: 'YYYY-MM-DD HH:mm:ss',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss',
-      },
     },
     {
       component: 'InputNumber',
       fieldName: 'planHours',
       label: '计划工时',
-      defaultValue: 0,
+      defaultValue: 1,
       rules: 'required',
       formItemClass: 'col-span-1',
       componentProps: {
-        min: 0,
+        min: 0.1,
         precision: 2,
         addonAfter: '小时',
       },
@@ -270,7 +266,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'taskStatus',
       label: '任务状态',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('TASK_STATUS'),
@@ -287,7 +283,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'taskType',
       label: '任务类型',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         api: () => getLocalDictList('TASK_TYPE'),
@@ -402,6 +398,7 @@ export function useColumns(
     {
       field: 'taskTitle',
       title: '任务标题',
+      sortable: true,
       minWidth: 200,
       cellRender: {
         name: 'CellLink',
@@ -427,6 +424,7 @@ export function useColumns(
     {
       field: 'taskStatus',
       title: '任务状态',
+      sortable: true,
       width: 100,
       cellRender: {
         name: 'DictTag',
@@ -458,11 +456,13 @@ export function useColumns(
     {
       field: 'startDate',
       title: '开始时间',
+      sortable: true,
       width: 100,
     },
     {
       field: 'endDate',
       title: '结束时间',
+      sortable: true,
       width: 100,
     },
     {

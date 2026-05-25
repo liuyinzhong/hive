@@ -15,7 +15,6 @@ defineOptions({
 });
 
 const [Drawer, DrawerApi] = useVbenDrawer({
-  showCancelButton: false,
   showConfirmButton: false,
   onOpenChange: (open: boolean) => {
     if (open) {
@@ -49,7 +48,8 @@ const submit = () => {
 </script>
 <template>
   <Drawer title="缺陷详情" class="w-[45%]">
-    <template #extra>
+    <BugDetail :bug-num="bugInfo.bugNum" :show-btn="false" />
+    <template #prepend-footer>
       <a-space size="small">
         <CopyButton :text="bugLink" type="dashed" />
         <a-button @click="newTab" type="dashed">
@@ -59,24 +59,6 @@ const submit = () => {
           </a-flex>
         </a-button>
       </a-space>
-    </template>
-    <BugDetail :bug-num="bugInfo.bugNum" :show-btn="false" />
-    <template #prepend-footer>
-      <div class="w-full">
-        <a-flex align="start" :gap="5" class="w-full mb-2">
-          <UserAvatar />
-          <VbenTiptap
-            v-model="bugInfo.changeRichText"
-            :toolbar="false"
-            placeholder="请输入内容"
-            class="w-full"
-            :min-height="100"
-          />
-        </a-flex>
-        <div class="w-full flex justify-end">
-          <a-button type="primary" @click="submit">提交</a-button>
-        </div>
-      </div>
     </template>
   </Drawer>
 </template>

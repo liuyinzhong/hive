@@ -38,42 +38,35 @@ export namespace DevTaskApi {
 
 /**
  * 获取任务列表
- *
- * @param params 查询参数
  */
-export const getTaskList = async (params: Recordable<any>) => {
+export const getTaskListApi = async (params: Recordable<any>) => {
   return requestClient.get<{
     items: Array<DevTaskApi.DevTaskFace>;
     total: number;
-  }>('/dev/task/list', {
+  }>('/dev/tasks', {
     params,
   });
 };
 
 /**
  * 创建任务
- *
- * @param data 任务 数据
  */
-export const createTask = async (
+export const createTaskApi = async (
   data: Omit<DevTaskApi.DevTaskFace, 'taskId'>,
 ) => {
   const newData = objectOmit(data, ['taskId']);
-  return requestClient.post('/dev/task', newData);
+  return requestClient.post('/dev/tasks', newData);
 };
 
 /**
  * 更新任务
- *
- * @param id 任务 ID
- * @param data 任务 数据
  */
-export const updateTask = async (
+export const updateTaskApi = async (
   id: string,
   data: Omit<DevTaskApi.DevTaskFace, 'taskId'>,
 ) => {
   const newData = objectOmit(data, ['taskId']);
-  return requestClient.put(`/dev/task/${id}`, newData);
+  return requestClient.put(`/dev/tasks/${id}`, newData);
 };
 
 /**
@@ -81,12 +74,8 @@ export const updateTask = async (
  *
  * @param taskNum 任务编号
  */
-export const getTaskDetail = async (taskNum: number) => {
-  return requestClient.get<DevTaskApi.DevTaskFace>('/dev/task/get', {
-    params: {
-      taskNum,
-    },
-  });
+export const getTaskDetailApi = async (taskNum: number) => {
+  return requestClient.get<DevTaskApi.DevTaskFace>(`/dev/tasks/${taskNum}`);
 };
 
 /**
@@ -94,11 +83,26 @@ export const getTaskDetail = async (taskNum: number) => {
  *
  * @param params 查询参数
  */
-export const taskListByStoryId = async (params: Recordable<any>) => {
+export const taskListByStoryIdApi = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevTaskApi.DevTaskFace>>(
-    '/dev/task/taskListByStoryId',
+    '/dev/tasks/taskListByStoryId',
     {
       params,
     },
   );
+};
+
+/**
+ * 删除任务
+ */
+export const deleteTaskApi = async (ids: string[]) => {
+  return requestClient.delete(`/dev/tasks`, { data: ids });
+};
+
+/**
+ * 流转任务
+ */
+export const nextTaskApi = async (taskId: string, data: Recordable<any>) => {
+  const newData = objectOmit(data, ['taskId']);
+  return requestClient.put(`/dev/tasks/${taskId}/next`, newData);
 };

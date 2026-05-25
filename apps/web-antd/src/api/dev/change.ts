@@ -1,5 +1,5 @@
 import type { Recordable } from '@vben/types';
-
+import { objectOmit } from '@vueuse/core';
 import { requestClient } from '#/api/request';
 export namespace DevChangeApi {
   export interface DevChangeFace {
@@ -22,11 +22,19 @@ export namespace DevChangeApi {
   }
 }
 
-export const getChangeList = async (params: Recordable<any>) => {
+export const getChangeListApi = async (params: Recordable<any>) => {
   return requestClient.get<Array<DevChangeApi.DevChangeFace>>(
     '/dev/changeHistory',
     {
       params,
     },
   );
+};
+
+// 创建变更记录
+export const addChangeApi = async (
+  data: Omit<DevChangeApi.DevChangeFace, 'changeId'>,
+) => {
+  const newData = objectOmit(data, ['changeId']);
+  return requestClient.post('/dev/changeHistory', newData);
 };

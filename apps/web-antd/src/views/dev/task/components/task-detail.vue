@@ -11,12 +11,12 @@ import {
   VbenButton,
   VbenButtonGroup,
 } from '@vben/common-ui';
-import { useTabs } from '@vben/hooks';
+import { useTabs, useRefresh } from '@vben/hooks';
 import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import { message } from 'ant-design-vue';
 
-import { getTaskDetail } from '#/api/dev';
+import { getTaskDetailApi, addChangeApi } from '#/api/dev';
 import ChangeLog from '#/views/dev/story/components/change-log.vue';
 import addFormModal from '#/views/dev/task/add-modal.vue';
 import nextModal from '#/views/dev/task/next-modal.vue';
@@ -39,7 +39,7 @@ const props = defineProps({
 });
 
 const { closeCurrentTab } = useTabs();
-
+const { refresh } = useRefresh();
 // 跳转路由
 const router = useRouter();
 
@@ -74,7 +74,7 @@ const loadTaskDetail = () => {
   }
 
   loading.value = true;
-  getTaskDetail(Number(props.taskNum))
+  getTaskDetailApi(Number(props.taskNum))
     .then((res: DevTaskApi.DevTaskFace) => {
       if (!res) {
         router.push({ name: 'FallbackNotFound' });
@@ -132,12 +132,13 @@ const onBtnClick = (btnType: string) => {
       }).then((val) => {
         const _params = {
           businessId: detail.value.taskId,
-          businessType: 10,
-          changeBehavior: 20,
+          businessType: '10',
+          changeBehavior: '30',
           changeRichText: val,
         };
-
-        loadTaskDetail();
+        addChangeApi(_params).then(() => {
+          refresh();
+        });
       });
       break;
     }
@@ -186,7 +187,6 @@ defineExpose({
           </a-typography-paragraph>
 
           <!-- 富文本内容 -->
-          <div v-html="detail.taskRichText" style="min-height: 300px"></div>
           <div v-html="detail.taskRichText" style="min-height: 300px"></div>
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">

@@ -13,8 +13,7 @@ import { Plus } from '@vben/icons';
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getTaskList } from '#/api/dev';
-import { sleep } from '#/utils';
+import { getTaskListApi, deleteTaskApi } from '#/api/dev/task';
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
@@ -42,10 +41,15 @@ const [Grid, gridApi] = useVbenVxeGrid({
       mode: 'cell',
     },
     columns: useColumns(onActionClick),
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
+      sort: true,
       ajax: {
         query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getTaskList({
+          return await getTaskListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
@@ -95,19 +99,14 @@ async function onDelete(_row: DevTaskApi.DevTaskFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,
-    key: 'action_process_msg',
   });
 
-  await sleep(1000);
-
-  message.success({
-    content: '删除成功',
-    key: 'action_process_msg',
-  });
-
-  await sleep(1000);
-  hideLoading();
-  gridApi.query();
+  try {
+    await deleteTaskApi([_row.taskId ?? '']);
+    gridApi.query();
+  } finally {
+    hideLoading();
+  }
 }
 // #endregion
 

@@ -27,7 +27,7 @@ import { useSortable } from '@vben-core/composables';
 import { Card } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { getTaskList } from '#/api/dev';
+import { getTaskListApi } from '#/api/dev';
 import CellProgress from '#/components/CellProgress/index.vue';
 import DictTag from '#/components/DictTag/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
@@ -100,7 +100,7 @@ const taskDataList = reactive<Array<DataItem>>([
 onMounted(() => {
   // 初始化排序
   initSortable();
-  getTaskList({}).then(({ items }) => {
+  getTaskListApi({}).then(({ items }) => {
     taskDataList.forEach((taskInfo) => {
       taskInfo.children = items.filter(
         (item) => item.taskStatus === taskInfo.taskStatus,

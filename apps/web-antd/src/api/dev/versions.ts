@@ -140,7 +140,7 @@ export const deleteVersionApi = async (versionIds: string[]) => {
 };
 
 /**
- * 流转版本
+ * 流转
  */
 export const nextVersionApi = async (
   versionId: string,

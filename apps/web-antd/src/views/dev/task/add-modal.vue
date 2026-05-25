@@ -2,8 +2,8 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createTask, updateTask } from '#/api/dev/task';
-
+import { createTaskApi, updateTaskApi } from '#/api/dev/task';
+import dayjs from 'dayjs';
 import { useFormSchema } from './data';
 
 defineOptions({
@@ -35,7 +35,17 @@ const [Form, formApi] = useVbenForm({
   },
   wrapperClass: 'grid-cols-3',
   fieldMappingTime: [
-    ['timeArr', ['endDate', 'startDate'], 'YYYY-MM-DD HH:mm:ss'],
+    [
+      'timeArr',
+      ['startDate', 'endDate'],
+      (value: any, fieldName: string) => {
+        if (fieldName === 'startDate') {
+          return dayjs(value).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+        } else {
+          return dayjs(value).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+        }
+      },
+    ],
   ],
   schema: useFormSchema(),
   showDefaultActions: false,
@@ -59,6 +69,7 @@ const [Modal, modalApi] = useVbenModal({
       // 设置表单值, 默认会过滤不在schema中定义的field,
       // 可通过filterFields形参关闭过滤 为false的话可以配合 hide属性
       // 可通过 shouldValidate 来控制是否立马校验一次表单值
+      data.timeArr = [dayjs(data.startDate), dayjs(data.endDate)];
       formApi.setValues(data);
     }
   },
@@ -66,14 +77,14 @@ const [Modal, modalApi] = useVbenModal({
 
 async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
-  (values.taskId ? updateTask(values.taskId, values) : createTask(values))
+  (values.taskId ? updateTaskApi(values.taskId, values) : createTaskApi(values))
     .then(() => {
       modalApi.close();
     })
-    .catch(() => {
+    .finally(() => {
+      emit('success');
       modalApi.unlock();
     });
-  emit('success');
 }
 </script>
 <template>

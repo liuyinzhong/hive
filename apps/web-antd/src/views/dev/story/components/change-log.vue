@@ -3,7 +3,7 @@ import type { DevChangeApi } from '#/api/dev';
 
 import { ref, watch } from 'vue';
 
-import { getChangeList } from '#/api/dev';
+import { getChangeListApi } from '#/api/dev';
 import DictTag from '#/components/DictTag/index.vue';
 import { getLocalDictText } from '#/dicts';
 /**
@@ -23,7 +23,7 @@ watch(
   () => props.businessId,
   (newVal) => {
     if (newVal) {
-      getChangeList({
+      getChangeListApi({
         businessId: newVal,
       }).then((res: DevChangeApi.DevChangeFace[]) => {
         changeLogList.value = res || [];
@@ -39,14 +39,15 @@ watch(
     <a-timeline v-else>
       <a-timeline-item v-for="item in changeLogList" :key="item.changeId">
         <div>
-          {{ item.createDate }}
-          <span style="margin-right: 8px">{{ item.creatorName }}</span>
-          {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeBehavior)
-          }}{{ getLocalDictText('BUSINESS_TYPE', item.businessType) }}
-          <!-- <DictTag dict-type="CHANGE_BEHAVIOR" :value="item.changeBehavior" />
-          <DictTag dict-type="BUSINESS_TYPE" :value="item.businessType" /> -->
+          <div>
+            {{ item.createDate }}
+          </div>
+          <div>
+            {{ item.creatorName }}
+            {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeBehavior)
+            }}{{ getLocalDictText('BUSINESS_TYPE', item.businessType) }}
+          </div>
         </div>
-
         <div v-html="item.changeRichText"></div>
       </a-timeline-item>
     </a-timeline>

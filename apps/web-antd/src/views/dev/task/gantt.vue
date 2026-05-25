@@ -11,7 +11,7 @@ import * as VTable from '@visactor/vtable';
 import { Gantt } from '@visactor/vtable-gantt';
 import * as VTableGantt from '@visactor/vtable-gantt';
 
-import { getTaskList } from '#/api/dev';
+import { getTaskListApi } from '#/api/dev';
 import storyDetailDrawerComponent from '#/views/dev/story/detail-drawer.vue';
 import taskDetailDrawerComponent from '#/views/dev/task/detail-drawer.vue';
 
@@ -49,7 +49,7 @@ const columns: any = [
 ];
 
 nextTick(async () => {
-  const TaskData: any = await getTaskList({});
+  const TaskData: any = await getTaskListApi({});
   const ganttInstance = new Gantt(
     document.querySelector('#tableContainer') as HTMLDivElement,
     {

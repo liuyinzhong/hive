@@ -11,12 +11,12 @@ import {
   VbenButton,
   VbenButtonGroup,
 } from '@vben/common-ui';
-import { useTabs } from '@vben/hooks';
+import { useTabs, useRefresh } from '@vben/hooks';
 import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import { message } from 'ant-design-vue';
 
-import { getStoryDetailApi } from '#/api/dev';
+import { addChangeApi, getStoryDetailApi } from '#/api/dev';
 import addBugModal from '#/views/dev/bug/add-modal.vue';
 import addFormModal from '#/views/dev/story/add-modal.vue';
 import nextModal from '#/views/dev/story/next-modal.vue';
@@ -43,6 +43,7 @@ const props = defineProps({
 });
 
 const { closeCurrentTab } = useTabs();
+const { refresh } = useRefresh();
 
 // 跳转路由
 const router = useRouter();
@@ -63,7 +64,9 @@ watch(
 /**
  * 需求详情数据
  */
-const detail = ref<DevStoryApi.DevStoryFace>({});
+const detail = ref<DevStoryApi.DevStoryFace>({
+  storyId: '',
+});
 const loading = ref(false);
 
 const activeKey = ref('变更日志');
@@ -156,12 +159,13 @@ const onBtnClick = (btnType: string) => {
       }).then((val) => {
         const _params = {
           businessId: detail.value.storyId,
-          businessType: 0,
-          changeBehavior: 20,
+          businessType: '0',
+          changeBehavior: '30',
           changeRichText: val,
         };
-
-        loadStoryDetail();
+        addChangeApi(_params).then(() => {
+          refresh();
+        });
       });
       break;
     }

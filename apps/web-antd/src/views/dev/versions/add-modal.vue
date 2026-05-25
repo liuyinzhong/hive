@@ -27,6 +27,7 @@ const [Form, formApi] = useVbenForm({
       'timeArr',
       ['startDate', 'endDate'],
       (value: any, fieldName: string) => {
+        debugger;
         if (fieldName === 'startDate') {
           return dayjs(value).startOf('day').format('YYYY-MM-DD HH:mm:ss');
         } else {
@@ -54,6 +55,7 @@ const [Modal, modalApi] = useVbenModal({
           title: '编辑版本',
         });
       }
+      data.timeArr = [dayjs(data.startDate), dayjs(data.endDate)];
       formApi.setValues(data);
     }
   },
