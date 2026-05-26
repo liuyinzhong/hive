@@ -3,7 +3,6 @@ import type { DevBugApi } from '#/api/dev';
 
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-
 import {
   confirm,
   prompt,
@@ -12,7 +11,7 @@ import {
   VbenButtonGroup,
 } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
-import { VbenTiptap } from '@vben/plugins/tiptap';
+import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
 import { message } from 'ant-design-vue';
 
@@ -158,8 +157,8 @@ defineExpose({
             </a-typography-title>
           </a-typography-paragraph>
 
-          <!-- 富文本内容 -->
-          <div v-html="detail.bugRichText" style="min-height: 300px"></div>
+          <!-- 富文本预览 -->
+          <VbenTiptapPreview :content="detail.bugRichText" />
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
           <a-tabs v-model:active-key="activeKey">
