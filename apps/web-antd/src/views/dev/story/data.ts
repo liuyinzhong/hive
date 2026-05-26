@@ -508,6 +508,15 @@ export function useNextFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
+      fieldName: 'storyId',
+      label: '需求主键id',
+      dependencies: {
+        triggerFields: ['storyId'],
+        show: false,
+      },
+    },
+    {
+      component: 'Input',
       fieldName: 'storyStatus',
       label: '需求状态',
       dependencies: {

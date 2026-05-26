@@ -49,8 +49,7 @@ const [Modal, modalApi] = useVbenModal({
         data = await getBugDetailApi(data.bugNum);
         modalApi.setState({ title: '编辑缺陷' });
       }
-      formApi.setValues(data);
-      formApi.resetValidate();
+      formApi.setValues(data, true, true);
     }
   },
 });

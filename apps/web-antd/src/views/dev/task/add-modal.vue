@@ -2,7 +2,7 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createTaskApi, updateTaskApi } from '#/api/dev/task';
+import { createTaskApi, updateTaskApi, getTaskDetailApi } from '#/api/dev/task';
 import dayjs from 'dayjs';
 import { useFormSchema } from './data';
 
@@ -57,21 +57,19 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: async () => {
     await formApi.validateAndSubmitForm();
   },
-  onOpenChange(isOpen: boolean) {
+  async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = modalApi.getData();
-      if (data.taskId) {
-        modalApi.setState({
-          title: '编辑任务',
-        });
+      let data = modalApi.getData() || {};
+      if (data.taskNum) {
+        data = await getTaskDetailApi(data.taskNum);
+        modalApi.setState({ title: '编辑任务' });
       }
 
       // 设置表单值, 默认会过滤不在schema中定义的field,
       // 可通过filterFields形参关闭过滤 为false的话可以配合 hide属性
       // 可通过 shouldValidate 来控制是否立马校验一次表单值
       data.timeArr = [dayjs(data.startDate), dayjs(data.endDate)];
-      formApi.setValues(data);
-      formApi.resetValidate();
+      formApi.setValues(data, true, true);
     }
   },
 });

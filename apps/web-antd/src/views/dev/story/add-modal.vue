@@ -51,9 +51,8 @@ const [Modal, modalApi] = useVbenModal({
           status: 'done',
         }));
         modalApi.setState({ title: '编辑需求' });
-        formApi.setValues(storyRow);
-        formApi.resetValidate();
       }
+      formApi.setValues(storyRow, true, true);
     }
   },
 });

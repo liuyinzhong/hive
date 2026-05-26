@@ -8591,7 +8591,7 @@
             "dataLen": 36,
             "numScale": "",
             "primaryKey": 0,
-            "notNull": 1,
+            "notNull": 0,
             "autoIncrement": 0,
             "defaultValue": "",
             "stndDictId": "",
@@ -17506,7 +17506,7 @@
     "readonly": false,
     "allowWs": false
   },
-  "updateTime": 1779778168787,
-  "signature": "8818d88483d30b14eb2cc7ef27eae93d",
+  "updateTime": 1779787559207,
+  "signature": "d55a2c9e1932574b71dc1fe8c982830e",
   "branchId": "1111"
 }

@@ -90,32 +90,6 @@ const loadTaskDetail = () => {
 // #region 按钮点击事件
 const onBtnClick = (btnType: string) => {
   switch (btnType) {
-    case '删除按钮': {
-      confirm({
-        title: '删除确认',
-        content: '删除该任务吗?',
-        icon: 'error',
-        beforeClose({ isConfirm }) {
-          if (isConfirm) {
-            // 这里可以执行一些异步操作。如果最终返回了false，将阻止关闭弹窗
-            return new Promise((resolve) =>
-              setTimeout(() => {
-                // 模拟删除操作
-                closeCurrentTab();
-                resolve(true);
-              }, 2000),
-            );
-          }
-        },
-      })
-        .then(() => {
-          message.success('删除按钮');
-        })
-        .catch(() => {
-          message.error('取消删除');
-        });
-      break;
-    }
     case '流转按钮': {
       NextModalApi.setData(detail.value).open();
       break;
@@ -221,9 +195,6 @@ defineExpose({
             :disabled="detail.taskStatus === '99'"
           >
             <span class="icon-[lucide--pencil-line]"></span>
-          </VbenButton>
-          <VbenButton @click="onBtnClick('删除按钮')" class="cursor-pointer">
-            <span class="icon-[lucide--trash-2]"></span>
           </VbenButton>
         </VbenButtonGroup>
       </div>

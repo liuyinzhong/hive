@@ -42,6 +42,8 @@ import type { Sortable } from '@vben/hooks';
 import type { TipTapProps } from '@vben/plugins/tiptap';
 import type { Recordable } from '@vben/types';
 
+import { upload_file } from '#/api/examples/upload';
+
 import {
   computed,
   defineAsyncComponent,
@@ -137,7 +139,7 @@ const ColorSelect = defineAsyncComponent(
   () => import('#/components/ColorSelect/index.vue'),
 );
 
-const withDefaultPlaceholder = <T extends Component>(
+const withDefaultPlaceholder = (
   component: Component,
   type: 'input' | 'select',
   componentProps: Recordable<any> = {},
@@ -724,7 +726,29 @@ async function initComponentAdapter() {
     RadioGroup,
     RangePicker,
     Rate,
-    RichEditor: withDefaultPlaceholder(VbenTiptap, 'input'),
+    RichEditor: withDefaultPlaceholder(VbenTiptap, 'input', {
+      imageUpload: {
+        accept: 'image/*',
+        maxSize: 5 * 1024 * 1024, // 5MB
+        upload: (file: any, onProgress: any) => {
+          return new Promise((resolve, reject) => {
+            upload_file({
+              file,
+              onProgress({ percent }) {
+                onProgress?.(percent);
+              },
+              onSuccess(response) {
+                // 从响应中提取图片URL
+                resolve(response?.data?.url ?? response?.url ?? '');
+              },
+              onError() {
+                reject(new Error($t('ui.tiptap.upload.uploadFailed')));
+              },
+            });
+          });
+        },
+      },
+    }),
     Select: withDefaultPlaceholder(Select, 'select'),
     Space,
     Switch,
