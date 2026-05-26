@@ -24,6 +24,7 @@ import batchFormModal from './batch-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
+import { formatSorts } from '#/utils/index.js';
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
@@ -52,10 +53,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async ({ page }: any, formValues: Recordable<any>) => {
+        query: async (
+          { page, sorts, filters }: any,
+          formValues: Recordable<any>,
+        ) => {
           return await getTaskListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
+            sorts: formatSorts(sorts),
             ...formValues,
           });
         },

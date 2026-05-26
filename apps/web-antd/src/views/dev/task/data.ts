@@ -441,6 +441,11 @@ export function useColumns(
       },
     },
     {
+      field: 'planHours',
+      title: '计划工时',
+      width: 100,
+    },
+    {
       field: 'percent',
       title: '任务进度',
       align: 'center',
@@ -473,13 +478,39 @@ export function useColumns(
       field: 'startDate',
       title: '开始时间',
       sortable: true,
-      width: 100,
+      width: 140,
+      editRender: {
+        name: 'CellDate',
+        props: {},
+        events: {
+          change: (val: any, row: DevTaskApi.DevTaskFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val, key: 'startDate' },
+              });
+          },
+        },
+      },
     },
     {
       field: 'endDate',
       title: '结束时间',
       sortable: true,
-      width: 100,
+      width: 140,
+      editRender: {
+        name: 'CellDate',
+        props: {},
+        events: {
+          change: (val: any, row: DevTaskApi.DevTaskFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val, key: 'endDate' },
+              });
+          },
+        },
+      },
     },
     {
       width: 120,

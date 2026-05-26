@@ -8,6 +8,7 @@ import {
   useVbenVxeGrid as useGrid,
 } from '@vben/plugins/vxe-table';
 
+import CellDate from '#/adapter/component/table/CellDate';
 import CellImage from '#/adapter/component/table/CellImage';
 import CellLink from '#/adapter/component/table/CellLink';
 import CellProgress from '#/adapter/component/table/CellProgress';
@@ -67,6 +68,9 @@ setupVbenVxeTable({
 
     // 表格配置项可以用 cellRender: { name: 'CellLink' },
     vxeUI.renderer.add('CellLink', CellLink);
+
+    // 表格配置项可以用 cellRender: { name: 'CellDate' },
+    vxeUI.renderer.add('CellDate', CellDate);
 
     // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
     // vxeUI.formats.add
