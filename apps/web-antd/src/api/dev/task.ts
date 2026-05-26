@@ -92,3 +92,14 @@ export const nextTaskApi = async (taskId: string, data: Recordable<any>) => {
   const newData = objectOmit(data, ['taskId']);
   return requestClient.put(`/dev/tasks/${taskId}/next`, newData);
 };
+
+/**
+ * 更新任务字段
+ */
+export const updateTaskFieldApi = async (
+  taskId: string,
+  data: Recordable<any>,
+) => {
+  const newData = objectOmit(data, ['taskId']);
+  return requestClient.put(`/dev/tasks/${taskId}/field`, newData);
+};

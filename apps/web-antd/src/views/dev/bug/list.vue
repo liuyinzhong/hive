@@ -6,20 +6,21 @@ import type {
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 import type { DevBugApi } from '#/api/dev';
-
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getBugList } from '#/api/dev';
-import { sleep } from '#/utils';
+import { getBugListApi, deleteBugApi, updateBugFieldApi } from '#/api/dev/bug';
+import { formatSorts } from '#/utils';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
+import confirmModal from './confirm-modal.vue';
+
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
     wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
@@ -40,12 +41,21 @@ const [Grid, gridApi] = useVbenVxeGrid({
       trigger: 'click',
       mode: 'cell',
     },
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
+      sort: true,
       ajax: {
-        query: async ({ page }: any, formValues: Recordable<any>) => {
-          return await getBugList({
+        query: async (
+          { page, sorts, filters }: any,
+          formValues: Recordable<any>,
+        ) => {
+          return await getBugListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
+            sorts: formatSorts(sorts),
             ...formValues,
           });
         },
@@ -69,8 +79,7 @@ function onActionClick({
       break;
     }
     case 'confirmBug': {
-      row.openModalSource = 'confirmBug';
-      NextModalApi.setData(row).open();
+      ConfirmModalApi.setData(row).open();
       break;
     }
     case 'delete': {
@@ -82,8 +91,16 @@ function onActionClick({
       break;
     }
     case 'next': {
-      row.openModalSource = 'next';
       NextModalApi.setData(row).open();
+      break;
+    }
+    case 'updateField': {
+      updateBugFieldApi(row.bugId ?? '', {
+        key: row.key,
+        value: row.value,
+      }).finally(() => {
+        gridApi.query();
+      });
       break;
     }
   }
@@ -101,19 +118,15 @@ async function onDelete(_row: DevBugApi.DevBugFace) {
   const hideLoading = message.loading({
     content: '正在删除',
     duration: 0,
-    key: 'action_process_msg',
   });
 
-  await sleep(1000);
-
-  message.success({
-    content: '删除成功',
-    key: 'action_process_msg',
-  });
-
-  await sleep(1000);
-  hideLoading();
-  gridApi.query();
+  try {
+    await deleteBugApi([_row.bugId ?? '']);
+    message.success('删除成功');
+    gridApi.query();
+  } finally {
+    hideLoading();
+  }
 }
 // #endregion
 
@@ -125,18 +138,20 @@ const [AddFormModal, AddFormModalApi] = useVbenModal({
 
 // #endregion
 
-// #region 流转弹窗
 const [NextModal, NextModalApi] = useVbenModal({
   connectedComponent: nextModal,
   destroyOnClose: true,
 });
 
-// #region 打开详情抽屉
+const [ConfirmModal, ConfirmModalApi] = useVbenModal({
+  connectedComponent: confirmModal,
+  destroyOnClose: true,
+});
+
 const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
   connectedComponent: detailDrawer,
   destroyOnClose: true,
 });
-// #endregion
 </script>
 
 <template>
@@ -150,6 +165,7 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
     </Grid>
     <AddFormModal @success="gridApi.query" />
     <NextModal @success="gridApi.query" />
+    <ConfirmModal @success="gridApi.query" />
     <DetailDrawer />
   </Page>
 </template>

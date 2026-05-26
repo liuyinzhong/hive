@@ -44,7 +44,7 @@ const [Modal, modalApi] = useVbenModal({
       let storyRow: DevStoryApi.DevStoryFace = modalApi.getData();
       if (storyRow.storyNum) {
         storyRow = await getStoryDetailApi(storyRow.storyNum);
-        storyRow.fileIds = storyRow.fileList.map((item: any) => ({
+        storyRow.fileIds = storyRow.fileList?.map((item: any) => ({
           ...item,
           name: item.originalName,
           uid: item.fileId,
@@ -52,6 +52,7 @@ const [Modal, modalApi] = useVbenModal({
         }));
         modalApi.setState({ title: '编辑需求' });
         formApi.setValues(storyRow);
+        formApi.resetValidate();
       }
     }
   },

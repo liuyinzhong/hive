@@ -71,6 +71,7 @@ const [Modal, modalApi] = useVbenModal({
       // 可通过 shouldValidate 来控制是否立马校验一次表单值
       data.timeArr = [dayjs(data.startDate), dayjs(data.endDate)];
       formApi.setValues(data);
+      formApi.resetValidate();
     }
   },
 });

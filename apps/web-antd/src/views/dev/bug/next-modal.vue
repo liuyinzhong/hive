@@ -4,10 +4,10 @@ import { ref } from 'vue';
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createBug, updateBug } from '#/api/dev';
+import { nextBugApi } from '#/api/dev/bug';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
 import { getLocalDictList } from '#/dicts';
-
+import { message } from 'ant-design-vue';
 import { useNextFormSchema } from './data';
 defineOptions({
   name: 'BugNextModal',
@@ -45,16 +45,6 @@ const [Modal, modalApi] = useVbenModal({
     if (isOpen) {
       const data = modalApi.getData();
       formData.value = data;
-      if (formData.value.openModalSource === 'confirmBug') {
-        modalApi.setState({ title: '缺陷确认' });
-      }
-
-      /* if (formData.value.openModalSource === 'confirmBug') {
-        formApi.updateSchema([{ fieldName: 'bugConfirmStatus', hide: true }]);
-      } else {
-        formApi.updateSchema([{ fieldName: 'bugStatus', hide: true }]);
-      } */
-
       formApi.setValues(data);
 
       /* 设置当前步骤 */
@@ -65,16 +55,21 @@ const [Modal, modalApi] = useVbenModal({
   },
 });
 
-function onSubmit(values: Record<string, any>) {
+async function onSubmit(values: Record<string, any>) {
+  const hideLoading = message.loading({
+    content: '正在流转中...',
+    duration: 0,
+  });
   modalApi.lock();
-  (values.bugId ? updateBug(values.bugId, values) : createBug(values))
-    .then(() => {
-      modalApi.close();
-    })
-    .catch(() => {
-      modalApi.unlock();
-    });
-  emit('success');
+  try {
+    await nextBugApi(values.bugId, values);
+    message.success('流转成功');
+    modalApi.close();
+    emit('success');
+  } finally {
+    hideLoading();
+    modalApi.unlock();
+  }
 }
 // #endregion
 
@@ -83,33 +78,27 @@ function setChangeRichText(value: string) {
 }
 </script>
 <template>
-  <Modal
-    :class="
-      formData.openModalSource === 'confirmBug' ? 'w-[800px]' : 'w-[1000px]'
-    "
-  >
+  <Modal class="w-[1000px]">
     <a-row :gutter="24">
       <a-col :span="6">
-        <div v-if="formData.openModalSource === 'next'">
-          <a-steps
-            v-model:current="current"
-            direction="vertical"
-            @change="changeCurrent"
-            :items="stepsItems"
-          />
+        <a-steps
+          v-model:current="current"
+          direction="vertical"
+          @change="changeCurrent"
+          :items="stepsItems"
+        />
 
-          <a-divider dashed>常用语(双击)</a-divider>
-          <CommonPhrase
-            :text-list="[
-              '已修复，已更新至测试环境',
-              '测试验证完毕，已关闭',
-              '非BUG，已关闭',
-            ]"
-            @dbl-click="setChangeRichText"
-          />
-        </div>
+        <a-divider dashed>常用语(双击)</a-divider>
+        <CommonPhrase
+          :text-list="[
+            '已修复，已更新至测试环境',
+            '测试验证完毕，已关闭',
+            '非BUG，已关闭',
+          ]"
+          @dbl-click="setChangeRichText"
+        />
       </a-col>
-      <a-col :span="formData.openModalSource === 'confirmBug' ? 24 : 18">
+      <a-col :span="18">
         <Form />
       </a-col>
     </a-row>

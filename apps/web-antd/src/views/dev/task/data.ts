@@ -413,11 +413,18 @@ export function useColumns(
       width: 120,
       showOverflow: true,
       title: '执行人',
-      cellRender: {
-        name: 'UserAvatar',
-        props: {
-          avatarField: 'avatar',
-          nameField: 'realName',
+      field: 'userList',
+      editRender: {
+        name: 'UserSelect',
+        props: {},
+        events: {
+          change: (val: any, row: DevTaskApi.DevTaskFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'userId' },
+              });
+          },
         },
       },
     },
@@ -446,10 +453,19 @@ export function useColumns(
       field: 'taskType',
       title: '任务类型',
       width: 100,
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'TASK_TYPE',
+        },
+        events: {
+          change: (val: any, row: DevTaskApi.DevTaskFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'taskType' },
+              });
+          },
         },
       },
     },

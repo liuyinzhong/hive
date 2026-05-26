@@ -239,7 +239,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Select',
       fieldName: 'bugLevel',
       label: '级别',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_LEVEL'),
@@ -249,7 +249,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Select',
       fieldName: 'bugEnv',
       label: '环境',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_ENV'),
@@ -259,11 +259,12 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Select',
       fieldName: 'bugStatus',
       label: '缺陷状态',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       dependencies: {
         triggerFields: ['bugId'],
         disabled: (value) => value.bugId,
+        show: false,
       },
       componentProps: {
         options: getLocalDictList('BUG_STATUS'),
@@ -273,7 +274,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Select',
       fieldName: 'bugSource',
       label: '来源',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_SOURCE'),
@@ -283,7 +284,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Select',
       fieldName: 'bugType',
       label: '缺陷类型',
-      defaultValue: 0,
+      defaultValue: '0',
       formItemClass: 'col-span-1',
       componentProps: {
         options: getLocalDictList('BUG_TYPE'),
@@ -429,6 +430,7 @@ export function useColumns(
     {
       field: 'bugTitle',
       title: '缺陷标题',
+      sortable: true,
       minWidth: 200,
       cellRender: {
         name: 'CellLink',
@@ -443,27 +445,38 @@ export function useColumns(
       width: 120,
       showOverflow: true,
       title: '修复人',
-      cellRender: {
-        name: 'UserAvatar',
-        props: {
-          avatarField: 'avatar',
-          nameField: 'realName',
+      field: 'userList',
+      editRender: {
+        name: 'UserSelect',
+        props: {},
+        events: {
+          change: (val: any, row: DevBugApi.DevBugFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'userId' },
+              });
+          },
         },
       },
     },
 
     {
-      title: '缺陷确认状态',
+      title: '确认状态',
       field: 'bugConfirmStatus',
+      sortable: true,
       width: 100,
       cellRender: {
-        name: 'CellTag',
-        options: getLocalDictList('BUG_CONFIRM_STATUS'),
+        name: 'DictTag',
+        props: {
+          type: 'BUG_CONFIRM_STATUS',
+        },
       },
     },
     {
       title: '缺陷状态',
       field: 'bugStatus',
+      sortable: true,
       width: 100,
       cellRender: {
         name: 'DictTag',
@@ -475,11 +488,21 @@ export function useColumns(
     {
       title: '级别',
       field: 'bugLevel',
+      sortable: true,
       width: 100,
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'BUG_LEVEL',
+        },
+        events: {
+          change: (val: any, row: DevBugApi.DevBugFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'bugLevel' },
+              });
+          },
         },
       },
     },
@@ -487,10 +510,19 @@ export function useColumns(
       title: '环境',
       field: 'bugEnv',
       width: 100,
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'BUG_ENV',
+        },
+        events: {
+          change: (val: any, row: DevBugApi.DevBugFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'bugEnv' },
+              });
+          },
         },
       },
     },
@@ -498,10 +530,19 @@ export function useColumns(
       title: '缺陷类型',
       field: 'bugType',
       width: 100,
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'BUG_TYPE',
+        },
+        events: {
+          change: (val: any, row: DevBugApi.DevBugFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'bugType' },
+              });
+          },
         },
       },
     },
@@ -509,10 +550,19 @@ export function useColumns(
       title: '来源',
       field: 'bugSource',
       width: 100,
-      cellRender: {
-        name: 'DictTag',
+      editRender: {
+        name: 'DictSelect',
         props: {
           type: 'BUG_SOURCE',
+        },
+        events: {
+          change: (val: any, row: DevBugApi.DevBugFace) => {
+            onActionClick &&
+              onActionClick({
+                code: 'updateField',
+                row: { ...row, value: val || [], key: 'bugSource' },
+              });
+          },
         },
       },
     },
@@ -535,8 +585,9 @@ export function useColumns(
             icon: 'lucide:circle-check',
             tips: '确认bug按钮',
             /* 确认已是bug时。禁止重复确认、bug已关闭时禁止确认 */
-            disabled: (row: any) =>
-              row.bugConfirmStatus === 20 || row.bugStatus === 99,
+            disabled: (row: any) => {
+              return row.bugConfirmStatus === '1';
+            },
           },
           {
             code: 'next',
@@ -544,7 +595,7 @@ export function useColumns(
             tips: '流转按钮',
             disabled: (row: any) => {
               /* 待确认时，禁止流转bug 、bug已关闭时禁止流转 */
-              return row.bugConfirmStatus === 0 || row.bugStatus === 99;
+              return row.bugConfirmStatus === '0';
             },
           },
           {
@@ -583,34 +634,12 @@ export function useNextFormSchema(): VbenFormSchema[] {
       label: '缺陷状态',
       dependencies: {
         show: false,
-        triggerFields: ['bugId', 'openModalSource'],
-      },
-    },
-    {
-      component: 'Input',
-      fieldName: 'openModalSource',
-      label: '打开弹窗来源',
-      dependencies: {
-        triggerFields: ['openModalSource'],
-        show: false,
-      },
-    },
-    {
-      component: 'RadioGroup',
-      fieldName: 'bugConfirmStatus',
-      label: '缺陷确认状态',
-      componentProps: {
-        options: getLocalDictList('BUG_CONFIRM_STATUS'),
-      },
-      dependencies: {
-        show: (value: any) => value.openModalSource === 'confirmBug',
-        triggerFields: ['openModalSource'],
+        triggerFields: ['bugId'],
       },
     },
     {
       component: 'RichEditor',
       fieldName: 'changeRichText',
-      label: '富文本',
     },
   ];
 }

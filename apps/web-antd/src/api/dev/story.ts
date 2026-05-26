@@ -96,7 +96,8 @@ export const updateStoryFieldApi = async (
   storyId: string,
   data: Recordable<any>,
 ) => {
-  return requestClient.put(`/dev/storys/${storyId}/field`, data);
+  const newData = objectOmit(data, ['storyId']);
+  return requestClient.put(`/dev/storys/${storyId}/field`, newData);
 };
 
 /**

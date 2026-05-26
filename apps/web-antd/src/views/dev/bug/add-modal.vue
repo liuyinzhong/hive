@@ -2,8 +2,7 @@
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createBug, updateBug } from '#/api/dev';
-import { deepClone } from '#/utils';
+import { createBugApi, updateBugApi, getBugDetailApi } from '#/api/dev/bug';
 
 import { useFormSchema } from './data';
 defineOptions({
@@ -43,27 +42,29 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: async () => {
     await formApi.validateAndSubmitForm();
   },
-  onOpenChange(isOpen: boolean) {
+  async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = deepClone(modalApi.getData());
-      if (data.bugId) {
+      let data = modalApi.getData() || {};
+      if (data.bugNum) {
+        data = await getBugDetailApi(data.bugNum);
         modalApi.setState({ title: '编辑缺陷' });
       }
       formApi.setValues(data);
+      formApi.resetValidate();
     }
   },
 });
 
 async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
-  (values.bugId ? updateBug(values.bugId, values) : createBug(values))
+  (values.bugId ? updateBugApi(values.bugId, values) : createBugApi(values))
     .then(() => {
       modalApi.close();
     })
-    .catch(() => {
+    .finally(() => {
+      emit('success');
       modalApi.unlock();
     });
-  emit('success');
 }
 </script>
 <template>

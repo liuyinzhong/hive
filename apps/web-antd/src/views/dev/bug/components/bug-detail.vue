@@ -16,7 +16,7 @@ import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import { message } from 'ant-design-vue';
 
-import { getBugDetail } from '#/api/dev';
+import { getBugDetailApi } from '#/api/dev';
 import addFormModal from '#/views/dev/bug/add-modal.vue';
 import nextModal from '#/views/dev/bug/next-modal.vue';
 import ChangeLog from '#/views/dev/story/components/change-log.vue';
@@ -73,7 +73,7 @@ const loadBugDetail = () => {
   }
 
   loading.value = true;
-  getBugDetail(Number(props.bugNum))
+  getBugDetailApi(Number(props.bugNum))
     .then((res: DevBugApi.DevBugFace) => {
       if (!res) {
         router.push({ name: 'FallbackNotFound' });
@@ -185,7 +185,6 @@ defineExpose({
           </a-typography-paragraph>
 
           <!-- 富文本内容 -->
-          <div v-html="detail.bugRichText" style="min-height: 300px"></div>
           <div v-html="detail.bugRichText" style="min-height: 300px"></div>
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">

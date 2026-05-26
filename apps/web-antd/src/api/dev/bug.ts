@@ -59,33 +59,73 @@ export namespace DevBugApi {
   }
 }
 
-export const getBugList = async (params: Recordable<any>) => {
-  return requestClient.get<Array<DevBugApi.DevBugFace>>('/dev/bug/list', {
+/**
+ * 获取Bug列表
+ */
+export const getBugListApi = async (params: Recordable<any>) => {
+  return requestClient.get<Array<DevBugApi.DevBugFace>>('/dev/bugs', {
     params,
   });
 };
 
-export const createBug = async (data: Omit<DevBugApi.DevBugFace, 'bugId'>) => {
+/**
+ * 创建Bug
+ */
+export const createBugApi = async (
+  data: Omit<DevBugApi.DevBugFace, 'bugId'>,
+) => {
   const newData = objectOmit(data, ['bugId']);
-  return requestClient.post('/dev/bug', newData);
+  return requestClient.post('/dev/bugs', newData);
 };
 
 /**
  * 更新Bug
- *
- * @param id Bug ID
- * @param data Bug 数据
  */
-export const updateBug = async (
-  id: string,
+export const updateBugApi = async (
+  bugId: string,
   data: Omit<DevBugApi.DevBugFace, 'bugId'>,
 ) => {
   const newData = objectOmit(data, ['bugId']);
-  return requestClient.put(`/dev/bug/${id}`, newData);
+  return requestClient.put(`/dev/bugs/${bugId}`, newData);
 };
 
-export const getBugDetail = async (bugNum: number) => {
-  return requestClient.get<DevBugApi.DevBugFace>('/dev/bug/get', {
-    params: { bugNum },
-  });
+/**
+ * 获取Bug详情
+ */
+export const getBugDetailApi = async (bugNum: number) => {
+  return requestClient.get<DevBugApi.DevBugFace>(`/dev/bugs/${bugNum}`);
+};
+
+/**
+ * 删除Bug
+ */
+export const deleteBugApi = async (bugIds: string[]) => {
+  return requestClient.delete(`/dev/bugs`, { data: bugIds });
+};
+
+/**
+ * 流转Bug
+ */
+export const nextBugApi = async (bugId: string, data: Recordable<any>) => {
+  const newData = objectOmit(data, ['bugId']);
+  return requestClient.put(`/dev/bugs/${bugId}/next`, newData);
+};
+
+/**
+ * 更新字段
+ */
+export const updateBugFieldApi = async (
+  bugId: string,
+  data: Recordable<any>,
+) => {
+  const newData = objectOmit(data, ['bugId']);
+  return requestClient.put(`/dev/bugs/${bugId}/field`, newData);
+};
+
+/**
+ * 确认Bug
+ */
+export const confirmBugApi = async (bugId: string, data: Recordable<any>) => {
+  const newData = objectOmit(data, ['bugId']);
+  return requestClient.put(`/dev/bugs/${bugId}/confirm`, newData);
 };

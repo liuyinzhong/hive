@@ -13,7 +13,11 @@ import { Plus } from '@vben/icons';
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getTaskListApi, deleteTaskApi } from '#/api/dev/task';
+import {
+  getTaskListApi,
+  deleteTaskApi,
+  updateTaskFieldApi,
+} from '#/api/dev/task';
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
@@ -82,6 +86,15 @@ function onActionClick({
     }
     case 'taskTitle': {
       DetailDrawerApi.setData(row).open();
+      break;
+    }
+    case 'updateField': {
+      updateTaskFieldApi(row.taskId ?? '', {
+        key: row.key,
+        value: row.value,
+      }).finally(() => {
+        gridApi.query();
+      });
       break;
     }
   }

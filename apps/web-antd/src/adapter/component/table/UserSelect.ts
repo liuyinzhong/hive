@@ -10,14 +10,35 @@ import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
 import { getUserListAllApi } from '#/api/system';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 
+/*
+仅支持两种格式，
+多人参与 所绑定的数据格式为：[{ userId: '', realName: '', avatar: '' }]
+
+//这条数据里必需包含userId、realName、avatar三个字段
+单人参与 所绑定的数据格式为：{ userId: '', realName: '', avatar: '' }
+
+多人时请看 需求管理-参与人员列
+单人时请看 任务管理-执行人列
+
+*/
+
 export default {
   renderTableEdit(_renderOpts: any, params: any) {
     const { column, row } = params;
     const { props, events } = _renderOpts;
+    let _list: any[] = row?.[column.field];
+    if (!_list) {
+      _list = [
+        {
+          userId: row?.userId || '',
+          realName: row?.realName || '',
+          avatar: row?.avatar || '',
+        },
+      ];
+    }
+
     const userIds =
-      row?.[column.field].map(
-        (item: SystemUserApi.SystemUserFace) => item.userId,
-      ) || [];
+      _list.map((item: SystemUserApi.SystemUserFace) => item.userId) || [];
 
     // 初始化值
     let _value: any = userIds || [];

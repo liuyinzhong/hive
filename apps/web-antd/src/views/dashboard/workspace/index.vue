@@ -4,6 +4,7 @@ import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { Sortable } from '@vben-core/composables';
 
 import type { DevTaskApi } from '#/api/dev';
+import { nextTaskApi } from '#/api/dev/task';
 
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -35,7 +36,7 @@ import addTaskModal from '#/views/dev/task/add-modal.vue';
 interface DataItem {
   title: string;
   icon: string;
-  taskStatus: number;
+  taskStatus: string;
   children: DevTaskApi.DevTaskFace[];
 }
 
@@ -80,19 +81,19 @@ const taskDataList = reactive<Array<DataItem>>([
   {
     title: '待执行',
     icon: 'icon-[lucide--badge]',
-    taskStatus: 0,
+    taskStatus: '0',
     children: [],
   },
   {
     title: '执行中',
     icon: 'icon-[lucide--badge-percent]',
-    taskStatus: 10,
+    taskStatus: '10',
     children: [],
   },
   {
     title: '已完成',
     icon: 'icon-[lucide--badge-check]',
-    taskStatus: 99,
+    taskStatus: '99',
     children: [],
   },
 ]);
@@ -100,13 +101,6 @@ const taskDataList = reactive<Array<DataItem>>([
 onMounted(() => {
   // 初始化排序
   initSortable();
-  getTaskListApi({}).then(({ items }) => {
-    taskDataList.forEach((taskInfo) => {
-      taskInfo.children = items.filter(
-        (item) => item.taskStatus === taskInfo.taskStatus,
-      );
-    });
-  });
 });
 
 // 排序选项
@@ -134,8 +128,8 @@ const sortableOptions: Sortable.Options = {
   // 拖动结束时的回调
   onEnd: async (event) => {
     // 获取源容器和目标容器
-    const fromContainer = event.from.dataset.container;
-    const toContainer = event.to.dataset.container;
+    const fromTaskStatus = event.from.dataset.taskStatus;
+    const toTaskStatus = event.to.dataset.taskStatus;
 
     // 从元素中获取任务ID
     const taskId = event.item.dataset.id || '';
@@ -145,16 +139,23 @@ const sortableOptions: Sortable.Options = {
       return;
     }
 
-    // console.log('从列表拖动到列表:', fromContainer, '->', toContainer);
+    await nextTaskApi(taskId, {
+      taskStatus: toTaskStatus,
+    });
+    // console.log('从列表拖动到列表:', fromTaskStatus, '->', toTaskStatus);
     // console.log('拖动的任务ID:', taskId);
 
     // 如果源列表和目标列表相同，不做处理
-    if (fromContainer === toContainer) {
+    if (fromTaskStatus === toTaskStatus) {
       return;
     }
     // 查找源列表和目标列表
-    const fromList = taskDataList.find((item) => item.title === fromContainer);
-    const toList = taskDataList.find((item) => item.title === toContainer);
+    const fromList = taskDataList.find(
+      (item) => item.taskStatus === fromTaskStatus,
+    );
+    const toList = taskDataList.find(
+      (item) => item.taskStatus === toTaskStatus,
+    );
     if (!fromList || !toList) {
       return;
     }
@@ -184,6 +185,13 @@ async function initSortable() {
       await initializeSortable();
     }
   }
+  getTaskListApi({}).then(({ items }) => {
+    taskDataList.forEach((taskInfo) => {
+      taskInfo.children = items.filter(
+        (item) => item.taskStatus === taskInfo.taskStatus,
+      );
+    });
+  });
 }
 
 // #region 任务添加弹窗
@@ -234,6 +242,7 @@ function onCreate() {
                 <div
                   class="sort-container h-[600px] overflow-auto"
                   :data-container="item.title"
+                  :data-task-status="item.taskStatus"
                   :ref="(el) => (sortContainers[index] = el)"
                 >
                   <template v-if="item.children.length > 0">
@@ -304,6 +313,6 @@ function onCreate() {
       </Card>
     </div>
 
-    <AddTaskModal />
+    <AddTaskModal @success="initSortable" />
   </div>
 </template>
