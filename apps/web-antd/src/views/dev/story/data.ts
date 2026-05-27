@@ -3,17 +3,16 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
-
-import {
-  getModulesListApi,
-  getProjectsListApi,
-  getVersionsListApi,
-} from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
 import { getUserListAllApi } from '#/api/system';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { storyRichTemplateText } from '#/template/richText';
+import {
+  projectSchema,
+  versionSchema,
+  moduleSchema,
+} from '#/views/dev/base/baseSchema';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -51,22 +50,11 @@ export function useFormSchema(): VbenFormSchema[] {
         resultField: 'items',
       },
     },
-    {
-      component: 'ApiSelect',
-      fieldName: 'projectId',
-      label: '项目',
-      rules: 'required',
-      formItemClass: 'col-span-1',
-      componentProps: (_value: any, _formApi: any) => {
-        return {
-          api: () => getProjectsListApi(),
-          labelField: 'projectTitle',
-          valueField: 'projectId',
-          autoSelect: 'first',
-        };
+    projectSchema({
+      componentProps: {
+        autoSelect: 'first',
       },
-    },
-
+    }),
     {
       component: 'RichEditor',
       fieldName: 'storyRichText',
@@ -79,57 +67,8 @@ export function useFormSchema(): VbenFormSchema[] {
         modelValue: storyRichTemplateText,
       },
     },
-    {
-      component: 'ApiSelect',
-      fieldName: 'versionId',
-      label: '迭代版本',
-      rules: 'required',
-      formItemClass: 'col-span-1',
-      componentProps: (value, _formApi) => {
-        if (!value.projectId) {
-          return {};
-        }
-        return {
-          key: `versionId_${value.projectId}`,
-          api: () =>
-            getVersionsListApi({
-              projectId: value.projectId,
-              includeId: value.versionId || undefined,
-            }),
-          labelField: 'version',
-          valueField: 'versionId',
-          resultField: 'items',
-          // autoSelect: false,
-          autoSelect: 'first',
-        };
-      },
-      dependencies: {
-        triggerFields: ['projectId'],
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'moduleId',
-      label: '关联模块',
-      rules: 'required',
-      formItemClass: 'col-span-1',
-      componentProps: (value, _formApi) => {
-        if (!value.projectId) {
-          return {};
-        }
-        return {
-          key: `moduleId_${value.projectId}`,
-          api: () => getModulesListApi({ projectId: value.projectId }),
-          labelField: 'moduleTitle',
-          valueField: 'moduleId',
-          resultField: '',
-          autoSelect: 'first',
-        };
-      },
-      dependencies: {
-        triggerFields: ['projectId'],
-      },
-    },
+    versionSchema(),
+    moduleSchema(),
 
     {
       component: 'ApiSelect',
@@ -202,75 +141,11 @@ export function useFormSchema(): VbenFormSchema[] {
 /** 表格查询表单配置 */
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
-    {
-      component: 'ApiSelect',
-      fieldName: 'projectId',
-      label: '项目',
-      componentProps: () => {
-        return {
-          api: () => getProjectsListApi(),
-          labelField: 'projectTitle',
-          valueField: 'projectId',
-          allowClear: true,
-        };
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'versionId',
-      label: '迭代版本',
-      componentProps: (value, _formApi) => {
-        if (!value.projectId) {
-          return {};
-        }
-        return {
-          key: `versionId_${value.projectId}`,
-          api: () =>
-            getVersionsListApi({
-              projectId: value.projectId,
-              page: 1,
-              pageSize: 100,
-            }),
-          labelField: 'version',
-          valueField: 'versionId',
-          resultField: 'items',
-          allowClear: true,
-        };
-      },
-      dependencies: {
-        triggerFields: ['projectId'],
-        componentProps: (value, formApi) => {
-          formApi.setFieldValue('versionId', undefined);
-          return {};
-        },
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'moduleId',
-      label: '关联模块',
-      componentProps: (value, _formApi) => {
-        if (!value.projectId) {
-          return {};
-        }
-        return {
-          key: `moduleId_${value.projectId}`,
-          api: () => getModulesListApi({ projectId: value.projectId }),
-          labelField: 'moduleTitle',
-          valueField: 'moduleId',
-          resultField: '',
-          autoSelect: '',
-          allowClear: true,
-        };
-      },
-      dependencies: {
-        triggerFields: ['projectId'],
-        componentProps: (value, formApi) => {
-          formApi.setFieldValue('moduleId', undefined);
-          return {};
-        },
-      },
-    },
+    projectSchema({
+      rules: '',
+    }),
+    versionSchema(),
+    moduleSchema(),
     {
       component: 'Input',
       defaultValue: '',
@@ -288,6 +163,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         filterOption: true,
         showSearch: true,
+        mode: 'multiple',
         api: () => getLocalDictList('STORY_STATUS'),
       },
     },

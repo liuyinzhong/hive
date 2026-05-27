@@ -8,7 +8,6 @@ import { h, nextTick, ref } from 'vue';
 
 import { useDebounceFn } from '@vueuse/core';
 import { Flex, Tag, TypographyText } from 'ant-design-vue';
-
 import {
   getModulesListApi,
   getProjectsListApi,
@@ -18,7 +17,7 @@ import {
 import { getUserListAllApi } from '#/api/system';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
-import { getLocalDictList } from '#/dicts';
+import { getLocalDictList, getLocalDictText } from '#/dicts';
 import { $t } from '#/locales';
 import { taskRichTemplateText } from '#/template/richText';
 
@@ -114,6 +113,25 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'versionId',
       label: '迭代版本',
       formItemClass: 'col-span-1',
+      renderComponentContent: () => ({
+        option: (optionItem: any) => {
+          const _title =
+            (optionItem.remark || '') +
+            getLocalDictText('RELEASE_STATUS', optionItem.releaseStatus);
+
+          return h(
+            Flex,
+            {
+              gap: 10,
+              align: 'center',
+            },
+            [
+              h('div', {}, optionItem.label),
+              h('div', { title: _title }, _title),
+            ],
+          );
+        },
+      }),
       componentProps: (value: any, _formApi: any) => {
         if (!value.projectId) {
           return {};
@@ -353,6 +371,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         filterOption: true,
         showSearch: true,
+        mode: 'multiple',
         api: () => getLocalDictList('TASK_STATUS'),
       },
     },

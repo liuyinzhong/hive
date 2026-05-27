@@ -63,8 +63,12 @@ export namespace DevBugApi {
  * 获取Bug列表
  */
 export const getBugListApi = async (params: Recordable<any>) => {
-  return requestClient.get<Array<DevBugApi.DevBugFace>>('/dev/bugs', {
+  return requestClient.get<{
+    items: Array<DevBugApi.DevBugFace>;
+    total: number;
+  }>('/dev/bugs', {
     params,
+    paramsSerializer: 'comma',
   });
 };
 

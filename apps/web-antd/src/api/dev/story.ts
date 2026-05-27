@@ -49,8 +49,12 @@ export namespace DevStoryApi {
  * 获取需求列表
  */
 export const getStoryListApi = async (params: Recordable<any>) => {
-  return requestClient.get<Array<DevStoryApi.DevStoryFace>>('/dev/storys', {
+  return requestClient.get<{
+    items: Array<DevStoryApi.DevStoryFace>;
+    total: number;
+  }>('/dev/storys', {
     params,
+    paramsSerializer: 'comma',
   });
 };
 

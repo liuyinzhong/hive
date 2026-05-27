@@ -22,6 +22,7 @@ import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
+import { formatSorts } from '#/utils/index.js';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: addFormModal,
@@ -56,12 +57,21 @@ const [Grid, gridApi] = useVbenVxeGrid({
       showLine: false,
       transform: false,
     },
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
+      sort: true,
       ajax: {
-        query: async ({ page }: any, formValues: Recordable<any>) => {
+        query: async (
+          { page, sorts, filters }: any,
+          formValues: Recordable<any>,
+        ) => {
           return await getDictListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
+            sorts: formatSorts(sorts),
             ...formValues,
           });
         },

@@ -152,17 +152,20 @@ export function useColumns<T = SystemDictApi.SystemDictFace>(
       field: 'label',
       title: $t('system.dict.dictName'),
       treeNode: true,
+      sortable: true,
       width: 150,
     },
     {
       field: 'value',
       title: $t('system.dict.value'),
       align: 'left',
+      sortable: true,
     },
     {
       field: 'type',
       title: $t('system.dict.type'),
       align: 'left',
+      sortable: true,
     },
     {
       cellRender: {

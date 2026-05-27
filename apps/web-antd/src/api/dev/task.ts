@@ -45,6 +45,7 @@ export const getTaskListApi = async (params: Recordable<any>) => {
     total: number;
   }>('/dev/tasks', {
     params,
+    paramsSerializer: 'comma',
   });
 };
 

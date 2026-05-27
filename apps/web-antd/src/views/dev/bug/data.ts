@@ -18,7 +18,7 @@ import {
 import { getUserListAllApi } from '#/api/system';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
-import { getLocalDictList } from '#/dicts';
+import { getLocalDictList, getLocalDictText } from '#/dicts';
 import { $t } from '#/locales';
 import { bugRichTemplateText } from '#/template/richText';
 
@@ -94,6 +94,25 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '迭代版本',
       rules: 'required',
       formItemClass: 'col-span-1',
+      renderComponentContent: () => ({
+        option: (optionItem: any) => {
+          const _title =
+            (optionItem.remark || '') +
+            getLocalDictText('RELEASE_STATUS', optionItem.releaseStatus);
+
+          return h(
+            Flex,
+            {
+              gap: 10,
+              align: 'center',
+            },
+            [
+              h('div', {}, optionItem.label),
+              h('div', { title: _title }, _title),
+            ],
+          );
+        },
+      }),
       componentProps: (value: any, _formApi: any) => {
         if (!value.projectId) {
           return {};
@@ -379,6 +398,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'bugStatus',
       label: '状态',
       componentProps: {
+        allowClear: true,
+        filterOption: true,
+        showSearch: true,
+        mode: 'multiple',
         options: getLocalDictList('BUG_STATUS'),
       },
     },
@@ -386,6 +409,9 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'Input',
       fieldName: 'bugTitle',
       label: '标题',
+      componentProps: {
+        allowClear: true,
+      },
     },
   ];
 }

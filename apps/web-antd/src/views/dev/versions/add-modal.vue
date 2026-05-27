@@ -53,8 +53,8 @@ const [Modal, modalApi] = useVbenModal({
         modalApi.setState({
           title: '编辑版本',
         });
+        data.timeArr = [dayjs(data.startDate), dayjs(data.endDate)];
       }
-      data.timeArr = [dayjs(data.startDate), dayjs(data.endDate)];
       formApi.setValues(data);
     }
   },
