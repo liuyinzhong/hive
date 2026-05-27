@@ -7,33 +7,43 @@ import {
 } from '#/api/dev';
 import { getLocalDictText } from '#/dicts';
 import { h } from 'vue';
-
+import type { VbenFormSchema } from '#/adapter/form';
 import { Flex } from 'ant-design-vue';
-export const projectSchema = (config?: any) => {
-  return {
+export const projectSchema = (config?: any): VbenFormSchema => {
+  const base = {
     component: 'ApiSelect',
     fieldName: 'projectId',
     label: '项目',
     rules: 'required',
     formItemClass: 'col-span-1',
+  } as VbenFormSchema;
+
+  return {
+    ...base,
+    ...config,
     componentProps: (_value: any, _formApi: any) => {
       return {
         api: () => getProjectsListApi(),
         labelField: 'projectTitle',
         valueField: 'projectId',
+        autoSelect: 'first',
         ...config?.componentProps,
       };
     },
-  };
+  } as VbenFormSchema;
 };
 
-export const versionSchema = () => {
-  return {
+export const versionSchema = (config?: any): VbenFormSchema => {
+  const base = {
     component: 'ApiSelect',
     fieldName: 'versionId',
     label: '迭代版本',
     rules: 'required',
     formItemClass: 'col-span-1',
+  } as VbenFormSchema;
+  return {
+    ...base,
+    ...config,
     renderComponentContent: () => ({
       option: (optionItem: any) => {
         const _title =
@@ -66,6 +76,7 @@ export const versionSchema = () => {
         resultField: 'items',
         // autoSelect: false,
         autoSelect: 'first',
+        ...config?.componentProps,
       };
     },
     dependencies: {
@@ -75,16 +86,20 @@ export const versionSchema = () => {
         return {};
       },
     },
-  };
+  } as VbenFormSchema;
 };
 
-export const moduleSchema = () => {
-  return {
+export const moduleSchema = (config?: any): VbenFormSchema => {
+  const base = {
     component: 'ApiSelect',
     fieldName: 'moduleId',
     label: '关联模块',
     rules: 'required',
     formItemClass: 'col-span-1',
+  } as VbenFormSchema;
+  return {
+    ...base,
+    ...config,
     componentProps: (value: any, _formApi: any) => {
       if (!value.projectId) {
         return {};
@@ -96,6 +111,7 @@ export const moduleSchema = () => {
         valueField: 'moduleId',
         resultField: '',
         autoSelect: 'first',
+        ...config?.componentProps,
       };
     },
     dependencies: {
@@ -105,5 +121,5 @@ export const moduleSchema = () => {
         return {};
       },
     },
-  };
+  } as VbenFormSchema;
 };

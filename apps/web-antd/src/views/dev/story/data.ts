@@ -50,11 +50,7 @@ export function useFormSchema(): VbenFormSchema[] {
         resultField: 'items',
       },
     },
-    projectSchema({
-      componentProps: {
-        autoSelect: 'first',
-      },
-    }),
+    projectSchema(),
     {
       component: 'RichEditor',
       fieldName: 'storyRichText',
@@ -143,9 +139,22 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     projectSchema({
       rules: '',
+      componentProps: {
+        autoSelect: '',
+      },
     }),
-    versionSchema(),
-    moduleSchema(),
+    versionSchema({
+      rules: '',
+      componentProps: {
+        autoSelect: '',
+      },
+    }),
+    moduleSchema({
+      rules: '',
+      componentProps: {
+        autoSelect: '',
+      },
+    }),
     {
       component: 'Input',
       defaultValue: '',
