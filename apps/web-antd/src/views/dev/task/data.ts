@@ -4,27 +4,19 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevTaskApi } from '#/api/dev';
 
-import { h, nextTick, ref } from 'vue';
-
-import { useDebounceFn } from '@vueuse/core';
-import { Flex, Tag, TypographyText } from 'ant-design-vue';
-import {
-  getModulesListApi,
-  getProjectsListApi,
-  getStoryListApi,
-  getVersionsListApi,
-} from '#/api/dev';
-import { getUserListAllApi } from '#/api/system';
-import UserAvatar from '#/components/UserAvatar/index.vue';
-import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
-import { getLocalDictList, getLocalDictText } from '#/dicts';
+import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { taskRichTemplateText } from '#/template/richText';
+import {
+  projectSchema,
+  versionSchema,
+  moduleSchema,
+  storySchema,
+  userIdSchema,
+} from '#/views/dev/base/baseSchema';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
-  const keyword = ref('');
-
   return [
     {
       component: 'Input',
@@ -75,27 +67,14 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
 
-    {
-      component: 'ApiSelect',
-      fieldName: 'projectId',
-      label: '项目',
-      rules: 'required',
-      formItemClass: 'col-span-1',
-      componentProps: (_value: any, _formApi: any) => {
-        return {
-          api: () => getProjectsListApi(),
-          labelField: 'projectTitle',
-          valueField: 'projectId',
-          autoSelect: 'first',
-        };
-      },
+    projectSchema({
       dependencies: {
-        triggerFields: ['projectId'],
-        disabled: (value) => {
+        disabled: (value: any) => {
           return value.openModalSource === 'storyListAddBtn';
         },
       },
-    },
+    }),
+
     {
       component: 'RichEditor',
       fieldName: 'taskRichText',
@@ -108,177 +87,40 @@ export function useFormSchema(): VbenFormSchema[] {
         modelValue: taskRichTemplateText,
       },
     },
-    {
-      component: 'ApiSelect',
-      fieldName: 'versionId',
-      label: '迭代版本',
-      formItemClass: 'col-span-1',
-      renderComponentContent: () => ({
-        option: (optionItem: any) => {
-          const _title =
-            (optionItem.remark || '') +
-            getLocalDictText('RELEASE_STATUS', optionItem.releaseStatus);
-
-          return h(
-            Flex,
-            {
-              gap: 10,
-              align: 'center',
-            },
-            [
-              h('div', {}, optionItem.label),
-              h('div', { title: _title }, _title),
-            ],
-          );
-        },
-      }),
-      componentProps: (value: any, _formApi: any) => {
-        if (!value.projectId) {
-          return {};
-        }
-        return {
-          key: `versionId_${value.projectId}`,
-          api: () =>
-            getVersionsListApi({
-              projectId: value.projectId,
-              includeId: value.versionId || undefined,
-            }),
-          labelField: 'version',
-          valueField: 'versionId',
-          resultField: 'items',
-          autoSelect: false,
-        };
-      },
+    versionSchema({
+      rules: '',
       dependencies: {
-        triggerFields: ['projectId'],
-        disabled: (value) => {
+        disabled: (value: any) => {
           return value.openModalSource === 'storyListAddBtn';
         },
       },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'moduleId',
-      label: '关联模块',
-      formItemClass: 'col-span-1',
-      componentProps: (value, _formApi) => {
-        if (!value.projectId) {
-          return {};
-        }
-        return {
-          key: `moduleId_${value.projectId}`,
-          api: () => getModulesListApi({ projectId: value.projectId }),
-          labelField: 'moduleTitle',
-          valueField: 'moduleId',
-          resultField: '',
-          autoSelect: 'first',
-        };
-      },
+    }),
+    moduleSchema({
+      rules: '',
       dependencies: {
-        triggerFields: ['projectId', 'storyId'],
-        disabled: (value) => {
+        disabled: (value: any) => {
           return (
             Boolean(value.storyId) ||
             value.openModalSource === 'storyListAddBtn'
           );
         },
       },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'storyId',
-      label: '关联需求',
-      formItemClass: 'col-span-1',
-      renderComponentContent: () => ({
-        option: (optionItem: any) => {
-          return h(Flex, { gap: 10, align: 'center' }, [
-            h(
-              Tag,
-              { style: { height: 'fit-content' } },
-              `#${optionItem.storyNum || ''}`,
-            ),
-            h(TypographyText, { ellipsis: true }, optionItem.label || ''),
-            h(UserAvatarGroup, {
-              userList: optionItem.userList || [],
-            }),
-          ]);
-        },
-      }),
-      componentProps: (value, formApi) => {
-        if (!value.versionId) {
-          return {};
-        }
-
-        return {
-          api: (_params: any) => getStoryListApi({ ..._params }),
-          /* 当params 中有值变化时，会重新触发api属性 */
-          params: {
-            keyword: keyword.value || undefined,
-            versionId: value.versionId || undefined,
-            projectId: value.projectId || undefined,
-            includeId: value.storyId,
-          },
-          placeholder: '请输入需求标题、需求编号',
-          allowClear: true,
-          showSearch: true,
-          filterOption: false,
-          labelField: 'storyTitle',
-          valueField: 'storyId',
-          resultField: 'items',
-          autoSelect: false,
-          onSelect: (value: any, option: any) => {
-            keyword.value = '';
-            nextTick(() => {
-              formApi.setFieldValue('moduleId', option.moduleId || undefined);
-            });
-          },
-          onSearch: useDebounceFn((value: string) => {
-            keyword.value = value;
-          }, 700),
-        };
+    }),
+    storySchema({
+      rules: '',
+      componentProps: {
+        autoSelect: false,
+        allowClear: true,
       },
       dependencies: {
-        triggerFields: ['versionId'],
-        disabled: (value) => {
+        disabled: (value: any) => {
           return value.openModalSource === 'storyListAddBtn';
         },
       },
-    },
-
-    {
-      component: 'ApiSelect',
-      fieldName: 'userId',
+    }),
+    userIdSchema({
       label: '执行人',
-      rules: 'required',
-      formItemClass: 'col-span-1',
-      renderComponentContent: () => {
-        return {
-          option: (optionItem: any) => {
-            return h(UserAvatar, {
-              avatar: optionItem.avatar || '',
-              name: optionItem.label || '',
-            });
-          },
-        };
-      },
-      componentProps: {
-        api: () => getUserListAllApi(),
-        labelField: 'realName',
-        valueField: 'userId',
-        resultField: 'items',
-        showSearch: true,
-        allowClear: true,
-        filterOption: true,
-        optionFilterProp: 'label',
-      },
-    },
-
-    /* {
-      component: 'InputNumber',
-      fieldName: 'actualHours',
-      label: '实际工时',
-      defaultValue: 0,
-    }, */
+    }),
 
     {
       component: 'ApiSelect',
@@ -313,47 +155,20 @@ export function useFormSchema(): VbenFormSchema[] {
 /** 表格查询表单配置 */
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
-    {
-      component: 'ApiSelect',
-      fieldName: 'projectId',
-      label: '项目',
+    projectSchema({
+      rules: '',
       componentProps: {
-        api: () => getProjectsListApi(),
-        labelField: 'projectTitle',
-        valueField: 'projectId',
+        autoSelect: false,
         allowClear: true,
       },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'versionId',
-      label: '迭代版本',
-      componentProps: (value, _formApi) => {
-        if (!value.projectId) {
-          return {};
-        }
-        return {
-          key: `versionId_${value.projectId}`,
-          api: () =>
-            getVersionsListApi({
-              projectId: value.projectId,
-              page: 1,
-              pageSize: 100,
-            }),
-          labelField: 'version',
-          valueField: 'versionId',
-          resultField: 'items',
-          allowClear: true,
-        };
+    }),
+    versionSchema({
+      rules: '',
+      componentProps: {
+        autoSelect: false,
+        allowClear: true,
       },
-      dependencies: {
-        triggerFields: ['projectId'],
-        componentProps: (value, formApi) => {
-          formApi.setFieldValue('versionId', undefined);
-          return {};
-        },
-      },
-    },
+    }),
     {
       component: 'Input',
       defaultValue: '',
