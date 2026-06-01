@@ -35,7 +35,6 @@ export {
   EyeOff,
   FoldHorizontal,
   Fullscreen,
-  Github,
   Grid,
   Grip,
   GripVertical,
@@ -95,4 +94,4 @@ export {
   Unlink2,
   UserRoundPen,
   X,
-} from 'lucide-vue-next';
+} from '@lucide/vue';
