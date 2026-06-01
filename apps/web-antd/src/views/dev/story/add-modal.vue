@@ -29,7 +29,7 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  wrapperClass: 'grid-cols-3',
+  wrapperClass: 'grid-cols-4',
   schema: useFormSchema(),
   showDefaultActions: false,
 });
@@ -75,7 +75,7 @@ async function onSubmit(values: Record<string, any>) {
 }
 </script>
 <template>
-  <Modal class="w-[1000px]">
+  <Modal class="w-[1200px]">
     <Form />
   </Modal>
 </template>

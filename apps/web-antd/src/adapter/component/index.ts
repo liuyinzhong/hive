@@ -138,6 +138,9 @@ const PreviewGroup = defineAsyncComponent(() =>
 const ColorSelect = defineAsyncComponent(
   () => import('#/components/ColorSelect/index.vue'),
 );
+const NodeSteps = defineAsyncComponent(
+  () => import('#/components/NodeSteps/index.vue'),
+);
 
 const withDefaultPlaceholder = (
   component: Component,
@@ -613,6 +616,7 @@ export type ComponentType =
   | 'Checkbox'
   | 'CheckboxGroup'
   | 'ColorSelect'
+  | 'NodeSteps'
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
@@ -757,6 +761,7 @@ async function initComponentAdapter() {
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload: withPreviewUpload(),
     ColorSelect: withDefaultPlaceholder(ColorSelect, 'select'),
+    NodeSteps: NodeSteps,
   };
 
   // 将组件注册到全局共享状态中
