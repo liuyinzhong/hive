@@ -37,7 +37,7 @@ const menuIcon = computed(() =>
 const isHttp = computed(() => isHttpUrl(item.parentPaths.at(-1)));
 
 const isTopLevelMenuItem = computed(
-  () => parentMenu.value?.type.name === 'MenuUI',
+  () => parentMenu.value?.type.name === 'Menu',
 );
 
 const collapseShowTitle = computed(

@@ -1,7 +1,16 @@
 <script lang="ts" setup>
 import type { ExtendedModalApi, ModalProps } from './modal';
 
-import { computed, nextTick, onDeactivated, ref, unref, watch } from 'vue';
+import {
+  computed,
+  nextTick,
+  onDeactivated,
+  provide,
+  ref,
+  unref,
+  useId,
+  watch,
+} from 'vue';
 
 import { usePriorityValues, useSimpleLocale } from '@vben-core/composables';
 import { Expand, Shrink } from '@vben-core/icons';
@@ -43,6 +52,10 @@ const dialogRef = ref();
 const headerRef = ref();
 // @ts-expect-error unused
 const footerRef = ref();
+
+const id = useId();
+
+provide('DISMISSABLE_MODAL_ID', id);
 
 const { $t } = useSimpleLocale();
 const state = props.modalApi?.useStore?.();
@@ -181,18 +194,21 @@ function handleOpenAutoFocus(e: Event) {
 
 // pointer-down-outside
 function pointerDownOutside(e: Event) {
-  if (!closeOnClickModal.value || submitting.value) {
+  const target = e.target as HTMLElement;
+  const isDismissableModal = target?.dataset.dismissableModal;
+  if (
+    !closeOnClickModal.value ||
+    isDismissableModal !== id ||
+    submitting.value
+  ) {
     e.preventDefault();
+    e.stopPropagation();
   }
 }
 
 function handleFocusOutside(e: Event) {
   e.preventDefault();
   e.stopPropagation();
-}
-
-function handleCloseAutoFocus(_e: Event) {
-  // allow reka-ui to return focus to the trigger element on close
 }
 
 const getForceMount = computed(() => {
@@ -212,7 +228,7 @@ function handleClosed() {
 </script>
 <template>
   <Dialog
-    :modal="modal"
+    :modal="false"
     :open="state?.isOpen"
     @update:open="() => (!submitting ? modalApi?.close() : undefined)"
   >
@@ -245,7 +261,7 @@ function handleClosed() {
       :z-index="zIndex"
       :overlay-blur="overlayBlur"
       close-class="top-3"
-      @close-auto-focus="handleCloseAutoFocus"
+      @close-auto-focus="handleFocusOutside"
       @closed="handleClosed"
       :close-disabled="submitting"
       @escape-key-down="escapeKeyDown"
@@ -328,7 +344,7 @@ function handleClosed() {
           <component
             :is="components.DefaultButton || VbenButton"
             v-if="showCancelButton"
-            variant="outline"
+            variant="ghost"
             :disabled="submitting"
             @click="() => modalApi?.onCancel()"
           >
