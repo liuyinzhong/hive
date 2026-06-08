@@ -33,7 +33,6 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Select',
       componentProps: {
-        class: 'w-full',
         options: [
           { label: '选项1', value: '1' },
           { label: '选项2', value: '2' },
