@@ -67,7 +67,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   sideMouseLeave: [];
   toggleSidebar: [];
-  'update:sidebarWidth': [value: number];
+  'update:sidebar-width': [value: number];
 }>();
 const sidebarDraggable = defineModel<boolean>('sidebarDraggable', {
   default: true,
@@ -520,7 +520,7 @@ const idMainContent = ELEMENT_ID_MAIN_CONTENT;
       :width="getSidebarWidth"
       :z-index="sidebarZIndex"
       @leave="() => emit('sideMouseLeave')"
-      @update:width="(val) => emit('update:sidebarWidth', val)"
+      @update:width="(val) => emit('update:sidebar-width', val)"
     >
       <template v-if="isSideMode && !isMixedNav" #logo>
         <slot name="logo"></slot>

@@ -54,7 +54,7 @@ const opened = computed(() => {
   return rootMenu?.openedMenus.includes(props.path);
 });
 const isTopLevelMenuSubmenu = computed(
-  () => parentMenu.value?.type.name === 'MenuUI',
+  () => parentMenu.value?.type.name === 'Menu',
 );
 const mode = computed(() => rootMenu?.props.mode ?? 'vertical');
 const rounded = computed(() => rootMenu?.props.rounded);
