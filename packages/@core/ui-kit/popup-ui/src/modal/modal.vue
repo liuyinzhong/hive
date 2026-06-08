@@ -53,12 +53,12 @@ const headerRef = ref();
 // @ts-expect-error unused
 const footerRef = ref();
 
-const id = useId();
-
-provide('DISMISSABLE_MODAL_ID', id);
-
 const { $t } = useSimpleLocale();
 const state = props.modalApi?.useStore?.();
+
+const id = useId();
+// 遮罩层通过该 id 标记，仅当点击发生在当前 Modal 的遮罩上时才允许关闭
+provide('DISMISSABLE_MODAL_ID', id);
 
 const {
   appendToMain,
@@ -211,6 +211,10 @@ function handleFocusOutside(e: Event) {
   e.stopPropagation();
 }
 
+function handleCloseAutoFocus(_e: Event) {
+  // allow reka-ui to return focus to the trigger element on close
+}
+
 const getForceMount = computed(() => {
   return !unref(destroyOnClose) && unref(firstOpened);
 });
@@ -256,12 +260,12 @@ function handleClosed() {
       :force-mount="getForceMount"
       :modal="modal"
       :open="state?.isOpen"
-      :show-close="closable"
+      :show-close-button="closable"
       :animation-type="animationType"
       :z-index="zIndex"
       :overlay-blur="overlayBlur"
       close-class="top-3"
-      @close-auto-focus="handleFocusOutside"
+      @close-auto-focus="handleCloseAutoFocus"
       @closed="handleClosed"
       :close-disabled="submitting"
       @escape-key-down="escapeKeyDown"
@@ -344,7 +348,7 @@ function handleClosed() {
           <component
             :is="components.DefaultButton || VbenButton"
             v-if="showCancelButton"
-            variant="ghost"
+            variant="outline"
             :disabled="submitting"
             @click="() => modalApi?.onCancel()"
           >
