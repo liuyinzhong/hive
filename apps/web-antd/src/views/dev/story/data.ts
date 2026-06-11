@@ -79,6 +79,12 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '',
       labelWidth: 0,
       formItemClass: 'col-span-1 row-span-10 items-baseline',
+      dependencies: {
+        triggerFields: ['storyId'],
+        disabled(_value: any) {
+          return !!_value.storyId;
+        },
+      },
     },
     projectSchema(),
 

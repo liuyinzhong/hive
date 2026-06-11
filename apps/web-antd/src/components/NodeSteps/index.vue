@@ -42,6 +42,11 @@ const props = defineProps({
     type: Array as () => NodeItem[],
     default: () => [],
   },
+  /** 是否禁用交互（拖拽、删除、负责人选择、审批勾选） */
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 /**
@@ -197,6 +202,8 @@ async function initSelectedSortable() {
     }
     selectedSortable = null; // 销毁后记得清空引用
   }
+  // 禁用状态不初始化拖拽
+  if (props.disabled) return;
 
   const { initializeSortable } = useSortable(selectedPanelRef.value, {
     animation: 200,
@@ -229,6 +236,9 @@ async function initAlternativeSortable() {
   if (alternativeSortable) {
     alternativeSortable?.destroy();
   }
+
+  // 禁用状态不初始化拖拽
+  if (props.disabled) return;
 
   const { initializeSortable } = useSortable(alternativePanelRef.value, {
     animation: 200,
@@ -351,7 +361,11 @@ const activeKey = ref(['selected', 'alternative']);
         >
           <!-- 1号区域：排序序号（拖拽手柄） -->
           <div
-            class="drag-handle flex h-6 w-6 cursor-grab items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 active:cursor-grabbing"
+            class="drag-handle flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600"
+            :class="{
+              'cursor-grab active:cursor-grabbing': !props.disabled,
+              'cursor-not-allowed opacity-60': props.disabled,
+            }"
           >
             {{ index + 1 }}
           </div>
@@ -366,6 +380,7 @@ const activeKey = ref(['selected', 'alternative']);
               <a-tooltip title="审批节点">
                 <a-checkbox
                   :checked="item.approval"
+                  :disabled="props.disabled"
                   @change="
                     (e: any) => onApprovalChange(index, e.target.checked)
                   "
@@ -376,6 +391,7 @@ const activeKey = ref(['selected', 'alternative']);
                 :value="item.userId || undefined"
                 :options="userList"
                 :allow-clear="true"
+                :disabled="props.disabled"
                 placeholder="请选择负责人"
                 size="small"
                 style="flex: 1"
@@ -388,6 +404,7 @@ const activeKey = ref(['selected', 'alternative']);
 
           <!-- 3号区域：删除按钮（悬浮时显示） -->
           <div
+            v-if="!props.disabled"
             class="flex h-5 w-5 cursor-pointer items-center justify-center rounded text-red-500 opacity-0 transition-opacity hover:bg-red-50 group-hover:opacity-100"
             @click="removeNode(index)"
           >

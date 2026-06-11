@@ -21,7 +21,7 @@ export function filesToUrlString(
   key: 'url' | 'fileId' = 'url',
   returnType: 'string' | 'array' = 'string',
 ) {
-  if (!fileList?.length) return '';
+  if (!fileList?.length) return returnType === 'string' ? '' : [];
   const result = fileList
     .filter((file: any) => file.status === 'done')
     .map((file: any) => file.response?.[key] || file[key]);
