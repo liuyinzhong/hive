@@ -47,7 +47,6 @@
     "@visactor/vtable": "catalog:",
     "@visactor/vtable-editors": "catalog:",
     "@visactor/vtable-gantt": "catalog:",
-    "@vue-flow/core": "catalog:",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",

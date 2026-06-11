@@ -121,21 +121,23 @@ function initSelectedNodes() {
  * 根据索引计算节点类型
  * @param index 节点索引
  * @param total 节点总数
- * @returns 节点类型：0-开始、2-审批/普通、3-结束
+ * @returns 节点类型：0-开始节点、1-普通节点、2-审批节点、3-结束节点
  */
 function getNodeTypeByIndex(index: number, total: number): number {
   if (index === 0) return 0;
   if (index === total - 1) return 3;
-  return 2;
+  return 1;
 }
 
 /**
  * 重新计算所有节点的 sort 和 nodeType
+ * @description 根据节点位置和审批状态计算：首个为0、末尾为3、审批中为2、其余为1
  */
 function recalculateNodes() {
   selectedNodes.value = selectedNodes.value.map((node, index, arr) => ({
     ...node,
-    nodeType: getNodeTypeByIndex(index, arr.length),
+    nodeType:
+      index === 0 ? 0 : index === arr.length - 1 ? 3 : node.approval ? 2 : 1,
     sort: index,
   }));
 }
@@ -164,7 +166,7 @@ function createNodeFromDict(dictItem: SystemDictApi.SystemDictFace): NodeItem {
     approval: false,
     businessType: props.businessType,
     label: dictItem.label || '',
-    nodeType: 2,
+    nodeType: 1,
     remark: dictItem.remark || '',
     sort: 0,
     userId: '',

@@ -38,9 +38,6 @@ const tokenTheme = computed(() => {
   </ConfigProvider>
 </template>
 <style>
-@import '@vue-flow/core/dist/style.css';
-@import '@vue-flow/core/dist/theme-default.css';
-
 .vxe-select--panel.is--transfer {
   z-index: 2001 !important;
 }
