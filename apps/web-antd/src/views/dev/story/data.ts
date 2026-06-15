@@ -3,7 +3,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
-import { z } from '#/adapter/form';
+// import { z } from '#/adapter/form';
 import { upload_file } from '#/api/examples/upload';
 import { getUserListAllApi } from '#/api/system';
 import { getLocalDictList } from '#/dicts';
@@ -56,14 +56,14 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyRichText',
       label: '',
       labelWidth: 0,
-      formItemClass: 'col-span-2 row-span-10 items-baseline',
+      formItemClass: 'col-span-3 row-span-10 items-baseline',
       componentProps: {
         editable: true,
         minHeight: 410,
         modelValue: storyRichTemplateText,
       },
     },
-    {
+    /* {
       component: 'NodeSteps',
       fieldName: 'nodes',
       componentProps: {
@@ -81,11 +81,14 @@ export function useFormSchema(): VbenFormSchema[] {
       formItemClass: 'col-span-1 row-span-10 items-baseline',
       dependencies: {
         triggerFields: ['storyId'],
+        show() {
+          return false;
+        },
         disabled(_value: any) {
           return !!_value.storyId;
         },
       },
-    },
+    }, */
     projectSchema(),
 
     versionSchema(),

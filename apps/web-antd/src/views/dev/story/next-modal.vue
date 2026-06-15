@@ -7,7 +7,9 @@ import { message } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
-import { nextStoryApi, getStoryDetailApi } from '#/api/dev/story';
+import { getLocalDictList } from '#/dicts';
+import { nextStoryApi } from '#/api/dev/story';
+
 import { useNextFormSchema } from './data';
 defineOptions({
   name: 'StoryNextModal',
@@ -15,12 +17,15 @@ defineOptions({
 const emit = defineEmits<{
   success: [];
 }>();
-const stepsItems: any = ref([]);
+const stepsItems: any = getLocalDictList('STORY_STATUS').map((item: any) => ({
+  title: item.label,
+  description: item.remark,
+  value: item.value,
+}));
 const current = ref(0);
-
 const changeCurrent = (index: number) => {
   current.value = index;
-  formApi.setFieldValue('storyStatus', stepsItems.value[index].value);
+  formApi.setFieldValue('storyStatus', stepsItems[index].value);
 };
 
 const [Form, formApi] = useVbenForm({
@@ -34,22 +39,21 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: async () => {
     await formApi.validateAndSubmitForm();
   },
-  async onOpenChange(isOpen: boolean) {
+  onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const { storyNum } = modalApi.getData();
-      const data = await getStoryDetailApi(storyNum);
-      current.value = data.nodes.findIndex((item: any) => item.current);
-      stepsItems.value = data.nodes
-        .toSorted((a: any, b: any) => a.sort - b.sort)
-        .map((item: any, index: number) => ({
-          title: item.label,
-          description: item.remark,
-          value: item.value,
-          subTitle: item.realName,
-          disabled: index < current.value ? true : false,
-        }));
+      const data = modalApi.getData();
 
       formApi.setValues(data);
+
+      /* 设置当前步骤 */
+      current.value = stepsItems.findIndex(
+        (item: any) => item.value === data.storyStatus,
+      );
+
+      /* 禁用已完成的步骤 */
+      stepsItems.forEach((item: any, index: number) => {
+        item.disabled = index < current.value;
+      });
     }
   },
 });
