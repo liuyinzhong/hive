@@ -141,7 +141,7 @@ function onDelete(row: SystemRoleApi.SystemRoleFace) {
   deleteRoleApi([row.roleId])
     .then(() => {
       message.success({
-        content: $t('ui.actionMessage.deleteSuccess', [row.name]),
+        content: $t('ui.actionMessage.deleteSuccess', [row.roleTitle]),
         key: 'action_process_msg',
       });
       onRefresh();

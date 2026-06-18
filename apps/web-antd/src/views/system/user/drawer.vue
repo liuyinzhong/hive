@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { useVbenDrawer, useVbenForm } from '@vben/common-ui';
-
 import { createUserApi, updateUserApi } from '#/api/system';
 import { useFormSchema } from './data';
 

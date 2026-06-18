@@ -48,10 +48,10 @@ export default {
     const presets: Recordable<Recordable<any>> = {
       delete: {
         danger: true,
-        text: $t('common.delete'),
+        text: $t('ui.actionTitle.delete'),
       },
       edit: {
-        text: $t('common.edit'),
+        text: $t('ui.actionTitle.edit'),
       },
     };
     const operations: Array<Recordable<any>> = (options || ['edit', 'delete'])

@@ -13,14 +13,17 @@ import { IconifyIcon } from '@vben/icons';
 import { Spin } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { createRoleApi, getMenuListApi, updateRoleApi } from '#/api/system';
+import {
+  createRoleApi,
+  getMenuListApi,
+  updateRoleApi,
+  getRoleDetailApi,
+} from '#/api/system';
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';
 
 const emits = defineEmits(['success']);
-
-const formData = ref<SystemRoleApi.SystemRoleFace>();
 
 const [Form, formApi] = useVbenForm({
   schema: useFormSchema(),
@@ -30,14 +33,16 @@ const [Form, formApi] = useVbenForm({
 const permissions = ref<DataNode[]>([]);
 const loadingPermissions = ref(false);
 
-const roleId = ref();
 const [Drawer, drawerApi] = useVbenDrawer({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
     const values = await formApi.getValues();
     drawerApi.lock();
-    (roleId.value ? updateRoleApi(roleId.value, values) : createRoleApi(values))
+    (values.roleId
+      ? updateRoleApi(values.roleId, values)
+      : createRoleApi(values)
+    )
       .then(() => {
         emits('success');
         drawerApi.close();
@@ -47,16 +52,20 @@ const [Drawer, drawerApi] = useVbenDrawer({
         drawerApi.unlock();
       });
   },
-  onOpenChange(isOpen) {
+  async onOpenChange(isOpen) {
     if (isOpen) {
-      const data = drawerApi.getData<SystemRoleApi.SystemRoleFace>();
-      formApi.resetForm();
-      if (data) {
-        formData.value = data;
-        roleId.value = data.roleId;
+      let data = drawerApi.getData<SystemRoleApi.SystemRoleFace>() || {};
+      if (data.roleId) {
+        data = await getRoleDetailApi(data.roleId);
         formApi.setValues(data);
+        drawerApi.setState({
+          title: $t('ui.actionTitle.edit', [$t('system.role.name')]),
+        });
       } else {
-        roleId.value = undefined;
+        drawerApi.setState({
+          title: $t('ui.actionTitle.create', [$t('system.role.name')]),
+        });
+        formApi.resetForm();
       }
 
       if (permissions.value.length === 0) {
@@ -76,12 +85,6 @@ async function loadPermissions() {
   }
 }
 
-const getDrawerTitle = computed(() => {
-  return formData.value?.roleId
-    ? $t('common.edit', $t('system.role.name'))
-    : $t('common.create', $t('system.role.name'));
-});
-
 function getNodeClass(node: Recordable<any>) {
   const classes: string[] = [];
   if (node.value?.type === 'button') {
@@ -95,7 +98,7 @@ function getNodeClass(node: Recordable<any>) {
 }
 </script>
 <template>
-  <Drawer :title="getDrawerTitle" class="w-[800px]">
+  <Drawer class="w-[800px]">
     <Form>
       <template #permissions="slotProps">
         <Spin :spinning="loadingPermissions" wrapper-class-name="w-full">

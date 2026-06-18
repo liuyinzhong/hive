@@ -1,7 +1,6 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { SystemUserApi } from '#/api/system';
 
 import { h } from 'vue';
@@ -43,6 +42,18 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
     },
     {
+      component: 'Input',
+      fieldName: 'phone',
+      label: '手机号',
+      componentProps: {
+        maxlength: 11,
+      },
+      rules: z
+        .string()
+        .length(11, $t('ui.formRules.length', ['手机号', 11]))
+        .regex(/^\d{11}$/, '手机号格式不正确'),
+    },
+    {
       component: 'InputPassword',
       fieldName: 'password',
       label: '密码',
@@ -58,25 +69,10 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '描述',
     },
     {
-      component: 'ApiSelect',
+      component: 'ApiTreeSelect',
       fieldName: 'deptIds',
       label: '部门',
       rules: 'required',
-      renderComponentContent: () => ({
-        option: (optionItem: any) => {
-          return h(
-            Flex,
-            {
-              gap: 10,
-              align: 'center',
-            },
-            [
-              h('div', {}, optionItem.label),
-              h('div', { title: optionItem.remark }, optionItem.remark),
-            ],
-          );
-        },
-      }),
       componentProps: {
         api: getAllDeptListApi,
         optionFilterProp: 'label',
@@ -152,7 +148,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns<T = SystemUserApi.SystemUserFace>(
-  onActionClick?: OnActionClickFn<T>,
   onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<T>['columns'] {
   return [
@@ -179,30 +174,17 @@ export function useColumns<T = SystemUserApi.SystemUserFace>(
       title: $t('system.role.status'),
       width: 100,
     },
+    { field: 'deptTitles', title: '部门' },
+    { field: 'roleTitles', title: '角色' },
     { field: 'desc', title: '描述' },
     { field: 'createDate', title: '创建时间' },
     {
-      align: 'right',
+      align: 'center',
       field: 'operation',
       fixed: 'right',
-      headerAlign: 'center',
-      showOverflow: false,
+      slots: { default: 'action' },
       title: '操作',
-      width: 110,
-      cellRender: {
-        attrs: {
-          nameField: 'username',
-          nameTitle: '',
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          'edit', // 默认的编辑按钮
-          {
-            code: 'delete', // 默认的删除按钮
-          },
-        ],
-      },
+      width: 150,
     },
   ];
 }

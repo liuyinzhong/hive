@@ -1,5 +1,5 @@
 import type { Recordable } from '@vben/types';
-
+import { objectOmit } from '@vueuse/core';
 import { requestClient } from '#/api/request';
 
 export namespace SystemRoleApi {
@@ -30,7 +30,8 @@ export const getRoleListApi = async (params: Recordable<any>) => {
 export const createRoleApi = async (
   data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
 ) => {
-  return requestClient.post('/system/roles', data);
+  const newData = objectOmit(data, ['roleId']);
+  return requestClient.post('/system/roles', newData);
 };
 
 /**
@@ -42,7 +43,8 @@ export const updateRoleApi = async (
   roleId: string,
   data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
 ) => {
-  return requestClient.put(`/system/roles/${roleId}`, data);
+  const newData = objectOmit(data, ['roleId']);
+  return requestClient.put(`/system/roles/${roleId}`, newData);
 };
 
 /**
@@ -70,5 +72,14 @@ export const updateRoleStatusApi = async (
 export const getAllRoleListApi = async () => {
   return requestClient.get<Array<SystemRoleApi.SystemRoleFace>>(
     '/system/roles/all',
+  );
+};
+
+/**
+ * 获取角色详情
+ */
+export const getRoleDetailApi = async (roleId: string) => {
+  return requestClient.get<SystemRoleApi.SystemRoleFace>(
+    `/system/roles/${roleId}`,
   );
 };

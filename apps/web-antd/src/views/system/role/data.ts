@@ -13,6 +13,17 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
     },
     {
+      component: 'Input',
+      fieldName: 'roleId',
+      label: '主键id',
+      dependencies: {
+        triggerFields: ['roleId'],
+        show() {
+          return false;
+        },
+      },
+    },
+    {
       component: 'RadioGroup',
       componentProps: {
         buttonStyle: 'solid',
@@ -84,6 +95,11 @@ export function useColumns<T = SystemRoleApi.SystemRoleFace>(
       width: 200,
       sortable: true,
       sortBy: 'roleTitle',
+    },
+    {
+      field: 'roleId',
+      title: $t('system.role.id'),
+      width: 200,
     },
     {
       cellRender: {

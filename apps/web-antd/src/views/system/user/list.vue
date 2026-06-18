@@ -1,24 +1,22 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-import type { SystemUserApi } from '#/api/system';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { SystemUserApi, SystemDeptApi } from '#/api/system';
 
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 
-import { Page, useVbenDrawer } from '@vben/common-ui';
+import { Page, Tree, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, message, Modal } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   getUsersListApi,
   deleteUserApi,
   updateUserStatusApi,
+  getAllDeptListApi,
 } from '#/api/system';
 import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
@@ -26,8 +24,21 @@ import ExtraDrawer from './drawer.vue';
 import { formatSorts } from '#/utils';
 
 onMounted(() => {
-  // console.log('onMounted');
+  loadDeptList();
 });
+const deptList = ref<SystemDeptApi.SystemDeptFace[]>([]);
+const selectedDeptId = ref();
+async function loadDeptList() {
+  try {
+    const res = await getAllDeptListApi();
+    deptList.value = res;
+  } catch (error) {}
+}
+
+async function selectDept(e: any) {
+  selectedDeptId.value = e.value.deptId;
+  gridApi.query();
+}
 
 // #region 表格搜索,配置
 
@@ -40,7 +51,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    columns: useColumns(onActionClick, onStatusChange),
+    columns: useColumns(onStatusChange),
     toolbarConfig: {
       zoom: true,
       custom: true,
@@ -53,15 +64,13 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async (
-          { page, sorts, filters }: any,
-          formValues: Recordable<any>,
-        ) => {
+        query: async ({ page, sorts, filters }: any, formValues: any) => {
           return await getUsersListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
             sorts: formatSorts(sorts),
             ...formValues,
+            deptId: selectedDeptId.value,
           });
         },
       },
@@ -70,28 +79,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {},
 });
 
-/**
- * 表格操作按钮的回调函数
- */
-function onActionClick({
-  code,
-  row,
-}: OnActionClickParams<SystemUserApi.SystemUserFace>) {
-  switch (code) {
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
-  }
-}
-
 // #region 抽屉组件
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [FormDrawer, drawerApi] = useVbenDrawer({
   // 连接抽离的组件
   connectedComponent: ExtraDrawer,
   destroyOnClose: true,
@@ -179,14 +169,52 @@ function onRefresh() {
 
 <template>
   <Page auto-content-height>
-    <Grid>
-      <template #toolbar-tools>
-        <Button type="primary" @click="onCreate">
-          <Plus class="size-5" />
-          新建
-        </Button>
-      </template>
-    </Grid>
-    <Drawer @success="onRefresh" />
+    <FormDrawer @success="onRefresh" />
+
+    <div class="flex size-full">
+      <a-card class="w-1/6">
+        <Tree
+          label-field="deptTitle"
+          value-field="deptId"
+          :tree-data="deptList"
+          :default-expanded-level="2"
+          @select="selectDept"
+        />
+      </a-card>
+
+      <div class="w-5/6 ml-4">
+        <Grid>
+          <template #toolbar-tools>
+            <Button type="primary" @click="onCreate">
+              <Plus class="size-5" />
+              {{ $t('ui.actionTitle.create') }}
+            </Button>
+          </template>
+          <template #action="{ row }">
+            <VbenTableAction
+              :actions="[
+                {
+                  text: '编辑',
+                  icon: 'lucide:edit',
+                  onClick: () => onEdit(row),
+                },
+              ]"
+              :dropdown-actions="[
+                {
+                  text: '删除',
+                  icon: 'lucide:trash-2',
+                  danger: true,
+                  popConfirm: {
+                    title: $t('ui.actionMessage.deleteConfirm', [row.realName]),
+                    confirm: () => onDelete(row),
+                  },
+                },
+              ]"
+              align="center"
+            />
+          </template>
+        </Grid>
+      </div>
+    </div>
   </Page>
 </template>

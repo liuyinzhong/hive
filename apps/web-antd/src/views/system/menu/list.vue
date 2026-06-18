@@ -100,7 +100,7 @@ function onDelete(row: SystemMenuApi.SystemMenuFace) {
   deleteMenuApi([row.id])
     .then(() => {
       message.success({
-        content: $t('ui.actionMessage.deleteSuccess', [row.name]),
+        content: $t('ui.actionMessage.deleteSuccess', [row.meta?.title]),
         key: 'action_process_msg',
       });
       onRefresh();

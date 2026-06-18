@@ -166,7 +166,7 @@ const schema: VbenFormSchema[] = [
       },
       triggerFields: ['type'],
     },
-    fieldName: 'activePath',
+    fieldName: 'meta.activePath',
     help: $t('system.menu.activePathHelp'),
     label: $t('system.menu.activePath'),
     rules: z
@@ -390,15 +390,18 @@ const schema: VbenFormSchema[] = [
     fieldName: 'meta.query',
     help: $t('system.menu.queryHelp', { json: '{"id":1}' }),
     label: $t('system.menu.query'),
-    rules: z.string().refine((value) => {
-      if (!value) return true;
-      try {
-        JSON.parse(value);
-        return true;
-      } catch {
-        return false;
-      }
-    }, $t('system.menu.queryMustBeJson')),
+    rules: z
+      .string()
+      .optional()
+      .refine((value) => {
+        if (!value) return true;
+        try {
+          JSON.parse(value);
+          return true;
+        } catch {
+          return false;
+        }
+      }, $t('system.menu.queryMustBeJson')),
   },
   {
     component: 'Divider',
