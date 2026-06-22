@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemRoleApi } from '#/api';
 
 import { Page, useVbenDrawer } from '@vben/common-ui';
@@ -12,7 +9,7 @@ import { Plus } from '@vben/icons';
 
 import { Button, message, Modal } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   deleteRoleApi,
   getRoleListApi,
@@ -37,7 +34,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     submitOnChange: false,
   },
   gridOptions: {
-    columns: useColumns(onActionClick, onStatusChange),
+    columns: useColumns(onStatusChange),
     height: 'auto',
     keepSource: true,
     sortConfig: {
@@ -68,19 +65,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions<SystemRoleApi.SystemRoleFace>,
 });
-
-function onActionClick(e: OnActionClickParams<SystemRoleApi.SystemRoleFace>) {
-  switch (e.code) {
-    case 'delete': {
-      onDelete(e.row);
-      break;
-    }
-    case 'edit': {
-      onEdit(e.row);
-      break;
-    }
-  }
-}
 
 /**
  * 将Antd的Modal.confirm封装为promise，方便在异步函数中调用。
@@ -163,6 +147,29 @@ function onCreate() {
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
     <Grid>
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '编辑',
+              icon: 'lucide:edit',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', [row.roleTitle]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
+      </template>
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">
           <Plus class="size-5" />

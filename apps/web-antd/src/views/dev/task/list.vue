@@ -6,13 +6,12 @@ import type {
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 import type { DevTaskApi } from '#/api/dev';
-
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   getTaskListApi,
   deleteTaskApi,
@@ -77,18 +76,6 @@ function onActionClick({
   row,
 }: OnActionClickParams<DevTaskApi.DevTaskFace>) {
   switch (code) {
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
-    case 'next': {
-      openNextModal(row);
-      break;
-    }
     case 'taskTitle': {
       DetailDrawerApi.setData(row).open();
       break;
@@ -178,6 +165,39 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
         <Button type="primary" @click="openBatchFormModal">
           批量添加任务
         </Button>
+      </template>
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '流转',
+              icon: 'lucide:redo-dot',
+              disabled: row.taskStatus === '99',
+              onClick: () => openNextModal(row),
+            },
+            {
+              text: '编辑',
+              icon: 'lucide:edit',
+              disabled: row.taskStatus === '99',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              disabled: row.taskStatus === '99',
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', [
+                  '#' + row.taskNum,
+                ]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
       </template>
     </Grid>
     <AddFormModal @success="gridApi.query" />

@@ -1,17 +1,14 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { DevModuleApi, DevProjectApi } from '#/api/dev';
 
 import { onMounted, ref } from 'vue';
 
 import { EllipsisText, Page, useVbenModal } from '@vben/common-ui';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   getModulesListApi,
   getProjectsListApi,
@@ -37,7 +34,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       enabled: false,
     },
     height: 600,
-    columns: useColumns(onActionClick),
+    columns: useColumns(),
     proxyConfig: {
       autoLoad: false,
       ajax: {
@@ -51,31 +48,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions<DevModuleApi.DevModuleFace>,
   gridEvents: {
-    // eslint-disable-next-line unused-imports/no-unused-vars
     rowDragstart: (e: any) => {},
-    rowDragend: ({ _oldRow, _index }: any) => {
-      /* console.log(
+    /* rowDragend: ({ _oldRow, _index }: any) => {
+      console.log(
         '排序后' + oldRow.moduleTitle + '在' + _index.newIndex + '位',
-      ); */
-    },
+      );
+    }, */
   },
 });
-
-function onActionClick({
-  code,
-  row,
-}: OnActionClickParams<DevModuleApi.DevModuleFace>) {
-  switch (code) {
-    case 'delete': {
-      deleteModule(row.moduleId);
-      break;
-    }
-    case 'edit': {
-      openAddModuleModal(row);
-      break;
-    }
-  }
-}
 // #endregion
 
 const items = ref<DevProjectApi.DevProjectFace[]>([]);
@@ -201,7 +181,33 @@ function openAddModuleModal(row: any) {
               添加
             </a-button>
           </template>
-          <Grid />
+          <Grid>
+            <template #action="{ row }">
+              <VbenTableAction
+                :actions="[
+                  {
+                    text: '编辑',
+                    icon: 'lucide:edit',
+                    onClick: () => openAddModuleModal(row),
+                  },
+                ]"
+                :dropdown-actions="[
+                  {
+                    text: '删除',
+                    icon: 'lucide:trash-2',
+                    danger: true,
+                    popConfirm: {
+                      title: $t('ui.actionMessage.deleteConfirm', [
+                        row.moduleTitle,
+                      ]),
+                      confirm: () => deleteModule(row.moduleId),
+                    },
+                  },
+                ]"
+                align="center"
+              />
+            </template>
+          </Grid>
         </a-card>
       </a-col>
     </a-row>

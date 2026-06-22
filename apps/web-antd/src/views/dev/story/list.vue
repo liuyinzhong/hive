@@ -14,7 +14,7 @@ import { LucidePlus, LucideTableProperties } from '@vben/icons';
 
 import { Button, message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   deleteStoryApi,
   getStoryListApi,
@@ -92,38 +92,6 @@ function onActionClick({
   row,
 }: OnActionClickParams<DevStoryApi.DevStoryFace>) {
   switch (code) {
-    case 'addBug': {
-      AddBugModalApi.setData({
-        storyId: row.storyId,
-        projectId: row.projectId,
-        versionId: row.versionId,
-        moduleId: row.moduleId,
-        openModalSource: 'storyListAddBtn',
-      }).open();
-      break;
-    }
-    case 'addTask': {
-      AddTaskModalApi.setData({
-        storyId: row.storyId,
-        projectId: row.projectId,
-        versionId: row.versionId,
-        moduleId: row.moduleId,
-        openModalSource: 'storyListAddBtn',
-      }).open();
-      break;
-    }
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
-    case 'next': {
-      openNextModal(row);
-      break;
-    }
     case 'storyTitle': {
       /* router.push({
         path: `/dev/story/detail/${row.storyNum}`,
@@ -141,6 +109,26 @@ function onActionClick({
       break;
     }
   }
+}
+
+function addTask(row: DevStoryApi.DevStoryFace) {
+  AddTaskModalApi.setData({
+    storyId: row.storyId,
+    projectId: row.projectId,
+    versionId: row.versionId,
+    moduleId: row.moduleId,
+    openModalSource: 'storyListAddBtn',
+  }).open();
+}
+
+function addBug(row: DevStoryApi.DevStoryFace) {
+  AddBugModalApi.setData({
+    storyId: row.storyId,
+    projectId: row.projectId,
+    versionId: row.versionId,
+    moduleId: row.moduleId,
+    openModalSource: 'storyListAddBtn',
+  }).open();
 }
 
 function onCreate() {
@@ -235,6 +223,51 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
           </template>
           批量新建
         </Button>
+      </template>
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '',
+              icon: 'lucide:badge-plus',
+              disabled:
+                !row.versionId || ['0', '99'].includes(row.storyStatus ?? ''),
+              onClick: () => addTask(row),
+            },
+            {
+              text: '',
+              icon: 'lucide:bug',
+              disabled: !row.versionId || ['0'].includes(row.storyStatus ?? ''),
+              onClick: () => addBug(row),
+            },
+            {
+              text: '',
+              icon: 'lucide:redo-dot',
+              disabled: row.storyStatus === '99',
+              onClick: () => openNextModal(row),
+            },
+            {
+              text: '',
+              icon: 'lucide:pencil-line',
+              disabled: row.storyStatus === '99',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', [
+                  '#' + row.storyNum,
+                ]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
       </template>
     </Grid>
     <AddFormModal @success="gridApi.query" />

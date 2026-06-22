@@ -5,7 +5,6 @@ import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevTaskApi } from '#/api/dev';
 
 import { getLocalDictList } from '#/dicts';
-import { $t } from '#/locales';
 import { taskRichTemplateText } from '#/template/richText';
 import {
   projectSchema,
@@ -347,43 +346,12 @@ export function useColumns(
       },
     },
     {
-      width: 120,
+      align: 'center',
       field: 'operation',
       fixed: 'right',
-      title: $t('system.dept.operation'),
-      cellRender: {
-        attrs: {
-          nameField: 'taskTitle',
-          nameTitle: '任务',
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          {
-            code: 'next',
-            icon: 'lucide:redo-dot',
-            tips: '流转按钮',
-            disabled: (row: DevTaskApi.DevTaskFace) => {
-              return row.taskStatus === '99';
-            },
-          },
-          {
-            code: 'edit', // 默认的编辑按钮
-            icon: 'lucide:pencil-line',
-            text: '',
-            tips: '编辑按钮',
-            disabled: (row: DevTaskApi.DevTaskFace) => {
-              return row.taskStatus === '99';
-            },
-          },
-          {
-            code: 'delete', // 默认的删除按钮
-            icon: 'lucide:trash-2',
-            text: '',
-            tips: '删除按钮',
-          },
-        ],
-      },
+      slots: { default: 'action' },
+      title: '操作',
+      width: 200,
     },
   ];
 }

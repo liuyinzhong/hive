@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { DevVersionApi } from '#/api/dev';
 
 import { useRouter } from 'vue-router';
@@ -13,7 +10,7 @@ import { Page, useVbenModal } from '@vben/common-ui';
 
 import { message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getVersionsListApi, deleteVersionApi } from '#/api/dev';
 import { $t } from '#/locales';
 
@@ -32,7 +29,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(),
     toolbarConfig: {
       zoom: true,
       custom: true,
@@ -68,35 +65,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {},
 });
 
-/**
- * 表格操作按钮的回调函数
- */
-function onActionClick({
-  code,
-  row,
-}: OnActionClickParams<DevVersionApi.DevVersionFace>) {
-  switch (code) {
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'detail': {
-      router.push({
-        path: `/dev/versions/detail/${row.versionId}`,
-      });
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
-    case 'next': {
-      NextModalApi.setData(row).open();
-      break;
-    }
-  }
-}
-
 // #region 单个添加，编辑 表单弹窗
 const [FormModal, FormModalApi] = useVbenModal({
   connectedComponent: addFormModal,
@@ -115,6 +83,16 @@ function onEdit(row: DevVersionApi.DevVersionFace) {
 
 function onCreate() {
   FormModalApi.setData(null).open();
+}
+
+/**
+ * 查看版本详情/统计
+ * @param row
+ */
+function onDetail(row: DevVersionApi.DevVersionFace) {
+  router.push({
+    path: `/dev/versions/detail/${row.versionId}`,
+  });
 }
 
 async function onDelete(row: DevVersionApi.DevVersionFace) {
@@ -137,6 +115,46 @@ async function onDelete(row: DevVersionApi.DevVersionFace) {
 <template>
   <Page auto-content-height>
     <Grid>
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '统计',
+              icon: 'lucide:chart-pie',
+              onClick: () => onDetail(row),
+            },
+            {
+              text: '流转',
+              icon: 'lucide:redo-dot',
+              disabled: row.releaseStatus === '99',
+              onClick: () => NextModalApi.setData(row).open(),
+            },
+            {
+              text: '编辑',
+              icon: 'lucide:pencil-line',
+              disabled: row.releaseStatus === '99',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '更新日志',
+              icon: 'lucide:logs',
+              onClick: () => {},
+            },
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', [row.version]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
+      </template>
       <template #toolbar-actions>
         <a-button class="mr-2" type="primary" @click="onCreate">
           新建

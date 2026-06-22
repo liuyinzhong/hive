@@ -1,4 +1,4 @@
-import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemMenuApi } from '#/api/system';
 
 import { $t } from '#/locales';
@@ -21,9 +21,7 @@ export function getMenuTypeOptions() {
   ];
 }
 
-export function useColumns(
-  onActionClick: OnActionClickFn<SystemMenuApi.SystemMenuFace>,
-): VxeTableGridOptions<SystemMenuApi.SystemMenuFace>['columns'] {
+export function useColumns(): VxeTableGridOptions<SystemMenuApi.SystemMenuFace>['columns'] {
   return [
     {
       align: 'left',
@@ -87,26 +85,12 @@ export function useColumns(
       width: 100,
     },
     {
-      align: 'right',
-      cellRender: {
-        attrs: {
-          nameField: 'name',
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          {
-            code: 'append',
-            text: '新增下级',
-          },
-          'edit', // 默认的编辑按钮
-          'delete', // 默认的删除按钮
-        ],
-      },
+      align: 'center',
       field: 'operation',
       fixed: 'right',
       headerAlign: 'center',
       showOverflow: false,
+      slots: { default: 'action' },
       title: $t('system.menu.operation'),
       width: 200,
     },

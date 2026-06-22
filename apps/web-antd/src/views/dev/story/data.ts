@@ -7,7 +7,6 @@ import type { DevStoryApi } from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
 import { getUserListAllApi } from '#/api/system';
 import { getLocalDictList } from '#/dicts';
-import { $t } from '#/locales';
 import { storyRichTemplateText } from '#/template/richText';
 import {
   projectSchema,
@@ -357,64 +356,13 @@ export function useColumns(
         },
       },
     },
-
     {
-      width: 200,
+      align: 'center',
       field: 'operation',
       fixed: 'right',
-      title: $t('system.dept.operation'),
-      cellRender: {
-        attrs: {
-          nameField: 'storyTitle',
-          nameTitle: '需求',
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          {
-            code: 'addTask',
-            icon: 'lucide:badge-plus',
-            tips: '添加任务',
-            disabled: (row: DevStoryApi.DevStoryFace) => {
-              return (
-                !row.versionId || ['0', '99'].includes(row.storyStatus ?? '')
-              );
-            },
-          },
-
-          {
-            code: 'addBug',
-            icon: 'lucide:bug',
-            tips: '添加缺陷',
-            disabled: (row: DevStoryApi.DevStoryFace) => {
-              return !row.versionId || ['0'].includes(row.storyStatus ?? '');
-            },
-          },
-          {
-            code: 'next',
-            icon: 'lucide:redo-dot',
-            tips: '流转按钮',
-            disabled: (row: DevStoryApi.DevStoryFace) => {
-              return row.storyStatus === '99';
-            },
-          },
-          {
-            code: 'edit', // 默认的编辑按钮
-            icon: 'lucide:pencil-line',
-            text: '',
-            tips: '编辑按钮',
-            disabled: (row: DevStoryApi.DevStoryFace) => {
-              return row.storyStatus === '99';
-            },
-          },
-          {
-            code: 'delete', // 默认的删除按钮
-            icon: 'lucide:trash-2',
-            text: '',
-            tips: '删除按钮',
-          },
-        ],
-      },
+      slots: { default: 'action' },
+      title: '操作',
+      width: 200,
     },
   ];
 }

@@ -1,7 +1,6 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { SystemDeptApi } from '#/api/system';
 
 import { z } from '#/adapter/form';
@@ -72,11 +71,8 @@ export function useSchema(): VbenFormSchema[] {
 /**
  * 获取表格列配置
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
- * @param onActionClick 表格操作按钮点击事件
  */
-export function useColumns(
-  onActionClick?: OnActionClickFn<SystemDeptApi.SystemDeptFace>,
-): VxeTableGridOptions<SystemDeptApi.SystemDeptFace>['columns'] {
+export function useColumns(): VxeTableGridOptions<SystemDeptApi.SystemDeptFace>['columns'] {
   return [
     {
       align: 'left',
@@ -102,35 +98,14 @@ export function useColumns(
       width: 180,
     },
     {
-      align: 'right',
-      cellRender: {
-        attrs: {
-          nameField: 'deptTitle',
-          nameTitle: $t('system.dept.name'),
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          {
-            code: 'append',
-            text: '新增下级',
-          },
-          'edit', // 默认的编辑按钮
-          {
-            code: 'delete', // 默认的删除按钮
-            disabled: (row: SystemDeptApi.SystemDeptFace) => {
-              return !!(row.children && row.children.length > 0);
-            },
-          },
-        ],
-      },
+      align: 'center',
       field: 'operation',
       fixed: 'right',
       headerAlign: 'center',
       showOverflow: false,
+      slots: { default: 'action' },
       title: $t('system.dept.operation'),
       width: 200,
     },
   ];
 }
-console.log(123);

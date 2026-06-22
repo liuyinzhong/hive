@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemDeptApi } from '#/api/system';
 
 import { Page, useVbenModal } from '@vben/common-ui';
@@ -10,7 +7,7 @@ import { Plus } from '@vben/icons';
 
 import { Button, message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteDeptApi, getDeptListApi } from '#/api/system';
 import { $t } from '#/locales';
 
@@ -68,33 +65,10 @@ function onDelete(row: SystemDeptApi.SystemDeptFace) {
     });
 }
 
-/**
- * 表格操作按钮的回调函数
- */
-function onActionClick({
-  code,
-  row,
-}: OnActionClickParams<SystemDeptApi.SystemDeptFace>) {
-  switch (code) {
-    case 'append': {
-      onAppend(row);
-      break;
-    }
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
-  }
-}
-
 const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {},
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(),
     height: 'auto',
     keepSource: true,
     pagerConfig: {
@@ -132,6 +106,34 @@ function refreshGrid() {
   <Page auto-content-height>
     <FormModal @success="refreshGrid" />
     <Grid table-title="部门列表">
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '新增下级',
+              onClick: () => onAppend(row),
+            },
+            {
+              text: '编辑',
+              icon: 'lucide:edit',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              disabled: !!(row.children && row.children.length > 0),
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', [row.deptTitle]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
+      </template>
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">
           <Plus class="size-5" />

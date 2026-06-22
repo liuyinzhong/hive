@@ -8,7 +8,7 @@ export namespace SystemDictApi {
   export interface SystemDictFace {
     [key: string]: any;
     /** 字典id,; */
-    id: string;
+    id?: string;
     /** 字典父id,; */
     pid?: string;
     /** 字典标题,; */

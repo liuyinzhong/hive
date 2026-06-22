@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemDictApi } from '#/api/system';
 
 import { Page, useVbenModal } from '@vben/common-ui';
@@ -12,7 +9,7 @@ import { Plus } from '@vben/icons';
 
 import { Button, message, Modal } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   getDictListApi,
   deleteDictApi,
@@ -37,7 +34,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    columns: useColumns(onActionClick, onStatusChange),
+    columns: useColumns(onStatusChange),
     toolbarConfig: {
       zoom: true,
       custom: true,
@@ -114,7 +111,7 @@ function onDelete(row: SystemDictApi.SystemDictFace) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteDictApi([row.id])
+  deleteDictApi([row.id as string])
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.label]),
@@ -166,33 +163,10 @@ async function onStatusChange(
       `你要将${row.label}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
       `切换状态`,
     );
-    await updateDictStatusApi(row.id, { status: newStatus });
+    await updateDictStatusApi(row.id as string, { status: newStatus });
     return true;
   } catch {
     return false;
-  }
-}
-
-/**
- * 表格操作按钮的回调函数
- */
-function onActionClick({
-  code,
-  row,
-}: OnActionClickParams<SystemDictApi.SystemDictFace>) {
-  switch (code) {
-    case 'append': {
-      onAppend(row);
-      break;
-    }
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
   }
 }
 
@@ -207,6 +181,35 @@ function refreshGrid() {
   <Page auto-content-height>
     <FormModal @success="refreshGrid" />
     <Grid>
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '新增下级',
+              disabled: row._level > 0,
+              onClick: () => onAppend(row),
+            },
+            {
+              text: '编辑',
+              icon: 'lucide:edit',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              disabled: !!(row.children && row.children.length > 0),
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', [row.label]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
+      </template>
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">
           <Plus class="size-5" />

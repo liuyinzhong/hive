@@ -5,7 +5,6 @@ import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevBugApi } from '#/api/dev';
 
 import { getLocalDictList } from '#/dicts';
-import { $t } from '#/locales';
 import { bugRichTemplateText } from '#/template/richText';
 import {
   projectSchema,
@@ -384,50 +383,12 @@ export function useColumns(
     },
 
     {
-      width: 150,
+      align: 'center',
       field: 'operation',
       fixed: 'right',
-      title: $t('system.dept.operation'),
-      cellRender: {
-        attrs: {
-          nameField: 'bugTitle',
-          nameTitle: '缺陷',
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          {
-            code: 'confirmBug',
-            icon: 'lucide:circle-check',
-            tips: '确认bug按钮',
-            /* 确认已是bug时。禁止重复确认、bug已关闭时禁止确认 */
-            disabled: (row: DevBugApi.DevBugFace) => {
-              return row.bugConfirmStatus !== '0' || row.bugStatus === '99';
-            },
-          },
-          {
-            code: 'next',
-            icon: 'lucide:redo-dot',
-            tips: '流转按钮',
-            disabled: (row: DevBugApi.DevBugFace) => {
-              /* 待确认时，禁止流转bug 、bug已关闭时禁止流转 */
-              return row.bugConfirmStatus === '0' || row.bugStatus === '99';
-            },
-          },
-          {
-            code: 'edit', // 默认的编辑按钮
-            icon: 'lucide:pencil-line',
-            text: '',
-            tips: '编辑按钮',
-          },
-          {
-            code: 'delete', // 默认的删除按钮
-            icon: 'lucide:trash-2',
-            text: '',
-            tips: '删除按钮',
-          },
-        ],
-      },
+      slots: { default: 'action' },
+      title: '操作',
+      width: 150,
     },
   ];
 }

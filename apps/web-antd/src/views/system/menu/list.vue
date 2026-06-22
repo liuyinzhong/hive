@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { IconifyIcon, Plus } from '@vben/icons';
@@ -12,7 +9,7 @@ import { MenuBadge } from '@vben-core/menu-ui';
 
 import { Button, message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteMenuApi, getMenuListApi, SystemMenuApi } from '#/api/system';
 
 import { useColumns } from './data';
@@ -25,7 +22,7 @@ const [FormDrawer, formDrawerApi] = useVbenDrawer({
 
 const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(),
     height: 'auto',
     keepSource: true,
     pagerConfig: {
@@ -54,29 +51,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions,
 });
-
-function onActionClick({
-  code,
-  row,
-}: OnActionClickParams<SystemMenuApi.SystemMenuFace>) {
-  switch (code) {
-    case 'append': {
-      onAppend(row);
-      break;
-    }
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-}
 
 function onRefresh() {
   gridApi.query();
@@ -114,6 +88,35 @@ function onDelete(row: SystemMenuApi.SystemMenuFace) {
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
     <Grid>
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '新增下级',
+              onClick: () => onAppend(row),
+            },
+            {
+              text: '编辑',
+              icon: 'lucide:edit',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', [
+                  $t(row.meta.title),
+                ]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
+      </template>
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">
           <Plus class="size-5" />

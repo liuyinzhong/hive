@@ -1,7 +1,6 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevModuleApi } from '#/api/dev';
 
 import { upload_file } from '#/api/examples/upload';
@@ -116,9 +115,7 @@ export function useFormModuleSchema(): VbenFormSchema[] {
  * 获取表格列配置
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns(
-  onActionClick?: OnActionClickFn<DevModuleApi.DevModuleFace>,
-): VxeTableGridOptions<DevModuleApi.DevModuleFace>['columns'] {
+export function useColumns(): VxeTableGridOptions<DevModuleApi.DevModuleFace>['columns'] {
   return [
     {
       field: 'sort',
@@ -131,24 +128,12 @@ export function useColumns(
       title: '项目模块',
     },
     {
+      align: 'center',
       field: 'operation',
       fixed: 'right',
+      slots: { default: 'action' },
       title: '操作',
-      width: 100,
-      cellRender: {
-        attrs: {
-          nameField: 'moduleTitle',
-          nameTitle: '项目模块',
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          'edit', // 默认的编辑按钮
-          {
-            code: 'delete', // 默认的删除按钮
-          },
-        ],
-      },
+      width: 120,
     },
   ];
 }

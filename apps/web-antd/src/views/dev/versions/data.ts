@@ -1,7 +1,6 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevVersionApi } from '#/api/dev';
 
 import { z } from '#/adapter/form';
@@ -178,9 +177,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * 获取表格列配置
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns(
-  onActionClick?: OnActionClickFn<DevVersionApi.DevVersionFace>,
-): VxeTableGridOptions<DevVersionApi.DevVersionFace>['columns'] {
+export function useColumns(): VxeTableGridOptions<DevVersionApi.DevVersionFace>['columns'] {
   return [
     {
       field: 'version',
@@ -230,59 +227,14 @@ export function useColumns(
       title: '创建人',
     },
     {
-      align: 'right',
+      align: 'center',
       field: 'operation',
       fixed: 'right',
       headerAlign: 'center',
       showOverflow: false,
+      slots: { default: 'action' },
       title: $t('system.dept.operation'),
-      width: 190,
-      cellRender: {
-        attrs: {
-          nameField: 'version',
-          nameTitle: '版本号',
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          {
-            code: 'detail',
-            icon: 'lucide:chart-pie',
-            tips: '统计按钮',
-          },
-          {
-            code: 'next',
-            icon: 'lucide:redo-dot',
-            tips: '流转按钮',
-            disabled: (row: DevVersionApi.DevVersionFace) => {
-              return row.releaseStatus === '99';
-            },
-          },
-          {
-            code: 'log',
-            icon: 'lucide:logs',
-            tips: '更新日志按钮',
-            disabled: (row: DevVersionApi.DevVersionFace) => {
-              return row.releaseStatus !== '99';
-            },
-          },
-          {
-            code: 'edit', // 默认的编辑按钮
-            icon: 'lucide:pencil-line',
-            text: '',
-            tips: '编辑按钮',
-            disabled: (row: DevVersionApi.DevVersionFace) => {
-              return row.releaseStatus === '99';
-            },
-          },
-          {
-            code: 'delete', // 默认的删除按钮
-            icon: 'lucide:trash-2',
-            text: '',
-            tips: '删除按钮',
-          },
-        ],
-      },
+      width: 260,
     },
   ];
 }

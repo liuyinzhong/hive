@@ -1,7 +1,6 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { SystemDictApi } from '#/api/system';
 
 import { $t } from '#/locales';
@@ -143,7 +142,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
 export function useColumns<T = SystemDictApi.SystemDictFace>(
-  onActionClick?: OnActionClickFn<SystemDictApi.SystemDictFace>,
   onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<SystemDictApi.SystemDictFace>['columns'] {
   return [
@@ -192,36 +190,12 @@ export function useColumns<T = SystemDictApi.SystemDictFace>(
       title: $t('system.dept.createDate'),
     },
     {
-      align: 'right',
-      cellRender: {
-        attrs: {
-          nameField: 'label',
-          nameTitle: $t('system.dict.name'),
-          onClick: onActionClick,
-        },
-        name: 'CellOperation',
-        options: [
-          {
-            code: 'append',
-            text: '新增下级',
-            disabled: (row: SystemDictApi.SystemDictFace, level: number) => {
-              // 字典不允许有3级
-              return level > 0;
-            },
-          },
-          'edit', // 默认的编辑按钮
-          {
-            code: 'delete', // 默认的删除按钮
-            disabled: (row: SystemDictApi.SystemDictFace) => {
-              return !!(row.children && row.children.length > 0);
-            },
-          },
-        ],
-      },
+      align: 'center',
       field: 'operation',
       fixed: 'right',
       headerAlign: 'center',
       showOverflow: false,
+      slots: { default: 'action' },
       title: $t('system.dept.operation'),
       width: 200,
     },

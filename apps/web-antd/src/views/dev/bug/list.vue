@@ -11,7 +11,7 @@ import { Plus } from '@vben/icons';
 
 import { Button, message } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getBugListApi, deleteBugApi, updateBugFieldApi } from '#/api/dev/bug';
 import { formatSorts } from '#/utils';
 
@@ -71,27 +71,8 @@ function onActionClick({
   row,
 }: OnActionClickParams<DevBugApi.DevBugFace>) {
   switch (code) {
-    case 'addTask': {
-      break;
-    }
     case 'bugTitle': {
       DetailDrawerApi.setData(row).open();
-      break;
-    }
-    case 'confirmBug': {
-      ConfirmModalApi.setData(row).open();
-      break;
-    }
-    case 'delete': {
-      onDelete(row);
-      break;
-    }
-    case 'edit': {
-      onEdit(row);
-      break;
-    }
-    case 'next': {
-      NextModalApi.setData(row).open();
       break;
     }
     case 'updateField': {
@@ -161,6 +142,41 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
         <Button class="mr-2" type="primary" @click="onCreate()">
           <Plus class="size-5" />新建缺陷
         </Button>
+      </template>
+      <template #action="{ row }">
+        <VbenTableAction
+          :actions="[
+            {
+              text: '',
+              icon: 'lucide:circle-check',
+              disabled: row.bugConfirmStatus !== '0' || row.bugStatus === '99',
+              onClick: () => ConfirmModalApi.setData(row).open(),
+            },
+            {
+              text: '',
+              icon: 'lucide:redo-dot',
+              disabled: row.bugConfirmStatus === '0' || row.bugStatus === '99',
+              onClick: () => NextModalApi.setData(row).open(),
+            },
+            {
+              text: '',
+              icon: 'lucide:pencil-line',
+              onClick: () => onEdit(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              text: '删除',
+              icon: 'lucide:trash-2',
+              danger: true,
+              popConfirm: {
+                title: $t('ui.actionMessage.deleteConfirm', ['#' + row.bugNum]),
+                confirm: () => onDelete(row),
+              },
+            },
+          ]"
+          align="center"
+        />
       </template>
     </Grid>
     <AddFormModal @success="gridApi.query" />
