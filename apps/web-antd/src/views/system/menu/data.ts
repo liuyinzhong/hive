@@ -56,6 +56,11 @@ export function useColumns(): VxeTableGridOptions<SystemMenuApi.SystemMenuFace>[
       title: $t('system.menu.path'),
       width: 200,
     },
+    {
+      align: 'left',
+      field: 'order',
+      title: $t('system.menu.order'),
+    },
 
     {
       align: 'left',
