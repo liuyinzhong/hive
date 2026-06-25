@@ -3,7 +3,7 @@ import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
 import { createBugApi, updateBugApi, getBugDetailApi } from '#/api/dev/bug';
-
+import { message } from 'ant-design-vue';
 import { useFormSchema } from './data';
 defineOptions({
   name: 'BugAddFormModel',
@@ -58,6 +58,7 @@ async function onSubmit(values: Record<string, any>) {
   modalApi.lock();
   (values.bugId ? updateBugApi(values.bugId, values) : createBugApi(values))
     .then(() => {
+      message.success('操作成功');
       modalApi.close();
     })
     .finally(() => {

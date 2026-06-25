@@ -4,6 +4,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { useVbenForm } from '#/adapter/form';
 import { createProjectApi, updateProjectApi } from '#/api/dev';
 import { filesToUrlString, urlStringToFiles } from '#/utils';
+import { message } from 'ant-design-vue';
 
 import { useFormProjectSchema } from './data';
 defineOptions({
@@ -48,6 +49,7 @@ async function onSubmit(values: Record<string, any>) {
     : createProjectApi(values)
   )
     .then(() => {
+      message.success('操作成功');
       modalApi.close();
       emit('success');
     })

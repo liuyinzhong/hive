@@ -3,6 +3,7 @@ import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
 import { createVersionApi, updateVersionApi } from '#/api/dev';
+import { message } from 'ant-design-vue';
 
 import { useFormSchema } from './data';
 import dayjs from 'dayjs';
@@ -67,6 +68,7 @@ async function onSubmit(values: Record<string, any>) {
     : createVersionApi(values)
   )
     .then(() => {
+      message.success('操作成功');
       modalApi.close();
       emit('success');
     })

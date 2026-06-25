@@ -28,7 +28,7 @@ const props = defineProps({
         <a-list-item>
           <a-list-item-meta>
             <template #title>
-              <a :href="`/dev/bug/detail/${item.bugNum}`">
+              <a target="_blank" :href="`/dev/bug/detail/${item.bugNum}`">
                 {{ item.bugTitle }}
               </a>
             </template>

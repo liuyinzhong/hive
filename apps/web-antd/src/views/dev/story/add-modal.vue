@@ -7,7 +7,7 @@ import { deepClone, filesToUrlString, urlStringToFiles, sleep } from '#/utils';
 import { getStoryDetailApi } from '#/api/dev/story';
 import type { DevStoryApi } from '#/api/dev/story';
 import { useFormSchema } from './data';
-
+import { message } from 'ant-design-vue';
 defineOptions({
   name: 'StoryAddFormModel',
 });
@@ -65,6 +65,7 @@ async function onSubmit(values: Record<string, any>) {
     : createStoryApi(values)
   )
     .then(() => {
+      message.success('操作成功');
       modalApi.close();
       emit('success');
     })

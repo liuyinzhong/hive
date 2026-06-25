@@ -5,7 +5,7 @@ import { useVbenForm } from '#/adapter/form';
 import { createTaskApi, updateTaskApi, getTaskDetailApi } from '#/api/dev/task';
 import dayjs from 'dayjs';
 import { useFormSchema } from './data';
-
+import { message } from 'ant-design-vue';
 defineOptions({
   name: 'TaskAddFormModel',
 });
@@ -79,6 +79,7 @@ async function onSubmit(values: Record<string, any>) {
   (values.taskId ? updateTaskApi(values.taskId, values) : createTaskApi(values))
     .then(() => {
       modalApi.close();
+      message.success('操作成功');
     })
     .finally(() => {
       emit('success');
