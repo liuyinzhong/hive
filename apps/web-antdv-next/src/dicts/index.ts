@@ -1,0 +1,86 @@
+import type { SystemDictApi } from '#/api/system';
+
+import { getDictListApi } from '#/api/system';
+
+import { sortTree } from '@vben/utils';
+
+const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
+
+// 初始化字典数据，使用 void 操作符标记 Promise 为有意忽略
+void getDictListApi({ status: 1 })
+  .then((res) => {
+    res = sortTree(res, (a, b) => Number(a.value) - Number(b.value));
+    res.forEach((item: SystemDictApi.SystemDictFace) => {
+      if (item.type !== undefined && item.type !== null) {
+        dictionaryData[item.type] = item.children || [];
+      }
+    });
+  })
+  .catch((error) => {
+    console.error('Failed to load dictionary data:', error);
+  });
+
+/** 获取本地字典列表 */
+export const getLocalDictList = (
+  type: string,
+): SystemDictApi.SystemDictFace[] => {
+  const list = dictionaryData[type];
+  return list || [];
+};
+
+/** 静态获取 根据本地字典值，获取本地字典名称
+ * @param type 字典类型
+ * @param value 当前数据值
+ * @param key 以字典哪个字段读取值，默认为 value 字段
+ */
+export const getLocalDictText = (
+  type: string,
+  value: any,
+  key?: string,
+): string => {
+  if (['', null, undefined].includes(value)) {
+    return '';
+  }
+  const list: any = dictionaryData[type];
+  // oxlint-disable-next-line eqeqeq
+  const item: any = list?.find((a: any) => a[key || 'value'] == value);
+  return item?.label || '';
+};
+
+/** 静态获取 根据本地字典值，获取本地字典标签颜色
+ * @param type 字典类型
+ * @param value 当前数据值
+ * @param key 以字典哪个字段读取值，默认为 value 字段
+ */
+export const getLocalDictColor = (
+  type: string,
+  value: any,
+  key?: string,
+): string => {
+  if (['', null, undefined].includes(value)) {
+    return '';
+  }
+  const list: any = dictionaryData[type];
+  // oxlint-disable-next-line eqeqeq
+  const item: any = list?.find((a: any) => a[key || 'value'] == value);
+  return item?.color || '';
+};
+
+/** 根据本地字典值，获取本地字典行数据
+ * @param type 字典类型
+ * @param value 当前数据值
+ * @param key 以字典哪个字段读取值，默认为 value 字段
+ */
+export const getLocalDictRow = (
+  type: string,
+  value: any,
+  key?: string,
+): SystemDictApi.SystemDictFace => {
+  if (['', null, undefined].includes(value)) {
+    return {} as SystemDictApi.SystemDictFace;
+  }
+  const list: any = dictionaryData[type];
+  // oxlint-disable-next-line eqeqeq
+  const item: any = list?.find((a: any) => a[key || 'value'] == value);
+  return item || {};
+};

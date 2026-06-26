@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '@vben/common-ui';
-import type { BasicOption } from '@vben/types';
+import type { BasicOption, Recordable } from '@vben/types';
 
-import { computed, markRaw } from 'vue';
+import { computed, markRaw, useTemplateRef } from 'vue';
 
 import { AuthenticationLogin, SliderCaptcha, z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
@@ -13,57 +13,12 @@ defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
 
-const MOCK_USER_OPTIONS: BasicOption[] = [
-  {
-    label: 'Super',
-    value: 'vben',
-  },
-  {
-    label: 'Admin',
-    value: 'admin',
-  },
-  {
-    label: 'User',
-    value: 'jack',
-  },
-];
-
 const formSchema = computed((): VbenFormSchema[] => {
   return [
-    {
-      component: 'VbenSelect',
-      componentProps: {
-        options: MOCK_USER_OPTIONS,
-        placeholder: $t('authentication.selectAccount'),
-      },
-      fieldName: 'selectAccount',
-      label: $t('authentication.selectAccount'),
-      rules: z
-        .string()
-        .min(1, { message: $t('authentication.selectAccount') })
-        .optional()
-        .default('vben'),
-    },
     {
       component: 'VbenInput',
       componentProps: {
         placeholder: $t('authentication.usernameTip'),
-      },
-      dependencies: {
-        trigger(values, form) {
-          if (values.selectAccount) {
-            const findUser = MOCK_USER_OPTIONS.find(
-              (item) => item.value === values.selectAccount,
-            );
-            if (findUser) {
-              form.setValues({
-                password: '123456',
-                username: findUser.value,
-              });
-            }
-          }
-        },
-        triggerFields: ['selectAccount'],
       },
       fieldName: 'username',
       label: $t('authentication.username'),
@@ -87,12 +42,29 @@ const formSchema = computed((): VbenFormSchema[] => {
     },
   ];
 });
+
+const loginRef =
+  useTemplateRef<InstanceType<typeof AuthenticationLogin>>('loginRef');
+
+async function onSubmit(params: Recordable<any>) {
+  authStore.authLogin(params).catch(() => {
+    // 登陆失败，刷新验证码的演示
+    const formApi = loginRef.value?.getFormApi();
+    // 重置验证码组件的值
+    formApi?.setFieldValue('captcha', false, false);
+    // 使用表单API获取验证码组件实例，并调用其resume方法来重置验证码
+    formApi
+      ?.getFieldComponentRef<InstanceType<typeof SliderCaptcha>>('captcha')
+      ?.resume();
+  });
+}
 </script>
 
 <template>
   <AuthenticationLogin
+    ref="loginRef"
     :form-schema="formSchema"
     :loading="authStore.loginLoading"
-    @submit="authStore.authLogin"
+    @submit="onSubmit"
   />
 </template>

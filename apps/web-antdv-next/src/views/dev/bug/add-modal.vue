@@ -1,0 +1,74 @@
+<script lang="ts" setup>
+import { useVbenModal } from '@vben/common-ui';
+
+import { useVbenForm } from '#/adapter/form';
+import { createBugApi, updateBugApi, getBugDetailApi } from '#/api/dev/bug';
+import { message } from 'antdv-next';
+import { useFormSchema } from './data';
+defineOptions({
+  name: 'BugAddFormModel',
+});
+const emit = defineEmits<{
+  success: [];
+}>();
+const [Form, formApi] = useVbenForm({
+  handleSubmit: onSubmit,
+  handleValuesChange(_values, fieldsChanged) {
+    if (
+      fieldsChanged.includes('projectId') &&
+      !_values.openModalSource &&
+      !_values.bugId
+    ) {
+      formApi.setFieldValue('versionId', undefined);
+      formApi.setFieldValue('moduleId', undefined);
+      formApi.setFieldValue('storyId', undefined);
+    }
+  },
+  // 所有表单项共用，可单独在表单内覆盖
+  commonConfig: {
+    // 所有表单项
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  // 大屏一行显示3个，中屏一行显示2个，小屏一行显示1个
+  wrapperClass: 'grid-cols-3',
+  schema: useFormSchema(),
+  showDefaultActions: false,
+});
+
+const [Modal, modalApi] = useVbenModal({
+  title: '添加缺陷',
+  onConfirm: async () => {
+    await formApi.validateAndSubmitForm();
+  },
+  async onOpenChange(isOpen: boolean) {
+    if (isOpen) {
+      let data = modalApi.getData() || {};
+      if (data.bugNum) {
+        data = await getBugDetailApi(data.bugNum);
+        modalApi.setState({ title: '编辑缺陷' });
+      }
+      formApi.setValues(data, true, true);
+    }
+  },
+});
+
+async function onSubmit(values: Record<string, any>) {
+  modalApi.lock();
+  (values.bugId ? updateBugApi(values.bugId, values) : createBugApi(values))
+    .then(() => {
+      message.success('操作成功');
+      modalApi.close();
+    })
+    .finally(() => {
+      emit('success');
+      modalApi.unlock();
+    });
+}
+</script>
+<template>
+  <Modal class="w-[1000px]">
+    <Form />
+  </Modal>
+</template>

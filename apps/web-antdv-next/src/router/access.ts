@@ -5,10 +5,11 @@ import type {
 
 import { generateAccessible } from '@vben/access';
 import { preferences } from '@vben/preferences';
+import { mapTree } from '@vben/utils';
 
 import { message } from 'antdv-next';
 
-import { getAllMenusApi } from '#/api';
+import { getMyMenusApi } from '#/api/auth';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
@@ -29,7 +30,17 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         content: `${$t('common.loadingMenu')}...`,
         duration: 1.5,
       });
-      return await getAllMenusApi();
+      let res: any = await getMyMenusApi();
+      res = mapTree(res, (node: any) => {
+        return {
+          ...node,
+          meta: {
+            ...node.meta,
+            query: node.meta?.query ? JSON.parse(node.meta.query) : {},
+          },
+        };
+      });
+      return res || [];
     },
     // 可以指定没有权限跳转403页面
     forbiddenComponent,

@@ -1,7 +1,7 @@
 /**
  * 该文件可自行根据业务逻辑进行调整
  */
-import type { RequestClientOptions } from '@vben/request';
+import type { AxiosResponseHeaders, RequestClientOptions } from '@vben/request';
 
 import { useAppConfig } from '@vben/hooks';
 import { preferences } from '@vben/preferences';
@@ -12,12 +12,14 @@ import {
   RequestClient,
 } from '@vben/request';
 import { useAccessStore } from '@vben/stores';
+import { cloneDeep } from '@vben/utils';
 
 import { message } from 'antdv-next';
+import JSONBigInt from 'json-bigint';
 
 import { useAuthStore } from '#/store';
 
-import { refreshTokenApi } from './core';
+import { refreshTokenApi } from '#/api/auth';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 
@@ -25,6 +27,18 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   const client = new RequestClient({
     ...options,
     baseURL,
+    transformResponse: (data: any, header: AxiosResponseHeaders) => {
+      // storeAsString指示将BigInt存储为字符串，设为false则会存储为内置的BigInt类型
+      if (
+        header.getContentType()?.toString().includes('application/json') &&
+        typeof data === 'string'
+      ) {
+        return cloneDeep(
+          JSONBigInt({ storeAsString: true, strict: true }).parse(data),
+        );
+      }
+      return data;
+    },
   });
 
   /**
@@ -97,7 +111,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
       // 当前mock接口返回的错误字段是 error 或者 message
       const responseData = error?.response?.data ?? {};
-      const errorMessage = responseData?.error ?? responseData?.message ?? '';
+      const errorMessage = responseData?.message ?? responseData?.error ?? '';
       // 如果没有错误信息，则会根据状态码进行提示
       message.error(errorMessage || msg);
     }),
@@ -106,8 +120,16 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   return client;
 }
 
+/* 使用 vben基本请求又一次封装适配业务的方法 */
 export const requestClient = createRequestClient(apiURL, {
   responseReturn: 'data',
 });
 
+/* 直接使用 vben的基本请求 */
 export const baseRequestClient = new RequestClient({ baseURL: apiURL });
+
+export interface PageFetchParams {
+  [key: string]: any;
+  pageNo?: number;
+  pageSize?: number;
+}

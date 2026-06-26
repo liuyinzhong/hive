@@ -1,236 +1,210 @@
 <script lang="ts" setup>
-import type {
-  WorkbenchProjectItem,
-  WorkbenchQuickNavItem,
-  WorkbenchTodoItem,
-  WorkbenchTrendItem,
-} from '@vben/common-ui';
+import type { AnalysisOverviewItem } from '@vben/common-ui';
 
-import { ref } from 'vue';
+import type { Sortable } from '@vben-core/composables';
+
+import type { DevTaskApi } from '#/api/dev';
+import { nextTaskApi } from '#/api/dev/task';
+
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import {
-  AnalysisChartCard,
+  AnalysisOverview,
+  useVbenModal,
   WorkbenchHeader,
-  WorkbenchProject,
-  WorkbenchQuickNav,
-  WorkbenchTodo,
-  WorkbenchTrends,
 } from '@vben/common-ui';
+import {
+  LucideBug,
+  LucideChartBarStacked,
+  LucideFilm,
+  LucideHourglass,
+} from '@vben/icons';
 import { preferences } from '@vben/preferences';
 import { useUserStore } from '@vben/stores';
-import { openWindow } from '@vben/utils';
 
-import AnalyticsVisitsSource from '../analytics/analytics-visits-source.vue';
+import { useSortable } from '@vben-core/composables';
+
+import { Card } from 'antdv-next';
+import dayjs from 'dayjs';
+
+import { getTaskListApi } from '#/api/dev';
+import CellProgress from '#/components/CellProgress/index.vue';
+import DictTag from '#/components/DictTag/index.vue';
+import UserAvatar from '#/components/UserAvatar/index.vue';
+import addTaskModal from '#/views/dev/task/add-modal.vue';
+interface DataItem {
+  title: string;
+  icon: string;
+  taskStatus: string;
+  children: DevTaskApi.DevTaskFace[];
+}
 
 const userStore = useUserStore();
 
-// 这是一个示例数据，实际项目中需要根据实际情况进行调整
-// url 也可以是内部路由，在 navTo 方法中识别处理，进行内部跳转
-// 例如：url: /dashboard/workspace
-const projectItems: WorkbenchProjectItem[] = [
-  {
-    color: '',
-    content: '不要等待机会，而要创造机会。',
-    date: '2021-04-01',
-    group: '开源组',
-    icon: 'carbon:logo-github',
-    title: 'Github',
-    url: 'https://github.com',
-  },
-  {
-    color: '#3fb27f',
-    content: '现在的你决定将来的你。',
-    date: '2021-04-01',
-    group: '算法组',
-    icon: 'ion:logo-vue',
-    title: 'Vue',
-    url: 'https://vuejs.org',
-  },
-  {
-    color: '#e18525',
-    content: '没有什么才能比努力更重要。',
-    date: '2021-04-01',
-    group: '上班摸鱼',
-    icon: 'ion:logo-html5',
-    title: 'Html5',
-    url: 'https://developer.mozilla.org/zh-CN/docs/Web/HTML',
-  },
-  {
-    color: '#bf0c2c',
-    content: '热情和欲望可以突破一切难关。',
-    date: '2021-04-01',
-    group: 'UI',
-    icon: 'ion:logo-angular',
-    title: 'Angular',
-    url: 'https://angular.io',
-  },
-  {
-    color: '#00d8ff',
-    content: '健康的身体是实现目标的基石。',
-    date: '2021-04-01',
-    group: '技术牛',
-    icon: 'bx:bxl-react',
-    title: 'React',
-    url: 'https://reactjs.org',
-  },
-  {
-    color: '#EBD94E',
-    content: '路是走出来的，而不是空想出来的。',
-    date: '2021-04-01',
-    group: '架构组',
-    icon: 'ion:logo-javascript',
-    title: 'Js',
-    url: 'https://developer.mozilla.org/zh-CN/docs/Web/JavaScript',
-  },
-];
-
-// 同样，这里的 url 也可以使用以 http 开头的外部链接
-const quickNavItems: WorkbenchQuickNavItem[] = [
-  {
-    color: '#1fdaca',
-    icon: 'ion:home-outline',
-    title: '首页',
-    url: '/',
-  },
-  {
-    color: '#bf0c2c',
-    icon: 'ion:grid-outline',
-    title: '仪表盘',
-    url: '/dashboard',
-  },
-  {
-    color: '#e18525',
-    icon: 'ion:layers-outline',
-    title: '组件',
-    url: '/demos/features/icons',
-  },
-  {
-    color: '#3fb27f',
-    icon: 'ion:settings-outline',
-    title: '系统管理',
-    url: '/demos/features/login-expired', // 这里的 URL 是示例，实际项目中需要根据实际情况进行调整
-  },
-  {
-    color: '#4daf1bc9',
-    icon: 'ion:key-outline',
-    title: '权限管理',
-    url: '/demos/access/page-control',
-  },
-  {
-    color: '#00d8ff',
-    icon: 'ion:bar-chart-outline',
-    title: '图表',
-    url: '/analytics',
-  },
-];
-
-const todoItems = ref<WorkbenchTodoItem[]>([
-  {
-    completed: false,
-    content: `审查最近提交到Git仓库的前端代码，确保代码质量和规范。`,
-    date: '2024-07-30 11:00:00',
-    title: '审查前端代码提交',
-  },
-  {
-    completed: true,
-    content: `检查并优化系统性能，降低CPU使用率。`,
-    date: '2024-07-30 11:00:00',
-    title: '系统性能优化',
-  },
-  {
-    completed: false,
-    content: `进行系统安全检查，确保没有安全漏洞或未授权的访问。 `,
-    date: '2024-07-30 11:00:00',
-    title: '安全检查',
-  },
-  {
-    completed: false,
-    content: `更新项目中的所有npm依赖包，确保使用最新版本。`,
-    date: '2024-07-30 11:00:00',
-    title: '更新项目依赖',
-  },
-  {
-    completed: false,
-    content: `修复用户报告的页面UI显示问题，确保在不同浏览器中显示一致。 `,
-    date: '2024-07-30 11:00:00',
-    title: '修复UI显示问题',
-  },
-]);
-const trendItems: WorkbenchTrendItem[] = [
-  {
-    avatar: 'svg:avatar-1',
-    content: `在 <a>开源组</a> 创建了项目 <a>Vue</a>`,
-    date: '刚刚',
-    title: '威廉',
-  },
-  {
-    avatar: 'svg:avatar-2',
-    content: `关注了 <a>威廉</a> `,
-    date: '1个小时前',
-    title: '艾文',
-  },
-  {
-    avatar: 'svg:avatar-3',
-    content: `发布了 <a>个人动态</a> `,
-    date: '1天前',
-    title: '克里斯',
-  },
-  {
-    avatar: 'svg:avatar-4',
-    content: `发表文章 <a>如何编写一个Vite插件</a> `,
-    date: '2天前',
-    title: 'Vben',
-  },
-  {
-    avatar: 'svg:avatar-1',
-    content: `回复了 <a>杰克</a> 的问题 <a>如何进行项目优化？</a>`,
-    date: '3天前',
-    title: '皮特',
-  },
-  {
-    avatar: 'svg:avatar-2',
-    content: `关闭了问题 <a>如何运行项目</a> `,
-    date: '1周前',
-    title: '杰克',
-  },
-  {
-    avatar: 'svg:avatar-3',
-    content: `发布了 <a>个人动态</a> `,
-    date: '1周前',
-    title: '威廉',
-  },
-  {
-    avatar: 'svg:avatar-4',
-    content: `推送了代码到 <a>Github</a>`,
-    date: '2021-04-01 20:00',
-    title: '威廉',
-  },
-  {
-    avatar: 'svg:avatar-4',
-    content: `发表文章 <a>如何编写使用 Admin Vben</a> `,
-    date: '2021-03-01 20:00',
-    title: 'Vben',
-  },
-];
-
+// eslint-disable-next-line unused-imports/no-unused-vars
 const router = useRouter();
 
-// 这是一个示例方法，实际项目中需要根据实际情况进行调整
-// This is a sample method, adjust according to the actual project requirements
-function navTo(nav: WorkbenchProjectItem | WorkbenchQuickNavItem) {
-  if (nav.url?.startsWith('http')) {
-    openWindow(nav.url);
-    return;
-  }
-  if (nav.url?.startsWith('/')) {
-    router.push(nav.url).catch((error) => {
-      console.error('Navigation failed:', error);
+const overviewItems: AnalysisOverviewItem[] = [
+  {
+    icon: LucideFilm,
+    title: '需求',
+    totalTitle: '总需求数',
+    totalValue: 120_000,
+    value: 2000,
+  },
+  {
+    icon: LucideChartBarStacked,
+    title: '任务',
+    totalTitle: '总任务数',
+    totalValue: 500_000,
+    value: 20_000,
+  },
+  {
+    icon: LucideBug,
+    title: '缺陷',
+    totalTitle: '总缺陷数',
+    totalValue: 120_000,
+    value: 8000,
+  },
+  {
+    icon: LucideHourglass,
+    title: '本周工时',
+    totalTitle: '总工时',
+    totalValue: 50_000,
+    value: 5000,
+  },
+];
+
+// 待办事项数据
+const taskDataList = reactive<Array<DataItem>>([
+  {
+    title: '待执行',
+    icon: 'icon-[lucide--badge]',
+    taskStatus: '0',
+    children: [],
+  },
+  {
+    title: '执行中',
+    icon: 'icon-[lucide--badge-percent]',
+    taskStatus: '10',
+    children: [],
+  },
+  {
+    title: '已完成',
+    icon: 'icon-[lucide--badge-check]',
+    taskStatus: '99',
+    children: [],
+  },
+]);
+
+onMounted(() => {
+  // 初始化排序
+  initSortable();
+});
+
+// 排序选项
+const sortableOptions: Sortable.Options = {
+  group: {
+    name: 'taskTodoList',
+    // 我们设置为true，确保可以正常移动元素
+    pull: true,
+    put: true,
+  },
+  sort: true,
+  // 拖动时的动画时间（毫秒）
+  animation: 300,
+  // 拖动延迟（毫秒）
+  delay: 150,
+  // 只在触摸设备上延迟
+  delayOnTouchOnly: true,
+  // 过滤不可拖动的元素
+  filter: '.empty-component',
+  // 当尝试拖动被过滤的元素时触发
+  onFilter: (evt) => {
+    // 阻止默认行为，确保被过滤的元素不会被拖动
+    evt.preventDefault();
+  },
+  // 拖动结束时的回调
+  onEnd: async (event) => {
+    // 获取源容器和目标容器
+    const fromTaskStatus = event.from.dataset.taskStatus;
+    const toTaskStatus = event.to.dataset.taskStatus;
+
+    // 从元素中获取任务ID
+    const taskId = event.item.dataset.id || '';
+
+    // 确保ID有效
+    if (!taskId) {
+      return;
+    }
+
+    await nextTaskApi(taskId, {
+      taskStatus: toTaskStatus,
     });
-  } else {
-    console.warn(`Unknown URL for navigation item: ${nav.title} -> ${nav.url}`);
+    // console.log('从列表拖动到列表:', fromTaskStatus, '->', toTaskStatus);
+    // console.log('拖动的任务ID:', taskId);
+
+    // 如果源列表和目标列表相同，不做处理
+    if (fromTaskStatus === toTaskStatus) {
+      return;
+    }
+    // 查找源列表和目标列表
+    const fromList = taskDataList.find(
+      (item) => item.taskStatus === fromTaskStatus,
+    );
+    const toList = taskDataList.find(
+      (item) => item.taskStatus === toTaskStatus,
+    );
+    if (!fromList || !toList) {
+      return;
+    }
+
+    // 从源列表中查找并移除任务（使用ID查找）
+    const taskIndexById = fromList.children.findIndex(
+      (task: DevTaskApi.DevTaskFace) => task.taskId === taskId,
+    );
+    const task = fromList.children.splice(
+      taskIndexById,
+      1,
+    )[0] as DevTaskApi.DevTaskFace;
+    toList.children.push(task);
+    event.item.remove();
+  },
+};
+
+// 为每个列表创建ref
+const sortContainers = ref<(any | HTMLDivElement)[]>([]);
+/**
+ * 初始化所有列表的排序功能
+ */
+async function initSortable() {
+  for (const container of sortContainers.value) {
+    if (container) {
+      const { initializeSortable } = useSortable(container, sortableOptions);
+      await initializeSortable();
+    }
   }
+  getTaskListApi({}).then(({ items }) => {
+    taskDataList.forEach((taskInfo) => {
+      taskInfo.children = items.filter(
+        (item) => item.taskStatus === taskInfo.taskStatus,
+      );
+    });
+  });
 }
+
+// #region 任务添加弹窗
+const [AddTaskModal, AddTaskModalApi] = useVbenModal({
+  title: '添加任务',
+  connectedComponent: addTaskModal,
+  destroyOnClose: true,
+});
+
+function onCreate() {
+  AddTaskModalApi.setData(null).open();
+}
+// #endregion
 </script>
 
 <template>
@@ -244,23 +218,101 @@ function navTo(nav: WorkbenchProjectItem | WorkbenchQuickNavItem) {
       <template #description> 今日晴，20℃ - 32℃！ </template>
     </WorkbenchHeader>
 
-    <div class="mt-5 flex flex-col lg:flex-row">
-      <div class="mr-4 w-full lg:w-3/5">
-        <WorkbenchProject :items="projectItems" title="项目" @click="navTo" />
-        <WorkbenchTrends :items="trendItems" class="mt-5" title="最新动态" />
-      </div>
-      <div class="w-full lg:w-2/5">
-        <WorkbenchQuickNav
-          :items="quickNavItems"
-          class="mt-5 lg:mt-0"
-          title="快捷导航"
-          @click="navTo"
-        />
-        <WorkbenchTodo :items="todoItems" class="mt-5" title="待办事项" />
-        <AnalysisChartCard class="mt-5" title="访问来源">
-          <AnalyticsVisitsSource />
-        </AnalysisChartCard>
-      </div>
+    <div class="mt-5">
+      <AnalysisOverview :items="overviewItems" />
     </div>
+
+    <div class="mt-5 flex flex-col lg:flex-row">
+      <Card>
+        <a-button @click="onCreate" type="primary">添加任务</a-button>
+        <br />
+        <br />
+        <a-list :grid="{ gutter: 0, column: 3 }" :data-source="taskDataList">
+          <template #renderItem="{ item, index }">
+            <a-list-item>
+              <Card size="small" :body-style="{ padding: 0 }">
+                <template #title>
+                  <a-flex>
+                    <span :class="item.icon" style="font-size: 20px"></span>
+                    <span class="ml-2">
+                      {{ item.title }}({{ item.children.length }})
+                    </span>
+                  </a-flex>
+                </template>
+                <div
+                  class="sort-container h-[600px] overflow-auto"
+                  :data-container="item.title"
+                  :data-task-status="item.taskStatus"
+                  :ref="(el) => (sortContainers[index] = el)"
+                >
+                  <template v-if="item.children.length > 0">
+                    <div
+                      v-for="taskInfo in item.children"
+                      :key="taskInfo.taskId"
+                      :data-id="taskInfo.taskId"
+                      :data-parent-index="index"
+                      class="border-b p-3"
+                    >
+                      <div class="cursor-pointer">
+                        <div class="top flex items-center justify-between">
+                          <div class="left">
+                            <a-tag>
+                              {{ taskInfo.moduleTitle }}
+                            </a-tag>
+                            <DictTag
+                              dict-type="TASK_TYPE"
+                              :value="taskInfo.taskType"
+                            />
+                          </div>
+                          <div class="right">
+                            <a-tag>
+                              {{ taskInfo.version }}
+                            </a-tag>
+                          </div>
+                        </div>
+
+                        <div class="title line2 py-2">
+                          <a-typography-paragraph
+                            style="margin-bottom: 0"
+                            :ellipsis="{
+                              rows: 3,
+                            }"
+                            :content="taskInfo.taskTitle"
+                          />
+                        </div>
+
+                        <div class="bottom flex items-center justify-between">
+                          <div class="left">
+                            <UserAvatar
+                              :avatar="taskInfo.avatar"
+                              :name="taskInfo.realName"
+                            />
+                          </div>
+                          <div class="right">
+                            <span class="flex items-center">
+                              {{ dayjs(taskInfo.endDate).format('MM月DD号') }}
+                              {{ taskInfo.planHours || 0 }}h/{{
+                                taskInfo.actualHours || 0
+                              }}h
+                            </span>
+                            <CellProgress :value="taskInfo.percent" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div class="h-[100px]"></div>
+                    <a-empty class="empty-component" />
+                  </template>
+                </div>
+              </Card>
+            </a-list-item>
+          </template>
+        </a-list>
+      </Card>
+    </div>
+
+    <AddTaskModal @success="initSortable" />
   </div>
 </template>

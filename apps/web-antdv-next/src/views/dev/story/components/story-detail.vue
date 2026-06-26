@@ -1,0 +1,274 @@
+<script lang="ts" setup>
+import type { DevStoryApi } from '#/api/dev';
+
+import { onMounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+
+import {
+  confirm,
+  prompt,
+  useVbenModal,
+  VbenButton,
+  VbenButtonGroup,
+} from '@vben/common-ui';
+import { useTabs, useRefresh } from '@vben/hooks';
+import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
+
+import { message } from 'antdv-next';
+
+import { addChangeApi, getStoryDetailApi } from '#/api/dev';
+import addBugModal from '#/views/dev/bug/add-modal.vue';
+import addFormModal from '#/views/dev/story/add-modal.vue';
+import nextModal from '#/views/dev/story/next-modal.vue';
+import addTaskModal from '#/views/dev/task/add-modal.vue';
+
+import BaseInfo from './base-info.vue';
+import BugList from './bug-list.vue';
+import ChangeLog from './change-log.vue';
+import TaskList from './task-list.vue';
+
+/**
+ * 需求详情组件
+ * @property {number} storyNum - 需求编号
+ */
+const props = defineProps({
+  storyNum: {
+    type: [Number, String],
+    required: true,
+  },
+  showBtn: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+const { closeCurrentTab } = useTabs();
+const { refresh } = useRefresh();
+
+// 跳转路由
+const router = useRouter();
+
+// 组件挂载时加载详情
+onMounted(() => {
+  loadStoryDetail();
+});
+
+// 监听 storyNum 变化，重新加载详情
+watch(
+  () => props.storyNum,
+  () => {
+    loadStoryDetail();
+  },
+);
+
+/**
+ * 需求详情数据
+ */
+const detail = ref<DevStoryApi.DevStoryFace>({
+  storyId: '',
+});
+const loading = ref(false);
+
+const activeKey = ref('变更日志');
+
+/**
+ * 加载需求详情
+ */
+const loadStoryDetail = () => {
+  if (!props.storyNum) {
+    message.error('需求编号不能为空');
+    return;
+  }
+
+  loading.value = true;
+  getStoryDetailApi(Number(props.storyNum))
+    .then((res: DevStoryApi.DevStoryFace) => {
+      if (!res) {
+        router.push({ name: 'FallbackNotFound' });
+        return;
+      }
+      detail.value = res;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+// #region 按钮点击事件
+const onBtnClick = (btnType: string) => {
+  switch (btnType) {
+    case '流转按钮': {
+      NextModalApi.setData(detail.value).open();
+      break;
+    }
+    case '添加任务': {
+      AddTaskModalApi.setData({
+        storyId: detail.value.storyId,
+        projectId: detail.value.projectId,
+        versionId: detail.value.versionId,
+        moduleId: detail.value.moduleId,
+        openModalSource: 'storyListAddBtn',
+      }).open();
+      break;
+    }
+    case '添加缺陷': {
+      AddBugModalApi.setData({
+        storyId: detail.value.storyId,
+        projectId: detail.value.projectId,
+        versionId: detail.value.versionId,
+        moduleId: detail.value.moduleId,
+        openModalSource: 'storyListAddBtn',
+      }).open();
+      break;
+    }
+    case '添加评论': {
+      prompt({
+        component: VbenTiptap,
+        content: '',
+        title: '添加评论',
+        modelPropName: 'modelValue',
+        componentProps: {
+          placeholder: '请输入内容',
+        },
+      }).then((val) => {
+        const _params = {
+          businessId: detail.value.storyId,
+          businessType: '0',
+          changeBehavior: '30',
+          changeRichText: val,
+        };
+        addChangeApi(_params).then(() => {
+          refresh();
+        });
+      });
+      break;
+    }
+    case '编辑按钮': {
+      AddFormModalApi.setData(detail.value).open();
+      break;
+    }
+    default: {
+      message.error('未知操作');
+      break;
+    }
+  }
+};
+// #endregion
+
+// #region 弹窗引用
+
+const [AddFormModal, AddFormModalApi] = useVbenModal({
+  title: '添加需求',
+  connectedComponent: addFormModal,
+  destroyOnClose: true,
+});
+
+const [NextModal, NextModalApi] = useVbenModal({
+  title: '流转需求',
+  connectedComponent: nextModal,
+  destroyOnClose: true,
+});
+
+const [AddTaskModal, AddTaskModalApi] = useVbenModal({
+  title: '添加任务',
+  connectedComponent: addTaskModal,
+  destroyOnClose: true,
+});
+
+const [AddBugModal, AddBugModalApi] = useVbenModal({
+  title: '添加缺陷',
+  connectedComponent: addBugModal,
+  destroyOnClose: true,
+});
+
+// #endregion
+
+// 暴露方法
+defineExpose({
+  loadStoryDetail,
+});
+</script>
+<template>
+  <div v-spinning="loading">
+    <div>
+      <a-row>
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="16" :xxl="16">
+          <a-typography-paragraph>
+            <a-typography-title :level="4">
+              <blockquote>
+                {{ detail.storyTitle }}
+              </blockquote>
+            </a-typography-title>
+          </a-typography-paragraph>
+
+          <!-- 富文本预览 -->
+          <VbenTiptapPreview :content="detail.storyRichText" />
+        </a-col>
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
+          <a-tabs v-model:active-key="activeKey">
+            <a-tab-pane key="变更日志" tab="变更日志">
+              <ChangeLog :business-id="detail.storyId ?? ''" />
+            </a-tab-pane>
+            <a-tab-pane key="基本信息" tab="基本信息">
+              <BaseInfo :story-info="detail" />
+            </a-tab-pane>
+            <a-tab-pane key="关联任务" tab="关联任务">
+              <TaskList :task-list="detail.taskList ?? ''" />
+            </a-tab-pane>
+            <a-tab-pane key="关联缺陷" tab="关联缺陷">
+              <BugList :bug-list="detail.bugList ?? ''" />
+            </a-tab-pane>
+          </a-tabs>
+        </a-col>
+      </a-row>
+    </div>
+
+    <a-affix :offset-bottom="30" v-if="showBtn">
+      <div class="text-center">
+        <VbenButtonGroup border size="large">
+          <VbenButton @click="onBtnClick('添加评论')" class="cursor-pointer">
+            <span class="icon-[lucide--message-circle-plus]"></span>
+          </VbenButton>
+          <VbenButton
+            @click="onBtnClick('添加任务')"
+            class="cursor-pointer"
+            :disabled="
+              !detail.versionId ||
+              ['0', '99'].includes(detail.storyStatus ?? '')
+            "
+          >
+            <span class="icon-[lucide--badge-plus]"></span>
+          </VbenButton>
+          <VbenButton
+            @click="onBtnClick('添加缺陷')"
+            class="cursor-pointer"
+            :disabled="
+              !detail.versionId || ['0'].includes(detail.storyStatus ?? '')
+            "
+          >
+            <span class="icon-[lucide--bug]"></span>
+          </VbenButton>
+          <VbenButton
+            @click="onBtnClick('流转按钮')"
+            class="cursor-pointer"
+            :disabled="detail.storyStatus === '99'"
+          >
+            <span class="icon-[lucide--redo-dot]"></span>
+          </VbenButton>
+          <VbenButton
+            @click="onBtnClick('编辑按钮')"
+            class="cursor-pointer"
+            :disabled="detail.storyStatus === '99'"
+          >
+            <span class="icon-[lucide--pencil-line]"></span>
+          </VbenButton>
+        </VbenButtonGroup>
+      </div>
+    </a-affix>
+
+    <AddFormModal @success="refresh" />
+    <NextModal @success="refresh" />
+    <AddTaskModal @success="refresh" />
+    <AddBugModal @success="refresh" />
+  </div>
+</template>

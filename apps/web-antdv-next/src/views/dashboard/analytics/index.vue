@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { TabOption } from '@vben/types';
+
+import { onMounted, ref } from 'vue';
 
 import {
   AnalysisChartCard,
@@ -8,11 +9,13 @@ import {
   AnalysisOverview,
 } from '@vben/common-ui';
 import {
-  SvgBellIcon,
-  SvgCakeIcon,
-  SvgCardIcon,
-  SvgDownloadIcon,
+  LucideBug,
+  LucideChartBarStacked,
+  LucideFilm,
+  LucideHourglass,
 } from '@vben/icons';
+
+import { getWorkspaceEnum } from '#/api/statistics/dev';
 
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
@@ -20,47 +23,62 @@ import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
 
-const overviewItems: AnalysisOverviewItem[] = [
+const overviewItems: any = ref([
   {
-    icon: SvgCardIcon,
-    title: '用户量',
-    totalTitle: '总用户量',
-    totalValue: 120_000,
-    value: 2000,
+    icon: LucideFilm,
+    title: '需求',
+    totalTitle: '总需求数',
+    totalValue: 0,
+    totalValueFindKey: 'storyTotalNum',
+    value: 0,
+    valueFindKey: 'storyNum',
   },
   {
-    icon: SvgCakeIcon,
-    title: '访问量',
-    totalTitle: '总访问量',
-    totalValue: 500_000,
-    value: 20_000,
+    icon: LucideChartBarStacked,
+    title: '任务',
+    totalTitle: '总任务数',
+    totalValue: 0,
+    totalValueFindKey: 'taskTotalNum',
+    value: 0,
+    valueFindKey: 'taskNum',
   },
   {
-    icon: SvgDownloadIcon,
-    title: '下载量',
-    totalTitle: '总下载量',
-    totalValue: 120_000,
-    value: 8000,
+    icon: LucideBug,
+    title: '缺陷',
+    totalTitle: '总缺陷数',
+    totalValueFindKey: 'bugTotalNum',
+    totalValue: 0,
+    valueFindKey: 'bugNum',
+    value: 0,
   },
   {
-    icon: SvgBellIcon,
-    title: '使用量',
-    totalTitle: '总使用量',
+    icon: LucideHourglass,
+    title: '本周工时',
+    totalTitle: '总工时',
     totalValue: 50_000,
     value: 5000,
   },
-];
+]);
 
 const chartTabs: TabOption[] = [
   {
-    label: '流量趋势',
+    label: '任务趋势',
     value: 'trends',
   },
   {
-    label: '月访问量',
+    label: '工时总量',
     value: 'visits',
   },
 ];
+
+onMounted(() => {
+  getWorkspaceEnum({}).then((res) => {
+    overviewItems.value.forEach((item: any) => {
+      item.totalValue = res?.[item.totalValueFindKey] || 0;
+      item.value = res?.[item.valueFindKey] || 0;
+    });
+  });
+});
 </script>
 
 <template>
@@ -82,7 +100,7 @@ const chartTabs: TabOption[] = [
       <AnalysisChartCard class="mt-5 md:mt-0 md:mr-4 md:w-1/3" title="访问来源">
         <AnalyticsVisitsSource />
       </AnalysisChartCard>
-      <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/3" title="访问来源">
+      <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/3" title="本周任务">
         <AnalyticsVisitsSales />
       </AnalysisChartCard>
     </div>

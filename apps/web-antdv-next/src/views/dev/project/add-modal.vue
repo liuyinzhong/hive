@@ -1,0 +1,66 @@
+<script lang="ts" setup>
+import { useVbenModal } from '@vben/common-ui';
+
+import { useVbenForm } from '#/adapter/form';
+import { createProjectApi, updateProjectApi } from '#/api/dev';
+import { filesToUrlString, urlStringToFiles } from '#/utils';
+import { message } from 'antdv-next';
+
+import { useFormProjectSchema } from './data';
+defineOptions({
+  name: 'AddProjectModal',
+});
+
+const emit = defineEmits<{
+  success: [];
+}>();
+
+const [Form, formApi] = useVbenForm({
+  handleSubmit: onSubmit,
+  schema: useFormProjectSchema(),
+  showDefaultActions: false,
+});
+
+const [Modal, modalApi] = useVbenModal({
+  title: '添加项目',
+  fullscreenButton: false,
+  onConfirm: async () => {
+    await formApi.validateAndSubmitForm();
+  },
+  async onOpenChange(isOpen: boolean) {
+    if (isOpen) {
+      const data = modalApi.getData();
+      data.projectLogo = urlStringToFiles(data.projectLogo);
+      formApi.setValues(data);
+      modalApi.setState({ title: data.projectId ? '编辑项目' : '添加项目' });
+    }
+  },
+});
+
+async function onSubmit(values: Record<string, any>) {
+  modalApi.lock();
+  // 处理项目logo文件数组
+  if (values.projectLogo?.length) {
+    values.projectLogo = filesToUrlString(values.projectLogo, 'url', 'string');
+  }
+
+  (values.projectId
+    ? updateProjectApi(values.projectId, values)
+    : createProjectApi(values)
+  )
+    .then(() => {
+      message.success('操作成功');
+      modalApi.close();
+      emit('success');
+    })
+    .catch(() => {})
+    .finally(() => {
+      modalApi.unlock();
+    });
+}
+</script>
+<template>
+  <Modal class="w-[450px]">
+    <Form />
+  </Modal>
+</template>

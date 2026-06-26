@@ -1,0 +1,60 @@
+import type { Recordable } from '@vben/types';
+
+import { objectOmit } from '@vueuse/core';
+
+import { requestClient } from '#/api/request';
+export namespace DevModuleApi {
+  export interface DevModuleFace {
+    [key: string]: any;
+    moduleId: string;
+    moduleTitle: string;
+    pid: any;
+    projectId?: string;
+    sort?: number;
+    creatorId: string;
+    creatorName: string;
+    updateDate: string;
+    createDate: string;
+  }
+}
+
+/**
+ * 获取模块列表
+ *
+ * @param params 查询参数
+ */
+export const getModulesListApi = async (params: Recordable<any>) => {
+  return requestClient.get<Array<DevModuleApi.DevModuleFace>>('/dev/modules', {
+    params,
+  });
+};
+
+/**
+ * 创建模块
+ *
+ * @param data 模块 数据
+ */
+export const createModuleApi = async (
+  data: Omit<DevModuleApi.DevModuleFace, 'moduleId'>,
+) => {
+  const newData = objectOmit(data, ['moduleId']);
+  return requestClient.post('/dev/modules', newData);
+};
+
+/**
+ * 更新模块
+ */
+export const updateModuleApi = async (
+  moduleId: string,
+  data: Omit<DevModuleApi.DevModuleFace, 'moduleId'>,
+) => {
+  const newData = objectOmit(data, ['moduleId']);
+  return requestClient.put(`/dev/modules/${moduleId}`, newData);
+};
+
+/**
+ * 删除模块
+ */
+export const deleteModuleApi = async (moduleIds: string[]) => {
+  return requestClient.delete(`/dev/modules`, { data: moduleIds });
+};

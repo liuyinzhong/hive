@@ -45,3 +45,8 @@ watch(
     </App>
   </ConfigProvider>
 </template>
+<style>
+.vxe-select--panel.is--transfer {
+  z-index: 2001 !important;
+}
+</style>

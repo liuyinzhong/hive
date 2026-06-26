@@ -43,6 +43,8 @@ import type { Sortable } from '@vben/hooks';
 import type { TipTapProps } from '@vben/plugins/tiptap';
 import type { Recordable } from '@vben/types';
 
+import { upload_file } from '#/api/examples/upload';
+
 import {
   computed,
   defineAsyncComponent,
@@ -72,7 +74,6 @@ import { isEmpty } from '@vben/utils';
 
 import { message, Modal, notification } from 'antdv-next';
 
-import { upload_file } from '#/api';
 type AdapterUploadProps = UploadProps & {
   aspectRatio?: string;
   crop?: boolean;
@@ -146,6 +147,13 @@ const Upload = defineAsyncComponent(
 const Image = defineAsyncComponent(() => import('antdv-next/dist/image/index'));
 const PreviewGroup = defineAsyncComponent(() =>
   import('antdv-next/dist/image/index').then((res) => res.ImagePreviewGroup),
+);
+
+const ColorSelect = defineAsyncComponent(
+  () => import('#/components/ColorSelect/index.vue'),
+);
+const NodeSteps = defineAsyncComponent(
+  () => import('#/components/NodeSteps/index.vue'),
 );
 
 const withDefaultPlaceholder = (
@@ -624,6 +632,8 @@ export type ComponentType =
   | 'Checkbox'
   | 'CheckboxGroup'
   | 'CollapsibleParams'
+  | 'ColorSelect'
+  | 'NodeSteps'
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
@@ -740,6 +750,8 @@ async function initComponentAdapter() {
     Rate,
     RichEditor: withDefaultPlaceholder(VbenTiptap, 'input', {
       imageUpload: {
+        accept: 'image/*',
+        maxSize: 5 * 1024 * 1024, // 5MB
         upload: (file: any, onProgress: any) => {
           return new Promise((resolve, reject) => {
             upload_file({
@@ -767,6 +779,8 @@ async function initComponentAdapter() {
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload: withPreviewUpload(),
     CollapsibleParams: VbenCollapsibleParams,
+    ColorSelect: withDefaultPlaceholder(ColorSelect, 'select'),
+    NodeSteps: NodeSteps,
   };
 
   // 将组件注册到全局共享状态中

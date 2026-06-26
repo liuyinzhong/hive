@@ -3,6 +3,8 @@ import { computed } from 'vue';
 
 import { ProfileSecuritySetting } from '@vben/common-ui';
 
+import { message } from 'antdv-next';
+
 const formSchema = computed(() => {
   return [
     {
@@ -37,7 +39,11 @@ const formSchema = computed(() => {
     },
   ];
 });
+
+const handleSubmit = (_e: any) => {
+  message.success('安全设置成功');
+};
 </script>
 <template>
-  <ProfileSecuritySetting :form-schema="formSchema" />
+  <ProfileSecuritySetting :form-schema="formSchema" @submit="handleSubmit" />
 </template>
