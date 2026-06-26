@@ -8,7 +8,7 @@ import type {
 
 import type { ComponentPublicInstance } from 'vue';
 
-import { createApp, ref } from 'vue';
+import { createApp, h, ref } from 'vue';
 
 import { Select } from 'ant-design-vue';
 
@@ -53,6 +53,8 @@ export class SelectEditor implements IEditor {
   selectInstance: ComponentPublicInstance | null = null;
   /** 结束编辑回调函数 */
   successCallback: ((result?: any) => void) | null = null;
+  /** 更新Vue组件中options的外部setter（用于API异步加载完成后更新下拉选项） */
+  updateOptionsRef: ((options: any[]) => void) | null = null;
   /** 编辑器包装元素 */
   wrapperElement: HTMLDivElement | null = null;
 
@@ -72,6 +74,7 @@ export class SelectEditor implements IEditor {
 
     this.editorConfig = editorConfig || {};
     this.options = this.editorConfig.options || [];
+    console.log(this.options);
     this.changeCallback = this.editorConfig.change || (() => {});
   }
 
@@ -138,7 +141,7 @@ export class SelectEditor implements IEditor {
    * 初始化编辑器UI并挂载到指定容器
    * @param context 编辑上下文信息
    */
-  async onStart(context: EditContext) {
+  onStart(context: EditContext) {
     const { container, value, referencePosition, endEdit, table, col, row } =
       context;
 
@@ -152,12 +155,8 @@ export class SelectEditor implements IEditor {
     this.rowData = table.records[row - 1] || {};
     this.field = table.options.columns[col]?.field || '';
 
-    // 处理选项数据
-    /* if (this.options.length === 0) {
-      await this.processOptions(this.rowData);
-    } */
-
-    await this.processOptions(this.rowData);
+    // 同步初始化选项数据（本地options直接使用，API模式异步加载不影响挂载）
+    this.syncOptions();
 
     // 创建编辑器容器
     this.createWrapperElement();
@@ -223,6 +222,7 @@ export class SelectEditor implements IEditor {
       this.app.unmount();
       this.app = null;
       this.selectInstance = null;
+      this.updateOptionsRef = null;
     }
   }
 
@@ -254,6 +254,11 @@ export class SelectEditor implements IEditor {
         );
         const options = ref(this.options);
 
+        // 存储options更新函数，以便异步API加载完成后更新下拉选项
+        this.updateOptionsRef = (newOptions: any[]) => {
+          options.value = newOptions;
+        };
+
         /**
          * 获取下拉菜单的容器
          * 确保下拉菜单在表格内正确显示
@@ -262,48 +267,44 @@ export class SelectEditor implements IEditor {
 
         /**
          * 处理选择变化事件
-         * @param value 选中的值
-         * @param option 选中的完整选项对象
          */
         const handleSelectChange = (_value: string, option: any) => {
           this.selectedOption = option || {};
+          // 触发外部change回调
+          this.changeCallback(this.rowData, this.selectedOption);
+          // 结束编辑
           this.successCallback?.(this.selectedOption);
         };
-        const dropdownVisibleChange = (visible: boolean) => {
-          if (!visible) {
-            this.selectedOption = {};
-            this.successCallback?.(this.selectedOption);
-          }
+
+        /**
+         * 下拉框展开/关闭事件
+         */
+        const handleDropdownVisibleChange = (_visible: boolean) => {
+          // 关闭下拉时不触发successCallback，由VTable原生行为控制编辑结束时机
         };
 
-        return {
-          selectValue,
-          options,
-          getPopupContainer,
-          handleSelectChange,
-          dropdownVisibleChange,
-          fieldNames,
-        };
+        return () =>
+          h('div', { class: 'select-editor-container' }, [
+            h(Select as any, {
+              options: options.value,
+              value: selectValue.value,
+              'onUpdate:value': (val: string) => {
+                selectValue.value = val;
+              },
+              getPopupContainer,
+              dropdownMatchSelectWidth: false,
+              showSearch: true,
+              allowClear: true,
+              bordered: false,
+              autofocus: true,
+              defaultOpen: true,
+              fieldNames,
+              onChange: handleSelectChange,
+              onDropdownVisibleChange: handleDropdownVisibleChange,
+              style: { width: '100%' },
+            }),
+          ]);
       },
-      template: `
-        <div class="select-editor-container">
-          <Select
-            :options="options"
-            v-model:value="selectValue"
-            :getPopupContainer="getPopupContainer"
-            :dropdownMatchSelectWidth="false"
-            :showSearch="true"
-            :allowClear="true"
-            :bordered="false"
-            :autofocus="true"
-            :defaultOpen="true"
-            :fieldNames="fieldNames"
-            @change="handleSelectChange"
-            @dropdownVisibleChange="dropdownVisibleChange"
-            style="width: 100%;"
-          />
-        </div>
-      `,
     });
 
     // 挂载到包装元素
@@ -319,7 +320,7 @@ export class SelectEditor implements IEditor {
    */
   private async processOptions(rowData: any) {
     // 如果配置了api，则从api获取数据
-    if (JSON.stringify(this.editorConfig.api) === '{}') {
+    if (typeof this.editorConfig.api !== 'function') {
       // 使用本地配置的options
       this.options = this.editorConfig.options || [];
     } else {
@@ -332,10 +333,28 @@ export class SelectEditor implements IEditor {
         }
         // 转换数据格式
         this.options = this.transformOptions(listData);
+        // 通知Vue组件更新下拉选项
+        this.updateOptionsRef?.(this.options);
       } catch (error) {
         console.error('获取选项数据失败:', error);
         this.options = [];
+        this.updateOptionsRef?.([]);
       }
+    }
+  }
+
+  /**
+   * 同步初始化选项数据
+   * 本地options模式直接使用，API模式异步加载（不影响挂载）
+   */
+  private syncOptions() {
+    if (typeof this.editorConfig.api === 'function') {
+      // API模式：先使用初始options，后台异步加载远程数据
+      this.options = this.editorConfig.options || [];
+      this.processOptions(this.rowData);
+    } else {
+      // 本地options模式：直接使用传入的options
+      this.options = this.editorConfig.options || [];
     }
   }
 

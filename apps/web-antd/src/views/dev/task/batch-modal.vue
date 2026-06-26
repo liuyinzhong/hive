@@ -7,6 +7,8 @@ import { useVbenModal } from '@vben/common-ui';
 
 import * as VTable from '@visactor/vtable';
 import { Button, message } from 'ant-design-vue';
+import { getUsersListApi } from '#/api/system/user';
+import { getStoryListApi } from '#/api/dev/story';
 
 import { getLocalDictList } from '#/dicts';
 import { DateEditor, InputEditor, SelectEditor } from '#/vtable';
@@ -47,7 +49,12 @@ const columns: VTable.ColumnsDefine = [
     title: '关联需求',
     width: 200,
     editor: new SelectEditor({
-      options: getLocalDictList('STORY_STATUS'),
+      labelField: 'storyTitle',
+      valueField: 'storyId',
+      resultField: 'items',
+      api: async () => {
+        return getStoryListApi({ page: 1, pageSize: 100 });
+      },
       change: (rowData: DevTaskApi.DevTaskFace, e: any) => {
         rowData.storyId = e.value;
       },
@@ -64,7 +71,12 @@ const columns: VTable.ColumnsDefine = [
     title: '执行人',
     width: 100,
     editor: new SelectEditor({
-      options: getLocalDictList('STORY_STATUS'),
+      labelField: 'realName',
+      valueField: 'userId',
+      resultField: 'items',
+      api: async () => {
+        return getUsersListApi({ page: 1, pageSize: 100 });
+      },
       change: (rowData: DevTaskApi.DevTaskFace, e: any) => {
         rowData.userId = e.value;
       },
@@ -93,7 +105,7 @@ const columns: VTable.ColumnsDefine = [
     title: '任务类型',
     width: 'auto',
     editor: new SelectEditor({
-      options: getLocalDictList('STORY_STATUS'),
+      options: getLocalDictList('TASK_TYPE'),
       change: (_rowData: DevTaskApi.DevTaskFace, _e: any) => {},
     }),
   },
@@ -102,40 +114,37 @@ const columns: VTable.ColumnsDefine = [
     title: '任务状态',
     width: 'auto',
     editor: new SelectEditor({
-      options: getLocalDictList('STORY_STATUS'),
+      options: getLocalDictList('TASK_STATUS'),
       change: (_rowData: DevTaskApi.DevTaskFace, _e: any) => {},
     }),
   },
 ];
 
 const initTable = () => {
-  ListTableApi = new VTable.ListTable(
-    document.querySelector('#tableContainer') as HTMLDivElement,
-    {
-      records: records.value,
-      columns,
-      menu: {
-        contextMenuItems: ['复制', '粘贴', '清空单元格', '删除行', '新增行'],
-      },
-      widthMode: 'standard',
-      allowFrozenColCount: 2,
-      frozenColCount: 2,
-      autoWrapText: true,
-      hover: {
-        highlightMode: 'cross',
-      },
-      overscrollBehavior: 'none',
-      keyboardOptions: {
-        /* 开启这个配置的话，如果当前是在编辑中的单元格，方向键可以移动到下个单元格并进入编辑状态，而不是编辑文本内字符串的光标移动 。 */
-        moveEditCellOnArrowKeys: true,
-        /* 开启快捷键复制，与浏览器的快捷键一致。 */
-        copySelected: true,
-        /* 开启快捷键粘贴，与浏览器的快捷键一致。粘贴生效仅针对配置了编辑 editor 的单元格 */
-        pasteValueToCell: true,
-      },
-      editor: '', // 配置一个空的编辑器，以遍能粘贴到单元格中
+  ListTableApi = new VTable.ListTable(document.querySelector('#tableContainer') as HTMLDivElement, {
+    records: records.value,
+    columns,
+    menu: {
+      contextMenuItems: ['复制', '粘贴', '清空单元格', '删除行', '新增行'],
     },
-  );
+    widthMode: 'standard',
+    allowFrozenColCount: 2,
+    frozenColCount: 2,
+    autoWrapText: true,
+    hover: {
+      highlightMode: 'cross',
+    },
+    overscrollBehavior: 'none',
+    keyboardOptions: {
+      /* 开启这个配置的话，如果当前是在编辑中的单元格，方向键可以移动到下个单元格并进入编辑状态，而不是编辑文本内字符串的光标移动 。 */
+      moveEditCellOnArrowKeys: true,
+      /* 开启快捷键复制，与浏览器的快捷键一致。 */
+      copySelected: true,
+      /* 开启快捷键粘贴，与浏览器的快捷键一致。粘贴生效仅针对配置了编辑 editor 的单元格 */
+      pasteValueToCell: true,
+    },
+    editor: '', // 配置一个空的编辑器，以遍能粘贴到单元格中
+  });
 
   for (let i = 0; i < 10; i++) {
     addRow();
@@ -198,11 +207,7 @@ const initTable = () => {
 <template>
   <Modal class="w-[1030px]">
     <div class="h-[600px] w-full">
-      <div
-        id="tableContainer"
-        class="h-full w-full"
-        style="position: relative"
-      ></div>
+      <div id="tableContainer" class="h-full w-full" style="position: relative"></div>
     </div>
 
     <template #prepend-footer>
