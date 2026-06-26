@@ -30,7 +30,7 @@ export default {
         optionFilterProp: 'label',
         showSearch: true,
         defaultOpen: true,
-        dropdownMatchSelectWidth: false,
+        popupMatchSelectWidth: false,
         maxTagCount: 0,
         style: {
           width: '100%',

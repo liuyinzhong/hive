@@ -37,8 +37,7 @@ export default {
       ];
     }
 
-    const userIds =
-      _list.map((item: SystemUserApi.SystemUserFace) => item.userId) || [];
+    const userIds = _list.map((item: SystemUserApi.SystemUserFace) => item.userId) || [];
 
     // 初始化值
     let _value: any = userIds || [];
@@ -64,7 +63,7 @@ export default {
           filterOption: true,
           showSearch: true,
           defaultOpen: true,
-          dropdownMatchSelectWidth: false,
+          popupMatchSelectWidth: false,
           maxTagCount: 0,
           style: {
             width: '100%',
@@ -75,7 +74,7 @@ export default {
           getPopupContainer: (e: HTMLElement) => {
             return e.parentNode as HTMLElement;
           },
-          onDropdownVisibleChange(visible: boolean) {
+          onOpenChange(_visible: boolean) {
             events.change(_value, row);
           },
           onChange: (value: any) => {

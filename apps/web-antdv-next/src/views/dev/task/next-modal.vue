@@ -46,9 +46,7 @@ const [Modal, modalApi] = useVbenModal({
       formApi.setValues(modalApi.getData());
 
       const taskStatus = modalApi.getData().taskStatus;
-      current.value = stepsItems.findIndex(
-        (item: any) => item.value === taskStatus,
-      );
+      current.value = stepsItems.findIndex((item: any) => item.value === taskStatus);
       stepsItems.forEach((item: any, index: number) => {
         item.disabled = index < current.value;
       });
@@ -84,15 +82,12 @@ function setChangeRichText(value: string) {
       <a-col :span="6">
         <a-steps
           v-model:current="current"
-          direction="vertical"
+          orientation="vertical"
           @change="changeCurrent"
           :items="stepsItems"
         />
         <a-divider dashed>常用语(双击)</a-divider>
-        <CommonPhrase
-          :text-list="['已完成，已更新至测试环境']"
-          @dbl-click="setChangeRichText"
-        />
+        <CommonPhrase :text-list="['已完成，已更新至测试环境']" @dbl-click="setChangeRichText" />
       </a-col>
       <a-col :span="18">
         <Form />

@@ -9,17 +9,8 @@ import { nextTaskApi } from '#/api/dev/task';
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import {
-  AnalysisOverview,
-  useVbenModal,
-  WorkbenchHeader,
-} from '@vben/common-ui';
-import {
-  LucideBug,
-  LucideChartBarStacked,
-  LucideFilm,
-  LucideHourglass,
-} from '@vben/icons';
+import { AnalysisOverview, useVbenModal, WorkbenchHeader } from '@vben/common-ui';
+import { LucideBug, LucideChartBarStacked, LucideFilm, LucideHourglass } from '@vben/icons';
 import { preferences } from '@vben/preferences';
 import { useUserStore } from '@vben/stores';
 
@@ -150,12 +141,8 @@ const sortableOptions: Sortable.Options = {
       return;
     }
     // 查找源列表和目标列表
-    const fromList = taskDataList.find(
-      (item) => item.taskStatus === fromTaskStatus,
-    );
-    const toList = taskDataList.find(
-      (item) => item.taskStatus === toTaskStatus,
-    );
+    const fromList = taskDataList.find((item) => item.taskStatus === fromTaskStatus);
+    const toList = taskDataList.find((item) => item.taskStatus === toTaskStatus);
     if (!fromList || !toList) {
       return;
     }
@@ -164,10 +151,7 @@ const sortableOptions: Sortable.Options = {
     const taskIndexById = fromList.children.findIndex(
       (task: DevTaskApi.DevTaskFace) => task.taskId === taskId,
     );
-    const task = fromList.children.splice(
-      taskIndexById,
-      1,
-    )[0] as DevTaskApi.DevTaskFace;
+    const task = fromList.children.splice(taskIndexById, 1)[0] as DevTaskApi.DevTaskFace;
     toList.children.push(task);
     event.item.remove();
   },
@@ -187,9 +171,7 @@ async function initSortable() {
   }
   getTaskListApi({}).then(({ items }) => {
     taskDataList.forEach((taskInfo) => {
-      taskInfo.children = items.filter(
-        (item) => item.taskStatus === taskInfo.taskStatus,
-      );
+      taskInfo.children = items.filter((item) => item.taskStatus === taskInfo.taskStatus);
     });
   });
 }
@@ -209,12 +191,8 @@ function onCreate() {
 
 <template>
   <div class="p-5">
-    <WorkbenchHeader
-      :avatar="userStore.userInfo?.avatar || preferences.app.defaultAvatar"
-    >
-      <template #title>
-        早安, {{ userStore.userInfo?.realName }}, 开始您一天的工作吧！
-      </template>
+    <WorkbenchHeader :avatar="userStore.userInfo?.avatar || preferences.app.defaultAvatar">
+      <template #title> 早安, {{ userStore.userInfo?.realName }}, 开始您一天的工作吧！ </template>
       <template #description> 今日晴，20℃ - 32℃！ </template>
     </WorkbenchHeader>
 
@@ -230,13 +208,11 @@ function onCreate() {
         <a-list :grid="{ gutter: 0, column: 3 }" :data-source="taskDataList">
           <template #renderItem="{ item, index }">
             <a-list-item>
-              <Card size="small" :body-style="{ padding: 0 }">
+              <Card size="small" :styles="{ body: { padding: 0 } }">
                 <template #title>
                   <a-flex>
                     <span :class="item.icon" style="font-size: 20px"></span>
-                    <span class="ml-2">
-                      {{ item.title }}({{ item.children.length }})
-                    </span>
+                    <span class="ml-2"> {{ item.title }}({{ item.children.length }}) </span>
                   </a-flex>
                 </template>
                 <div
@@ -259,10 +235,7 @@ function onCreate() {
                             <a-tag>
                               {{ taskInfo.moduleTitle }}
                             </a-tag>
-                            <DictTag
-                              dict-type="TASK_TYPE"
-                              :value="taskInfo.taskType"
-                            />
+                            <DictTag dict-type="TASK_TYPE" :value="taskInfo.taskType" />
                           </div>
                           <div class="right">
                             <a-tag>
@@ -283,17 +256,12 @@ function onCreate() {
 
                         <div class="bottom flex items-center justify-between">
                           <div class="left">
-                            <UserAvatar
-                              :avatar="taskInfo.avatar"
-                              :name="taskInfo.realName"
-                            />
+                            <UserAvatar :avatar="taskInfo.avatar" :name="taskInfo.realName" />
                           </div>
                           <div class="right">
                             <span class="flex items-center">
                               {{ dayjs(taskInfo.endDate).format('MM月DD号') }}
-                              {{ taskInfo.planHours || 0 }}h/{{
-                                taskInfo.actualHours || 0
-                              }}h
+                              {{ taskInfo.planHours || 0 }}h/{{ taskInfo.actualHours || 0 }}h
                             </span>
                             <CellProgress :value="taskInfo.percent" />
                           </div>

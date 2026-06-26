@@ -11,7 +11,7 @@ import type { ComponentPublicInstance } from 'vue';
 import { createApp, ref } from 'vue';
 
 import { DatePicker } from 'antdv-next';
-import locale from 'antdv-next/es/date-picker/locale/zh_CN';
+import locale from 'antdv-next/dist/date-picker/locale/zh_CN';
 import dayjs from 'dayjs';
 
 // 文档地址：https://visactor.io/vtable/guide/edit/edit_cell
@@ -79,9 +79,7 @@ export class DateEditor implements IEditor {
     }
 
     // 检查目标元素是否在编辑器包装元素内
-    return (
-      this.wrapperElement === target || this.wrapperElement.contains(target)
-    );
+    return this.wrapperElement === target || this.wrapperElement.contains(target);
   }
 
   /**
@@ -95,11 +93,7 @@ export class DateEditor implements IEditor {
     }
 
     // 移除 DOM 元素
-    if (
-      this.wrapperElement &&
-      this.container &&
-      this.container.contains(this.wrapperElement)
-    ) {
+    if (this.wrapperElement && this.container && this.container.contains(this.wrapperElement)) {
       this.wrapperElement.remove();
     }
 
@@ -178,7 +172,7 @@ export class DateEditor implements IEditor {
           :autofocus="true"
           format="YYYY-MM-DD HH:mm:ss"
           valueFormat="YYYY-MM-DD HH:mm:ss"
-          :bordered="false"
+          :variant="'borderless'"
           @change="handleDateChange"
           @openChange="handleOpenChange"
           :getPopupContainer="getPopupContainer"

@@ -142,16 +142,14 @@ export class SelectEditor implements IEditor {
    * @param context 编辑上下文信息
    */
   onStart(context: EditContext) {
-    const { container, value, referencePosition, endEdit, table, col, row } =
-      context;
+    const { container, value, referencePosition, endEdit, table, col, row } = context;
 
     // 初始化基本属性
     this.container = container;
     this.successCallback = endEdit;
     this.selectedOption =
-      this.options.find(
-        (item) => item[this.editorConfig.labelField as string] === value || '',
-      ) || {};
+      this.options.find((item) => item[this.editorConfig.labelField as string] === value || '') ||
+      {};
     this.rowData = table.records[row - 1] || {};
     this.field = table.options.columns[col]?.field || '';
 
@@ -190,8 +188,7 @@ export class SelectEditor implements IEditor {
     }
     // 查找匹配的选项
     const activeOption = this.options.find(
-      (option: any) =>
-        option[this.editorConfig.labelField as string] === newValue,
+      (option: any) => option[this.editorConfig.labelField as string] === newValue,
     );
 
     // 未找到匹配选项则验证失败
@@ -249,9 +246,7 @@ export class SelectEditor implements IEditor {
         };
 
         // 响应式数据
-        const selectValue = ref(
-          this.selectedOption[this.editorConfig.valueField as string] || '',
-        );
+        const selectValue = ref(this.selectedOption[this.editorConfig.valueField as string] || '');
         const options = ref(this.options);
 
         // 存储options更新函数，以便异步API加载完成后更新下拉选项
@@ -292,15 +287,15 @@ export class SelectEditor implements IEditor {
                 selectValue.value = val;
               },
               getPopupContainer,
-              dropdownMatchSelectWidth: false,
+              popupMatchSelectWidth: false,
               showSearch: true,
               allowClear: true,
-              bordered: false,
+              variant: 'borderless',
               autofocus: true,
               defaultOpen: true,
               fieldNames,
               onChange: handleSelectChange,
-              onDropdownVisibleChange: handleDropdownVisibleChange,
+              onOpenChange: handleDropdownVisibleChange,
               style: { width: '100%' },
             }),
           ]);

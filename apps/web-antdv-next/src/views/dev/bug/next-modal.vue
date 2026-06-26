@@ -48,9 +48,7 @@ const [Modal, modalApi] = useVbenModal({
       formApi.setValues(data);
 
       /* 设置当前步骤 */
-      current.value = stepsItems.findIndex(
-        (item: any) => item.value === data.bugStatus,
-      );
+      current.value = stepsItems.findIndex((item: any) => item.value === data.bugStatus);
     }
   },
 });
@@ -83,18 +81,14 @@ function setChangeRichText(value: string) {
       <a-col :span="6">
         <a-steps
           v-model:current="current"
-          direction="vertical"
+          orientation="vertical"
           @change="changeCurrent"
           :items="stepsItems"
         />
 
         <a-divider dashed>常用语(双击)</a-divider>
         <CommonPhrase
-          :text-list="[
-            '已修复，已更新至测试环境',
-            '测试验证完毕，已关闭',
-            '非BUG，已关闭',
-          ]"
+          :text-list="['已修复，已更新至测试环境', '测试验证完毕，已关闭', '非BUG，已关闭']"
           @dbl-click="setChangeRichText"
         />
       </a-col>

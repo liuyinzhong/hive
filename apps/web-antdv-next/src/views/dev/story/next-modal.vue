@@ -46,9 +46,7 @@ const [Modal, modalApi] = useVbenModal({
       formApi.setValues(data);
 
       /* 设置当前步骤 */
-      current.value = stepsItems.findIndex(
-        (item: any) => item.value === data.storyStatus,
-      );
+      current.value = stepsItems.findIndex((item: any) => item.value === data.storyStatus);
 
       /* 禁用已完成的步骤 */
       stepsItems.forEach((item: any, index: number) => {
@@ -86,7 +84,7 @@ function setChangeRichText(value: string) {
       <a-col :span="6">
         <a-steps
           v-model:current="current"
-          direction="vertical"
+          orientation="vertical"
           @change="changeCurrent"
           :items="stepsItems"
         />

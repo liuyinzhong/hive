@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { DataNode } from 'antdv-next/es/tree';
+import type { DataNode } from 'antdv-next/dist/tree/index';
 
 import type { Recordable } from '@vben/types';
 
@@ -13,12 +13,7 @@ import { IconifyIcon } from '@vben/icons';
 import { Spin } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
-import {
-  createRoleApi,
-  getMenuListApi,
-  updateRoleApi,
-  getRoleDetailApi,
-} from '#/api/system';
+import { createRoleApi, getMenuListApi, updateRoleApi, getRoleDetailApi } from '#/api/system';
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';
@@ -39,10 +34,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     if (!valid) return;
     const values = await formApi.getValues();
     drawerApi.lock();
-    (values.roleId
-      ? updateRoleApi(values.roleId, values)
-      : createRoleApi(values)
-    )
+    (values.roleId ? updateRoleApi(values.roleId, values) : createRoleApi(values))
       .then(() => {
         emits('success');
         drawerApi.close();

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ChangeEvent } from 'antdv-next/es/_util/EventInterface';
+import type { ChangeEvent } from 'antdv-next/dist/_util/EventInterface';
 
 import type { Recordable } from '@vben/types';
 
@@ -67,10 +67,7 @@ const schema: VbenFormSchema[] = [
           return !(await isMenuNameExistsApi(value, formData.value?.id));
         },
         (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.pathName'),
-            value,
-          ]),
+          message: $t('ui.formRules.alreadyExists', [$t('system.menu.pathName'), value]),
         }),
       ),
   },
@@ -151,10 +148,7 @@ const schema: VbenFormSchema[] = [
           return !(await isMenuPathExistsApi(value, formData.value?.id));
         },
         (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.path'),
-            value,
-          ]),
+          message: $t('ui.formRules.alreadyExists', [$t('system.menu.path'), value]),
         }),
       ),
   },
@@ -444,8 +438,7 @@ const schema: VbenFormSchema[] = [
       },
       triggerFields: ['type'],
     },
-    help: () =>
-      h('p', { style: { maxWidth: '200px' } }, $t('system.menu.domCachedHelp')),
+    help: () => h('p', { style: { maxWidth: '200px' } }, $t('system.menu.domCachedHelp')),
     fieldName: 'meta.domCached',
     renderComponentContent() {
       return {
@@ -575,12 +568,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type', 'pid'],
     },
     fieldName: 'meta.noBasicLayout',
-    help: () =>
-      h(
-        'p',
-        { style: { maxWidth: '200px' } },
-        $t('system.menu.noBasicLayoutHelp'),
-      ),
+    help: () => h('p', { style: { maxWidth: '200px' } }, $t('system.menu.noBasicLayoutHelp')),
     renderComponentContent() {
       return {
         default: () => $t('system.menu.noBasicLayout'),
@@ -616,11 +604,7 @@ const schema: VbenFormSchema[] = [
     },
     fieldName: 'meta.menuVisibleWithForbidden',
     help: () =>
-      h(
-        'p',
-        { style: { maxWidth: '200px' } },
-        $t('system.menu.menuVisibleWithForbiddenHelp'),
-      ),
+      h('p', { style: { maxWidth: '200px' } }, $t('system.menu.menuVisibleWithForbiddenHelp')),
     renderComponentContent() {
       return {
         default: () => $t('system.menu.menuVisibleWithForbidden'),
@@ -655,9 +639,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
       if (data) {
         formData.value = data;
         formApi.setValues(formData.value);
-        titleSuffix.value = formData.value.meta?.title
-          ? $t(formData.value.meta.title)
-          : '';
+        titleSuffix.value = formData.value.meta?.title ? $t(formData.value.meta.title) : '';
       } else {
         formApi.resetForm();
         titleSuffix.value = '';
@@ -670,10 +652,7 @@ async function onSubmit() {
   const { valid } = await formApi.validate();
   if (valid) {
     drawerApi.lock();
-    const data =
-      await formApi.getValues<
-        Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>
-      >();
+    const data = await formApi.getValues<Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>>();
     if (data.type === 'link') {
       data.meta = { ...data.meta, link: data.linkSrc };
     } else if (data.type === 'embedded') {
@@ -681,9 +660,7 @@ async function onSubmit() {
     }
     delete data.linkSrc;
     try {
-      await (formData.value?.id
-        ? updateMenuApi(formData.value.id, data)
-        : createMenuApi(data));
+      await (formData.value?.id ? updateMenuApi(formData.value.id, data) : createMenuApi(data));
       drawerApi.close();
       emit('success');
     } finally {
