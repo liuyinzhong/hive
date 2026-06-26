@@ -42,6 +42,7 @@
     "commit": "czg",
     "dev": "turbo-run dev",
     "dev:antd": "pnpm -F @vben/web-antd run dev",
+    "dev:antdv-next": "pnpm -F @vben/web-antdv-next run dev",
     "dev:docs": "pnpm -F @vben/docs run dev",
     "dev:play": "pnpm -F @vben/playground run dev",
     "format": "vsh lint --format",
