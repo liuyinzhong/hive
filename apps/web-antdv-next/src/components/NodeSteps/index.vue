@@ -6,6 +6,15 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useSortable } from '@vben-core/composables';
 import type { Sortable } from '@vben-core/composables';
 
+import {
+  Collapse,
+  CollapsePanel,
+  Tag,
+  Tooltip,
+  Checkbox,
+  Select,
+} from 'antdv-next';
+
 import { getLocalDictList } from '#/dicts';
 import { getUserListAllApi } from '#/api/system';
 
@@ -344,12 +353,12 @@ const activeKey = ref(['selected', 'alternative']);
 </script>
 
 <template>
-  <a-collapse
+  <Collapse
     expand-icon-position="end"
     v-model:activeKey="activeKey"
     size="small"
   >
-    <a-collapse-panel
+    <CollapsePanel
       key="selected"
       :header="'已选节点' + '(' + selectedNodes.length + ')'"
     >
@@ -373,21 +382,21 @@ const activeKey = ref(['selected', 'alternative']);
           <!-- 2号区域：中部信息区 -->
           <div class="flex flex-1 flex-col gap-1">
             <!-- 上层：标题 + tooltip -->
-            <a-tooltip :title="item.remark || item.label">
+            <Tooltip :title="item.remark || item.label">
               <span class="text-m font-bold">{{ item.label }}</span>
-            </a-tooltip>
+            </Tooltip>
             <div class="flex gap-2">
-              <a-tooltip title="审批节点">
-                <a-checkbox
+              <Tooltip title="审批节点">
+                <Checkbox
                   :checked="item.approval"
                   :disabled="props.disabled"
                   @change="
                     (e: any) => onApprovalChange(index, e.target.checked)
                   "
                 >
-                </a-checkbox>
-              </a-tooltip>
-              <a-select
+                </Checkbox>
+              </Tooltip>
+              <Select
                 :value="item.userId || undefined"
                 :options="userList"
                 :allow-clear="true"
@@ -420,14 +429,14 @@ const activeKey = ref(['selected', 'alternative']);
           暂未选择节点，请从备选节点中拖拽添加
         </div>
       </div>
-    </a-collapse-panel>
+    </CollapsePanel>
 
-    <a-collapse-panel
+    <CollapsePanel
       key="alternative"
       :header="'备选节点' + '(' + alternativeNodes.length + ')'"
     >
       <div ref="alternativePanelRef" class="flex flex-wrap gap-1.5">
-        <a-tag
+        <Tag
           v-for="item in alternativeNodes"
           :key="item.value"
           :data-value="item.value"
@@ -435,7 +444,7 @@ const activeKey = ref(['selected', 'alternative']);
           color="blue"
         >
           {{ item.label }}
-        </a-tag>
+        </Tag>
 
         <div
           v-if="alternativeNodes.length === 0"
@@ -444,6 +453,6 @@ const activeKey = ref(['selected', 'alternative']);
           所有节点已添加
         </div>
       </div>
-    </a-collapse-panel>
-  </a-collapse>
+    </CollapsePanel>
+  </Collapse>
 </template>

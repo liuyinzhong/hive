@@ -13,7 +13,16 @@ import {
 import { useTabs } from '@vben/hooks';
 import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
-import { message } from 'antdv-next';
+import {
+  message,
+  Row,
+  Col,
+  Tabs,
+  TabPane,
+  Affix,
+  TypographyTitle,
+  TypographyParagraph,
+} from 'antdv-next';
 
 import { getBugDetailApi } from '#/api/dev';
 import addFormModal from '#/views/dev/bug/add-modal.vue';
@@ -147,33 +156,33 @@ defineExpose({
 <template>
   <div v-spinning="loading">
     <div>
-      <a-row>
-        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="16" :xxl="16">
-          <a-typography-paragraph>
-            <a-typography-title :level="4">
+      <Row>
+        <Col :xs="24" :sm="24" :md="24" :lg="24" :xl="16" :xxl="16">
+          <TypographyParagraph>
+            <TypographyTitle :level="4">
               <blockquote>
                 {{ detail.bugTitle }}
               </blockquote>
-            </a-typography-title>
-          </a-typography-paragraph>
+            </TypographyTitle>
+          </TypographyParagraph>
 
           <!-- 富文本预览 -->
           <VbenTiptapPreview :content="detail.bugRichText" />
-        </a-col>
-        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
-          <a-tabs v-model:active-key="activeKey">
-            <a-tab-pane key="变更日志" tab="变更日志">
+        </Col>
+        <Col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
+          <Tabs v-model:active-key="activeKey">
+            <TabPane key="变更日志" tab="变更日志">
               <ChangeLog :business-id="detail.bugId ?? ''" />
-            </a-tab-pane>
-            <a-tab-pane key="基本信息" tab="基本信息">
+            </TabPane>
+            <TabPane key="基本信息" tab="基本信息">
               <BaseInfo :bug-info="detail" />
-            </a-tab-pane>
-          </a-tabs>
-        </a-col>
-      </a-row>
+            </TabPane>
+          </Tabs>
+        </Col>
+      </Row>
     </div>
 
-    <a-affix :offset-bottom="30" v-if="showBtn">
+    <Affix :offset-bottom="30" v-if="showBtn">
       <div class="text-center">
         <VbenButtonGroup border size="large">
           <VbenButton @click="onBtnClick('添加评论')" class="cursor-pointer">
@@ -195,7 +204,7 @@ defineExpose({
           </VbenButton>
         </VbenButtonGroup>
       </div>
-    </a-affix>
+    </Affix>
 
     <AddFormModal />
     <NextModal />

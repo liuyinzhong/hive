@@ -7,6 +7,7 @@ import type { DevModuleApi, DevProjectApi } from '#/api/dev';
 import { onMounted, ref } from 'vue';
 
 import { EllipsisText, Page, useVbenModal } from '@vben/common-ui';
+import { Card, CardGrid, Button, Space, Tag, Row, Col } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
@@ -115,25 +116,23 @@ function openAddModuleModal(row: any) {
 
 <template>
   <Page auto-content-height>
-    <a-row :gutter="24">
-      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="16">
-        <a-card>
+    <Row :gutter="24">
+      <Col :xs="24" :sm="24" :md="24" :lg="24" :xl="16">
+        <Card>
           <template #title>
             <div class="flex items-center justify-between">
               <span class="ml-2 text-lg font-medium">项目</span>
-              <a-button type="primary" @click="createProject">
-                创建项目
-              </a-button>
+              <Button type="primary" @click="createProject"> 创建项目 </Button>
             </div>
           </template>
 
-          <a-card-grid v-for="item in items" :key="item.projectId">
+          <CardGrid v-for="item in items" :key="item.projectId">
             <div
               class="cursor-pointer"
               @click="setActiveProjectId(item.projectId)"
             >
               <div class="flex items-center">
-                <a-avatar
+                <Avatar
                   :size="45"
                   :src="item.projectLogo"
                   style="min-width: 45px"
@@ -149,37 +148,37 @@ function openAddModuleModal(row: any) {
               </div>
               <div class="flex justify-between">
                 <span>
-                  <a-badge
+                  <Badge
                     v-if="item.projectId === activeProjectId"
                     status="processing"
                   />
                 </span>
                 <span @click.stop="">
-                  <a-space warp>
-                    <a-button type="dashed" size="small"> 统计 </a-button>
-                    <a-button
+                  <Space warp>
+                    <Button type="dashed" size="small"> 统计 </Button>
+                    <Button
                       type="dashed"
                       size="small"
                       @click="editProject(item)"
                     >
                       编辑
-                    </a-button>
-                  </a-space>
+                    </Button>
+                  </Space>
                 </span>
               </div>
             </div>
-          </a-card-grid>
-        </a-card>
-      </a-col>
-      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
-        <a-card title="模块">
+          </CardGrid>
+        </Card>
+      </Col>
+      <Col :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
+        <Card title="模块">
           <template #extra>
-            <a-button
+            <Button
               type="primary"
               @click="openAddModuleModal({ projectId: activeProjectId })"
             >
               添加
-            </a-button>
+            </Button>
           </template>
           <Grid>
             <template #action="{ row }">
@@ -208,9 +207,9 @@ function openAddModuleModal(row: any) {
               />
             </template>
           </Grid>
-        </a-card>
-      </a-col>
-    </a-row>
+        </Card>
+      </Col>
+    </Row>
     <AddProjectModal @success="init" />
     <AddModuleModal @success="gridApi.query" />
   </Page>

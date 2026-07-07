@@ -4,6 +4,7 @@ import type { DevBugApi } from '#/api/dev';
 import { ref } from 'vue';
 
 import DictTag from '#/components/DictTag/index.vue';
+import { List, ListItem, ListItemMeta, Avatar } from 'antdv-next';
 
 /**
  * 基本信息组件
@@ -18,15 +19,15 @@ const props = defineProps({
 </script>
 <template>
   <div>
-    <a-list
+    <List
       item-layout="horizontal"
       bordered
       :data-source="props.bugList"
       size="small"
     >
       <template #renderItem="{ item }">
-        <a-list-item>
-          <a-list-item-meta>
+        <ListItem>
+          <ListItemMeta>
             <template #title>
               <a target="_blank" :href="`/dev/bug/detail/${item.bugNum}`">
                 {{ item.bugTitle }}
@@ -40,11 +41,11 @@ const props = defineProps({
             </template>
 
             <template #avatar>
-              <a-avatar :src="item.avatar" />
+              <Avatar :src="item.avatar" />
             </template>
-          </a-list-item-meta>
-        </a-list-item>
+          </ListItemMeta>
+        </ListItem>
       </template>
-    </a-list>
+    </List>
   </div>
 </template>

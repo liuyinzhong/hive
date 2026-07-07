@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
+import { Select, SelectOption, Tag } from 'antdv-next';
 
 // 组件属性定义
 interface Props {
@@ -61,15 +62,15 @@ const handleChange = (value: string) => {
 </script>
 
 <template>
-  <a-select v-model:value="selectedValue" @change="handleChange" class="w-full">
-    <a-select-option
+  <Select v-model:value="selectedValue" @change="handleChange" class="w-full">
+    <SelectOption
       v-for="option in colorOptions"
       :key="option.value"
       :value="option.value"
     >
-      <a-tag :color="option.value">{{ option.label }} {{ option.value }}</a-tag>
-    </a-select-option>
-  </a-select>
+      <Tag :color="option.value">{{ option.label }} {{ option.value }}</Tag>
+    </SelectOption>
+  </Select>
 </template>
 
 <style scoped></style>

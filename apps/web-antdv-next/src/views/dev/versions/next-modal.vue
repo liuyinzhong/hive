@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 
-import { message } from 'antdv-next';
+import { message, Row, Col, Steps, Divider } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
@@ -45,7 +45,9 @@ const [Modal, modalApi] = useVbenModal({
 
       formApi.setValues(data);
       /* 设置当前步骤 */
-      current.value = stepsItems.findIndex((item: any) => item.value === data.releaseStatus);
+      current.value = stepsItems.findIndex(
+        (item: any) => item.value === data.releaseStatus,
+      );
 
       /* 禁用已完成的步骤 */
       stepsItems.forEach((item: any, index: number) => {
@@ -79,15 +81,15 @@ function setChangeRichText(value: string) {
 </script>
 <template>
   <Modal class="w-[1000px]">
-    <a-row :gutter="24">
-      <a-col :span="6">
-        <a-steps
+    <Row :gutter="24">
+      <Col :span="6">
+        <Steps
           v-model:current="current"
           orientation="vertical"
           @change="changeCurrent"
           :items="stepsItems"
         />
-        <a-divider dashed>常用语(双击)</a-divider>
+        <Divider dashed>常用语(双击)</Divider>
         <CommonPhrase
           :text-list="[
             '已更新至测试环境',
@@ -98,11 +100,11 @@ function setChangeRichText(value: string) {
           ]"
           @dbl-click="setChangeRichText"
         />
-      </a-col>
-      <a-col :span="18">
+      </Col>
+      <Col :span="18">
         <Form />
-      </a-col>
-    </a-row>
+      </Col>
+    </Row>
   </Modal>
 </template>
 <style></style>

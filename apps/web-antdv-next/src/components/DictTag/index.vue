@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-
+import { Tag } from 'antdv-next';
 import { getLocalDictRow } from '#/dicts';
 
 const props = defineProps({
@@ -16,5 +16,5 @@ const props = defineProps({
 const dictRow = computed(() => getLocalDictRow(props.dictType, props.value));
 </script>
 <template>
-  <a-tag :color="dictRow.color">{{ dictRow.label || '-' }}</a-tag>
+  <Tag :color="dictRow.color">{{ dictRow.label || '-' }}</Tag>
 </template>

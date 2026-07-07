@@ -9,7 +9,7 @@ import { nextTick, onMounted, ref, watch } from 'vue';
 import { Page, Tree, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button, message, Modal } from 'antdv-next';
+import { Button, message, Modal, Card } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
@@ -172,7 +172,7 @@ function onRefresh() {
     <FormDrawer @success="onRefresh" />
 
     <div class="flex size-full">
-      <a-card class="w-1/6">
+      <Card class="w-1/6">
         <Tree
           label-field="deptTitle"
           value-field="deptId"
@@ -180,7 +180,7 @@ function onRefresh() {
           :default-expanded-level="2"
           @select="selectDept"
         />
-      </a-card>
+      </Card>
 
       <div class="w-5/6 ml-4">
         <Grid>

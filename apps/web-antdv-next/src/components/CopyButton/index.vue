@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useClipboard } from '@vueuse/core';
+import { Button, Flex } from 'antdv-next';
 
 /**
  * 复制按钮组件
@@ -65,10 +66,10 @@ defineExpose({
 </script>
 
 <template>
-  <a-button v-bind="$attrs" @click="handleCopy">
-    <a-flex align="center" :gap="5">
+  <Button v-bind="$attrs" @click="handleCopy">
+    <Flex align="center" :gap="5">
       <span v-if="showIcon" class="icon-[lucide--link]"></span>
       <span v-if="showText">复制</span>
-    </a-flex>
-  </a-button>
+    </Flex>
+  </Button>
 </template>

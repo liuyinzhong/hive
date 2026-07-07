@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { message } from 'antdv-next';
+import { message, Button } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getVersionsListApi, deleteVersionApi } from '#/api/dev';
@@ -156,9 +156,7 @@ async function onDelete(row: DevVersionApi.DevVersionFace) {
         />
       </template>
       <template #toolbar-actions>
-        <a-button class="mr-2" type="primary" @click="onCreate">
-          新建
-        </a-button>
+        <Button class="mr-2" type="primary" @click="onCreate"> 新建 </Button>
       </template>
     </Grid>
     <FormModal @success="gridApi.query" />

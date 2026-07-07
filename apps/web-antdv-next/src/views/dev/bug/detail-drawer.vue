@@ -8,6 +8,7 @@ import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import CopyButton from '#/components/CopyButton/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
+import { Space, Button, Flex } from 'antdv-next';
 
 import BugDetail from './components/bug-detail.vue';
 defineOptions({
@@ -50,15 +51,15 @@ const submit = () => {
   <Drawer title="缺陷详情" class="w-[45%]">
     <BugDetail :bug-num="bugInfo.bugNum" :show-btn="false" />
     <template #prepend-footer>
-      <a-space size="small">
+      <Space size="small">
         <CopyButton :text="bugLink" type="dashed" />
-        <a-button @click="newTab" type="dashed">
-          <a-flex align="center" :gap="5">
+        <Button @click="newTab" type="dashed">
+          <Flex align="center" :gap="5">
             <span class="icon-[lucide--app-window] size-4"></span>
             <span>新窗口</span>
-          </a-flex>
-        </a-button>
-      </a-space>
+          </Flex>
+        </Button>
+      </Space>
     </template>
   </Drawer>
 </template>

@@ -6,6 +6,7 @@ import { ref, watch } from 'vue';
 import { getChangeListApi } from '#/api/dev';
 import DictTag from '#/components/DictTag/index.vue';
 import { getLocalDictText } from '#/dicts';
+import { Timeline, TimelineItem, Empty } from 'antdv-next';
 /**
  * 变更记录组件
  * @property {String} businessId - 关联id
@@ -35,9 +36,9 @@ watch(
 </script>
 <template>
   <div>
-    <a-empty v-if="changeLogList.length === 0" />
-    <a-timeline v-else>
-      <a-timeline-item v-for="item in changeLogList" :key="item.changeId">
+    <Empty v-if="changeLogList.length === 0" />
+    <Timeline v-else>
+      <TimelineItem v-for="item in changeLogList" :key="item.changeId">
         <div>
           <div>
             {{ item.createDate }}
@@ -49,7 +50,7 @@ watch(
           </div>
         </div>
         <div v-html="item.changeRichText"></div>
-      </a-timeline-item>
-    </a-timeline>
+      </TimelineItem>
+    </Timeline>
   </div>
 </template>

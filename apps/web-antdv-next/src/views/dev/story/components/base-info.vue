@@ -2,7 +2,7 @@
 import type { DevStoryApi } from '#/api/dev';
 
 import { computed } from 'vue';
-
+import { Descriptions, DescriptionsItem, Tag } from 'antdv-next';
 import DictTag from '#/components/DictTag/index.vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 /**
@@ -19,30 +19,30 @@ const props = defineProps({
 const userList = computed(() => props.storyInfo.userList || []);
 </script>
 <template>
-  <a-descriptions :column="1" bordered size="small">
-    <a-descriptions-item label="需求编号">
-      <a-tag>#{{ storyInfo.storyNum || '-' }}</a-tag>
-    </a-descriptions-item>
-    <a-descriptions-item label="关联版本">
-      <a-tag>{{ storyInfo.version || '-' }}</a-tag>
-    </a-descriptions-item>
-    <a-descriptions-item label="关联项目">
+  <Descriptions :column="1" bordered size="small">
+    <DescriptionsItem label="需求编号">
+      <Tag>#{{ storyInfo.storyNum || '-' }}</Tag>
+    </DescriptionsItem>
+    <DescriptionsItem label="关联版本">
+      <Tag>{{ storyInfo.version || '-' }}</Tag>
+    </DescriptionsItem>
+    <DescriptionsItem label="关联项目">
       {{ storyInfo.projectTitle || '-' }}
-    </a-descriptions-item>
-    <a-descriptions-item label="关联模块">
+    </DescriptionsItem>
+    <DescriptionsItem label="关联模块">
       {{ storyInfo.moduleTitle || '-' }}
-    </a-descriptions-item>
-    <a-descriptions-item label="需求类型">
+    </DescriptionsItem>
+    <DescriptionsItem label="需求类型">
       <DictTag dict-type="STORY_TYPE" :value="storyInfo.storyType" />
-    </a-descriptions-item>
-    <a-descriptions-item label="需求优先级">
+    </DescriptionsItem>
+    <DescriptionsItem label="需求优先级">
       <DictTag dict-type="STORY_LEVEL" :value="storyInfo.storyLevel" />
-    </a-descriptions-item>
-    <a-descriptions-item label="需求来源">
+    </DescriptionsItem>
+    <DescriptionsItem label="需求来源">
       <DictTag dict-type="STORY_SOURCE" :value="storyInfo.source" />
-    </a-descriptions-item>
-    <a-descriptions-item label="参与人">
+    </DescriptionsItem>
+    <DescriptionsItem label="参与人">
       <UserAvatarGroup :user-list="userList" />
-    </a-descriptions-item>
-  </a-descriptions>
+    </DescriptionsItem>
+  </Descriptions>
 </template>

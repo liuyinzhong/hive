@@ -4,6 +4,7 @@ import type { DevTaskApi } from '#/api/dev';
 import { ref } from 'vue';
 
 import DictTag from '#/components/DictTag/index.vue';
+import { List, ListItem, ListItemMeta, Tag, Avatar } from 'antdv-next';
 
 /**
  * 基本信息组件
@@ -18,15 +19,15 @@ const props = defineProps({
 </script>
 <template>
   <div>
-    <a-list
+    <List
       item-layout="horizontal"
       bordered
       :data-source="props.taskList"
       size="small"
     >
       <template #renderItem="{ item }">
-        <a-list-item>
-          <a-list-item-meta>
+        <ListItem>
+          <ListItemMeta>
             <template #title>
               <a target="_blank" :href="`/dev/task/detail/${item.taskNum}`">
                 {{ item.taskTitle }}
@@ -36,16 +37,16 @@ const props = defineProps({
             <template #description>
               <DictTag dict-type="TASK_STATUS" :value="item.taskStatus" />
               <DictTag dict-type="TASK_TYPE" :value="item.taskType" />
-              <a-tag>{{ item.percent }}%</a-tag>
-              <a-tag>{{ item.endDate }}</a-tag>
+              <Tag>{{ item.percent }}%</Tag>
+              <Tag>{{ item.endDate }}</Tag>
             </template>
 
             <template #avatar>
-              <a-avatar :src="item.avatar" />
+              <Avatar :src="item.avatar" />
             </template>
-          </a-list-item-meta>
-        </a-list-item>
+          </ListItemMeta>
+        </ListItem>
       </template>
-    </a-list>
+    </List>
   </div>
 </template>

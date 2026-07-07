@@ -7,7 +7,7 @@ import { useVbenForm } from '#/adapter/form';
 import { nextBugApi } from '#/api/dev/bug';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
 import { getLocalDictList } from '#/dicts';
-import { message } from 'antdv-next';
+import { message, Row, Col, Steps, Divider } from 'antdv-next';
 import { useNextFormSchema } from './data';
 defineOptions({
   name: 'BugNextModal',
@@ -48,7 +48,9 @@ const [Modal, modalApi] = useVbenModal({
       formApi.setValues(data);
 
       /* 设置当前步骤 */
-      current.value = stepsItems.findIndex((item: any) => item.value === data.bugStatus);
+      current.value = stepsItems.findIndex(
+        (item: any) => item.value === data.bugStatus,
+      );
     }
   },
 });
@@ -77,24 +79,28 @@ function setChangeRichText(value: string) {
 </script>
 <template>
   <Modal class="w-[1000px]">
-    <a-row :gutter="24">
-      <a-col :span="6">
-        <a-steps
+    <Row :gutter="24">
+      <Col :span="6">
+        <Steps
           v-model:current="current"
           orientation="vertical"
           @change="changeCurrent"
           :items="stepsItems"
         />
 
-        <a-divider dashed>常用语(双击)</a-divider>
+        <Divider dashed>常用语(双击)</Divider>
         <CommonPhrase
-          :text-list="['已修复，已更新至测试环境', '测试验证完毕，已关闭', '非BUG，已关闭']"
+          :text-list="[
+            '已修复，已更新至测试环境',
+            '测试验证完毕，已关闭',
+            '非BUG，已关闭',
+          ]"
           @dbl-click="setChangeRichText"
         />
-      </a-col>
-      <a-col :span="18">
+      </Col>
+      <Col :span="18">
         <Form />
-      </a-col>
-    </a-row>
+      </Col>
+    </Row>
   </Modal>
 </template>
