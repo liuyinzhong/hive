@@ -7,7 +7,16 @@ import type { DevModuleApi, DevProjectApi } from '#/api/dev';
 import { onMounted, ref } from 'vue';
 
 import { EllipsisText, Page, useVbenModal } from '@vben/common-ui';
-import { Card, CardGrid, Button, Space, Tag, Row, Col } from 'antdv-next';
+import {
+  Card,
+  CardGrid,
+  Button,
+  Space,
+  Row,
+  Col,
+  Avatar,
+  Badge,
+} from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
