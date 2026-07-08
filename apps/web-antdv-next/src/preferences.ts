@@ -1,4 +1,5 @@
 import {
+  appCopyrightPreferences,
   defineOverridesPreferences,
   definePreferencesExtension,
 } from '@vben/preferences';
@@ -33,6 +34,7 @@ export const overridesPreferences = defineOverridesPreferences({
     accessMode: 'mixed',
     // accessMode: 'mixed',
   },
+  copyright: appCopyrightPreferences,
   widget: {
     languageToggle: true,
     timezone: true,

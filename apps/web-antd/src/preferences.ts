@@ -1,4 +1,5 @@
 import {
+  appCopyrightPreferences,
   defineOverridesPreferences,
   definePreferencesExtension,
 } from '@vben/preferences';
@@ -37,6 +38,7 @@ export const overridesPreferences = defineOverridesPreferences({
     languageToggle: true,
     timezone: true,
   },
+  copyright: appCopyrightPreferences,
 });
 
 export const preferencesExtension =
