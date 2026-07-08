@@ -102,5 +102,28 @@
     "value": "Dict Value",
     "label": "Dict Label"
   },
+  "file": {
+    "title": "File Management",
+    "list": "File List",
+    "name": "File",
+    "id": "File ID",
+    "fileName": "File Name",
+    "fileExt": "Extension",
+    "mimeType": "MIME Type",
+    "fileSize": "File Size",
+    "uploader": "Uploader",
+    "uploadTime": "Upload Time",
+    "operation": "Operation",
+    "preview": "Preview",
+    "copyLink": "Copy Link",
+    "copyLinkSuccess": "Link copied",
+    "upload": "Upload File",
+    "uploadSuccess": "Upload successful",
+    "searchFileName": "Enter file name (fuzzy search)",
+    "searchMimeType": "e.g. image/jpeg (exact match)",
+    "searchFileExt": "e.g. .jpg (exact match)",
+    "imagePreview": "Image Preview",
+    "fullPath": "Full Path"
+  },
   "title": "System Management"
 }

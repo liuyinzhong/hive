@@ -102,5 +102,28 @@
     "value": "字典值",
     "label": "字典标题"
   },
+  "file": {
+    "title": "文件管理",
+    "list": "文件列表",
+    "name": "文件",
+    "id": "文件ID",
+    "fileName": "文件名称",
+    "fileExt": "扩展名",
+    "mimeType": "MIME类型",
+    "fileSize": "文件大小",
+    "uploader": "上传人",
+    "uploadTime": "上传时间",
+    "operation": "操作",
+    "preview": "预览",
+    "copyLink": "复制链接",
+    "copyLinkSuccess": "已复制文件链接",
+    "upload": "上传文件",
+    "uploadSuccess": "上传成功",
+    "searchFileName": "请输入文件名称（模糊搜索）",
+    "searchMimeType": "如 image/jpeg（精确匹配）",
+    "searchFileExt": "如 .jpg（精确匹配）",
+    "imagePreview": "图片预览",
+    "fullPath": "完整路径"
+  },
   "title": "系统管理"
 }
