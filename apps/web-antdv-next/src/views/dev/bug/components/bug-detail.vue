@@ -3,13 +3,7 @@ import type { DevBugApi } from '#/api/dev';
 
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import {
-  confirm,
-  prompt,
-  useVbenModal,
-  VbenButton,
-  VbenButtonGroup,
-} from '@vben/common-ui';
+import { confirm, prompt, useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
 import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
