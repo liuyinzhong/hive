@@ -4,13 +4,7 @@ import type { DevStoryApi } from '#/api/dev';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import {
-  confirm,
-  prompt,
-  useVbenModal,
-  VbenButton,
-  VbenButtonGroup,
-} from '@vben/common-ui';
+import { confirm, prompt, useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
 import { useTabs, useRefresh } from '@vben/hooks';
 import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
@@ -241,19 +235,14 @@ defineExpose({
           <VbenButton
             @click="onBtnClick('添加任务')"
             class="cursor-pointer"
-            :disabled="
-              !detail.versionId ||
-              ['0', '99'].includes(detail.storyStatus ?? '')
-            "
+            :disabled="!detail.versionId || ['0', '99'].includes(detail.storyStatus ?? '')"
           >
             <span class="icon-[lucide--badge-plus]"></span>
           </VbenButton>
           <VbenButton
             @click="onBtnClick('添加缺陷')"
             class="cursor-pointer"
-            :disabled="
-              !detail.versionId || ['0'].includes(detail.storyStatus ?? '')
-            "
+            :disabled="!detail.versionId || ['0'].includes(detail.storyStatus ?? '')"
           >
             <span class="icon-[lucide--bug]"></span>
           </VbenButton>
