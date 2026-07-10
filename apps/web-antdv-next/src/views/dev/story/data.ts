@@ -1,151 +1,122 @@
-import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+import type { VxeTableGridOptions } from "@vben/plugins/vxe-table";
 
-import type { VbenFormSchema } from '#/adapter/form';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
-import type { DevStoryApi } from '#/api/dev';
+import type { VbenFormSchema } from "#/adapter/form";
+import type { OnActionClickFn } from "#/adapter/vxe-table";
+import type { DevStoryApi } from "#/api/dev";
 // import { z } from '#/adapter/form';
-import { upload_file } from '#/api/examples/upload';
-import { getUserListAllApi } from '#/api/system';
-import { getLocalDictList } from '#/dicts';
-import { storyRichTemplateText } from '#/template/richText';
-import {
-  projectSchema,
-  versionSchema,
-  moduleSchema,
-} from '#/views/dev/base/baseSchema';
+import { upload_file } from "#/api/examples/upload";
+import { getUserListAllApi } from "#/api/system";
+import { getLocalDictList } from "#/dicts";
+import { storyRichTemplateText } from "#/template/richText";
+import { projectSchema, versionSchema, moduleSchema } from "#/views/dev/base/baseSchema";
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
   return [
     {
-      component: 'Input',
-      fieldName: 'storyId',
-      label: '需求主键id',
+      component: "Input",
+      fieldName: "storyId",
+      label: "需求主键id",
       dependencies: {
-        triggerFields: ['storyId'],
+        triggerFields: ["storyId"],
         show() {
           return false;
         },
       },
     },
     {
-      component: 'Textarea',
-      fieldName: 'storyTitle',
-      label: '需求标题',
-      rules: 'required',
-      formItemClass: 'col-span-4 items-baseline',
+      component: "Textarea",
+      fieldName: "storyTitle",
+      label: "需求标题",
+      rules: "required",
+      formItemClass: "col-span-4 items-baseline",
     },
     {
-      component: 'ApiSelect',
-      fieldName: 'userIds',
-      label: '参与人员',
-      formItemClass: 'col-span-1',
+      component: "ApiSelect",
+      fieldName: "userIds",
+      label: "参与人员",
+      formItemClass: "col-span-1",
       componentProps: {
         allowClear: true,
-        mode: 'multiple',
+        mode: "multiple",
         maxTagCount: 6,
         api: () => getUserListAllApi(),
-        labelField: 'realName',
-        valueField: 'userId',
-        resultField: 'items',
+        labelField: "realName",
+        valueField: "userId",
+        resultField: "items",
       },
     },
     {
-      component: 'RichEditor',
-      fieldName: 'storyRichText',
-      label: '',
+      component: "RichEditor",
+      fieldName: "storyRichText",
+      label: "",
       labelWidth: 0,
-      formItemClass: 'col-span-3 row-span-10 items-baseline',
+      formItemClass: "col-span-3 row-span-10 items-baseline",
       componentProps: {
         editable: true,
         minHeight: 410,
         modelValue: storyRichTemplateText,
       },
     },
-    /* {
-      component: 'NodeSteps',
-      fieldName: 'nodes',
-      componentProps: {
-        dictType: 'STORY_STATUS',
-        businessType: '0',
-      },
-      rules: z
-        .array(z.any())
-        .min(1, { message: '请至少选择一个节点' })
-        .refine((nodes) => nodes.every((node: any) => !!node.userId), {
-          message: '每个节点的负责人不能为空',
-        }),
-      label: '',
-      labelWidth: 0,
-      formItemClass: 'col-span-1 row-span-10 items-baseline',
-      dependencies: {
-        triggerFields: ['storyId'],
-        show() {
-          return false;
-        },
-        disabled(_value: any) {
-          return !!_value.storyId;
-        },
-      },
-    }, */
+
     projectSchema(),
 
     versionSchema(),
     moduleSchema(),
 
     {
-      component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
-      defaultValue: '0',
-      formItemClass: 'col-span-1',
+      component: "ApiSelect",
+      fieldName: "storyStatus",
+      label: "需求状态",
+      defaultValue: "0",
+      formItemClass: "col-span-1",
       componentProps: {
-        api: () => getLocalDictList('STORY_STATUS'),
+        api: () => getLocalDictList("STORY_STATUS"),
       },
       dependencies: {
-        triggerFields: ['storyId'],
+        triggerFields: ["storyId"],
         disabled(row: any) {
           return row.storyId;
         },
       },
     },
     {
-      component: 'ApiSelect',
-      fieldName: 'storyType',
-      label: '需求类型',
-      rules: 'required',
-      defaultValue: '0',
-      formItemClass: 'col-span-1',
+      component: "ApiSelect",
+      fieldName: "storyType",
+      label: "需求类型",
+      rules: "required",
+      defaultValue: "0",
+      formItemClass: "col-span-1",
       componentProps: {
-        api: () => getLocalDictList('STORY_TYPE'),
+        api: () => getLocalDictList("STORY_TYPE"),
       },
     },
 
     {
-      component: 'ApiSelect',
-      fieldName: 'storyLevel',
-      label: '优先级',
-      formItemClass: 'col-span-1',
-      defaultValue: '0',
+      component: "ApiSelect",
+      fieldName: "storyLevel",
+      label: "优先级",
+      formItemClass: "col-span-1",
+      defaultValue: "0",
       componentProps: {
-        api: () => getLocalDictList('STORY_LEVEL'),
+        api: () => getLocalDictList("STORY_LEVEL"),
       },
     },
     {
-      component: 'ApiSelect',
-      fieldName: 'source',
-      label: '需求来源',
-      defaultValue: '0',
-      formItemClass: 'col-span-1',
+      component: "ApiSelect",
+      fieldName: "source",
+      label: "需求来源",
+      defaultValue: "0",
+      formItemClass: "col-span-1",
       componentProps: {
-        api: () => getLocalDictList('STORY_SOURCE'),
+        api: () => getLocalDictList("STORY_SOURCE"),
       },
     },
     {
-      component: 'Upload',
-      fieldName: 'fileIds',
-      label: '附件',
-      formItemClass: 'col-span-1',
+      component: "Upload",
+      fieldName: "fileIds",
+      label: "附件",
+      formItemClass: "col-span-1",
       componentProps: {
         // 更多属性见：https://ant.design/components/upload-cn
         // 自动携带认证信息
@@ -155,7 +126,7 @@ export function useFormSchema(): VbenFormSchema[] {
         multiple: true,
         showUploadList: true,
         // 上传列表的内建样式，支持四种基本样式 text, picture, picture-card 和 picture-circle
-        listType: 'text',
+        listType: "text",
       },
     },
   ];
@@ -165,45 +136,45 @@ export function useFormSchema(): VbenFormSchema[] {
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     projectSchema({
-      rules: '',
+      rules: "",
       componentProps: {
         autoSelect: false,
         allowClear: true,
       },
     }),
     versionSchema({
-      rules: '',
+      rules: "",
       componentProps: {
         autoSelect: false,
         allowClear: true,
       },
     }),
     moduleSchema({
-      rules: '',
+      rules: "",
       componentProps: {
         autoSelect: false,
         allowClear: true,
       },
     }),
     {
-      component: 'Input',
-      defaultValue: '',
-      fieldName: 'keyword',
-      label: '需求名称',
+      component: "Input",
+      defaultValue: "",
+      fieldName: "keyword",
+      label: "需求名称",
       componentProps: {
         allowClear: true,
       },
     },
     {
-      component: 'ApiSelect',
-      fieldName: 'storyStatus',
-      label: '需求状态',
+      component: "ApiSelect",
+      fieldName: "storyStatus",
+      label: "需求状态",
       componentProps: {
         allowClear: true,
         filterOption: true,
         showSearch: true,
-        mode: 'multiple',
-        api: () => getLocalDictList('STORY_STATUS'),
+        mode: "multiple",
+        api: () => getLocalDictList("STORY_STATUS"),
       },
     },
   ];
@@ -215,71 +186,71 @@ export function useGridFormSchema(): VbenFormSchema[] {
  */
 export function useColumns(
   onActionClick?: OnActionClickFn<DevStoryApi.DevStoryFace>,
-): VxeTableGridOptions<DevStoryApi.DevStoryFace>['columns'] {
+): VxeTableGridOptions<DevStoryApi.DevStoryFace>["columns"] {
   return [
     {
-      field: 'storyNum',
-      title: '编号',
+      field: "storyNum",
+      title: "编号",
       width: 60,
       dragSort: false,
       formatter: ({ row }) => `#${row.storyNum}`,
     },
     {
-      field: 'projectTitle',
-      title: '项目',
+      field: "projectTitle",
+      title: "项目",
       width: 60,
     },
     {
       width: 80,
-      field: 'version',
-      title: '迭代版本',
+      field: "version",
+      title: "迭代版本",
       cellRender: {
-        name: 'CellTag',
+        name: "CellTag",
       },
     },
     {
-      field: 'storyStatus',
-      title: '需求状态',
+      field: "storyStatus",
+      title: "需求状态",
       sortable: true,
       width: 100,
       cellRender: {
-        name: 'DictTag',
+        name: "DictTag",
         props: {
-          type: 'STORY_STATUS',
+          type: "STORY_STATUS",
         },
       },
     },
     {
-      field: 'storyTitle',
-      title: '需求名称',
+      field: "storyTitle",
+      title: "需求名称",
       sortable: true,
       minWidth: 200,
       cellRender: {
-        name: 'CellLink',
+        name: "CellLink",
         events: {
           click: (val: any) => {
-            onActionClick && onActionClick({ code: 'storyTitle', row: val });
+            onActionClick && onActionClick({ code: "storyTitle", row: val });
           },
         },
       },
     },
     {
       width: 165,
-      field: 'userList',
+      field: "userList",
       showOverflow: true,
-      title: '参与人员',
+      title: "参与人员",
       editRender: {
-        name: 'UserSelect',
+        name: "UserSelect",
         props: {
-          mode: 'multiple',
+          mode: "multiple",
           maxCount: 6,
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
             onActionClick &&
               onActionClick({
-                code: 'updateField',
-                row: { ...row, value: val || [], key: 'userIds' },
+                code: "updateField",
+                row: { ...row, value: val || [], key: "userIds" },
               });
           },
         },
@@ -288,27 +259,27 @@ export function useColumns(
 
     {
       width: 100,
-      field: 'moduleTitle',
-      title: '项目模块',
+      field: "moduleTitle",
+      title: "项目模块",
       cellRender: {
-        name: 'CellTag',
+        name: "CellTag",
       },
     },
     {
-      field: 'storyType',
-      title: '需求类型',
+      field: "storyType",
+      title: "需求类型",
       width: 100,
       editRender: {
-        name: 'DictSelect',
+        name: "DictSelect",
         props: {
-          type: 'STORY_TYPE',
+          type: "STORY_TYPE",
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
             onActionClick &&
               onActionClick({
-                code: 'updateField',
-                row: { ...row, value: val || [], key: 'storyType' },
+                code: "updateField",
+                row: { ...row, value: val || [], key: "storyType" },
               });
           },
         },
@@ -317,20 +288,20 @@ export function useColumns(
 
     {
       width: 90,
-      field: 'storyLevel',
-      title: '优先级',
+      field: "storyLevel",
+      title: "优先级",
       sortable: true,
       editRender: {
-        name: 'DictSelect',
+        name: "DictSelect",
         props: {
-          type: 'STORY_LEVEL',
+          type: "STORY_LEVEL",
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
             onActionClick &&
               onActionClick({
-                code: 'updateField',
-                row: { ...row, value: val || [], key: 'storyLevel' },
+                code: "updateField",
+                row: { ...row, value: val || [], key: "storyLevel" },
               });
           },
         },
@@ -338,30 +309,30 @@ export function useColumns(
     },
     {
       width: 100,
-      field: 'source',
-      title: '需求来源',
+      field: "source",
+      title: "需求来源",
       editRender: {
-        name: 'DictSelect',
+        name: "DictSelect",
         props: {
-          type: 'STORY_SOURCE',
+          type: "STORY_SOURCE",
         },
         events: {
           change: (val: any, row: DevStoryApi.DevStoryFace) => {
             onActionClick &&
               onActionClick({
-                code: 'updateField',
-                row: { ...row, value: val || [], key: 'source' },
+                code: "updateField",
+                row: { ...row, value: val || [], key: "source" },
               });
           },
         },
       },
     },
     {
-      align: 'center',
-      field: 'operation',
-      fixed: 'right',
-      slots: { default: 'action' },
-      title: '操作',
+      align: "center",
+      field: "operation",
+      fixed: "right",
+      slots: { default: "action" },
+      title: "操作",
       width: 200,
     },
   ];
@@ -371,27 +342,27 @@ export function useColumns(
 export function useNextFormSchema(): VbenFormSchema[] {
   return [
     {
-      component: 'Input',
-      fieldName: 'storyId',
-      label: '需求主键id',
+      component: "Input",
+      fieldName: "storyId",
+      label: "需求主键id",
       dependencies: {
-        triggerFields: ['storyId'],
+        triggerFields: ["storyId"],
         show: false,
       },
     },
     {
-      component: 'Input',
-      fieldName: 'storyStatus',
-      label: '需求状态',
+      component: "Input",
+      fieldName: "storyStatus",
+      label: "需求状态",
       dependencies: {
-        triggerFields: ['storyId'],
+        triggerFields: ["storyId"],
         show: false,
       },
     },
     {
-      component: 'RichEditor',
-      fieldName: 'changeRichText',
-      label: '',
+      component: "RichEditor",
+      fieldName: "changeRichText",
+      label: "",
       labelWidth: 30,
     },
   ];
