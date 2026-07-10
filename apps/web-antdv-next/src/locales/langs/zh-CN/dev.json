@@ -1,0 +1,19 @@
+{
+  "title": "开发管理",
+  "task": {
+    "title": "任务管理",
+    "gantt": "甘特图"
+  },
+  "versions": {
+    "title": "版本管理"
+  },
+  "story": {
+    "title": "需求管理"
+  },
+  "project": {
+    "title": "项目管理"
+  },
+  "bug": {
+    "title": "缺陷管理"
+  }
+}

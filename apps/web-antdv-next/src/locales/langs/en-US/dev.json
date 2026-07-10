@@ -1,0 +1,19 @@
+{
+  "title": "Development Management",
+  "task": {
+    "title": "Task Management",
+    "gantt": "Gantt Chart"
+  },
+  "versions": {
+    "title": "Version Management"
+  },
+  "story": {
+    "title": "Story Management"
+  },
+  "project": {
+    "title": "Project Management"
+  },
+  "bug": {
+    "title": "Bug Management"
+  }
+}
