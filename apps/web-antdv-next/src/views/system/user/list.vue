@@ -1,27 +1,29 @@
 <script lang="ts" setup>
-import type { Recordable } from '@vben/types';
+import type { Recordable } from "@vben/types";
 
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemUserApi, SystemDeptApi } from '#/api/system';
+import type { VxeTableGridOptions } from "#/adapter/vxe-table";
+import type { SystemUserApi, SystemDeptApi } from "#/api/system";
 
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, watch } from "vue";
 
-import { Page, Tree, useVbenDrawer } from '@vben/common-ui';
-import { Plus } from '@vben/icons';
+import { Page, Tree, useVbenDrawer } from "@vben/common-ui";
+import { Plus } from "@vben/icons";
 
-import { Button, message, Modal, Card } from 'antdv-next';
+import { Button, message, Modal, Card } from "antdv-next";
 
-import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, VbenTableAction } from "#/adapter/vxe-table";
 import {
   getUsersListApi,
   deleteUserApi,
   updateUserStatusApi,
   getAllDeptListApi,
-} from '#/api/system';
-import { $t } from '#/locales';
-import { useColumns, useGridFormSchema } from './data';
-import ExtraDrawer from './drawer.vue';
-import { formatSorts } from '#/utils';
+} from "#/api/system";
+import { $t } from "#/locales";
+import { useColumns, useGridFormSchema } from "./data";
+import ExtraDrawer from "./drawer.vue";
+import Detail from "./detail.vue";
+
+import { formatSorts } from "#/utils";
 
 onMounted(() => {
   loadDeptList();
@@ -45,7 +47,7 @@ async function selectDept(e: any) {
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
+    wrapperClass: "sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4",
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),
@@ -87,8 +89,17 @@ const [FormDrawer, drawerApi] = useVbenDrawer({
   destroyOnClose: true,
 });
 
+const [DetailDrawer, detailDrawerApi] = useVbenDrawer({
+  connectedComponent: Detail,
+  destroyOnClose: true,
+});
+
 function onEdit(row: SystemUserApi.SystemUserFace) {
   drawerApi.setData(row).open();
+}
+
+function onDetail(row: SystemUserApi.SystemUserFace) {
+  detailDrawerApi.setData(row).open();
 }
 
 function onCreate() {
@@ -97,15 +108,15 @@ function onCreate() {
 
 async function onDelete(row: SystemUserApi.SystemUserFace) {
   const hideLoading = message.loading({
-    content: $t('ui.actionMessage.deleting', [row.realName]),
+    content: $t("ui.actionMessage.deleting", [row.realName]),
     duration: 0,
-    key: 'action_process_msg',
+    key: "action_process_msg",
   });
   deleteUserApi([row.userId])
     .then(() => {
       message.success({
-        content: $t('ui.actionMessage.deleteSuccess', [row.realName]),
-        key: 'action_process_msg',
+        content: $t("ui.actionMessage.deleteSuccess", [row.realName]),
+        key: "action_process_msg",
       });
       onRefresh();
     })
@@ -124,7 +135,7 @@ function confirm(content: string, title: string) {
     Modal.confirm({
       content,
       onCancel() {
-        reject(new Error('已取消'));
+        reject(new Error("已取消"));
       },
       onOk() {
         reslove(true);
@@ -140,13 +151,10 @@ function confirm(content: string, title: string) {
  * @param row 行数据
  * @returns 返回false则中止改变，返回其他值（undefined、true）则允许改变
  */
-async function onStatusChange(
-  newStatus: number,
-  row: SystemUserApi.SystemUserFace,
-) {
+async function onStatusChange(newStatus: number, row: SystemUserApi.SystemUserFace) {
   const status: Recordable<string> = {
-    0: '禁用',
-    1: '启用',
+    0: "禁用",
+    1: "启用",
   };
   try {
     await confirm(
@@ -170,7 +178,7 @@ function onRefresh() {
 <template>
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
-
+    <DetailDrawer @success="onRefresh" />
     <div class="flex size-full">
       <Card class="w-1/6">
         <Tree
@@ -187,12 +195,17 @@ function onRefresh() {
           <template #toolbar-tools>
             <Button type="primary" @click="onCreate">
               <Plus class="size-5" />
-              {{ $t('ui.actionTitle.create') }}
+              {{ $t("ui.actionTitle.create") }}
             </Button>
           </template>
           <template #action="{ row }">
             <VbenTableAction
               :actions="[
+                {
+                  text: $t('common.detail'),
+                  icon: 'lucide:eye',
+                  onClick: () => onDetail(row),
+                },
                 {
                   text: '编辑',
                   icon: 'lucide:edit',

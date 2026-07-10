@@ -125,5 +125,19 @@
     "imagePreview": "图片预览",
     "fullPath": "完整路径"
   },
+  "user": {
+    "title": "用户管理",
+    "userId": "用户ID",
+    "avatar": "头像",
+    "dept": "用户部门",
+    "desc": "用户描述",
+    "username": "用户名",
+    "realName": "真实姓名",
+    "email": "邮箱",
+    "phone": "手机",
+    "role": "角色",
+    "status": "状态",
+    "remark": "备注"
+  },
   "title": "系统管理"
 }

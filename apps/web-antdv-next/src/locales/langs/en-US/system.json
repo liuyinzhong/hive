@@ -125,5 +125,19 @@
     "imagePreview": "Image Preview",
     "fullPath": "Full Path"
   },
+  "user": {
+    "title": "User Management",
+    "userId": "User ID",
+    "avatar": "Avatar",
+    "dept": "User Department",
+    "desc": "User Description",
+    "username": "Username",
+    "realName": "Real Name",
+    "email": "Email",
+    "phone": "Phone",
+    "role": "Role",
+    "status": "Status",
+    "remark": "Remark"
+  },
   "title": "System Management"
 }
