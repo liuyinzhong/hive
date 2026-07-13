@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "catalog:",
+    "@logicflow/core": "catalog:",
+    "@logicflow/extension": "catalog:",
     "@tanstack/vue-query": "catalog:",
     "@vben-core/composables": "workspace:*",
     "@vben-core/menu-ui": "workspace:*",

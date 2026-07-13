@@ -19,7 +19,7 @@ web-antdv-next/
 ├── public/                         # 静态资源目录，打包时直接复制到输出目录
 │
 ├── src/                            # 项目源码目录
-│   ├── adapter/                    # 组件适配器，将 ant-design-vue 组件适配到 vben 体系
+│   ├── adapter/                    # 组件适配器，将 antdv-next 组件适配到 vben 体系
 │   │   ├── component/              # 通用组件适配（表单、表格等基础组件的包装注册）
 │   │   │   └── table/              # 表格单元格自定义渲染组件
 │   │   └── ...
