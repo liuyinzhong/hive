@@ -10,18 +10,24 @@ import '@logicflow/extension/es/index.css';
 import { Page } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
 
-import { Button, message, Space } from 'antdv-next';
+import { Button, message, Space, TabPane, Tabs } from 'antdv-next';
 
 import {
   getWorkflowDefinitionDetailApi,
   publishWorkflowDefinitionApi,
   saveWorkflowDefinitionCanvasApi,
+  saveWorkflowDefinitionFormApi,
   type WorkflowDefinitionApi,
 } from '#/api/workflow';
 import { $t } from '#/locales';
 
 import NodePanel from './components/node-panel.vue';
+import FormDesigner from './components/form-designer.vue';
 import PropertyPanel from './components/property-panel.vue';
+import {
+  createEmptyWorkflowFormSchema,
+  parseWorkflowFormSchema,
+} from '../form/schema';
 import type {
   WorkflowElement,
   WorkflowGraphData,
@@ -43,6 +49,10 @@ const selectedElement = ref<WorkflowElement>();
 const definition = ref<WorkflowDefinitionApi.WorkflowDefinition>();
 const loading = ref(false);
 const zoomPercent = ref('100%');
+const activeMode = ref<'flow' | 'form'>('flow');
+const formSchema = ref<WorkflowDefinitionApi.WorkflowFormSchema>(
+  createEmptyWorkflowFormSchema(),
+);
 
 const isConditionEdge = computed(() => {
   const edge = selectedElement.value;
@@ -68,6 +78,7 @@ async function initDesigner() {
   loading.value = true;
   try {
     definition.value = await getWorkflowDefinitionDetailApi(definitionId);
+    formSchema.value = parseWorkflowFormSchema(definition.value.formSchema);
     await nextTick();
     initLogicFlow();
   } finally {
@@ -248,8 +259,17 @@ function onRemoveElement(id: string) {
   selectedElement.value = undefined;
 }
 
-/** 保存当前 LogicFlow 画布数据。 */
+/** 保存当前激活的表单设计或流程画布。 */
 async function onSave() {
+  if (activeMode.value === 'form') {
+    await saveFormSchema();
+    return;
+  }
+  await saveFlowData();
+}
+
+/** 保存当前 LogicFlow 画布数据。 */
+async function saveFlowData() {
   const lf = lfRef.value;
   if (!lf) {
     return;
@@ -262,15 +282,57 @@ async function onSave() {
   message.success($t('flow.designer.message.saveSuccess'));
 }
 
+/** 校验并保存当前流程申请表单结构。 */
+async function saveFormSchema() {
+  if (!validateFormSchema()) return false;
+  await saveWorkflowDefinitionFormApi(definitionId, formSchema.value);
+  message.success($t('flow.form.message.saveSuccess'));
+  return true;
+}
+
 /** 校验并发布当前流程定义。 */
 async function onPublish() {
-  if (!validateConditionBranches()) {
+  if (!validateFormSchema() || !validateConditionBranches()) {
     return;
   }
-  await onSave();
+  await saveWorkflowDefinitionFormApi(definitionId, formSchema.value);
+  await saveFlowData();
   await publishWorkflowDefinitionApi(definitionId);
   message.success($t('flow.designer.message.publishSuccess'));
   definition.value = await getWorkflowDefinitionDetailApi(definitionId);
+}
+
+/** 发布前校验表单字段完整性、字段标识和选项配置。 */
+function validateFormSchema() {
+  const fields = formSchema.value.fields;
+  if (fields.length === 0) {
+    message.error($t('flow.form.message.fieldRequired'));
+    return false;
+  }
+  const keyPattern = /^[A-Za-z][A-Za-z0-9_]{0,63}$/;
+  const keys = new Set<string>();
+  for (const field of fields) {
+    if (!field.label.trim() || !keyPattern.test(field.key)) {
+      message.error($t('flow.form.message.fieldInvalid', [field.label]));
+      return false;
+    }
+    if (keys.has(field.key)) {
+      message.error($t('flow.form.message.fieldDuplicate', [field.key]));
+      return false;
+    }
+    keys.add(field.key);
+    if (
+      ['checkbox', 'radio', 'select'].includes(field.type) &&
+      (!field.options?.length ||
+        field.options.some(
+          (option) => !option.label.trim() || !option.value.trim(),
+        ))
+    ) {
+      message.error($t('flow.form.message.optionInvalid', [field.label]));
+      return false;
+    }
+  }
+  return true;
 }
 
 /** 发布前校验条件节点的出线、默认分支和分支表达式。 */
@@ -291,9 +353,7 @@ function validateConditionBranches() {
       (edge) => edge.sourceNodeId === node.id,
     );
     if (outgoingEdges.length < 2) {
-      message.error(
-        $t('flow.designer.message.outgoingRequired', [nodeName]),
-      );
+      message.error($t('flow.designer.message.outgoingRequired', [nodeName]));
       return false;
     }
     const defaultEdges = outgoingEdges.filter(
@@ -318,8 +378,7 @@ function validateConditionBranches() {
     const priorities = conditionEdges.map((edge) => edge.properties?.priority);
     if (
       priorities.some(
-        (priority) =>
-          !Number.isInteger(priority) || Number(priority) <= 0,
+        (priority) => !Number.isInteger(priority) || Number(priority) <= 0,
       )
     ) {
       message.error($t('flow.designer.message.priorityInvalid', [nodeName]));
@@ -422,15 +481,15 @@ function onFitView() {
           </div>
         </div>
         <Space>
-          <Button @click="lfRef?.undo()">
+          <Button v-if="activeMode === 'flow'" @click="lfRef?.undo()">
             <IconifyIcon class="size-4" icon="lucide:undo-2" />
             {{ $t('flow.designer.undo') }}
           </Button>
-          <Button @click="lfRef?.redo()">
+          <Button v-if="activeMode === 'flow'" @click="lfRef?.redo()">
             <IconifyIcon class="size-4" icon="lucide:redo-2" />
             {{ $t('flow.designer.redo') }}
           </Button>
-          <div class="zoom-actions">
+          <div v-if="activeMode === 'flow'" class="zoom-actions">
             <Button class="zoom-button" @click="onZoomOut">
               <IconifyIcon class="size-4" icon="lucide:zoom-out" />
             </Button>
@@ -441,7 +500,7 @@ function onFitView() {
               <IconifyIcon class="size-4" icon="lucide:zoom-in" />
             </Button>
           </div>
-          <Button @click="onFitView">
+          <Button v-if="activeMode === 'flow'" @click="onFitView">
             <IconifyIcon class="size-4" icon="lucide:scan" />
             {{ $t('flow.designer.fitView') }}
           </Button>
@@ -456,18 +515,26 @@ function onFitView() {
         </Space>
       </header>
 
-      <div class="designer-body">
-        <NodePanel @drag-start="onDragStart" />
-        <main class="canvas-wrap">
-          <div ref="containerRef" class="logicflow-canvas"></div>
-        </main>
-        <PropertyPanel
-          :condition-edge="isConditionEdge"
-          :element="selectedElement"
-          @change="onPropertyChange"
-          @remove="onRemoveElement"
-        />
-      </div>
+      <Tabs v-model:active-key="activeMode" class="designer-tabs">
+        <TabPane key="form" :tab="$t('flow.form.designer.tab')">
+          <FormDesigner v-model="formSchema" />
+        </TabPane>
+        <TabPane key="flow" force-render :tab="$t('flow.designer.flowTab')">
+          <div class="designer-body">
+            <NodePanel @drag-start="onDragStart" />
+            <main class="canvas-wrap">
+              <div ref="containerRef" class="logicflow-canvas"></div>
+            </main>
+            <PropertyPanel
+              :condition-edge="isConditionEdge"
+              :element="selectedElement"
+              :form-fields="formSchema.fields"
+              @change="onPropertyChange"
+              @remove="onRemoveElement"
+            />
+          </div>
+        </TabPane>
+      </Tabs>
     </div>
   </Page>
 </template>
@@ -539,8 +606,30 @@ function onFitView() {
 
 .designer-body {
   display: flex;
+  overflow: hidden;
+  height: 100%;
   min-height: 0;
   flex: 1;
+}
+
+.designer-tabs {
+  min-height: 0;
+  flex: 1;
+}
+
+.designer-tabs :deep(.ant-tabs-nav) {
+  margin: 0;
+  padding: 0 16px;
+}
+
+.designer-tabs :deep(.ant-tabs-body-holder) {
+  min-height: 0;
+}
+
+.designer-tabs :deep(.ant-tabs-body),
+.designer-tabs :deep(.ant-tabs-content) {
+  height: 100%;
+  min-height: 0;
 }
 
 .canvas-wrap {

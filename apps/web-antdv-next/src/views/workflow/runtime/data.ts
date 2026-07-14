@@ -2,7 +2,6 @@ import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { WorkflowRuntimeApi } from '#/api/workflow';
 
-import { getAllWorkflowDefinitionsApi } from '#/api/workflow';
 import { $t } from '#/locales';
 
 export function getInstanceStatusOptions() {
@@ -93,49 +92,6 @@ export function useCopyGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         mode: 'multiple',
         options: getCopyStatusOptions(),
-      },
-    },
-  ];
-}
-
-export function useStartFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      component: 'ApiSelect',
-      fieldName: 'definitionId',
-      label: $t('flow.runtime.common.definition'),
-      rules: 'selectRequired',
-      componentProps: {
-        api: () => getAllWorkflowDefinitionsApi({ status: '1' }),
-        labelField: 'definitionName',
-        optionFilterProp: 'label',
-        resultField: '',
-        showSearch: true,
-        valueField: 'definitionId',
-      },
-    },
-    {
-      component: 'Input',
-      fieldName: 'title',
-      label: $t('flow.runtime.common.title'),
-      rules: 'required',
-      componentProps: { allowClear: true, maxlength: 128 },
-    },
-    {
-      component: 'Input',
-      fieldName: 'businessKey',
-      label: $t('flow.runtime.instance.businessKey'),
-      componentProps: { allowClear: true, maxlength: 128 },
-    },
-    {
-      component: 'Textarea',
-      defaultValue: '{}',
-      fieldName: 'variablesText',
-      help: $t('flow.runtime.instance.variablesHint'),
-      label: $t('flow.runtime.instance.variables'),
-      componentProps: {
-        autoSize: { maxRows: 12, minRows: 6 },
-        placeholder: $t('flow.runtime.instance.variablesPlaceholder'),
       },
     },
   ];

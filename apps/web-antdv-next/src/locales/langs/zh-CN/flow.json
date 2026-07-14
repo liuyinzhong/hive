@@ -2,6 +2,7 @@
   "title": "流程管理",
   "designer": {
     "title": "流程设计器",
+    "flowTab": "流程设计",
     "property": "属性",
     "selectElement": "请选择节点或连线",
     "id": "ID",
@@ -89,6 +90,63 @@
       "conditionMissing": "条件节点“{0}”存在未配置条件的分支",
       "priorityInvalid": "条件节点“{0}”存在无效的分支优先级",
       "priorityDuplicate": "条件节点“{0}”的非默认分支优先级不能重复"
+    }
+  },
+  "form": {
+    "common": {
+      "yes": "是",
+      "no": "否",
+      "separator": "、"
+    },
+    "fieldType": {
+      "input": "单行文本",
+      "textarea": "多行文本",
+      "number": "数字",
+      "select": "下拉选择",
+      "radio": "单选",
+      "checkbox": "多选",
+      "date": "日期",
+      "switch": "开关"
+    },
+    "designer": {
+      "tab": "表单设计",
+      "components": "字段组件",
+      "preview": "表单预览",
+      "empty": "从左侧添加表单字段",
+      "properties": "字段属性",
+      "selectField": "请选择一个表单字段",
+      "optionDefault": "选项1",
+      "optionNumber": "选项{0}",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "fieldType": "字段类型",
+      "fieldLabel": "字段名称",
+      "fieldKey": "字段标识",
+      "fieldKeyHint": "以字母开头，只能包含字母、数字和下划线；条件分支将使用此标识。",
+      "placeholder": "输入提示",
+      "required": "必填",
+      "defaultValue": "默认值",
+      "dateDefaultHint": "YYYY-MM-DD",
+      "options": "选项配置",
+      "optionLabel": "选项名称",
+      "optionValue": "选项值"
+    },
+    "message": {
+      "saveSuccess": "表单保存成功",
+      "fieldRequired": "流程表单至少需要一个字段",
+      "fieldInvalid": "字段“{0}”的名称或标识不合法",
+      "fieldDuplicate": "字段标识“{0}”不能重复",
+      "optionInvalid": "字段“{0}”至少需要一个完整选项"
+    },
+    "runtime": {
+      "startApplication": "发起申请",
+      "chooseApplication": "选择申请类型",
+      "selectApplication": "请先选择申请类型",
+      "noApplications": "暂无可发起的申请，请先配置并发布流程",
+      "fillApplication": "填写申请内容并提交审批",
+      "changeApplication": "更换申请",
+      "applicationContent": "申请内容",
+      "required": "请填写{0}"
     }
   },
   "runtime": {

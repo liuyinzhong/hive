@@ -81,7 +81,7 @@ function cancelInstance(row: WorkflowRuntimeApi.WorkflowInstance) {
       <template #toolbar-actions>
         <Button type="primary" @click="startWorkflowModalApi.open()">
           <Plus class="size-5" />
-          {{ $t('flow.runtime.instance.start') }}
+          {{ $t('flow.form.runtime.startApplication') }}
         </Button>
       </template>
       <template #action="{ row }">

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { WorkflowRuntimeApi } from '#/api/workflow';
+import type { WorkflowDefinitionApi, WorkflowRuntimeApi } from '#/api/workflow';
 
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -19,6 +19,8 @@ import {
 
 import { getWorkflowInstanceDetailApi } from '#/api/workflow';
 import { $t } from '#/locales';
+import FormRenderer from '#/views/workflow/form/form-renderer.vue';
+import { parseWorkflowFormSchema } from '#/views/workflow/form/schema';
 import {
   getCopyStatusOptions,
   getInstanceStatusOptions,
@@ -153,6 +155,10 @@ const variableEntries = computed<VariableEntry[]>(() =>
       value: formatVariableValue(value),
     }),
   ),
+);
+
+const formSchema = computed<WorkflowDefinitionApi.WorkflowFormSchema>(() =>
+  parseWorkflowFormSchema(detail.value?.instance.formSchema),
 );
 
 function currentInstanceId() {
@@ -416,10 +422,16 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
               </dl>
 
               <div class="variables-heading">
-                <IconifyIcon icon="lucide:braces" />
-                <h3>{{ $t('flow.runtime.detail.variables') }}</h3>
+                <IconifyIcon icon="lucide:file-text" />
+                <h3>{{ $t('flow.form.runtime.applicationContent') }}</h3>
               </div>
-              <dl v-if="variableEntries.length" class="variable-list">
+              <FormRenderer
+                v-if="formSchema.fields.length"
+                :model-value="detail.instance.variables"
+                readonly
+                :schema="formSchema"
+              />
+              <dl v-else-if="variableEntries.length" class="variable-list">
                 <div
                   v-for="variable in variableEntries"
                   :key="variable.key"

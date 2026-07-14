@@ -2,6 +2,7 @@
   "title": "Flow Management",
   "designer": {
     "title": "Workflow Designer",
+    "flowTab": "Flow Design",
     "property": "Properties",
     "selectElement": "Select a node or edge",
     "id": "ID",
@@ -89,6 +90,63 @@
       "conditionMissing": "Condition node “{0}” has a branch without conditions",
       "priorityInvalid": "Condition node “{0}” has an invalid branch priority",
       "priorityDuplicate": "Non-default branch priorities for condition node “{0}” must be unique"
+    }
+  },
+  "form": {
+    "common": {
+      "yes": "Yes",
+      "no": "No",
+      "separator": ", "
+    },
+    "fieldType": {
+      "input": "Single-line Text",
+      "textarea": "Multi-line Text",
+      "number": "Number",
+      "select": "Select",
+      "radio": "Radio",
+      "checkbox": "Checkbox",
+      "date": "Date",
+      "switch": "Switch"
+    },
+    "designer": {
+      "tab": "Form Design",
+      "components": "Fields",
+      "preview": "Form Preview",
+      "empty": "Add fields from the left panel",
+      "properties": "Field Properties",
+      "selectField": "Select a form field",
+      "optionDefault": "Option 1",
+      "optionNumber": "Option {0}",
+      "moveUp": "Move Up",
+      "moveDown": "Move Down",
+      "fieldType": "Field Type",
+      "fieldLabel": "Field Label",
+      "fieldKey": "Field Key",
+      "fieldKeyHint": "Start with a letter and use only letters, numbers, or underscores. Branch conditions use this key.",
+      "placeholder": "Placeholder",
+      "required": "Required",
+      "defaultValue": "Default Value",
+      "dateDefaultHint": "YYYY-MM-DD",
+      "options": "Options",
+      "optionLabel": "Option Label",
+      "optionValue": "Option Value"
+    },
+    "message": {
+      "saveSuccess": "Form saved",
+      "fieldRequired": "The workflow form needs at least one field",
+      "fieldInvalid": "The label or key for field “{0}” is invalid",
+      "fieldDuplicate": "Field key “{0}” must be unique",
+      "optionInvalid": "Field “{0}” needs at least one complete option"
+    },
+    "runtime": {
+      "startApplication": "Start Request",
+      "chooseApplication": "Choose Request Type",
+      "selectApplication": "Choose a request type first",
+      "noApplications": "No requests are available. Configure and publish a workflow first.",
+      "fillApplication": "Fill in the request and submit it for approval",
+      "changeApplication": "Change Request",
+      "applicationContent": "Request Details",
+      "required": "Enter {0}"
     }
   },
   "runtime": {

@@ -21,6 +21,7 @@ export namespace WorkflowRuntimeApi {
     definitionName: string;
     definitionVersion: number;
     endDate?: null | string;
+    formSchema?: null | string;
     instanceId: string;
     startDate?: null | string;
     starterId: string;
@@ -82,7 +83,7 @@ export namespace WorkflowRuntimeApi {
   export interface StartWorkflowInstanceRequest {
     businessKey?: string;
     definitionId: string;
-    title: string;
+    title?: string;
     variables: Record<string, unknown>;
   }
 

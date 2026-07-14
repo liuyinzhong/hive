@@ -14,6 +14,7 @@ import {
 } from 'antdv-next';
 
 import { getAllRoleListApi, getUserListAllApi } from '#/api/system';
+import type { WorkflowDefinitionApi } from '#/api/workflow';
 import { $t } from '#/locales';
 
 import type {
@@ -51,6 +52,7 @@ interface PropertyFormState {
 const props = defineProps<{
   conditionEdge?: boolean;
   element?: WorkflowElement;
+  formFields?: WorkflowDefinitionApi.WorkflowFormField[];
 }>();
 
 const emit = defineEmits<{
@@ -122,6 +124,13 @@ const conditionOperatorOptions = [
 const branchModeOptions = [
   { label: $t('flow.designer.branch.firstMatch'), value: 'firstMatch' },
 ];
+
+const formFieldOptions = computed(() =>
+  (props.formFields ?? []).map((field) => ({
+    label: `${field.label} (${field.key})`,
+    value: field.key,
+  })),
+);
 
 const nodeType = computed(() => props.element?.properties?.nodeType ?? '');
 const elementId = computed(() => props.element?.id ?? '');
@@ -259,6 +268,55 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 /** 判断条件操作符是否需要填写比较值。 */
 function operatorNeedsValue(operator: string) {
   return !['empty', 'notEmpty'].includes(operator);
+}
+
+/** 根据表单字段类型返回可用的条件比较操作符。 */
+function conditionOperatorsForField(fieldKey: string) {
+  const type = props.formFields?.find((field) => field.key === fieldKey)?.type;
+  if (type === 'number') {
+    return conditionOperatorOptions.filter(
+      (option) => !['contains', 'notContains'].includes(option.value),
+    );
+  }
+  if (type === 'checkbox') {
+    return conditionOperatorOptions.filter((option) =>
+      ['contains', 'notContains', 'empty', 'notEmpty'].includes(option.value),
+    );
+  }
+  if (type === 'input' || type === 'textarea') {
+    return conditionOperatorOptions.filter(
+      (option) =>
+        ![
+          'greaterThan',
+          'greaterThanOrEqual',
+          'lessThan',
+          'lessThanOrEqual',
+        ].includes(option.value),
+    );
+  }
+  return conditionOperatorOptions.filter((option) =>
+    ['equal', 'notEqual', 'empty', 'notEmpty'].includes(option.value),
+  );
+}
+
+/** 表单字段变化时将操作符重置为该字段支持的首个操作符。 */
+function onConditionFieldChange(rule: WorkflowConditionRule) {
+  rule.operator = conditionOperatorsForField(rule.field)[0]?.value ?? 'equal';
+  rule.value = '';
+}
+
+/** 返回选择类或开关字段可直接选择的条件值。 */
+function conditionValueOptions(fieldKey: string) {
+  const field = props.formFields?.find((item) => item.key === fieldKey);
+  if (field?.type === 'switch') {
+    return [
+      { label: $t('flow.form.common.yes'), value: 'true' },
+      { label: $t('flow.form.common.no'), value: 'false' },
+    ];
+  }
+  return ['checkbox', 'radio', 'select'].includes(field?.type ?? '')
+    ? (field?.options ?? [])
+    : [];
 }
 
 /** 新增一条条件规则。 */
@@ -605,16 +663,28 @@ function submit() {
                 <IconifyIcon class="size-4" icon="lucide:trash-2" />
               </Button>
             </div>
-            <Input
+            <Select
               v-model:value="rule.field"
+              :options="formFieldOptions"
               :placeholder="$t('flow.designer.condition.fieldPlaceholder')"
+              @change="onConditionFieldChange(rule)"
             />
             <Select
               v-model:value="rule.operator"
-              :options="conditionOperatorOptions"
+              :options="conditionOperatorsForField(rule.field)"
+            />
+            <Select
+              v-if="
+                operatorNeedsValue(rule.operator) &&
+                conditionValueOptions(rule.field).length
+              "
+              v-model:value="rule.value"
+              :options="conditionValueOptions(rule.field)"
+              :placeholder="$t('flow.designer.condition.valuePlaceholder')"
             />
             <Input
               v-if="operatorNeedsValue(rule.operator)"
+              v-show="!conditionValueOptions(rule.field).length"
               v-model:value="rule.value"
               :placeholder="$t('flow.designer.condition.valuePlaceholder')"
             />
