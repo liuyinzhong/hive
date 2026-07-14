@@ -10,7 +10,7 @@ import { h } from "vue";
 import { Flex } from "antdv-next";
 
 import { z } from "#/adapter/form";
-import { getAllDeptListApi, getAllRoleListApi } from "#/api/system";
+import { getAllDeptListApi, getAllRoleListApi, getUserListAllApi } from "#/api/system";
 import { $t } from "#/locales";
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -69,6 +69,20 @@ export function useFormSchema(): VbenFormSchema[] {
       component: "Textarea",
       fieldName: "desc",
       label: "描述",
+    },
+    {
+      component: "ApiSelect",
+      fieldName: "leaderUserId",
+      label: $t("system.user.leader"),
+      componentProps: {
+        allowClear: true,
+        api: getUserListAllApi,
+        optionFilterProp: "label",
+        labelField: "realName",
+        valueField: "userId",
+        resultField: "",
+        showSearch: true,
+      },
     },
     {
       component: "ApiTreeSelect",
@@ -177,6 +191,8 @@ export function useColumns<T = SystemUserApi.SystemUserFace>(
       width: 100,
     },
     { field: "deptTitles", title: "部门" },
+    { field: "leaderUserName", title: "直属主管" },
+    { field: "phone", title: "手机号" },
     { field: "roleTitles", title: "角色" },
     { field: "desc", title: "描述" },
     { field: "createDate", title: "创建时间" },

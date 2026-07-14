@@ -137,7 +137,8 @@
     "phone": "手机",
     "role": "角色",
     "status": "状态",
-    "remark": "备注"
+    "remark": "备注",
+    "leader": "直属主管"
   },
   "title": "系统管理"
 }

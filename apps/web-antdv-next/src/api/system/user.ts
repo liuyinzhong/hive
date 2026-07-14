@@ -10,11 +10,14 @@ export namespace SystemUserApi {
     avatar: string;
     username: string;
     realName: string;
+    leaderUserId?: null | string;
+    leaderUserName?: null | string;
     desc: string;
     password?: string;
     disabled: boolean;
     createDate: string;
     updateDate: string;
+    status: 0 | 1;
   }
 }
 

@@ -137,7 +137,8 @@
     "phone": "Phone",
     "role": "Role",
     "status": "Status",
-    "remark": "Remark"
+    "remark": "Remark",
+    "leader": "Direct Manager"
   },
   "title": "System Management"
 }

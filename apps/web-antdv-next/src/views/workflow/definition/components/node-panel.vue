@@ -1,46 +1,43 @@
 <script lang="ts" setup>
 import { IconifyIcon } from '@vben/icons';
 
-interface NodeItem {
-  icon: string;
-  nodeType: string;
-  text: string;
-  type: string;
-}
+import { $t } from '#/locales';
+
+import type { WorkflowPaletteNode } from '../types';
 
 const emit = defineEmits<{
-  dragStart: [node: NodeItem];
+  dragStart: [node: WorkflowPaletteNode];
 }>();
 
-const nodes: NodeItem[] = [
+const nodes: WorkflowPaletteNode[] = [
   {
     icon: 'lucide:circle-play',
     nodeType: 'start',
-    text: '开始节点',
+    text: $t('flow.designer.node.start'),
     type: 'circle',
   },
   {
     icon: 'lucide:user-check',
     nodeType: 'approve',
-    text: '审批节点',
+    text: $t('flow.designer.node.approve'),
     type: 'rect',
   },
   {
     icon: 'lucide:git-branch',
     nodeType: 'condition',
-    text: '条件节点',
+    text: $t('flow.designer.node.condition'),
     type: 'diamond',
   },
   {
     icon: 'lucide:send',
     nodeType: 'copy',
-    text: '抄送节点',
+    text: $t('flow.designer.node.copy'),
     type: 'rect',
   },
   {
     icon: 'lucide:circle-stop',
     nodeType: 'end',
-    text: '结束节点',
+    text: $t('flow.designer.node.end'),
     type: 'circle',
   },
 ];
@@ -48,7 +45,7 @@ const nodes: NodeItem[] = [
 
 <template>
   <aside class="workflow-node-panel">
-    <div class="panel-title">节点</div>
+    <div class="panel-title">{{ $t('flow.designer.nodePanel') }}</div>
     <button
       v-for="node in nodes"
       :key="node.nodeType"
