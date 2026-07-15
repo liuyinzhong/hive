@@ -6,160 +6,124 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { Page } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
+import { preferences } from '@vben/preferences';
 import {
   Button,
+  Card,
+  Col,
+  Descriptions,
+  DescriptionsItem,
   Empty,
   message,
+  Row,
   Spin,
-  Table,
   TabPane,
   Tabs,
   Tag,
 } from 'antdv-next';
 
+import { getUserListAllApi } from '#/api/system';
 import { getWorkflowInstanceDetailApi } from '#/api/workflow';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import UserAvatar from '#/components/UserAvatar/index.vue';
+import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 import { $t } from '#/locales';
-import FormRenderer from '#/views/workflow/form/form-renderer.vue';
-import { parseWorkflowFormSchema } from '#/views/workflow/form/schema';
+import {
+  getWorkflowFormFields,
+  parseWorkflowFormSchema,
+} from '#/views/workflow/form/schema';
 import {
   getCopyStatusOptions,
   getInstanceStatusOptions,
   getStatusText,
   getTaskStatusOptions,
+  useCopyDetailColumns,
+  useTaskDetailColumns,
 } from '#/views/workflow/runtime/data';
 
 defineOptions({ name: 'WorkflowInstanceDetail' });
 
-interface VariableEntry {
+interface ApplicationEntry {
   key: string;
+  label: string;
   value: string;
 }
 
-const actionOrder: Record<string, number> = {
-  start: 10,
-  branch: 20,
-  pending: 30,
-  approve: 40,
-  reject: 40,
-  rejected: 50,
-  copy: 60,
-  complete: 70,
-  completed: 80,
-  cancel: 90,
-};
+interface NodePerson {
+  id: string;
+  name: string;
+  tooltip: string;
+}
 
 const route = useRoute();
 const router = useRouter();
 const detail = ref<WorkflowRuntimeApi.WorkflowInstanceDetail>();
 const loading = ref(false);
+const userAvatarMap = ref(new Map<string, string>());
 
-const taskColumns = computed(() => [
-  {
-    dataIndex: 'nodeName',
-    key: 'nodeName',
-    title: $t('flow.runtime.common.node'),
-    width: 180,
+const [TaskGrid] = useVbenVxeGrid<WorkflowRuntimeApi.WorkflowTask>({
+  class: 'h-auto',
+  showSearchForm: false,
+  gridOptions: {
+    columns: useTaskDetailColumns(),
+    height: 'auto',
+    minHeight: 400,
+    pagerConfig: {
+      enabled: false,
+    },
+    rowConfig: { keyField: 'taskId' },
+    scrollY: {
+      enabled: false,
+    },
   },
-  {
-    dataIndex: 'assigneeName',
-    key: 'assigneeName',
-    title: $t('flow.runtime.detail.assignee'),
-    width: 130,
-  },
-  {
-    dataIndex: 'approvalMode',
-    key: 'approvalMode',
-    title: $t('flow.runtime.task.approvalMode'),
-    width: 110,
-  },
-  {
-    dataIndex: 'status',
-    key: 'status',
-    title: $t('flow.runtime.common.status'),
-    width: 100,
-  },
-  {
-    dataIndex: 'comment',
-    key: 'comment',
-    title: $t('flow.runtime.common.comment'),
-    minWidth: 180,
-  },
-  {
-    dataIndex: 'createDate',
-    key: 'createDate',
-    title: $t('flow.runtime.common.createDate'),
-    width: 170,
-  },
-  {
-    dataIndex: 'finishDate',
-    key: 'finishDate',
-    title: $t('flow.runtime.common.finishDate'),
-    width: 170,
-  },
-]);
-
-const copyColumns = computed(() => [
-  {
-    dataIndex: 'nodeName',
-    key: 'nodeName',
-    title: $t('flow.runtime.common.node'),
-    width: 180,
-  },
-  {
-    dataIndex: 'receiverName',
-    key: 'receiverName',
-    title: $t('flow.runtime.detail.receiver'),
-    width: 130,
-  },
-  {
-    dataIndex: 'status',
-    key: 'status',
-    title: $t('flow.runtime.common.status'),
-    width: 100,
-  },
-  {
-    dataIndex: 'createDate',
-    key: 'createDate',
-    title: $t('flow.runtime.common.createDate'),
-    width: 170,
-  },
-  {
-    dataIndex: 'readDate',
-    key: 'readDate',
-    title: $t('flow.runtime.common.readDate'),
-    width: 170,
-  },
-]);
-
-const orderedRecords = computed(() => {
-  const records = detail.value?.records ?? [];
-  return records
-    .map((record, index) => ({ index, record }))
-    .sort((left, right) => {
-      const dateCompare = (left.record.createDate ?? '').localeCompare(
-        right.record.createDate ?? '',
-      );
-      if (dateCompare !== 0) return dateCompare;
-      const actionCompare =
-        (actionOrder[left.record.action] ?? 999) -
-        (actionOrder[right.record.action] ?? 999);
-      return actionCompare === 0 ? left.index - right.index : actionCompare;
-    })
-    .map(({ record }) => record);
 });
 
-const variableEntries = computed<VariableEntry[]>(() =>
-  Object.entries(detail.value?.instance.variables ?? {}).map(
-    ([key, value]) => ({
-      key,
-      value: formatVariableValue(value),
-    }),
-  ),
+const [CopyGrid] = useVbenVxeGrid<WorkflowRuntimeApi.WorkflowCopy>({
+  class: 'h-auto',
+  showSearchForm: false,
+  gridOptions: {
+    columns: useCopyDetailColumns(),
+    height: 'auto',
+    minHeight: 400,
+    pagerConfig: {
+      enabled: false,
+    },
+    rowConfig: { keyField: 'copyId' },
+    scrollY: {
+      enabled: false,
+    },
+  },
+});
+
+const progressNodes = computed(() => detail.value?.nodes ?? []);
+const progressItemCount = computed(() => progressNodes.value.length);
+const allTasks = computed(() =>
+  progressNodes.value.flatMap((node) => node.tasks),
+);
+const allCopies = computed(() =>
+  progressNodes.value.flatMap((node) => node.copies),
 );
 
 const formSchema = computed<WorkflowDefinitionApi.WorkflowFormSchema>(() =>
   parseWorkflowFormSchema(detail.value?.instance.formSchema),
 );
+
+const applicationEntries = computed<ApplicationEntry[]>(() => {
+  const variables = detail.value?.instance.variables ?? {};
+  const fields = getWorkflowFormFields(formSchema.value);
+  if (fields.length > 0) {
+    return fields.map((field) => ({
+      key: field.key,
+      label: field.label,
+      value: formatApplicationValue(field, variables[field.key]),
+    }));
+  }
+  return Object.entries(variables).map(([key, value]) => ({
+    key,
+    label: key,
+    value: formatVariableValue(value),
+  }));
+});
 
 function currentInstanceId() {
   const value = route.params.instanceId;
@@ -171,11 +135,26 @@ async function loadDetail() {
   if (!instanceId) return;
   loading.value = true;
   try {
-    detail.value = await getWorkflowInstanceDetailApi(instanceId);
+    const [workflowDetail] = await Promise.all([
+      getWorkflowInstanceDetailApi(instanceId),
+      loadUserAvatars(),
+    ]);
+    detail.value = workflowDetail;
   } catch {
     message.error($t('flow.runtime.message.loadFailed'));
   } finally {
     loading.value = false;
+  }
+}
+
+async function loadUserAvatars() {
+  try {
+    const users = await getUserListAllApi();
+    userAvatarMap.value = new Map(
+      users.map((user) => [user.userId, user.avatar ?? '']),
+    );
+  } catch {
+    userAvatarMap.value = new Map();
   }
 }
 
@@ -188,16 +167,19 @@ function statusColor(
 
 function recordActionText(action: string) {
   const knownActions = new Set([
+    'planned',
     'approve',
+    'addSign',
     'branch',
     'cancel',
     'complete',
-    'completed',
     'copy',
     'pending',
+    'removeSign',
     'reject',
-    'rejected',
     'start',
+    'transfer',
+    'return',
   ]);
   return knownActions.has(action)
     ? $t(`flow.runtime.detail.action.${action}`)
@@ -207,32 +189,95 @@ function recordActionText(action: string) {
 function recordIcon(action: string) {
   const icons: Record<string, string> = {
     approve: 'lucide:check',
+    addSign: 'lucide:user-round-plus',
     branch: 'lucide:git-branch',
     cancel: 'lucide:ban',
     complete: 'lucide:flag',
-    completed: 'lucide:circle-check-big',
     copy: 'lucide:mail',
     pending: 'lucide:clock-3',
+    removeSign: 'lucide:user-round-minus',
     reject: 'lucide:x',
-    rejected: 'lucide:circle-x',
     start: 'lucide:play',
+    transfer: 'lucide:send',
+    return: 'lucide:undo-2',
   };
   return icons[action] ?? 'lucide:circle';
 }
 
-function recordTone(action: string) {
-  if (['approve', 'complete', 'completed', 'copy'].includes(action)) {
-    return 'success';
-  }
-  if (['reject', 'rejected'].includes(action)) return 'danger';
-  if (action === 'pending') return 'warning';
-  if (action === 'cancel') return 'neutral';
-  return 'info';
+function nodeIcon(node: WorkflowRuntimeApi.WorkflowNodeInstance) {
+  if (node.status !== '0') return recordIcon(node.action);
+  const icons: Record<WorkflowRuntimeApi.NodeType, string> = {
+    approve: 'lucide:circle-dashed',
+    condition: 'lucide:git-branch',
+    copy: 'lucide:mail',
+    end: 'lucide:flag',
+    start: 'lucide:play',
+  };
+  return icons[node.nodeType];
+}
+
+function nodeTone(node: WorkflowRuntimeApi.WorkflowNodeInstance) {
+  if (node.status === '0') return 'upcoming';
+  if (node.status === '1') return 'warning';
+  if (node.status === '2') return 'success';
+  return node.action === 'cancel' ? 'neutral' : 'danger';
 }
 
 function recordComment(record: WorkflowRuntimeApi.WorkflowRecord) {
   if (record.action === 'branch') return '';
   return record.comment?.trim() ?? '';
+}
+
+function approvalModeText(mode?: null | WorkflowRuntimeApi.ApprovalMode) {
+  return mode === 'all'
+    ? $t('flow.runtime.task.approvalAll')
+    : $t('flow.runtime.task.approvalAny');
+}
+
+function userAvatar(userId: string) {
+  return userAvatarMap.value.get(userId) || undefined;
+}
+
+function userAvatarWithFallback(userId: string) {
+  return userAvatar(userId) || preferences.app.defaultAvatar;
+}
+
+function nodePeople(
+  node: WorkflowRuntimeApi.WorkflowNodeInstance,
+): NodePerson[] {
+  if (node.nodeType === 'approve' && node.tasks.length > 0) {
+    return node.tasks.map((task) => ({
+      id: task.assigneeId,
+      name: task.assigneeName,
+      tooltip: `${task.assigneeName} · ${getStatusText(
+        getTaskStatusOptions(),
+        task.status,
+      )}`,
+    }));
+  }
+  if (node.nodeType === 'copy' && node.copies.length > 0) {
+    return node.copies.map((copy) => ({
+      id: copy.receiverId,
+      name: copy.receiverName,
+      tooltip: `${copy.receiverName} · ${getStatusText(
+        getCopyStatusOptions(),
+        copy.status,
+      )}`,
+    }));
+  }
+  return node.actors.map((actor) => ({
+    id: actor.userId,
+    name: actor.userName,
+    tooltip: actor.userName,
+  }));
+}
+
+function nodeAvatarUsers(node: WorkflowRuntimeApi.WorkflowNodeInstance) {
+  return nodePeople(node).map((person) => ({
+    avatar: userAvatar(person.id) ?? '',
+    realName: person.tooltip,
+    userId: person.id,
+  }));
 }
 
 function formatVariableValue(value: unknown) {
@@ -241,272 +286,300 @@ function formatVariableValue(value: unknown) {
   return String(value);
 }
 
+function formatApplicationValue(
+  field: WorkflowDefinitionApi.WorkflowFormField,
+  value: unknown,
+) {
+  if (value === null || value === undefined || value === '') return '-';
+  if (field.type === 'switch') {
+    return value ? $t('flow.form.common.yes') : $t('flow.form.common.no');
+  }
+  if (field.type === 'checkbox') {
+    const values = Array.isArray(value)
+      ? value.filter((item): item is string => typeof item === 'string')
+      : [];
+    return values
+      .map((item) => applicationOptionLabel(field, item))
+      .join($t('flow.form.common.separator'));
+  }
+  if (field.type === 'radio' || field.type === 'select') {
+    return applicationOptionLabel(field, String(value));
+  }
+  return formatVariableValue(value);
+}
+
+function applicationOptionLabel(
+  field: WorkflowDefinitionApi.WorkflowFormField,
+  value: string,
+) {
+  return field.options?.find((item) => item.value === value)?.label ?? value;
+}
+
 watch(() => route.params.instanceId, loadDetail, { immediate: true });
 </script>
 
 <template>
   <Page>
+    <template #title>
+      <div class="page-heading">
+        <Button
+          class="detail-back"
+          :title="$t('flow.runtime.detail.back')"
+          @click="router.back()"
+        >
+          <IconifyIcon class="size-4" icon="lucide:arrow-left" />
+        </Button>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="detail-title">
+              {{ detail?.instance.title ?? $t('flow.runtime.detail.title') }}
+            </h1>
+            <Tag
+              v-if="detail"
+              :color="
+                statusColor(getInstanceStatusOptions(), detail.instance.status)
+              "
+            >
+              {{
+                getStatusText(
+                  getInstanceStatusOptions(),
+                  detail.instance.status,
+                )
+              }}
+            </Tag>
+          </div>
+          <div v-if="detail" class="detail-subtitle">
+            <span>{{ detail.instance.definitionName }}</span>
+            <span class="detail-dot"></span>
+            <span>v{{ detail.instance.definitionVersion }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
+
     <Spin :spinning="loading">
       <div class="detail-page">
-        <header class="detail-header">
-          <Button
-            class="detail-back"
-            :title="$t('flow.runtime.detail.back')"
-            @click="router.back()"
-          >
-            <IconifyIcon class="size-4" icon="lucide:arrow-left" />
-          </Button>
-          <div class="min-w-0 flex-1">
-            <div class="flex flex-wrap items-center gap-2">
-              <h1 class="detail-title">
-                {{ detail?.instance.title ?? $t('flow.runtime.detail.title') }}
-              </h1>
-              <Tag
-                v-if="detail"
-                :color="
-                  statusColor(
-                    getInstanceStatusOptions(),
-                    detail.instance.status,
-                  )
-                "
-              >
-                {{
-                  getStatusText(
-                    getInstanceStatusOptions(),
-                    detail.instance.status,
-                  )
-                }}
-              </Tag>
-            </div>
-            <div v-if="detail" class="detail-subtitle">
-              <span>{{ detail.instance.definitionName }}</span>
-              <span class="detail-dot"></span>
-              <span>v{{ detail.instance.definitionVersion }}</span>
-            </div>
-          </div>
-        </header>
-
         <template v-if="detail">
-          <section class="overview-band">
-            <div class="overview-item">
-              <IconifyIcon icon="lucide:user-round" />
-              <div>
-                <div class="overview-label">
-                  {{ $t('flow.runtime.common.starter') }}
-                </div>
-                <div class="overview-value">
-                  {{ detail.instance.starterName }}
-                </div>
-              </div>
-            </div>
-            <div class="overview-item">
-              <IconifyIcon icon="lucide:calendar-play" />
-              <div>
-                <div class="overview-label">
-                  {{ $t('flow.runtime.detail.startDate') }}
-                </div>
-                <div class="overview-value">
-                  {{ detail.instance.startDate || '-' }}
-                </div>
-              </div>
-            </div>
-            <div class="overview-item">
-              <IconifyIcon icon="lucide:calendar-check" />
-              <div>
-                <div class="overview-label">
-                  {{ $t('flow.runtime.detail.endDate') }}
-                </div>
-                <div class="overview-value">
-                  {{ detail.instance.endDate || '-' }}
-                </div>
-              </div>
-            </div>
-            <div class="overview-item">
-              <IconifyIcon icon="lucide:briefcase-business" />
-              <div class="min-w-0">
-                <div class="overview-label">
-                  {{ $t('flow.runtime.instance.businessKey') }}
-                </div>
-                <div class="overview-value break-all">
-                  {{ detail.instance.businessKey || '-' }}
-                </div>
-              </div>
-            </div>
-          </section>
+          <Card
+            class="detail-card"
+            size="small"
+            :title="$t('flow.runtime.detail.basic')"
+          >
+            <Descriptions
+              class="basic-descriptions"
+              :column="{ lg: 4, md: 3, sm: 2, xs: 1 }"
+              bordered
+              size="small"
+            >
+              <DescriptionsItem :label="$t('flow.runtime.common.starter')">
+                {{ detail.instance.starterName }}
+              </DescriptionsItem>
+              <DescriptionsItem :label="$t('flow.runtime.detail.instanceNo')">
+                {{ detail.instance.instanceNo }}
+              </DescriptionsItem>
+              <DescriptionsItem :label="$t('flow.runtime.common.definition')">
+                {{ detail.instance.definitionName }}
+              </DescriptionsItem>
+              <DescriptionsItem
+                :label="$t('flow.runtime.detail.definitionVersion')"
+              >
+                v{{ detail.instance.definitionVersion }}
+              </DescriptionsItem>
+              <DescriptionsItem :label="$t('flow.runtime.detail.startDate')">
+                {{ detail.instance.startDate || '-' }}
+              </DescriptionsItem>
+              <DescriptionsItem :label="$t('flow.runtime.detail.endDate')">
+                {{ detail.instance.endDate || '-' }}
+              </DescriptionsItem>
+              <DescriptionsItem
+                :label="$t('flow.runtime.instance.businessKey')"
+              >
+                {{ detail.instance.businessKey || '-' }}
+              </DescriptionsItem>
+            </Descriptions>
+          </Card>
 
-          <div class="detail-workspace">
-            <section class="history-panel">
-              <div class="section-heading">
-                <div>
-                  <h2>{{ $t('flow.runtime.detail.history') }}</h2>
-                  <p>{{ detail.instance.definitionName }}</p>
-                </div>
-                <span class="section-count">{{ orderedRecords.length }}</span>
-              </div>
+          <Row class="detail-workspace" :gutter="[16, 16]">
+            <Col :lg="16" :xs="24">
+              <Card class="detail-card h-full" size="small">
+                <template #title>
+                  <div class="card-heading">
+                    <h2>{{ $t('flow.runtime.detail.history') }}</h2>
+                  </div>
+                </template>
+                <template #extra>
+                  <span class="section-count">{{ progressItemCount }}</span>
+                </template>
 
-              <div v-if="orderedRecords.length" class="timeline-list">
-                <article
-                  v-for="(record, index) in orderedRecords"
-                  :key="record.recordId"
-                  class="timeline-item"
-                >
-                  <div
-                    v-if="index < orderedRecords.length - 1"
-                    class="timeline-rail"
-                  ></div>
-                  <div
-                    class="timeline-marker"
-                    :class="`timeline-marker--${recordTone(record.action)}`"
+                <div v-if="progressItemCount" class="timeline-list">
+                  <article
+                    v-for="(node, index) in progressNodes"
+                    :key="node.nodeInstanceId"
+                    class="timeline-item"
+                    :class="{ 'timeline-item--upcoming': node.status === '0' }"
                   >
-                    <IconifyIcon :icon="recordIcon(record.action)" />
-                  </div>
-                  <div class="timeline-content">
-                    <div class="timeline-primary">
-                      <div class="flex min-w-0 flex-wrap items-center gap-2">
-                        <strong>{{ recordActionText(record.action) }}</strong>
-                        <Tag v-if="record.nodeName" color="default">
-                          {{ record.nodeName }}
-                        </Tag>
-                      </div>
-                      <time>{{ record.createDate || '-' }}</time>
+                    <div
+                      v-if="index < progressNodes.length - 1"
+                      class="timeline-rail"
+                      :class="{
+                        'timeline-rail--upcoming': node.status === '0',
+                      }"
+                    ></div>
+                    <div
+                      class="timeline-marker"
+                      :class="`timeline-marker--${nodeTone(node)}`"
+                    >
+                      <IconifyIcon :icon="nodeIcon(node)" />
                     </div>
-                    <div class="timeline-meta">
-                      <span>
-                        <IconifyIcon icon="lucide:user-round" />
-                        {{
-                          record.operatorName ||
-                          $t('flow.runtime.detail.systemOperator')
-                        }}
-                      </span>
-                      <span
-                        v-if="recordComment(record)"
-                        class="timeline-comment"
+                    <div class="timeline-content">
+                      <div
+                        class="timeline-primary flex flex-col items-start justify-between gap-1 sm:flex-row sm:gap-4"
                       >
-                        <IconifyIcon icon="lucide:message-square-text" />
-                        {{ recordComment(record) }}
-                      </span>
+                        <div class="flex min-w-0 flex-wrap items-center gap-2">
+                          <strong>{{ recordActionText(node.action) }}</strong>
+                          <Tag color="default">{{ node.nodeName }}</Tag>
+                          <Tag v-if="node.approvalMode" color="blue">
+                            {{ approvalModeText(node.approvalMode) }}
+                          </Tag>
+                          <span
+                            v-if="node.durationSeconds != null"
+                            class="timeline-duration"
+                          >
+                            <IconifyIcon icon="lucide:clock-3" />
+                            {{
+                              $t('flow.runtime.detail.durationSeconds', [
+                                node.durationSeconds,
+                              ])
+                            }}
+                          </span>
+                        </div>
+                        <div
+                          class="timeline-timing flex shrink-0 flex-col items-start gap-1 sm:items-end"
+                        >
+                          <time>{{ node.startDate || '-' }}</time>
+                        </div>
+                      </div>
+                      <div
+                        v-if="nodePeople(node).length"
+                        class="approver-display"
+                        :class="{
+                          'approver-display--upcoming': node.status === '0',
+                        }"
+                      >
+                        <template v-if="nodePeople(node).length === 1">
+                          <UserAvatar
+                            :avatar="
+                              userAvatarWithFallback(nodePeople(node)[0]!.id)
+                            "
+                            :name="nodePeople(node)[0]!.name"
+                          />
+                          <Tag
+                            v-if="node.nodeType === 'copy' && node.copies[0]"
+                            :color="
+                              statusColor(
+                                getCopyStatusOptions(),
+                                node.copies[0].status,
+                              )
+                            "
+                          >
+                            {{
+                              getStatusText(
+                                getCopyStatusOptions(),
+                                node.copies[0].status,
+                              )
+                            }}
+                          </Tag>
+                        </template>
+                        <UserAvatarGroup
+                          v-else
+                          :max-count="nodePeople(node).length"
+                          :user-list="nodeAvatarUsers(node)"
+                        />
+                      </div>
+                      <div v-else class="timeline-meta">
+                        <span>
+                          <IconifyIcon icon="lucide:settings" />
+                          {{ $t('flow.runtime.detail.systemOperator') }}
+                        </span>
+                      </div>
+                      <div
+                        v-if="
+                          node.nodeType === 'approve' && node.records.length
+                        "
+                        class="timeline-operations"
+                      >
+                        <div
+                          v-for="operation in node.records"
+                          :key="operation.recordId"
+                          class="timeline-operation"
+                        >
+                          <span
+                            v-if="recordComment(operation)"
+                            class="timeline-comment"
+                          >
+                            {{ recordComment(operation) }}
+                          </span>
+                          <time>{{ operation.createDate || '-' }}</time>
+                        </div>
+                      </div>
                     </div>
+                  </article>
+                </div>
+                <Empty
+                  v-else
+                  :description="$t('flow.runtime.detail.noRecords')"
+                  :image="Empty.PRESENTED_IMAGE_SIMPLE"
+                />
+              </Card>
+            </Col>
+
+            <Col :lg="8" :xs="24">
+              <Card class="detail-card h-full" size="small">
+                <template #title>
+                  <div class="card-heading">
+                    <h2>{{ $t('flow.runtime.detail.application') }}</h2>
                   </div>
-                </article>
-              </div>
-              <Empty
-                v-else
-                :description="$t('flow.runtime.detail.noRecords')"
-                :image="Empty.PRESENTED_IMAGE_SIMPLE"
-              />
-            </section>
+                </template>
 
-            <aside class="application-panel">
-              <div class="section-heading">
-                <div>
-                  <h2>{{ $t('flow.runtime.detail.application') }}</h2>
-                  <p>{{ $t('flow.runtime.detail.basic') }}</p>
-                </div>
-              </div>
-
-              <dl class="info-list">
-                <div class="info-row">
-                  <dt>{{ $t('flow.runtime.common.definition') }}</dt>
-                  <dd>{{ detail.instance.definitionName }}</dd>
-                </div>
-                <div class="info-row">
-                  <dt>{{ $t('flow.runtime.detail.definitionVersion') }}</dt>
-                  <dd>v{{ detail.instance.definitionVersion }}</dd>
-                </div>
-                <div class="info-row">
-                  <dt>{{ $t('flow.runtime.detail.instanceId') }}</dt>
-                  <dd class="break-all font-mono text-xs">
-                    {{ detail.instance.instanceId }}
-                  </dd>
-                </div>
-              </dl>
-
-              <div class="variables-heading">
-                <IconifyIcon icon="lucide:file-text" />
-                <h3>{{ $t('flow.form.runtime.applicationContent') }}</h3>
-              </div>
-              <FormRenderer
-                v-if="formSchema.fields.length"
-                :model-value="detail.instance.variables"
-                readonly
-                :schema="formSchema"
-              />
-              <dl v-else-if="variableEntries.length" class="variable-list">
-                <div
-                  v-for="variable in variableEntries"
-                  :key="variable.key"
-                  class="variable-row"
+                <Descriptions
+                  v-if="applicationEntries.length"
+                  class="application-descriptions"
+                  :column="1"
+                  bordered
+                  size="small"
                 >
-                  <dt>{{ variable.key }}</dt>
-                  <dd>{{ variable.value }}</dd>
+                  <DescriptionsItem
+                    v-for="entry in applicationEntries"
+                    :key="entry.key"
+                    :label="entry.label"
+                  >
+                    {{ entry.value }}
+                  </DescriptionsItem>
+                </Descriptions>
+                <div v-else class="variables-empty">
+                  <IconifyIcon icon="lucide:braces" />
+                  <span>{{ $t('flow.runtime.detail.noVariables') }}</span>
                 </div>
-              </dl>
-              <div v-else class="variables-empty">
-                <IconifyIcon icon="lucide:braces" />
-                <span>{{ $t('flow.runtime.detail.noVariables') }}</span>
-              </div>
-            </aside>
-          </div>
+              </Card>
+            </Col>
+          </Row>
 
-          <section class="detail-table-section">
+          <Card class="detail-card detail-table-card" size="small">
             <Tabs>
               <TabPane
                 key="tasks"
-                :tab="`${$t('flow.runtime.detail.tasks')} (${detail.tasks.length})`"
+                :tab="`${$t('flow.runtime.detail.tasks')} (${allTasks.length})`"
               >
-                <Table
-                  :columns="taskColumns"
-                  :data-source="detail.tasks"
-                  :pagination="false"
-                  row-key="taskId"
-                  :scroll="{ x: 1150 }"
-                  size="small"
-                >
-                  <template #bodyCell="{ column, record }">
-                    <span v-if="column.key === 'approvalMode'">
-                      {{
-                        record.approvalMode === 'all'
-                          ? $t('flow.runtime.task.approvalAll')
-                          : $t('flow.runtime.task.approvalAny')
-                      }}
-                    </span>
-                    <Tag
-                      v-else-if="column.key === 'status'"
-                      :color="
-                        statusColor(getTaskStatusOptions(), record.status)
-                      "
-                    >
-                      {{ getStatusText(getTaskStatusOptions(), record.status) }}
-                    </Tag>
-                  </template>
-                </Table>
+                <TaskGrid :table-data="allTasks" />
               </TabPane>
               <TabPane
                 key="copies"
-                :tab="`${$t('flow.runtime.detail.copies')} (${detail.copies.length})`"
+                :tab="`${$t('flow.runtime.detail.copies')} (${allCopies.length})`"
               >
-                <Table
-                  :columns="copyColumns"
-                  :data-source="detail.copies"
-                  :pagination="false"
-                  row-key="copyId"
-                  :scroll="{ x: 760 }"
-                  size="small"
-                >
-                  <template #bodyCell="{ column, record }">
-                    <Tag
-                      v-if="column.key === 'status'"
-                      :color="
-                        statusColor(getCopyStatusOptions(), record.status)
-                      "
-                    >
-                      {{ getStatusText(getCopyStatusOptions(), record.status) }}
-                    </Tag>
-                  </template>
-                </Table>
+                <CopyGrid :table-data="allCopies" />
               </TabPane>
             </Tabs>
-          </section>
+          </Card>
         </template>
       </div>
     </Spin>
@@ -516,138 +589,85 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
 <style scoped>
 .detail-page {
   min-height: 100%;
-  padding: 16px;
 }
 
-.detail-header {
+.page-heading {
   display: flex;
-  align-items: flex-start;
   gap: 12px;
-  padding: 0 0 16px;
+  align-items: center;
+  width: 100%;
 }
 
 .detail-back {
+  flex: none;
   width: 36px;
   height: 36px;
-  flex: none;
   padding: 0;
 }
 
 .detail-title {
-  overflow-wrap: anywhere;
   margin: 0;
   font-size: 20px;
   font-weight: 650;
   line-height: 30px;
+  overflow-wrap: anywhere;
 }
 
 .detail-subtitle {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
   margin-top: 2px;
-  color: hsl(var(--muted-foreground));
   font-size: 13px;
+  color: hsl(var(--muted-foreground));
 }
 
 .detail-dot {
   width: 3px;
   height: 3px;
-  border-radius: 50%;
   background: hsl(var(--muted-foreground));
+  border-radius: 50%;
 }
 
-.overview-band {
-  display: grid;
-  overflow: hidden;
-  border: 1px solid hsl(var(--border));
-  border-radius: 6px;
-  background: hsl(var(--background));
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.overview-item {
-  display: flex;
+.basic-descriptions :deep(.ant-descriptions-item-content),
+.application-descriptions :deep(.ant-descriptions-item-content) {
   min-width: 0;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 18px;
-}
-
-.overview-item + .overview-item {
-  border-left: 1px solid hsl(var(--border));
-}
-
-.overview-item > svg {
-  width: 18px;
-  height: 18px;
-  flex: none;
-  color: hsl(var(--primary));
-}
-
-.overview-label {
-  margin-bottom: 3px;
-  color: hsl(var(--muted-foreground));
-  font-size: 12px;
-}
-
-.overview-value {
   overflow-wrap: anywhere;
-  font-size: 14px;
-  font-weight: 550;
 }
 
 .detail-workspace {
-  display: grid;
-  overflow: hidden;
   margin-top: 16px;
-  border: 1px solid hsl(var(--border));
-  border-radius: 6px;
-  background: hsl(var(--background));
-  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
 }
 
-.history-panel,
-.application-panel {
+.detail-card {
   min-width: 0;
-  padding: 20px;
 }
 
-.application-panel {
-  border-left: 1px solid hsl(var(--border));
-  background: hsl(var(--muted) / 18%);
+.detail-table-card {
+  margin-top: 16px;
 }
 
-.section-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.section-heading h2,
-.variables-heading h3 {
+.card-heading h2 {
   margin: 0;
   font-size: 15px;
   font-weight: 650;
 }
 
-.section-heading p {
+.card-heading p {
   margin: 3px 0 0;
-  color: hsl(var(--muted-foreground));
   font-size: 12px;
+  color: hsl(var(--muted-foreground));
 }
 
 .section-count {
   min-width: 24px;
   height: 24px;
-  border-radius: 12px;
-  background: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
   font-size: 12px;
   line-height: 24px;
+  color: hsl(var(--muted-foreground));
   text-align: center;
+  background: hsl(var(--muted));
+  border-radius: 12px;
 }
 
 .timeline-list {
@@ -657,8 +677,8 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
 .timeline-item {
   position: relative;
   display: grid;
-  gap: 14px;
   grid-template-columns: 32px minmax(0, 1fr);
+  gap: 14px;
 }
 
 .timeline-rail {
@@ -673,10 +693,10 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
 .timeline-marker {
   z-index: 1;
   display: flex;
-  width: 32px;
-  height: 32px;
   align-items: center;
   justify-content: center;
+  width: 32px;
+  height: 32px;
   border: 1px solid;
   border-radius: 50%;
 }
@@ -686,33 +706,48 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
   height: 15px;
 }
 
-.timeline-marker--info {
-  border-color: hsl(213 94% 68%);
-  background: hsl(214 100% 97%);
-  color: hsl(221 83% 53%);
-}
-
 .timeline-marker--success {
-  border-color: hsl(142 69% 58%);
-  background: hsl(138 76% 97%);
-  color: hsl(142 71% 35%);
+  color: hsl(142deg 71% 35%);
+  background: hsl(138deg 76% 97%);
+  border-color: hsl(142deg 69% 58%);
 }
 
 .timeline-marker--warning {
-  border-color: hsl(43 96% 56%);
-  background: hsl(48 100% 96%);
-  color: hsl(32 95% 44%);
+  color: hsl(32deg 95% 44%);
+  background: hsl(48deg 100% 96%);
+  border-color: hsl(43deg 96% 56%);
 }
 
 .timeline-marker--danger {
-  border-color: hsl(0 91% 71%);
-  background: hsl(0 86% 97%);
-  color: hsl(0 72% 51%);
+  color: hsl(0deg 72% 51%);
+  background: hsl(0deg 86% 97%);
+  border-color: hsl(0deg 91% 71%);
 }
 
 .timeline-marker--neutral {
-  border-color: hsl(var(--border));
+  color: hsl(var(--muted-foreground));
   background: hsl(var(--muted));
+  border-color: hsl(var(--border));
+}
+
+.timeline-marker--upcoming {
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--background));
+  border-color: hsl(var(--border));
+  border-style: dashed;
+}
+
+.timeline-rail--upcoming {
+  background: repeating-linear-gradient(
+    to bottom,
+    hsl(var(--border)) 0,
+    hsl(var(--border)) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.timeline-item--upcoming .timeline-content {
   color: hsl(var(--muted-foreground));
 }
 
@@ -727,22 +762,28 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
   border-bottom: 0;
 }
 
-.timeline-primary {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
 .timeline-primary strong {
   font-size: 14px;
   font-weight: 600;
 }
 
-.timeline-primary time {
+.timeline-timing time {
   flex: none;
-  color: hsl(var(--muted-foreground));
   font-size: 12px;
+  color: hsl(var(--muted-foreground));
+}
+
+.timeline-duration {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+  color: hsl(221deg 83% 53%);
+}
+
+.timeline-duration svg {
+  width: 13px;
+  height: 13px;
 }
 
 .timeline-meta {
@@ -750,87 +791,75 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
   flex-wrap: wrap;
   gap: 6px 18px;
   margin-top: 7px;
-  color: hsl(var(--muted-foreground));
   font-size: 13px;
+  color: hsl(var(--muted-foreground));
 }
 
 .timeline-meta span {
   display: inline-flex;
-  min-width: 0;
-  align-items: center;
   gap: 6px;
+  align-items: center;
+  min-width: 0;
 }
 
 .timeline-meta svg {
+  flex: none;
   width: 14px;
   height: 14px;
-  flex: none;
+}
+
+.approver-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 9px;
+}
+
+.approver-display--upcoming {
+  opacity: 0.78;
 }
 
 .timeline-comment {
-  overflow-wrap: anywhere;
   color: hsl(var(--foreground));
-}
-
-.info-list,
-.variable-list {
-  margin: 0;
-}
-
-.info-row,
-.variable-row {
-  display: grid;
-  gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid hsl(var(--border));
-  grid-template-columns: minmax(88px, 0.7fr) minmax(0, 1.3fr);
-}
-
-.info-row dt,
-.variable-row dt {
-  color: hsl(var(--muted-foreground));
-  font-size: 13px;
-}
-
-.info-row dd,
-.variable-row dd {
   overflow-wrap: anywhere;
-  margin: 0;
-  font-size: 13px;
 }
 
-.variables-heading {
+.timeline-operations {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  margin-top: 10px;
+  background: hsl(var(--muted) / 35%);
+  border-left: 2px solid hsl(var(--border));
+}
+
+.timeline-operation {
   display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
   align-items: center;
-  gap: 8px;
-  margin: 22px 0 8px;
-}
-
-.variables-heading svg {
-  width: 16px;
-  height: 16px;
+  min-width: 0;
+  font-size: 12px;
   color: hsl(var(--muted-foreground));
 }
 
-.variable-row:last-child {
-  border-bottom: 0;
-}
-
-.variable-row dt {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+.timeline-operation time {
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .variables-empty {
   display: flex;
-  min-height: 96px;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
   gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
   border: 1px dashed hsl(var(--border));
   border-radius: 6px;
-  color: hsl(var(--muted-foreground));
-  font-size: 13px;
 }
 
 .variables-empty svg {
@@ -838,87 +867,21 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
   height: 24px;
 }
 
-.detail-table-section {
-  margin-top: 16px;
-  padding: 0 16px 16px;
-  border: 1px solid hsl(var(--border));
-  border-radius: 6px;
-  background: hsl(var(--background));
-}
-
-@media (max-width: 1024px) {
-  .overview-band {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .overview-item:nth-child(3) {
-    border-left: 0;
-  }
-
-  .overview-item:nth-child(n + 3) {
-    border-top: 1px solid hsl(var(--border));
-  }
-
-  .detail-workspace {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .application-panel {
-    border-top: 1px solid hsl(var(--border));
-    border-left: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .detail-page {
-    padding: 12px;
-  }
-
-  .overview-band {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .overview-item + .overview-item {
-    border-top: 1px solid hsl(var(--border));
-    border-left: 0;
-  }
-
-  .history-panel,
-  .application-panel {
-    padding: 16px;
-  }
-
-  .timeline-primary {
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .timeline-primary time {
-    white-space: normal;
-  }
-}
-
-:global(.dark) .timeline-marker--info {
-  border-color: hsl(217 91% 60% / 55%);
-  background: hsl(217 91% 60% / 12%);
-  color: hsl(213 94% 75%);
-}
-
 :global(.dark) .timeline-marker--success {
-  border-color: hsl(142 71% 45% / 55%);
-  background: hsl(142 71% 45% / 12%);
-  color: hsl(142 69% 68%);
+  color: hsl(142deg 69% 68%);
+  background: hsl(142deg 71% 45% / 12%);
+  border-color: hsl(142deg 71% 45% / 55%);
 }
 
 :global(.dark) .timeline-marker--warning {
-  border-color: hsl(38 92% 50% / 55%);
-  background: hsl(38 92% 50% / 12%);
-  color: hsl(43 96% 66%);
+  color: hsl(43deg 96% 66%);
+  background: hsl(38deg 92% 50% / 12%);
+  border-color: hsl(38deg 92% 50% / 55%);
 }
 
 :global(.dark) .timeline-marker--danger {
-  border-color: hsl(0 72% 51% / 55%);
-  background: hsl(0 72% 51% / 12%);
-  color: hsl(0 91% 76%);
+  color: hsl(0deg 91% 76%);
+  background: hsl(0deg 72% 51% / 12%);
+  border-color: hsl(0deg 72% 51% / 55%);
 }
 </style>

@@ -16,8 +16,11 @@ import { $t } from '#/locales';
 import FormRenderer from '#/views/workflow/form/form-renderer.vue';
 import {
   createWorkflowFormValues,
+  getWorkflowFormFields,
   parseWorkflowFormSchema,
 } from '#/views/workflow/form/schema';
+
+import { getWorkflowCategoryText } from '../definition/category';
 
 interface StartableDefinition {
   definition: WorkflowDefinitionApi.WorkflowDefinition;
@@ -43,7 +46,9 @@ const startableDefinitions = computed<StartableDefinition[]>(() =>
       schema: parseWorkflowFormSchema(definition.formSchema),
     }))
     .filter(
-      (item) => item.definition.definitionId && item.schema.fields.length > 0,
+      (item) =>
+        item.definition.definitionId &&
+        getWorkflowFormFields(item.schema).length > 0,
     ),
 );
 
@@ -146,7 +151,7 @@ async function validateForm() {
               }}</span>
             </span>
             <Tag v-if="item.definition.category">
-              {{ item.definition.category }}
+              {{ getWorkflowCategoryText(item.definition.category) }}
             </Tag>
             <IconifyIcon class="size-4" icon="lucide:chevron-right" />
           </button>

@@ -138,7 +138,7 @@
     "role": "Role",
     "status": "Status",
     "remark": "Remark",
-    "leader": "Direct Manager"
+    "leader": "Direct Superior"
   },
   "title": "System Management"
 }

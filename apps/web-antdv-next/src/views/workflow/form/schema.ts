@@ -26,14 +26,24 @@ export function isWorkflowFormSchema(
   if (!isRecord(value) || value.version !== 1 || !Array.isArray(value.fields)) {
     return false;
   }
-  return value.fields.every(
-    (field) =>
-      isRecord(field) &&
-      typeof field.id === 'string' &&
-      typeof field.key === 'string' &&
-      typeof field.label === 'string' &&
-      typeof field.required === 'boolean' &&
-      typeof field.type === 'string',
+  return value.fields.every(isWorkflowFormElement);
+}
+
+/** 判断表单元素是否为栅格布局。 */
+export function isWorkflowFormGrid(
+  element: WorkflowDefinitionApi.WorkflowFormElement,
+): element is WorkflowDefinitionApi.WorkflowFormGrid {
+  return element.type === 'grid';
+}
+
+/** 按表单顺序返回所有真实业务字段，排除布局容器。 */
+export function getWorkflowFormFields(
+  schema: WorkflowDefinitionApi.WorkflowFormSchema,
+) {
+  return schema.fields.flatMap((element) =>
+    isWorkflowFormGrid(element)
+      ? element.columns.flatMap((column) => column.fields)
+      : [element],
   );
 }
 
@@ -42,10 +52,46 @@ export function createWorkflowFormValues(
   schema: WorkflowDefinitionApi.WorkflowFormSchema,
 ) {
   return Object.fromEntries(
-    schema.fields.map((field) => [
+    getWorkflowFormFields(schema).map((field) => [
       field.key,
       field.defaultValue ?? defaultValueForField(field.type),
     ]),
+  );
+}
+
+/** 判断未知值是否符合表单元素结构。 */
+function isWorkflowFormElement(
+  value: unknown,
+): value is WorkflowDefinitionApi.WorkflowFormElement {
+  if (!isRecord(value) || typeof value.id !== 'string') return false;
+  if (value.type === 'grid') {
+    return (
+      Array.isArray(value.columns) &&
+      value.columns.every(
+        (column) =>
+          isRecord(column) &&
+          typeof column.id === 'string' &&
+          typeof column.span === 'number' &&
+          Array.isArray(column.fields) &&
+          column.fields.every(isWorkflowFormField),
+      )
+    );
+  }
+  return isWorkflowFormField(value);
+}
+
+/** 判断未知值是否符合业务字段结构。 */
+function isWorkflowFormField(
+  value: unknown,
+): value is WorkflowDefinitionApi.WorkflowFormField {
+  return (
+    isRecord(value) &&
+    typeof value.id === 'string' &&
+    typeof value.key === 'string' &&
+    typeof value.label === 'string' &&
+    typeof value.required === 'boolean' &&
+    typeof value.type === 'string' &&
+    value.type !== 'grid'
   );
 }
 

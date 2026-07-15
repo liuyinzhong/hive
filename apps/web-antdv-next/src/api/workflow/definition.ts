@@ -5,6 +5,8 @@ import { objectOmit } from '@vueuse/core';
 import { requestClient } from '#/api/request';
 
 export namespace WorkflowDefinitionApi {
+  export type WorkflowFormFieldPermission = 'editable' | 'hidden' | 'readonly';
+
   export type WorkflowFormFieldType =
     | 'checkbox'
     | 'date'
@@ -31,8 +33,22 @@ export namespace WorkflowDefinitionApi {
     type: WorkflowFormFieldType;
   }
 
-  export interface WorkflowFormSchema {
+  export interface WorkflowFormGridColumn {
     fields: WorkflowFormField[];
+    id: string;
+    span: number;
+  }
+
+  export interface WorkflowFormGrid {
+    columns: WorkflowFormGridColumn[];
+    id: string;
+    type: 'grid';
+  }
+
+  export type WorkflowFormElement = WorkflowFormField | WorkflowFormGrid;
+
+  export interface WorkflowFormSchema {
+    fields: WorkflowFormElement[];
     version: 1;
   }
 

@@ -14,6 +14,7 @@ import {
   useTaskGridFormSchema,
 } from '#/views/workflow/runtime/data';
 import TaskActionModal from '#/views/workflow/runtime/task-action-modal.vue';
+import TaskOperationModal from '#/views/workflow/runtime/task-operation-modal.vue';
 
 defineOptions({ name: 'WorkflowTaskList' });
 
@@ -52,6 +53,10 @@ const [ActionModal, actionModalApi] = useVbenModal({
   connectedComponent: TaskActionModal,
   destroyOnClose: true,
 });
+const [OperationModal, operationModalApi] = useVbenModal({
+  connectedComponent: TaskOperationModal,
+  destroyOnClose: true,
+});
 
 function openDetail(row: WorkflowRuntimeApi.WorkflowTask) {
   router.push(`/workflow/instance/detail/${row.instanceId}`);
@@ -62,6 +67,18 @@ function openAction(
   task: WorkflowRuntimeApi.WorkflowTask,
 ) {
   actionModalApi.setData({ action, task }).open();
+}
+
+function openOperation(
+  action:
+    | 'addSign'
+    | 'removeSign'
+    | 'returnNode'
+    | 'returnPrevious'
+    | 'transfer',
+  task: WorkflowRuntimeApi.WorkflowTask,
+) {
+  operationModalApi.setData({ action, task }).open();
 }
 </script>
 
@@ -91,9 +108,42 @@ function openAction(
             },
           ]"
           align="center"
+          :dropdown-actions="[
+            {
+              disabled: row.status !== '0',
+              icon: 'lucide:send',
+              text: $t('flow.runtime.task.operation.transfer'),
+              onClick: () => openOperation('transfer', row),
+            },
+            {
+              disabled: row.status !== '0',
+              icon: 'lucide:user-round-plus',
+              text: $t('flow.runtime.task.operation.addSign'),
+              onClick: () => openOperation('addSign', row),
+            },
+            {
+              disabled: row.status !== '0',
+              icon: 'lucide:user-round-minus',
+              text: $t('flow.runtime.task.operation.removeSign'),
+              onClick: () => openOperation('removeSign', row),
+            },
+            {
+              disabled: row.status !== '0',
+              icon: 'lucide:undo-2',
+              text: $t('flow.runtime.task.operation.returnPrevious'),
+              onClick: () => openOperation('returnPrevious', row),
+            },
+            {
+              disabled: row.status !== '0',
+              icon: 'lucide:corner-up-left',
+              text: $t('flow.runtime.task.operation.returnNode'),
+              onClick: () => openOperation('returnNode', row),
+            },
+          ]"
         />
       </template>
     </Grid>
     <ActionModal @success="gridApi.query" />
+    <OperationModal @success="gridApi.query" />
   </Page>
 </template>

@@ -1,11 +1,15 @@
 import type { Recordable } from '@vben/types';
 
+import type { WorkflowDefinitionApi } from './definition';
+
 import { requestClient } from '#/api/request';
 
 export namespace WorkflowRuntimeApi {
   export type ApprovalMode = 'all' | 'any';
   export type CopyStatus = '0' | '1';
   export type InstanceStatus = '0' | '1' | '2' | '3';
+  export type NodeStatus = '0' | '1' | '2' | '3';
+  export type NodeType = 'approve' | 'condition' | 'copy' | 'end' | 'start';
   export type TaskStatus = '0' | '1' | '2' | '3';
 
   export interface PaginationResult<T> {
@@ -23,6 +27,7 @@ export namespace WorkflowRuntimeApi {
     endDate?: null | string;
     formSchema?: null | string;
     instanceId: string;
+    instanceNo: string;
     startDate?: null | string;
     starterId: string;
     starterName: string;
@@ -41,10 +46,12 @@ export namespace WorkflowRuntimeApi {
     instanceId: string;
     instanceTitle: string;
     nodeId: string;
+    nodeInstanceId: string;
     nodeName: string;
     starterName: string;
     status: TaskStatus;
     taskId: string;
+    taskGroupId: string;
   }
 
   export interface WorkflowCopy {
@@ -53,6 +60,7 @@ export namespace WorkflowRuntimeApi {
     instanceId: string;
     instanceTitle: string;
     nodeId: string;
+    nodeInstanceId: string;
     nodeName: string;
     readDate?: null | string;
     receiverId: string;
@@ -66,6 +74,7 @@ export namespace WorkflowRuntimeApi {
     comment?: null | string;
     createDate?: null | string;
     nodeId?: null | string;
+    nodeInstanceId: string;
     nodeName?: null | string;
     operatorId?: null | string;
     operatorName?: null | string;
@@ -73,22 +82,62 @@ export namespace WorkflowRuntimeApi {
     taskId?: null | string;
   }
 
-  export interface WorkflowInstanceDetail {
+  export interface WorkflowNodeActor {
+    userId: string;
+    userName: string;
+  }
+
+  export interface WorkflowNodeInstance {
+    action: string;
+    actors: WorkflowNodeActor[];
+    approvalMode?: null | ApprovalMode;
+    branchEdgeId?: null | string;
     copies: WorkflowCopy[];
-    instance: WorkflowInstance;
+    durationSeconds?: null | number;
+    endDate?: null | string;
+    fieldPermissions: Record<
+      string,
+      WorkflowDefinitionApi.WorkflowFormFieldPermission
+    >;
+    nodeId: string;
+    nodeInstanceId: string;
+    nodeName: string;
+    nodeType: NodeType;
     records: WorkflowRecord[];
+    routeVersion: number;
+    sequence: number;
+    startDate?: null | string;
+    status: NodeStatus;
     tasks: WorkflowTask[];
+  }
+
+  export interface WorkflowInstanceDetail {
+    instance: WorkflowInstance;
+    nodes: WorkflowNodeInstance[];
   }
 
   export interface StartWorkflowInstanceRequest {
     businessKey?: string;
     definitionId: string;
-    title?: string;
     variables: Record<string, unknown>;
   }
 
   export interface WorkflowTaskActionRequest {
     comment?: string;
+    variables?: Record<string, unknown>;
+  }
+
+  export interface WorkflowReturnTarget {
+    nodeId: string;
+    nodeName: string;
+  }
+
+  export interface WorkflowTaskOperationRequest {
+    comment?: string;
+    targetNodeId?: string;
+    targetUserId?: string;
+    taskIds?: string[];
+    userIds?: string[];
   }
 }
 
@@ -135,6 +184,40 @@ export function rejectWorkflowTaskApi(
   data: WorkflowRuntimeApi.WorkflowTaskActionRequest,
 ) {
   return requestClient.put(`/workflow/tasks/${taskId}/reject`, data);
+}
+
+export function transferWorkflowTaskApi(
+  taskId: string,
+  data: WorkflowRuntimeApi.WorkflowTaskOperationRequest,
+) {
+  return requestClient.put(`/workflow/tasks/${taskId}/transfer`, data);
+}
+
+export function addWorkflowTaskSignApi(
+  taskId: string,
+  data: WorkflowRuntimeApi.WorkflowTaskOperationRequest,
+) {
+  return requestClient.put(`/workflow/tasks/${taskId}/add-sign`, data);
+}
+
+export function removeWorkflowTaskSignApi(
+  taskId: string,
+  data: WorkflowRuntimeApi.WorkflowTaskOperationRequest,
+) {
+  return requestClient.put(`/workflow/tasks/${taskId}/remove-sign`, data);
+}
+
+export function getWorkflowTaskReturnTargetsApi(taskId: string) {
+  return requestClient.get<WorkflowRuntimeApi.WorkflowReturnTarget[]>(
+    `/workflow/tasks/${taskId}/return-targets`,
+  );
+}
+
+export function returnWorkflowTaskApi(
+  taskId: string,
+  data: WorkflowRuntimeApi.WorkflowTaskOperationRequest,
+) {
+  return requestClient.put(`/workflow/tasks/${taskId}/return`, data);
 }
 
 export function getWorkflowCopiesApi(params: Recordable<unknown>) {

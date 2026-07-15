@@ -1,5 +1,18 @@
 {
   "title": "Flow Management",
+  "definition": {
+    "category": {
+      "general": "General",
+      "finance": "Finance",
+      "hr": "Human Resources",
+      "administration": "Administration",
+      "procurement": "Procurement",
+      "development": "Development",
+      "system": "System",
+      "other": "Other",
+      "selectPlaceholder": "Select a workflow category"
+    }
+  },
   "designer": {
     "title": "Workflow Designer",
     "flowTab": "Flow Design",
@@ -35,7 +48,7 @@
       "copyType": "CC Type",
       "specifiedUser": "Specified Users",
       "specifiedRole": "Specified Roles",
-      "initiatorLeader": "Initiator's Manager",
+      "initiatorLeader": "Initiator's Direct Superior",
       "assigneeUser": "Approvers",
       "assigneeRole": "Approval Roles",
       "copyUser": "CC Users",
@@ -44,7 +57,7 @@
       "selectAssigneeRole": "Select approval roles",
       "selectCopyUser": "Select CC users",
       "selectCopyRole": "Select CC roles",
-      "leaderHint": "The initiator's direct manager will be resolved at runtime."
+      "leaderHint": "The initiator's direct superior will be resolved at runtime."
     },
     "branch": {
       "strategy": "Branch Strategy",
@@ -76,6 +89,14 @@
       "empty": "Is empty",
       "notEmpty": "Is not empty"
     },
+    "fieldPermission": {
+      "title": "Field Permissions",
+      "hint": "Control which request fields approvers can view or edit at this node. Unconfigured fields are read-only.",
+      "empty": "Add fields in Form Design first",
+      "hidden": "Hidden",
+      "readonly": "Read-only",
+      "editable": "Editable"
+    },
     "message": {
       "actorLoadFailed": "Failed to load users and roles",
       "selectAssignee": "Select at least one approval user or role",
@@ -106,11 +127,13 @@
       "radio": "Radio",
       "checkbox": "Checkbox",
       "date": "Date",
+      "grid": "Grid Layout",
       "switch": "Switch"
     },
     "designer": {
       "tab": "Form Design",
       "components": "Fields",
+      "layoutComponents": "Layout Components",
       "preview": "Form Preview",
       "empty": "Add fields from the left panel",
       "properties": "Field Properties",
@@ -129,14 +152,24 @@
       "dateDefaultHint": "YYYY-MM-DD",
       "options": "Options",
       "optionLabel": "Option Label",
-      "optionValue": "Option Value"
+      "optionValue": "Option Value",
+      "gridColumns": "Columns",
+      "allocatedSpan": "Allocated Span",
+      "columnSettings": "Column Settings",
+      "addColumn": "Add Column",
+      "removeColumn": "Remove Column",
+      "columnNumber": "Column {0}",
+      "columnEmpty": "Select this column to add fields, or drag fields here",
+      "rootDrop": "Drop here to move out of the grid",
+      "gridHint": "Each row uses a 24-column grid. Column spans must total no more than 24. New fields are added to the selected column."
     },
     "message": {
       "saveSuccess": "Form saved",
       "fieldRequired": "The workflow form needs at least one field",
       "fieldInvalid": "The label or key for field “{0}” is invalid",
       "fieldDuplicate": "Field key “{0}” must be unique",
-      "optionInvalid": "Field “{0}” needs at least one complete option"
+      "optionInvalid": "Field “{0}” needs at least one complete option",
+      "gridInvalid": "Grid column spans must be between 1 and 24 and total no more than 24"
     },
     "runtime": {
       "startApplication": "Start Request",
@@ -155,6 +188,7 @@
       "detail": "Details",
       "status": "Status",
       "title": "Flow Title",
+      "instanceNo": "Flow No",
       "definition": "Flow Definition",
       "starter": "Initiator",
       "node": "Flow Node",
@@ -193,7 +227,27 @@
       "canceled": "Canceled",
       "commentPlaceholder": "Enter an approval comment",
       "approveSuccess": "Task approved",
-      "rejectSuccess": "Task rejected"
+      "rejectSuccess": "Task rejected",
+      "operation": {
+        "transfer": "Transfer",
+        "transferPlaceholder": "Select a user",
+        "transferSuccess": "Task transferred",
+        "addSign": "Add Approvers",
+        "addSignPlaceholder": "Select users to add",
+        "addSignSuccess": "Approvers added",
+        "removeSign": "Remove Approvers",
+        "removeSignPlaceholder": "Select approvers to remove",
+        "removeSignSuccess": "Approvers removed",
+        "returnPrevious": "Return to Previous",
+        "returnPreviousPlaceholder": "No previous approval node is available",
+        "returnPreviousSuccess": "Returned to the previous approval node",
+        "returnNode": "Return to Node",
+        "returnNodePlaceholder": "Select a previously approved node",
+        "returnNodeSuccess": "Returned to the selected approval node",
+        "note": "Note",
+        "notePlaceholder": "Enter an optional note",
+        "noOptions": "No options are available"
+      }
     },
     "copy": {
       "title": "My CC",
@@ -212,26 +266,30 @@
       "definitionVersion": "Definition Version",
       "startDate": "Started At",
       "endDate": "Ended At",
+      "durationSeconds": "Duration: {0} seconds",
       "variables": "Flow Variables",
       "operator": "Operator",
       "assignee": "Approver",
       "receiver": "Receiver",
       "history": "Flow Progress",
       "application": "Request Information",
-      "instanceId": "Instance ID",
+      "instanceNo": "Instance No",
       "systemOperator": "System",
       "noVariables": "No flow variables",
       "noRecords": "No flow history",
       "action": {
+        "planned": "Not Reached",
         "start": "Flow Started",
         "pending": "Awaiting Approval",
         "approve": "Approved",
+        "transfer": "Task Transferred",
+        "addSign": "Approvers Added",
+        "removeSign": "Approvers Removed",
+        "return": "Returned to Approval Node",
         "reject": "Rejected",
-        "rejected": "Flow Rejected",
         "copy": "Copied",
         "branch": "Condition Branch",
         "complete": "Entered End Node",
-        "completed": "Flow Completed",
         "cancel": "Flow Canceled"
       }
     },

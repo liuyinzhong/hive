@@ -138,7 +138,7 @@
     "role": "角色",
     "status": "状态",
     "remark": "备注",
-    "leader": "直属主管"
+    "leader": "直属上级"
   },
   "title": "系统管理"
 }

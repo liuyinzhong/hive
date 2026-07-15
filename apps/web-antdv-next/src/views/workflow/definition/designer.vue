@@ -7,7 +7,7 @@ import { Menu, SelectionSelect } from '@logicflow/extension';
 import '@logicflow/core/es/index.css';
 import '@logicflow/extension/es/index.css';
 
-import { Page } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
 
 import { Button, message, Space, TabPane, Tabs } from 'antdv-next';
@@ -17,8 +17,8 @@ import {
   publishWorkflowDefinitionApi,
   saveWorkflowDefinitionCanvasApi,
   saveWorkflowDefinitionFormApi,
-  type WorkflowDefinitionApi,
 } from '#/api/workflow';
+import type { WorkflowDefinitionApi } from '#/api/workflow';
 import { $t } from '#/locales';
 
 import NodePanel from './components/node-panel.vue';
@@ -26,6 +26,8 @@ import FormDesigner from './components/form-designer.vue';
 import PropertyPanel from './components/property-panel.vue';
 import {
   createEmptyWorkflowFormSchema,
+  getWorkflowFormFields,
+  isWorkflowFormGrid,
   parseWorkflowFormSchema,
 } from '../form/schema';
 import type {
@@ -41,10 +43,15 @@ defineOptions({
 
 type LogicFlowInstance = InstanceType<typeof LogicFlow>;
 
+interface PropertyPanelExpose {
+  submit: () => void;
+}
+
 const route = useRoute();
 const router = useRouter();
 const containerRef = ref<HTMLDivElement>();
 const lfRef = ref<LogicFlowInstance>();
+const propertyPanelRef = ref<PropertyPanelExpose>();
 const selectedElement = ref<WorkflowElement>();
 const definition = ref<WorkflowDefinitionApi.WorkflowDefinition>();
 const loading = ref(false);
@@ -53,6 +60,15 @@ const activeMode = ref<'flow' | 'form'>('flow');
 const formSchema = ref<WorkflowDefinitionApi.WorkflowFormSchema>(
   createEmptyWorkflowFormSchema(),
 );
+const formFields = computed(() => getWorkflowFormFields(formSchema.value));
+
+const [PropertyDrawer, propertyDrawerApi] = useVbenDrawer({
+  confirmText: $t('flow.designer.apply'),
+  onConfirm() {
+    propertyPanelRef.value?.submit();
+  },
+  title: $t('flow.designer.property'),
+});
 
 const isConditionEdge = computed(() => {
   const edge = selectedElement.value;
@@ -132,7 +148,7 @@ function initLogicFlow() {
     setSelectedElement(data);
   });
   lf.on('blank:click', () => {
-    selectedElement.value = undefined;
+    setSelectedElement(undefined);
   });
   lf.on('selection:selected', ({ data }: { data?: unknown[] }) => {
     setSelectedElement(data?.[0]);
@@ -151,7 +167,7 @@ function resolveGraphData(flowData?: string): WorkflowGraphData {
 
   try {
     const graphData: unknown = JSON.parse(flowData);
-    if (isWorkflowGraphData(graphData) && graphData.nodes.length) {
+    if (isWorkflowGraphData(graphData) && graphData.nodes.length > 0) {
       return graphData;
     }
   } catch {
@@ -176,7 +192,11 @@ function getInitialGraphData(): WorkflowGraphData {
       {
         id: 'start',
         properties: { nodeType: 'start' },
-        text: $t('flow.designer.node.startShort'),
+        text: {
+          value: $t('flow.designer.node.startShort'),
+          x: 220,
+          y: 240,
+        },
         type: 'circle',
         x: 220,
         y: 240,
@@ -184,7 +204,11 @@ function getInitialGraphData(): WorkflowGraphData {
       {
         id: 'end',
         properties: { nodeType: 'end' },
-        text: $t('flow.designer.node.endShort'),
+        text: {
+          value: $t('flow.designer.node.endShort'),
+          x: 620,
+          y: 240,
+        },
         type: 'circle',
         x: 620,
         y: 240,
@@ -224,8 +248,12 @@ function onPropertyChange(values: WorkflowPropertyValues) {
   if (propertyValues.isDefaultBranch === true && element.sourceNodeId) {
     clearSiblingDefaultBranches(element.id, element.sourceNodeId);
   }
-  setSelectedElement(lf.getDataById(element.id));
+  const updatedElement = lf.getDataById(element.id);
+  selectedElement.value = isWorkflowElement(updatedElement)
+    ? updatedElement
+    : undefined;
   message.success($t('flow.designer.message.propertyApplied'));
+  propertyDrawerApi.close();
 }
 
 /** 清除同一条件节点其它出线的默认分支标记。 */
@@ -257,6 +285,7 @@ function onRemoveElement(id: string) {
   }
   lfRef.value?.deleteElement(id);
   selectedElement.value = undefined;
+  propertyDrawerApi.close();
 }
 
 /** 保存当前激活的表单设计或流程画布。 */
@@ -304,13 +333,28 @@ async function onPublish() {
 
 /** 发布前校验表单字段完整性、字段标识和选项配置。 */
 function validateFormSchema() {
-  const fields = formSchema.value.fields;
+  const fields = formFields.value;
   if (fields.length === 0) {
     message.error($t('flow.form.message.fieldRequired'));
     return false;
   }
   const keyPattern = /^[A-Za-z][A-Za-z0-9_]{0,63}$/;
   const keys = new Set<string>();
+  for (const element of formSchema.value.fields) {
+    if (!isWorkflowFormGrid(element)) continue;
+    const totalSpan = element.columns.reduce(
+      (total, column) => total + column.span,
+      0,
+    );
+    if (
+      element.columns.length === 0 ||
+      totalSpan > 24 ||
+      element.columns.some((column) => column.span < 1 || column.span > 24)
+    ) {
+      message.error($t('flow.form.message.gridInvalid'));
+      return false;
+    }
+  }
   for (const field of fields) {
     if (!field.label.trim() || !keyPattern.test(field.key)) {
       message.error($t('flow.form.message.fieldInvalid', [field.label]));
@@ -347,8 +391,7 @@ function validateConditionBranches() {
   );
 
   for (const node of conditionNodes) {
-    const nodeName =
-      typeof node.text === 'string' ? node.text : node.text?.value || node.id;
+    const nodeName = node.text?.value || node.id;
     const outgoingEdges = graphData.edges.filter(
       (edge) => edge.sourceNodeId === node.id,
     );
@@ -366,7 +409,8 @@ function validateConditionBranches() {
     const invalidEdge = outgoingEdges.find(
       (edge) =>
         edge.properties?.isDefaultBranch !== true &&
-        !edge.properties?.conditionExpression,
+        (!edge.properties?.conditionRules?.length ||
+          !['and', 'or'].includes(edge.properties.conditionLogic ?? '')),
     );
     if (invalidEdge) {
       message.error($t('flow.designer.message.conditionMissing', [nodeName]));
@@ -395,7 +439,13 @@ function validateConditionBranches() {
 
 /** 将未知 LogicFlow 数据设置为当前选中元素。 */
 function setSelectedElement(value: unknown) {
-  selectedElement.value = isWorkflowElement(value) ? value : undefined;
+  const element = isWorkflowElement(value) ? value : undefined;
+  selectedElement.value = element;
+  if (element) {
+    propertyDrawerApi.open();
+    return;
+  }
+  propertyDrawerApi.close();
 }
 
 /** 获取经过结构校验的 LogicFlow 画布数据。 */
@@ -409,12 +459,31 @@ function isWorkflowGraphData(value: unknown): value is WorkflowGraphData {
   if (!isRecord(value)) {
     return false;
   }
-  return Array.isArray(value.edges) && Array.isArray(value.nodes);
+  return (
+    Array.isArray(value.edges) &&
+    value.edges.every(isWorkflowElement) &&
+    Array.isArray(value.nodes) &&
+    value.nodes.every(isWorkflowElement)
+  );
 }
 
 /** 判断未知值是否为 LogicFlow 节点或连线数据。 */
 function isWorkflowElement(value: unknown): value is WorkflowElement {
-  return isRecord(value) && typeof value.id === 'string';
+  return (
+    isRecord(value) &&
+    typeof value.id === 'string' &&
+    (value.text === undefined || isWorkflowElementText(value.text))
+  );
+}
+
+/** 判断未知值是否为当前 LogicFlow 文本对象。 */
+function isWorkflowElementText(value: unknown) {
+  return (
+    isRecord(value) &&
+    typeof value.value === 'string' &&
+    typeof value.x === 'number' &&
+    typeof value.y === 'number'
+  );
 }
 
 /** 判断未知值是否为可读取字段的对象。 */
@@ -525,16 +594,31 @@ function onFitView() {
             <main class="canvas-wrap">
               <div ref="containerRef" class="logicflow-canvas"></div>
             </main>
-            <PropertyPanel
-              :condition-edge="isConditionEdge"
-              :element="selectedElement"
-              :form-fields="formSchema.fields"
-              @change="onPropertyChange"
-              @remove="onRemoveElement"
-            />
           </div>
         </TabPane>
       </Tabs>
+
+      <PropertyDrawer class="w-[440px]">
+        <PropertyPanel
+          ref="propertyPanelRef"
+          :condition-edge="isConditionEdge"
+          :element="selectedElement"
+          :form-fields="formFields"
+          @change="onPropertyChange"
+        />
+        <template #prepend-footer>
+          <div class="mr-auto">
+            <Button
+              v-if="selectedElement"
+              danger
+              @click="onRemoveElement(selectedElement.id)"
+            >
+              <IconifyIcon class="size-4" icon="lucide:trash-2" />
+              {{ $t('flow.designer.delete') }}
+            </Button>
+          </div>
+        </template>
+      </PropertyDrawer>
     </div>
   </Page>
 </template>
@@ -542,48 +626,48 @@ function onFitView() {
 <style scoped>
 .workflow-designer {
   display: flex;
-  overflow: hidden;
+  flex-direction: column;
   height: 100%;
   min-height: 680px;
-  flex-direction: column;
+  overflow: hidden;
+  background: hsl(var(--background));
   border: 1px solid hsl(var(--border));
   border-radius: 8px;
-  background: hsl(var(--background));
 }
 
 .designer-header {
   display: flex;
-  min-height: 58px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid hsl(var(--border));
+  min-height: 58px;
   padding: 10px 12px;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .title-block {
   display: flex;
-  align-items: center;
   gap: 12px;
+  align-items: center;
 }
 
 .title {
-  color: hsl(var(--foreground));
   font-size: 15px;
   font-weight: 600;
+  color: hsl(var(--foreground));
 }
 
 .meta {
-  color: hsl(var(--muted-foreground));
-  font-size: 12px;
   margin-top: 2px;
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
 }
 
 .zoom-actions {
   display: inline-flex;
   overflow: hidden;
+  background: hsl(var(--background));
   border: 1px solid hsl(var(--border));
   border-radius: 6px;
-  background: hsl(var(--background));
 }
 
 .zoom-actions :deep(.ant-btn) {
@@ -600,26 +684,26 @@ function onFitView() {
 .zoom-percent {
   min-width: 64px;
   padding-inline: 8px;
-  color: hsl(var(--foreground));
   font-variant-numeric: tabular-nums;
+  color: hsl(var(--foreground));
 }
 
 .designer-body {
   display: flex;
-  overflow: hidden;
+  flex: 1;
   height: 100%;
   min-height: 0;
-  flex: 1;
+  overflow: hidden;
 }
 
 .designer-tabs {
-  min-height: 0;
   flex: 1;
+  min-height: 0;
 }
 
 .designer-tabs :deep(.ant-tabs-nav) {
-  margin: 0;
   padding: 0 16px;
+  margin: 0;
 }
 
 .designer-tabs :deep(.ant-tabs-body-holder) {
@@ -633,8 +717,8 @@ function onFitView() {
 }
 
 .canvas-wrap {
-  min-width: 0;
   flex: 1;
+  min-width: 0;
   background:
     linear-gradient(90deg, rgb(15 23 42 / 4%) 1px, transparent 1px),
     linear-gradient(rgb(15 23 42 / 4%) 1px, transparent 1px);

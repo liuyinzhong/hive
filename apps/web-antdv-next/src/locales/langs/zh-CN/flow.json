@@ -1,5 +1,18 @@
 {
   "title": "流程管理",
+  "definition": {
+    "category": {
+      "general": "通用",
+      "finance": "财务",
+      "hr": "人事",
+      "administration": "行政",
+      "procurement": "采购",
+      "development": "开发",
+      "system": "系统",
+      "other": "其他",
+      "selectPlaceholder": "请选择流程分类"
+    }
+  },
   "designer": {
     "title": "流程设计器",
     "flowTab": "流程设计",
@@ -35,7 +48,7 @@
       "copyType": "抄送类型",
       "specifiedUser": "指定用户",
       "specifiedRole": "指定角色",
-      "initiatorLeader": "发起人主管",
+      "initiatorLeader": "发起人直属上级",
       "assigneeUser": "审批用户",
       "assigneeRole": "审批角色",
       "copyUser": "抄送用户",
@@ -44,7 +57,7 @@
       "selectAssigneeRole": "请选择审批角色",
       "selectCopyUser": "请选择抄送用户",
       "selectCopyRole": "请选择抄送角色",
-      "leaderHint": "运行时将根据流程发起人自动查找其直属主管。"
+      "leaderHint": "运行时将根据流程发起人自动查找其直属上级。"
     },
     "branch": {
       "strategy": "分支策略",
@@ -76,6 +89,14 @@
       "empty": "为空",
       "notEmpty": "不为空"
     },
+    "fieldPermission": {
+      "title": "节点字段权限",
+      "hint": "配置审批人在当前节点可查看和修改的申请字段，未配置字段默认只读。",
+      "empty": "请先在表单设计中添加字段",
+      "hidden": "隐藏",
+      "readonly": "只读",
+      "editable": "可编辑"
+    },
     "message": {
       "actorLoadFailed": "用户和角色数据加载失败",
       "selectAssignee": "请选择审批用户或角色",
@@ -106,11 +127,13 @@
       "radio": "单选",
       "checkbox": "多选",
       "date": "日期",
+      "grid": "栅格布局",
       "switch": "开关"
     },
     "designer": {
       "tab": "表单设计",
       "components": "字段组件",
+      "layoutComponents": "布局组件",
       "preview": "表单预览",
       "empty": "从左侧添加表单字段",
       "properties": "字段属性",
@@ -129,14 +152,24 @@
       "dateDefaultHint": "YYYY-MM-DD",
       "options": "选项配置",
       "optionLabel": "选项名称",
-      "optionValue": "选项值"
+      "optionValue": "选项值",
+      "gridColumns": "列数",
+      "allocatedSpan": "已分配栅格",
+      "columnSettings": "列设置",
+      "addColumn": "添加列",
+      "removeColumn": "删除列",
+      "columnNumber": "第{0}列",
+      "columnEmpty": "选择此列后添加字段，或拖入字段",
+      "rootDrop": "拖到这里移出栅格布局",
+      "gridHint": "每行采用24栅格，所有列宽总和不能超过24。选中列后，从左侧添加的字段会进入该列。"
     },
     "message": {
       "saveSuccess": "表单保存成功",
       "fieldRequired": "流程表单至少需要一个字段",
       "fieldInvalid": "字段“{0}”的名称或标识不合法",
       "fieldDuplicate": "字段标识“{0}”不能重复",
-      "optionInvalid": "字段“{0}”至少需要一个完整选项"
+      "optionInvalid": "字段“{0}”至少需要一个完整选项",
+      "gridInvalid": "栅格布局的列宽必须在1到24之间，且总和不能超过24"
     },
     "runtime": {
       "startApplication": "发起申请",
@@ -155,6 +188,7 @@
       "detail": "详情",
       "status": "状态",
       "title": "流程标题",
+      "instanceNo": "流程编号",
       "definition": "流程定义",
       "starter": "发起人",
       "node": "流程节点",
@@ -193,7 +227,27 @@
       "canceled": "已取消",
       "commentPlaceholder": "请输入审批意见",
       "approveSuccess": "审批已通过",
-      "rejectSuccess": "审批已驳回"
+      "rejectSuccess": "审批已驳回",
+      "operation": {
+        "transfer": "转交",
+        "transferPlaceholder": "请选择转交用户",
+        "transferSuccess": "任务已转交",
+        "addSign": "加签",
+        "addSignPlaceholder": "请选择加签用户",
+        "addSignSuccess": "加签成功",
+        "removeSign": "减签",
+        "removeSignPlaceholder": "请选择要移除的审批人",
+        "removeSignSuccess": "减签成功",
+        "returnPrevious": "退回上一节点",
+        "returnPreviousPlaceholder": "暂无可退回的上一审批节点",
+        "returnPreviousSuccess": "已退回上一审批节点",
+        "returnNode": "退回指定节点",
+        "returnNodePlaceholder": "请选择已审批通过的历史节点",
+        "returnNodeSuccess": "已退回指定审批节点",
+        "note": "操作说明",
+        "notePlaceholder": "请输入操作说明（选填）",
+        "noOptions": "当前没有可选项"
+      }
     },
     "copy": {
       "title": "我的抄送",
@@ -212,26 +266,30 @@
       "definitionVersion": "定义版本",
       "startDate": "开始时间",
       "endDate": "结束时间",
+      "durationSeconds": "停留 {0} 秒",
       "variables": "流程变量",
       "operator": "操作人",
       "assignee": "审批人",
       "receiver": "接收人",
       "history": "流转进度",
       "application": "申请信息",
-      "instanceId": "实例编号",
+      "instanceNo": "实例编号",
       "systemOperator": "系统自动处理",
       "noVariables": "暂无流程变量",
       "noRecords": "暂无流转记录",
       "action": {
+        "planned": "尚未到达",
         "start": "发起流程",
         "pending": "等待审批",
         "approve": "审批通过",
+        "transfer": "任务转交",
+        "addSign": "增加审批人",
+        "removeSign": "移除审批人",
+        "return": "退回审批节点",
         "reject": "审批驳回",
-        "rejected": "流程驳回",
         "copy": "流程抄送",
         "branch": "条件分支",
         "complete": "进入结束节点",
-        "completed": "流程完成",
         "cancel": "流程撤销"
       }
     },

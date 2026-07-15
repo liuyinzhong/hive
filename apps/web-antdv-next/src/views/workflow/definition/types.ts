@@ -22,12 +22,15 @@ export interface WorkflowElementProperties {
   assigneeType?: WorkflowAssigneeType;
   approvalMode?: WorkflowApprovalMode;
   branchMode?: WorkflowBranchMode;
-  conditionExpression?: string;
   conditionLogic?: WorkflowConditionLogic;
   conditionRules?: WorkflowConditionRule[];
   copyIds?: string[];
   copyNames?: string[];
   copyType?: Exclude<WorkflowAssigneeType, 'leader'>;
+  fieldPermissions?: Record<
+    string,
+    import('#/api/workflow').WorkflowDefinitionApi.WorkflowFormFieldPermission
+  >;
   isDefaultBranch?: boolean;
   nodeType?: WorkflowNodeType;
   priority?: number;
@@ -44,7 +47,7 @@ export interface WorkflowElement {
   properties?: WorkflowElementProperties;
   sourceNodeId?: string;
   targetNodeId?: string;
-  text?: string | WorkflowElementText;
+  text?: WorkflowElementText;
 }
 
 export interface WorkflowNodeData extends WorkflowElement {

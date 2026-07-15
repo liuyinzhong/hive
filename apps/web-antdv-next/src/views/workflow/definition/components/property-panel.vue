@@ -38,12 +38,15 @@ interface PropertyFormState {
   assigneeType: WorkflowAssigneeType;
   approvalMode: WorkflowApprovalMode;
   branchMode: WorkflowBranchMode;
-  conditionExpression: string;
   conditionLogic: WorkflowConditionLogic;
   conditionRules: WorkflowConditionRule[];
   copyIds: string[];
   copyNames: string[];
   copyType: Exclude<WorkflowAssigneeType, 'leader'>;
+  fieldPermissions: Record<
+    string,
+    WorkflowDefinitionApi.WorkflowFormFieldPermission
+  >;
   isDefaultBranch: boolean;
   priority: number;
   text: string;
@@ -57,7 +60,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   change: [values: WorkflowPropertyValues];
-  remove: [id: string];
 }>();
 
 const actorLoading = ref(false);
@@ -72,12 +74,12 @@ const formState = reactive<PropertyFormState>({
   assigneeType: 'user',
   approvalMode: 'any',
   branchMode: 'firstMatch',
-  conditionExpression: '',
   conditionLogic: 'and',
   conditionRules: [],
   copyIds: [],
   copyNames: [],
   copyType: 'user',
+  fieldPermissions: {},
   isDefaultBranch: false,
   priority: 1,
   text: '',
@@ -124,6 +126,11 @@ const conditionOperatorOptions = [
 const branchModeOptions = [
   { label: $t('flow.designer.branch.firstMatch'), value: 'firstMatch' },
 ];
+const fieldPermissionOptions = [
+  { label: $t('flow.designer.fieldPermission.hidden'), value: 'hidden' },
+  { label: $t('flow.designer.fieldPermission.readonly'), value: 'readonly' },
+  { label: $t('flow.designer.fieldPermission.editable'), value: 'editable' },
+];
 
 const formFieldOptions = computed(() =>
   (props.formFields ?? []).map((field) => ({
@@ -143,9 +150,7 @@ const activeAssigneeOptions = computed(() =>
 const activeCopyOptions = computed(() =>
   formState.copyType === 'role' ? roleOptions.value : userOptions.value,
 );
-const conditionExpressionPreview = computed(
-  () => buildConditionExpression() || formState.conditionExpression,
-);
+const generatedConditionExpression = computed(() => buildConditionExpression());
 
 watch(
   () => props.element,
@@ -154,25 +159,25 @@ watch(
     formState.text = normalizeText(element?.text);
     formState.assigneeType = properties.assigneeType ?? 'user';
     formState.approvalMode = properties.approvalMode === 'all' ? 'all' : 'any';
-    formState.assigneeIds = normalizeStringArray(properties.assigneeIds);
-    formState.assigneeNames = normalizeStringArray(properties.assigneeNames);
+    formState.assigneeIds = readStringArray(properties.assigneeIds);
+    formState.assigneeNames = readStringArray(properties.assigneeNames);
     assigneeNameSnapshot.value = createNameSnapshot(
       formState.assigneeIds,
       formState.assigneeNames,
     );
     formState.copyType = properties.copyType ?? 'user';
-    formState.copyIds = normalizeStringArray(properties.copyIds);
-    formState.copyNames = normalizeStringArray(properties.copyNames);
+    formState.fieldPermissions = normalizeFieldPermissions(
+      properties.fieldPermissions,
+    );
+    formState.copyIds = readStringArray(properties.copyIds);
+    formState.copyNames = readStringArray(properties.copyNames);
     copyNameSnapshot.value = createNameSnapshot(
       formState.copyIds,
       formState.copyNames,
     );
-    formState.conditionExpression = properties.conditionExpression ?? '';
     formState.conditionLogic =
       properties.conditionLogic === 'or' ? 'or' : 'and';
-    formState.conditionRules = normalizeConditionRules(
-      properties.conditionRules,
-    );
+    formState.conditionRules = readConditionRules(properties.conditionRules);
     formState.branchMode = 'firstMatch';
     formState.isDefaultBranch = properties.isDefaultBranch === true;
     formState.priority = normalizePriority(properties.priority);
@@ -209,18 +214,31 @@ async function loadActorOptions() {
 
 /** 将 LogicFlow 文本对象转换为表单可编辑字符串。 */
 function normalizeText(text?: WorkflowElement['text']) {
-  if (typeof text === 'string') {
-    return text;
-  }
   return text?.value ?? '';
 }
 
-/** 将未知值规范化为字符串数组，兼容旧画布数据。 */
-function normalizeStringArray(value: unknown): string[] {
+/** 读取当前画布格式中的字符串数组。 */
+function readStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) {
     return [];
   }
-  return value.map((item) => String(item));
+  return value.filter((item): item is string => typeof item === 'string');
+}
+
+/** 读取审批节点字段权限，新字段默认只读。 */
+function normalizeFieldPermissions(value: unknown) {
+  const source = isRecord(value) ? value : {};
+  return Object.fromEntries(
+    (props.formFields ?? []).map((field) => {
+      const permission = source[field.key];
+      return [
+        field.key,
+        permission === 'editable' || permission === 'hidden'
+          ? permission
+          : 'readonly',
+      ];
+    }),
+  ) as Record<string, WorkflowDefinitionApi.WorkflowFormFieldPermission>;
 }
 
 /** 将未知优先级规范化为大于零的整数。 */
@@ -229,7 +247,7 @@ function normalizePriority(value: unknown) {
   return Number.isInteger(priority) && priority > 0 ? priority : 1;
 }
 
-/** 根据历史 ID 和名称创建快照，供已停用对象回显使用。 */
+/** 根据已选 ID 和保存的名称创建快照。 */
 function createNameSnapshot(ids: string[], names: string[]) {
   return new Map(ids.map((id, index) => [id, names[index] ?? id]));
 }
@@ -243,21 +261,22 @@ function createConditionRule(): WorkflowConditionRule {
   };
 }
 
-/** 将历史条件数据规范化为当前条件规则结构。 */
-function normalizeConditionRules(value: unknown): WorkflowConditionRule[] {
+/** 读取当前画布格式中的条件规则。 */
+function readConditionRules(value: unknown): WorkflowConditionRule[] {
   if (!Array.isArray(value) || value.length === 0) {
     return [createConditionRule()];
   }
-  return value.map((item) => {
-    if (!isRecord(item)) {
-      return createConditionRule();
-    }
-    return {
-      field: String(item.field ?? ''),
-      operator: String(item.operator ?? 'equal'),
-      value: String(item.value ?? ''),
-    };
-  });
+  const rules = value.filter(isConditionRule).map((item) => ({ ...item }));
+  return rules.length > 0 ? rules : [createConditionRule()];
+}
+
+function isConditionRule(value: unknown): value is WorkflowConditionRule {
+  return (
+    isRecord(value) &&
+    typeof value.field === 'string' &&
+    typeof value.operator === 'string' &&
+    typeof value.value === 'string'
+  );
 }
 
 /** 判断未知值是否为可读取字段的对象。 */
@@ -402,7 +421,7 @@ function buildConditionExpression() {
   return expressions.join(connector);
 }
 
-/** 根据已选 ID 生成名称快照，兼容已停用但仍存在于历史画布的对象。 */
+/** 根据已选 ID 生成名称快照，并保留已停用对象的保存名称。 */
 function resolveSelectionNames(
   ids: string[],
   options: SelectOption[],
@@ -438,6 +457,9 @@ function submit() {
       activeAssigneeOptions.value,
       assigneeNameSnapshot.value,
     );
+    values.fieldPermissions = normalizeFieldPermissions(
+      formState.fieldPermissions,
+    );
   }
 
   if (nodeType.value === 'copy') {
@@ -456,7 +478,6 @@ function submit() {
 
   if (nodeType.value === 'condition') {
     values.branchMode = formState.branchMode;
-    values.conditionExpression = '';
     values.conditionRules = [];
   }
 
@@ -464,13 +485,12 @@ function submit() {
     values.isDefaultBranch = formState.isDefaultBranch;
     values.priority = formState.priority;
     if (formState.isDefaultBranch) {
-      values.conditionExpression = '';
       values.conditionRules = [];
       values.conditionLogic = 'and';
       emit('change', values);
       return;
     }
-    if (!conditionExpressionPreview.value) {
+    if (!generatedConditionExpression.value) {
       message.warning($t('flow.designer.message.conditionRequired'));
       return;
     }
@@ -478,23 +498,17 @@ function submit() {
     values.conditionRules = getValidConditionRules().map((rule) => ({
       ...rule,
     }));
-    values.conditionExpression = conditionExpressionPreview.value;
   }
 
   emit('change', values);
 }
+
+defineExpose({ submit });
 </script>
 
 <template>
-  <aside class="workflow-property-panel">
-    <div class="panel-title">{{ $t('flow.designer.property') }}</div>
-
-    <div v-if="!element" class="empty-state">
-      <IconifyIcon class="size-8" icon="lucide:mouse-pointer-click" />
-      <span>{{ $t('flow.designer.selectElement') }}</span>
-    </div>
-
-    <div v-else class="property-form">
+  <div v-if="element" class="workflow-property-panel">
+    <div class="property-form">
       <label class="field">
         <span>{{ $t('flow.designer.id') }}</span>
         <Input :value="elementId" disabled />
@@ -553,6 +567,34 @@ function submit() {
 
         <div v-else class="field-hint">
           {{ $t('flow.designer.actor.leaderHint') }}
+        </div>
+
+        <div class="field-permission-section">
+          <div class="field-permission-heading">
+            {{ $t('flow.designer.fieldPermission.title') }}
+          </div>
+          <div class="field-hint">
+            {{ $t('flow.designer.fieldPermission.hint') }}
+          </div>
+          <div v-if="formFields?.length" class="field-permission-list">
+            <div
+              v-for="field in formFields"
+              :key="field.key"
+              class="field-permission-item"
+            >
+              <div class="field-permission-name">
+                <span>{{ field.label }}</span>
+                <small>{{ field.key }}</small>
+              </div>
+              <Select
+                v-model:value="formState.fieldPermissions[field.key]"
+                :options="fieldPermissionOptions"
+              />
+            </div>
+          </div>
+          <div v-else class="field-hint">
+            {{ $t('flow.designer.fieldPermission.empty') }}
+          </div>
         </div>
       </template>
 
@@ -695,7 +737,7 @@ function submit() {
           <span>{{ $t('flow.designer.condition.expression') }}</span>
           <TextArea
             :rows="3"
-            :value="conditionExpressionPreview"
+            :value="generatedConditionExpression"
             disabled
             :placeholder="$t('flow.designer.condition.expressionPlaceholder')"
           />
@@ -706,45 +748,13 @@ function submit() {
         {{ $t('flow.designer.branch.normalEdgeHint') }}
       </div>
 
-      <div class="actions">
-        <Button type="primary" @click="submit">
-          {{ $t('flow.designer.apply') }}
-        </Button>
-        <Button danger @click="emit('remove', elementId)">
-          {{ $t('flow.designer.delete') }}
-        </Button>
-      </div>
     </div>
-  </aside>
+  </div>
 </template>
 
 <style scoped>
 .workflow-property-panel {
-  width: 360px;
   min-height: 0;
-  flex: none;
-  border-left: 1px solid hsl(var(--border));
-  background: hsl(var(--background));
-  overflow-y: auto;
-  padding: 12px;
-}
-
-.panel-title {
-  margin-bottom: 10px;
-  color: hsl(var(--muted-foreground));
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.empty-state {
-  display: flex;
-  min-height: 180px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-  color: hsl(var(--muted-foreground));
-  font-size: 13px;
 }
 
 .property-form {
@@ -801,6 +811,56 @@ function submit() {
   gap: 8px;
 }
 
+.field-permission-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid hsl(var(--border));
+  padding-top: 12px;
+}
+
+.field-permission-heading {
+  color: hsl(var(--foreground));
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.field-permission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-permission-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-permission-name {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.field-permission-name span,
+.field-permission-name small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.field-permission-name span {
+  color: hsl(var(--foreground));
+  font-size: 13px;
+}
+
+.field-permission-name small {
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+
 .condition-header,
 .condition-rule-header {
   display: flex;
@@ -827,10 +887,4 @@ function submit() {
   padding-inline: 0;
 }
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding-top: 4px;
-}
 </style>

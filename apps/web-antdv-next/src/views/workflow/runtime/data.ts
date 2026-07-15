@@ -99,6 +99,11 @@ export function useCopyGridFormSchema(): VbenFormSchema[] {
 
 export function useInstanceColumns(): VxeTableGridOptions<WorkflowRuntimeApi.WorkflowInstance>['columns'] {
   return [
+    {
+      field: 'instanceNo',
+      minWidth: 170,
+      title: $t('flow.runtime.common.instanceNo'),
+    },
     { field: 'title', minWidth: 200, title: $t('flow.runtime.common.title') },
     {
       field: 'definitionName',
@@ -174,7 +179,48 @@ export function useTaskColumns(): VxeTableGridOptions<WorkflowRuntimeApi.Workflo
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('flow.runtime.common.operation'),
-      width: 210,
+      width: 250,
+    },
+  ];
+}
+
+export function useTaskDetailColumns(): VxeTableGridOptions<WorkflowRuntimeApi.WorkflowTask>['columns'] {
+  return [
+    { field: 'nodeName', minWidth: 160, title: $t('flow.runtime.common.node') },
+    {
+      field: 'assigneeName',
+      minWidth: 130,
+      title: $t('flow.runtime.detail.assignee'),
+    },
+    {
+      field: 'approvalMode',
+      formatter: ({ row }) =>
+        row.approvalMode === 'all'
+          ? $t('flow.runtime.task.approvalAll')
+          : $t('flow.runtime.task.approvalAny'),
+      title: $t('flow.runtime.task.approvalMode'),
+      width: 110,
+    },
+    {
+      cellRender: { name: 'CellTag', options: getTaskStatusOptions() },
+      field: 'status',
+      title: $t('flow.runtime.common.status'),
+      width: 100,
+    },
+    {
+      field: 'comment',
+      minWidth: 180,
+      title: $t('flow.runtime.common.comment'),
+    },
+    {
+      field: 'createDate',
+      title: $t('flow.runtime.common.createDate'),
+      width: 170,
+    },
+    {
+      field: 'finishDate',
+      title: $t('flow.runtime.common.finishDate'),
+      width: 170,
     },
   ];
 }
@@ -213,6 +259,33 @@ export function useCopyColumns(): VxeTableGridOptions<WorkflowRuntimeApi.Workflo
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('flow.runtime.common.operation'),
+      width: 170,
+    },
+  ];
+}
+
+export function useCopyDetailColumns(): VxeTableGridOptions<WorkflowRuntimeApi.WorkflowCopy>['columns'] {
+  return [
+    { field: 'nodeName', minWidth: 160, title: $t('flow.runtime.common.node') },
+    {
+      field: 'receiverName',
+      minWidth: 130,
+      title: $t('flow.runtime.detail.receiver'),
+    },
+    {
+      cellRender: { name: 'CellTag', options: getCopyStatusOptions() },
+      field: 'status',
+      title: $t('flow.runtime.common.status'),
+      width: 100,
+    },
+    {
+      field: 'createDate',
+      title: $t('flow.runtime.common.createDate'),
+      width: 170,
+    },
+    {
+      field: 'readDate',
+      title: $t('flow.runtime.common.readDate'),
       width: 170,
     },
   ];

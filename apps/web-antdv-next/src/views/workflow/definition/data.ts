@@ -3,6 +3,10 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { WorkflowDefinitionApi } from '#/api/workflow';
 
+import { $t } from '#/locales';
+
+import { getWorkflowCategoryOptions } from './category';
+
 const statusOptions = [
   { label: '草稿', value: '0' },
   { label: '已发布', value: '1' },
@@ -52,13 +56,15 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'Input',
+      component: 'Select',
       fieldName: 'category',
       label: '流程分类',
       componentProps: {
         allowClear: true,
-        maxlength: 64,
-        placeholder: '如 dev、system',
+        options: getWorkflowCategoryOptions(),
+        optionFilterProp: 'label',
+        placeholder: $t('flow.definition.category.selectPlaceholder'),
+        showSearch: true,
       },
     },
     {
@@ -93,11 +99,15 @@ export function useGridFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'Input',
+      component: 'Select',
       fieldName: 'category',
       label: '流程分类',
       componentProps: {
         allowClear: true,
+        options: getWorkflowCategoryOptions(),
+        optionFilterProp: 'label',
+        placeholder: $t('flow.definition.category.selectPlaceholder'),
+        showSearch: true,
       },
     },
     {
@@ -134,6 +144,7 @@ export function useColumns(): VxeTableGridOptions<WorkflowDefinitionApi.Workflow
       sortable: true,
       cellRender: {
         name: 'CellTag',
+        options: getWorkflowCategoryOptions(),
       },
     },
     {
@@ -172,7 +183,7 @@ export function useColumns(): VxeTableGridOptions<WorkflowDefinitionApi.Workflow
       fixed: 'right',
       slots: { default: 'action' },
       title: '操作',
-      width: 230,
+      width: 240,
     },
   ];
 }
