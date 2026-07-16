@@ -22,7 +22,8 @@
     "deleting": "Deleting {0} ...",
     "deleteSuccess": "{0} deleted successfully",
     "operationSuccess": "Operation succeeded",
-    "operationFailed": "Operation failed"
+    "operationFailed": "Operation failed",
+    "statusChangeConfirm": "Confirm {0}?"
   },
   "placeholder": {
     "input": "Please enter",

@@ -179,6 +179,7 @@ function recordActionText(action: string) {
   const knownActions = new Set([
     'planned',
     'approve',
+    'autoApprove',
     'addSign',
     'branch',
     'cancel',
@@ -199,6 +200,7 @@ function recordActionText(action: string) {
 function recordIcon(action: string) {
   const icons: Record<string, string> = {
     approve: 'lucide:check',
+    autoApprove: 'lucide:badge-check',
     addSign: 'lucide:user-round-plus',
     branch: 'lucide:git-branch',
     cancel: 'lucide:ban',
@@ -435,7 +437,38 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
                         </div>
                       </div>
                       <div
-                        v-if="nodePeople(node).length"
+                        v-if="
+                          node.nodeType === 'approve' && node.records.length
+                        "
+                        class="mt-3 flex flex-col gap-3"
+                      >
+                        <div
+                          v-for="operation in node.records"
+                          :key="operation.recordId"
+                          class="grid min-w-0 grid-cols-[95px_minmax(0,1fr)] items-center gap-3"
+                        >
+                          <UserAvatar
+                            :avatar="
+                              userAvatarWithFallback(operation.operatorId ?? '')
+                            "
+                            :name="operation.operatorName ?? '-'"
+                          />
+                          <div
+                            class="flex min-w-0 items-center justify-between gap-4 border-l pl-3"
+                          >
+                            <div class="min-w-0 break-words text-sm">
+                              {{ recordComment(operation) || '-' }}
+                            </div>
+                            <time
+                              class="text-muted-foreground shrink-0 whitespace-nowrap text-xs"
+                            >
+                              {{ operation.createDate || '-' }}
+                            </time>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        v-else-if="nodePeople(node).length"
                         class="approver-display"
                         :class="{
                           'approver-display--upcoming': node.status === '0',
@@ -476,26 +509,6 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
                           <IconifyIcon icon="lucide:settings" />
                           {{ $t('flow.runtime.detail.systemOperator') }}
                         </span>
-                      </div>
-                      <div
-                        v-if="
-                          node.nodeType === 'approve' && node.records.length
-                        "
-                        class="timeline-operations"
-                      >
-                        <div
-                          v-for="operation in node.records"
-                          :key="operation.recordId"
-                          class="timeline-operation"
-                        >
-                          <span
-                            v-if="recordComment(operation)"
-                            class="timeline-comment"
-                          >
-                            {{ recordComment(operation) }}
-                          </span>
-                          <time>{{ operation.createDate || '-' }}</time>
-                        </div>
                       </div>
                     </div>
                   </article>
@@ -713,8 +726,8 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
 
 .timeline-content {
   min-width: 0;
-  padding: 2px 0 20px;
-  border-bottom: 1px solid hsl(var(--border));
+  padding: 10px 0;
+  border-bottom: 1px dashed hsl(var(--border));
 }
 
 .timeline-item:last-child .timeline-content {
@@ -778,35 +791,6 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
 
 .approver-display--upcoming {
   opacity: 0.78;
-}
-
-.timeline-comment {
-  color: hsl(var(--foreground));
-  overflow-wrap: anywhere;
-}
-
-.timeline-operations {
-  display: grid;
-  gap: 6px;
-  padding: 8px 10px;
-  margin-top: 10px;
-  background: hsl(var(--muted) / 35%);
-  border-left: 2px solid hsl(var(--border));
-}
-
-.timeline-operation {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
-  align-items: center;
-  min-width: 0;
-  font-size: 12px;
-  color: hsl(var(--muted-foreground));
-}
-
-.timeline-operation time {
-  margin-left: auto;
-  white-space: nowrap;
 }
 
 .variables-empty {

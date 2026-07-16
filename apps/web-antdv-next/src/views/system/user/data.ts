@@ -12,6 +12,7 @@ import {
   getAllDeptListApi,
   getAllRoleListApi,
   getUserListAllApi,
+  updateUserStatusApi,
 } from '#/api/system';
 import { $t } from '#/locales';
 /** 新增表单配置 */
@@ -166,9 +167,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * 获取表格列配置
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns<T = SystemUserApi.SystemUserFace>(
-  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
-): VxeTableGridOptions<T>['columns'] {
+export function useColumns(): VxeTableGridOptions<SystemUserApi.SystemUserFace>['columns'] {
   return [
     {
       field: 'avatar',
@@ -186,7 +185,10 @@ export function useColumns<T = SystemUserApi.SystemUserFace>(
     { field: 'username', title: '登录名', sortable: true },
     {
       cellRender: {
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          onChange: (newStatus: 0 | 1, row: SystemUserApi.SystemUserFace) =>
+            updateUserStatusApi(row.userId, { status: newStatus }),
+        },
         name: 'CellSwitch',
       },
       field: 'status',

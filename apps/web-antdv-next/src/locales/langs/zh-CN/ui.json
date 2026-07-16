@@ -22,7 +22,8 @@
     "deleting": "正在删除 {0} ...",
     "deleteSuccess": "{0} 删除成功",
     "operationSuccess": "操作成功",
-    "operationFailed": "操作失败"
+    "operationFailed": "操作失败",
+    "statusChangeConfirm": "确定{0}？"
   },
   "placeholder": {
     "input": "请输入",

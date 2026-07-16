@@ -2,6 +2,7 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemRoleApi } from '#/api';
 
+import { updateRoleStatusApi } from '#/api/system';
 import { $t } from '#/locales';
 
 export function useFormSchema(): VbenFormSchema[] {
@@ -84,9 +85,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
   ];
 }
 
-export function useColumns<T = SystemRoleApi.SystemRoleFace>(
-  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
-): VxeTableGridOptions['columns'] {
+export function useColumns(): VxeTableGridOptions['columns'] {
   return [
     {
       field: 'roleTitle',
@@ -102,8 +101,11 @@ export function useColumns<T = SystemRoleApi.SystemRoleFace>(
     },
     {
       cellRender: {
-        attrs: { beforeChange: onStatusChange },
-        name: onStatusChange ? 'CellSwitch' : 'CellTag',
+        attrs: {
+          onChange: (newStatus: 0 | 1, row: SystemRoleApi.SystemRoleFace) =>
+            updateRoleStatusApi(row.roleId, { status: newStatus }),
+        },
+        name: 'CellSwitch',
       },
       field: 'status',
       title: $t('system.role.status'),

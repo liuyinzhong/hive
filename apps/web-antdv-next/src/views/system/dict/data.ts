@@ -3,6 +3,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { SystemDictApi } from '#/api/system';
 
+import { updateDictStatusApi } from '#/api/system';
 import { $t } from '#/locales';
 
 /** 新增表单配置 */
@@ -141,9 +142,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
  * 获取表格列配置
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns<T = SystemDictApi.SystemDictFace>(
-  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
-): VxeTableGridOptions<SystemDictApi.SystemDictFace>['columns'] {
+export function useColumns(): VxeTableGridOptions<SystemDictApi.SystemDictFace>['columns'] {
   return [
     {
       align: 'left',
@@ -167,7 +166,10 @@ export function useColumns<T = SystemDictApi.SystemDictFace>(
     },
     {
       cellRender: {
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          onChange: (newStatus: 0 | 1, row: SystemDictApi.SystemDictFace) =>
+            updateDictStatusApi(row.id as string, { status: newStatus }),
+        },
         name: 'CellSwitch',
       },
       field: 'status',
