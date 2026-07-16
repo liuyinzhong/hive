@@ -10,8 +10,10 @@ import '@logicflow/extension/es/index.css';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
 
-import { Button, message, Space, TabPane, Tabs } from 'antdv-next';
+import { Button, message, Select, Space } from 'antdv-next';
 
+import type { FormSchemaApi } from '#/api/form';
+import { getAllFormSchemasApi } from '#/api/form';
 import {
   getWorkflowDefinitionDetailApi,
   publishWorkflowDefinitionApi,
@@ -22,14 +24,7 @@ import type { WorkflowDefinitionApi } from '#/api/workflow';
 import { $t } from '#/locales';
 
 import NodePanel from './components/node-panel.vue';
-import FormDesigner from './components/form-designer.vue';
 import PropertyPanel from './components/property-panel.vue';
-import {
-  createEmptyWorkflowFormSchema,
-  getWorkflowFormFields,
-  isWorkflowFormGrid,
-  parseWorkflowFormSchema,
-} from '../form/schema';
 import type {
   WorkflowElement,
   WorkflowGraphData,
@@ -56,11 +51,20 @@ const selectedElement = ref<WorkflowElement>();
 const definition = ref<WorkflowDefinitionApi.WorkflowDefinition>();
 const loading = ref(false);
 const zoomPercent = ref('100%');
-const activeMode = ref<'flow' | 'form'>('flow');
-const formSchema = ref<WorkflowDefinitionApi.WorkflowFormSchema>(
-  createEmptyWorkflowFormSchema(),
+const formSchemas = ref<FormSchemaApi.FormSchemaRecord[]>([]);
+const selectedFormSchemaId = ref<string>();
+const selectedFormSchema = computed(() =>
+  formSchemas.value.find(
+    (item) => item.formSchemaId === selectedFormSchemaId.value,
+  ),
 );
-const formFields = computed(() => getWorkflowFormFields(formSchema.value));
+const formFields = computed(() => selectedFormSchema.value?.schema ?? []);
+const formSchemaOptions = computed(() =>
+  formSchemas.value.map((item) => ({
+    label: item.schemaName,
+    value: item.formSchemaId,
+  })),
+);
 
 const [PropertyDrawer, propertyDrawerApi] = useVbenDrawer({
   confirmText: $t('flow.designer.apply'),
@@ -93,8 +97,13 @@ onBeforeUnmount(() => {
 async function initDesigner() {
   loading.value = true;
   try {
-    definition.value = await getWorkflowDefinitionDetailApi(definitionId);
-    formSchema.value = parseWorkflowFormSchema(definition.value.formSchema);
+    const [definitionRecord, schemaRecords] = await Promise.all([
+      getWorkflowDefinitionDetailApi(definitionId),
+      getAllFormSchemasApi({ status: '1' }),
+    ]);
+    definition.value = definitionRecord;
+    formSchemas.value = schemaRecords;
+    selectedFormSchemaId.value = definitionRecord.formSchemaId ?? undefined;
     await nextTick();
     initLogicFlow();
   } finally {
@@ -288,12 +297,9 @@ function onRemoveElement(id: string) {
   propertyDrawerApi.close();
 }
 
-/** 保存当前激活的表单设计或流程画布。 */
+/** 保存流程绑定的表单 Schema 和当前画布。 */
 async function onSave() {
-  if (activeMode.value === 'form') {
-    await saveFormSchema();
-    return;
-  }
+  if (!(await saveFormSchemaBinding())) return;
   await saveFlowData();
 }
 
@@ -311,72 +317,25 @@ async function saveFlowData() {
   message.success($t('flow.designer.message.saveSuccess'));
 }
 
-/** 校验并保存当前流程申请表单结构。 */
-async function saveFormSchema() {
-  if (!validateFormSchema()) return false;
-  await saveWorkflowDefinitionFormApi(definitionId, formSchema.value);
-  message.success($t('flow.form.message.saveSuccess'));
+/** 保存流程定义与独立表单 Schema 的绑定关系。 */
+async function saveFormSchemaBinding() {
+  if (!selectedFormSchemaId.value || formFields.value.length === 0) {
+    message.error($t('flow.designer.message.formSchemaRequired'));
+    return false;
+  }
+  await saveWorkflowDefinitionFormApi(definitionId, selectedFormSchemaId.value);
   return true;
 }
 
 /** 校验并发布当前流程定义。 */
 async function onPublish() {
-  if (!validateFormSchema() || !validateConditionBranches()) {
+  if (!validateConditionBranches() || !(await saveFormSchemaBinding())) {
     return;
   }
-  await saveWorkflowDefinitionFormApi(definitionId, formSchema.value);
   await saveFlowData();
   await publishWorkflowDefinitionApi(definitionId);
   message.success($t('flow.designer.message.publishSuccess'));
   definition.value = await getWorkflowDefinitionDetailApi(definitionId);
-}
-
-/** 发布前校验表单字段完整性、字段标识和选项配置。 */
-function validateFormSchema() {
-  const fields = formFields.value;
-  if (fields.length === 0) {
-    message.error($t('flow.form.message.fieldRequired'));
-    return false;
-  }
-  const keyPattern = /^[A-Za-z][A-Za-z0-9_]{0,63}$/;
-  const keys = new Set<string>();
-  for (const element of formSchema.value.fields) {
-    if (!isWorkflowFormGrid(element)) continue;
-    const totalSpan = element.columns.reduce(
-      (total, column) => total + column.span,
-      0,
-    );
-    if (
-      element.columns.length === 0 ||
-      totalSpan > 24 ||
-      element.columns.some((column) => column.span < 1 || column.span > 24)
-    ) {
-      message.error($t('flow.form.message.gridInvalid'));
-      return false;
-    }
-  }
-  for (const field of fields) {
-    if (!field.label.trim() || !keyPattern.test(field.key)) {
-      message.error($t('flow.form.message.fieldInvalid', [field.label]));
-      return false;
-    }
-    if (keys.has(field.key)) {
-      message.error($t('flow.form.message.fieldDuplicate', [field.key]));
-      return false;
-    }
-    keys.add(field.key);
-    if (
-      ['checkbox', 'radio', 'select'].includes(field.type) &&
-      (!field.options?.length ||
-        field.options.some(
-          (option) => !option.label.trim() || !option.value.trim(),
-        ))
-    ) {
-      message.error($t('flow.form.message.optionInvalid', [field.label]));
-      return false;
-    }
-  }
-  return true;
 }
 
 /** 发布前校验条件节点的出线、默认分支和分支表达式。 */
@@ -550,15 +509,26 @@ function onFitView() {
           </div>
         </div>
         <Space>
-          <Button v-if="activeMode === 'flow'" @click="lfRef?.undo()">
+          <div class="form-schema-binding">
+            <span>{{ $t('flow.designer.formSchema') }}</span>
+            <Select
+              v-model:value="selectedFormSchemaId"
+              class="form-schema-select"
+              :options="formSchemaOptions"
+              :placeholder="$t('flow.designer.selectFormSchema')"
+              option-filter-prop="label"
+              show-search
+            />
+          </div>
+          <Button @click="lfRef?.undo()">
             <IconifyIcon class="size-4" icon="lucide:undo-2" />
             {{ $t('flow.designer.undo') }}
           </Button>
-          <Button v-if="activeMode === 'flow'" @click="lfRef?.redo()">
+          <Button @click="lfRef?.redo()">
             <IconifyIcon class="size-4" icon="lucide:redo-2" />
             {{ $t('flow.designer.redo') }}
           </Button>
-          <div v-if="activeMode === 'flow'" class="zoom-actions">
+          <div class="zoom-actions">
             <Button class="zoom-button" @click="onZoomOut">
               <IconifyIcon class="size-4" icon="lucide:zoom-out" />
             </Button>
@@ -569,7 +539,7 @@ function onFitView() {
               <IconifyIcon class="size-4" icon="lucide:zoom-in" />
             </Button>
           </div>
-          <Button v-if="activeMode === 'flow'" @click="onFitView">
+          <Button @click="onFitView">
             <IconifyIcon class="size-4" icon="lucide:scan" />
             {{ $t('flow.designer.fitView') }}
           </Button>
@@ -584,19 +554,12 @@ function onFitView() {
         </Space>
       </header>
 
-      <Tabs v-model:active-key="activeMode" class="designer-tabs">
-        <TabPane key="form" :tab="$t('flow.form.designer.tab')">
-          <FormDesigner v-model="formSchema" />
-        </TabPane>
-        <TabPane key="flow" force-render :tab="$t('flow.designer.flowTab')">
-          <div class="designer-body">
-            <NodePanel @drag-start="onDragStart" />
-            <main class="canvas-wrap">
-              <div ref="containerRef" class="logicflow-canvas"></div>
-            </main>
-          </div>
-        </TabPane>
-      </Tabs>
+      <div class="designer-body">
+        <NodePanel @drag-start="onDragStart" />
+        <main class="canvas-wrap">
+          <div ref="containerRef" class="logicflow-canvas"></div>
+        </main>
+      </div>
 
       <PropertyDrawer class="w-[440px]">
         <PropertyPanel
@@ -688,32 +651,24 @@ function onFitView() {
   color: hsl(var(--foreground));
 }
 
+.form-schema-binding {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+}
+
+.form-schema-select {
+  width: 220px;
+}
+
 .designer-body {
   display: flex;
   flex: 1;
   height: 100%;
   min-height: 0;
   overflow: hidden;
-}
-
-.designer-tabs {
-  flex: 1;
-  min-height: 0;
-}
-
-.designer-tabs :deep(.ant-tabs-nav) {
-  padding: 0 16px;
-  margin: 0;
-}
-
-.designer-tabs :deep(.ant-tabs-body-holder) {
-  min-height: 0;
-}
-
-.designer-tabs :deep(.ant-tabs-body),
-.designer-tabs :deep(.ant-tabs-content) {
-  height: 100%;
-  min-height: 0;
 }
 
 .canvas-wrap {

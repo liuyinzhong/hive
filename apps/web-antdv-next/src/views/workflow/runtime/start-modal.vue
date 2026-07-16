@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { WorkflowDefinitionApi } from '#/api/workflow';
 
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
@@ -12,44 +12,35 @@ import {
   getAllWorkflowDefinitionsApi,
   startWorkflowInstanceApi,
 } from '#/api/workflow';
+import { useVbenForm } from '#/adapter/form';
 import { $t } from '#/locales';
-import FormRenderer from '#/views/workflow/form/form-renderer.vue';
 import {
-  createWorkflowFormValues,
-  getWorkflowFormFields,
-  parseWorkflowFormSchema,
-} from '#/views/workflow/form/schema';
+  FORM_SCHEMA_WRAPPER_CLASS,
+  loadVbenFormSchema,
+} from '#/utils/form-schema';
 
 import { getWorkflowCategoryText } from '../definition/category';
 
 interface StartableDefinition {
   definition: WorkflowDefinitionApi.WorkflowDefinition;
-  schema: WorkflowDefinitionApi.WorkflowFormSchema;
-}
-
-interface FormRendererApi {
-  validate: () => Promise<void>;
 }
 
 const emit = defineEmits<{ success: [] }>();
 
 const definitions = ref<WorkflowDefinitionApi.WorkflowDefinition[]>([]);
-const formRendererRef = ref<FormRendererApi>();
-const formValues = ref<Record<string, unknown>>({});
 const loading = ref(false);
 const selectedDefinitionId = ref<string>();
 
+const [ApplicationForm, applicationFormApi] = useVbenForm({
+  schema: [],
+  showDefaultActions: false,
+  wrapperClass: FORM_SCHEMA_WRAPPER_CLASS,
+});
+
 const startableDefinitions = computed<StartableDefinition[]>(() =>
   definitions.value
-    .map((definition) => ({
-      definition,
-      schema: parseWorkflowFormSchema(definition.formSchema),
-    }))
-    .filter(
-      (item) =>
-        item.definition.definitionId &&
-        getWorkflowFormFields(item.schema).length > 0,
-    ),
+    .filter((definition) => definition.definitionId && definition.formSchemaId)
+    .map((definition) => ({ definition })),
 );
 
 const selectedDefinition = computed(() =>
@@ -65,12 +56,14 @@ const [Modal, modalApi] = useVbenModal({
       message.warning($t('flow.form.runtime.selectApplication'));
       return;
     }
-    if (!(await validateForm())) return;
+    const { valid } = await applicationFormApi.validate();
+    if (!valid) return;
+    const variables = await applicationFormApi.getValues();
     modalApi.lock();
     try {
       await startWorkflowInstanceApi({
         definitionId: selected.definition.definitionId,
-        variables: formValues.value,
+        variables,
       });
       message.success($t('flow.runtime.instance.startSuccess'));
       modalApi.close();
@@ -82,7 +75,7 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(open) {
     if (!open) return;
     selectedDefinitionId.value = undefined;
-    formValues.value = {};
+    applicationFormApi.setState({ schema: [] });
     await loadDefinitions();
   },
   title: $t('flow.form.runtime.startApplication'),
@@ -98,26 +91,33 @@ async function loadDefinitions() {
   }
 }
 
-/** 选择申请类型并按字段默认值初始化申请数据。 */
-function selectDefinition(item: StartableDefinition) {
+/** 选择申请类型并加载其绑定的 Vben 表单 Schema。 */
+async function selectDefinition(item: StartableDefinition) {
+  const formSchemaId = item.definition.formSchemaId;
+  if (!formSchemaId) return;
+  loading.value = true;
   selectedDefinitionId.value = item.definition.definitionId;
-  formValues.value = createWorkflowFormValues(item.schema);
+  await nextTick();
+  try {
+    const loaded = await loadVbenFormSchema(formSchemaId);
+    applicationFormApi.setState({
+      schema: loaded.schema,
+      wrapperClass: loaded.wrapperClass,
+    });
+    await nextTick();
+    await applicationFormApi.resetForm();
+  } catch {
+    selectedDefinitionId.value = undefined;
+    message.error($t('flow.runtime.message.loadFailed'));
+  } finally {
+    loading.value = false;
+  }
 }
 
 /** 返回申请类型选择页并清空尚未提交的数据。 */
 function backToApplications() {
   selectedDefinitionId.value = undefined;
-  formValues.value = {};
-}
-
-/** 执行动态表单校验并将组件校验异常转换为布尔结果。 */
-async function validateForm() {
-  try {
-    await formRendererRef.value?.validate();
-    return true;
-  } catch {
-    return false;
-  }
+  applicationFormApi.setState({ schema: [] });
 }
 </script>
 
@@ -169,11 +169,7 @@ async function validateForm() {
             <span>{{ selectedDefinition.definition.remark }}</span>
           </div>
         </div>
-        <FormRenderer
-          ref="formRendererRef"
-          v-model="formValues"
-          :schema="selectedDefinition.schema"
-        />
+        <ApplicationForm />
       </div>
     </Spin>
   </Modal>

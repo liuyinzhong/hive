@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import type { WorkflowDefinitionApi, WorkflowRuntimeApi } from '#/api/workflow';
+import type { VbenFormSchema } from '#/adapter/form';
 
-import { computed, ref } from 'vue';
+import { nextTick, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { message, Spin, TextArea } from 'antdv-next';
@@ -11,18 +12,17 @@ import {
   getWorkflowInstanceDetailApi,
   rejectWorkflowTaskApi,
 } from '#/api/workflow';
+import { useVbenForm } from '#/adapter/form';
 import { $t } from '#/locales';
-import FormRenderer from '#/views/workflow/form/form-renderer.vue';
-import { parseWorkflowFormSchema } from '#/views/workflow/form/schema';
+import {
+  compileVbenFormSchema,
+  FORM_SCHEMA_WRAPPER_CLASS,
+  getFormSchemaWrapperClass,
+} from '#/utils/form-schema';
 
 interface ModalData {
   action: 'approve' | 'reject';
   task: WorkflowRuntimeApi.WorkflowTask;
-}
-
-interface FormRendererApi {
-  getEditableValues: () => Record<string, unknown>;
-  validate: () => Promise<void>;
 }
 
 const emit = defineEmits<{ success: [] }>();
@@ -30,23 +30,14 @@ const comment = ref('');
 const fieldPermissions = ref<
   Record<string, WorkflowDefinitionApi.WorkflowFormFieldPermission>
 >({});
-const formRendererRef = ref<FormRendererApi>();
-const formSchema = ref<WorkflowDefinitionApi.WorkflowFormSchema>({
-  fields: [],
-  version: 1,
-});
-const formValues = ref<Record<string, unknown>>({});
+const hasApplicationFields = ref(false);
 const loading = ref(false);
 const modalData = ref<ModalData>();
 
-const rendererPermissions = computed(() => {
-  if (modalData.value?.action === 'approve') return fieldPermissions.value;
-  return Object.fromEntries(
-    Object.entries(fieldPermissions.value).map(([key, permission]) => [
-      key,
-      permission === 'hidden' ? 'hidden' : 'readonly',
-    ]),
-  ) as Record<string, WorkflowDefinitionApi.WorkflowFormFieldPermission>;
+const [ApplicationForm, applicationFormApi] = useVbenForm({
+  schema: [],
+  showDefaultActions: false,
+  wrapperClass: FORM_SCHEMA_WRAPPER_CLASS,
 });
 
 const [Modal, modalApi] = useVbenModal({
@@ -59,8 +50,10 @@ const [Modal, modalApi] = useVbenModal({
         comment: comment.value.trim() || undefined,
       };
       if (data.action === 'approve') {
-        await formRendererRef.value?.validate();
-        const variables = formRendererRef.value?.getEditableValues() ?? {};
+        const { valid } = await applicationFormApi.validate();
+        if (!valid) return;
+        const values = await applicationFormApi.getValues();
+        const variables = pickEditableVariables(values, fieldPermissions.value);
         if (Object.keys(variables).length > 0) request.variables = variables;
         await approveWorkflowTaskApi(data.task.taskId, request);
         message.success($t('flow.runtime.task.approveSuccess'));
@@ -78,8 +71,8 @@ const [Modal, modalApi] = useVbenModal({
     if (!open) return;
     modalData.value = modalApi.getData<ModalData>();
     comment.value = '';
-    formSchema.value = { fields: [], version: 1 };
-    formValues.value = {};
+    hasApplicationFields.value = false;
+    applicationFormApi.setState({ schema: [] });
     fieldPermissions.value = {};
     modalApi.setState({
       title:
@@ -98,18 +91,106 @@ async function loadApplication() {
   loading.value = true;
   try {
     const detail = await getWorkflowInstanceDetailApi(data.task.instanceId);
-    formSchema.value = parseWorkflowFormSchema(detail.instance.formSchema);
-    formValues.value = { ...detail.instance.variables };
     const node = detail.nodes.find(
       (item) => item.nodeInstanceId === data.task.nodeInstanceId,
     );
     if (!node) throw new Error('Workflow node instance not found');
     fieldPermissions.value = node.fieldPermissions;
+    const schema = compileVbenFormSchema(detail.instance.formSchema ?? []);
+    const runtimeSchema = applyFieldPermissions(
+      schema,
+      node.fieldPermissions,
+      data.action,
+    );
+    hasApplicationFields.value = runtimeSchema.length > 0;
+    await nextTick();
+    applicationFormApi.setState({
+      schema: runtimeSchema,
+      wrapperClass: getFormSchemaWrapperClass(detail.instance.formLayout),
+    });
+    await nextTick();
+    await applicationFormApi.setValues(detail.instance.variables);
   } catch {
     message.error($t('flow.runtime.message.loadFailed'));
   } finally {
     loading.value = false;
   }
+}
+
+/** 按字段权限提取可编辑值，并保留 Vben 点路径生成的嵌套结构。 */
+function pickEditableVariables(
+  values: Record<string, unknown>,
+  permissions: Record<
+    string,
+    WorkflowDefinitionApi.WorkflowFormFieldPermission
+  >,
+) {
+  const result: Record<string, unknown> = {};
+  for (const [fieldName, permission] of Object.entries(permissions)) {
+    if (permission !== 'editable') continue;
+    const fieldValue = valueAtPath(values, fieldName);
+    if (!fieldValue.found) continue;
+    setValueAtPath(result, fieldName, fieldValue.value);
+  }
+  return result;
+}
+
+function valueAtPath(values: Record<string, unknown>, fieldName: string) {
+  let current: unknown = values;
+  for (const part of fieldName.split('.')) {
+    if (!isRecord(current) || !(part in current)) {
+      return { found: false, value: undefined };
+    }
+    current = current[part];
+  }
+  return { found: true, value: current };
+}
+
+function setValueAtPath(
+  values: Record<string, unknown>,
+  fieldName: string,
+  value: unknown,
+) {
+  const parts = fieldName.split('.');
+  let current = values;
+  for (const part of parts.slice(0, -1)) {
+    const next = current[part];
+    if (isRecord(next)) {
+      current = next;
+    } else {
+      const nested: Record<string, unknown> = {};
+      current[part] = nested;
+      current = nested;
+    }
+  }
+  const lastPart = parts.at(-1);
+  if (lastPart) current[lastPart] = value;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/** 将审批节点字段权限应用到编译后的 Vben Schema。 */
+function applyFieldPermissions(
+  schema: VbenFormSchema[],
+  permissions: Record<
+    string,
+    WorkflowDefinitionApi.WorkflowFormFieldPermission
+  >,
+  action: ModalData['action'],
+) {
+  return schema.map((field) => {
+    const configured = permissions[field.fieldName] ?? 'readonly';
+    const permission =
+      action === 'reject' && configured !== 'hidden' ? 'readonly' : configured;
+    return {
+      ...field,
+      disabled: permission !== 'editable' || field.disabled,
+      hide: permission === 'hidden' || field.hide,
+      rules: permission === 'editable' ? field.rules : undefined,
+    } as VbenFormSchema;
+  });
 }
 </script>
 
@@ -117,17 +198,11 @@ async function loadApplication() {
   <Modal class="w-[720px]">
     <Spin :spinning="loading">
       <div class="task-action-content">
-        <section v-if="formSchema.fields.length" class="application-section">
+        <section v-if="hasApplicationFields" class="application-section">
           <div class="section-title">
             {{ $t('flow.form.runtime.applicationContent') }}
           </div>
-          <FormRenderer
-            ref="formRendererRef"
-            :field-permissions="rendererPermissions"
-            :model-value="formValues"
-            :schema="formSchema"
-            @update:model-value="formValues = $event"
-          />
+          <ApplicationForm />
         </section>
         <label class="comment-field">
           <span>{{ $t('flow.runtime.common.comment') }}</span>

@@ -7,51 +7,6 @@ import { requestClient } from '#/api/request';
 export namespace WorkflowDefinitionApi {
   export type WorkflowFormFieldPermission = 'editable' | 'hidden' | 'readonly';
 
-  export type WorkflowFormFieldType =
-    | 'checkbox'
-    | 'date'
-    | 'input'
-    | 'number'
-    | 'radio'
-    | 'select'
-    | 'switch'
-    | 'textarea';
-
-  export interface WorkflowFormOption {
-    label: string;
-    value: string;
-  }
-
-  export interface WorkflowFormField {
-    defaultValue?: unknown;
-    id: string;
-    key: string;
-    label: string;
-    options?: WorkflowFormOption[];
-    placeholder?: string;
-    required: boolean;
-    type: WorkflowFormFieldType;
-  }
-
-  export interface WorkflowFormGridColumn {
-    fields: WorkflowFormField[];
-    id: string;
-    span: number;
-  }
-
-  export interface WorkflowFormGrid {
-    columns: WorkflowFormGridColumn[];
-    id: string;
-    type: 'grid';
-  }
-
-  export type WorkflowFormElement = WorkflowFormField | WorkflowFormGrid;
-
-  export interface WorkflowFormSchema {
-    fields: WorkflowFormElement[];
-    version: 1;
-  }
-
   export interface WorkflowDefinition {
     [key: string]: any;
     definitionId?: string;
@@ -61,7 +16,7 @@ export namespace WorkflowDefinitionApi {
     status?: string;
     version?: number;
     flowData?: string;
-    formSchema?: string;
+    formSchemaId?: null | string;
     remark?: string;
     creatorId?: string;
     creatorName?: string;
@@ -126,11 +81,14 @@ export const saveWorkflowDefinitionCanvasApi = async (
 /** 保存流程定义绑定的申请表单结构。 */
 export const saveWorkflowDefinitionFormApi = async (
   definitionId: string,
-  formSchema: WorkflowDefinitionApi.WorkflowFormSchema,
+  formSchemaId: string,
 ) => {
-  return requestClient.put(`/workflow/definitions/${definitionId}/form`, {
-    formSchema,
-  });
+  return requestClient.put(
+    `/workflow/definitions/${definitionId}/form-schema`,
+    {
+      formSchemaId,
+    },
+  );
 };
 
 export const publishWorkflowDefinitionApi = async (definitionId: string) => {

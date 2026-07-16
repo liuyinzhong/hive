@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import type { WorkflowDefinitionApi, WorkflowRuntimeApi } from '#/api/workflow';
+import type { WorkflowRuntimeApi } from '#/api/workflow';
+import type { VbenFormSchema } from '#/adapter/form';
 
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { Page } from '@vben/common-ui';
@@ -24,14 +25,16 @@ import {
 
 import { getUserListAllApi } from '#/api/system';
 import { getWorkflowInstanceDetailApi } from '#/api/workflow';
+import { useVbenForm } from '#/adapter/form';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 import { $t } from '#/locales';
 import {
-  getWorkflowFormFields,
-  parseWorkflowFormSchema,
-} from '#/views/workflow/form/schema';
+  compileVbenFormSchema,
+  FORM_SCHEMA_WRAPPER_CLASS,
+  getFormSchemaWrapperClass,
+} from '#/utils/form-schema';
 import {
   getCopyStatusOptions,
   getInstanceStatusOptions,
@@ -42,12 +45,6 @@ import {
 } from '#/views/workflow/runtime/data';
 
 defineOptions({ name: 'WorkflowInstanceDetail' });
-
-interface ApplicationEntry {
-  key: string;
-  label: string;
-  value: string;
-}
 
 interface NodePerson {
   id: string;
@@ -60,6 +57,13 @@ const router = useRouter();
 const detail = ref<WorkflowRuntimeApi.WorkflowInstanceDetail>();
 const loading = ref(false);
 const userAvatarMap = ref(new Map<string, string>());
+const hasApplicationFields = ref(false);
+
+const [ApplicationForm, applicationFormApi] = useVbenForm({
+  schema: [],
+  showDefaultActions: false,
+  wrapperClass: FORM_SCHEMA_WRAPPER_CLASS,
+});
 
 const [TaskGrid] = useVbenVxeGrid<WorkflowRuntimeApi.WorkflowTask>({
   class: 'h-auto',
@@ -104,27 +108,6 @@ const allCopies = computed(() =>
   progressNodes.value.flatMap((node) => node.copies),
 );
 
-const formSchema = computed<WorkflowDefinitionApi.WorkflowFormSchema>(() =>
-  parseWorkflowFormSchema(detail.value?.instance.formSchema),
-);
-
-const applicationEntries = computed<ApplicationEntry[]>(() => {
-  const variables = detail.value?.instance.variables ?? {};
-  const fields = getWorkflowFormFields(formSchema.value);
-  if (fields.length > 0) {
-    return fields.map((field) => ({
-      key: field.key,
-      label: field.label,
-      value: formatApplicationValue(field, variables[field.key]),
-    }));
-  }
-  return Object.entries(variables).map(([key, value]) => ({
-    key,
-    label: key,
-    value: formatVariableValue(value),
-  }));
-});
-
 function currentInstanceId() {
   const value = route.params.instanceId;
   return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
@@ -134,17 +117,44 @@ async function loadDetail() {
   const instanceId = currentInstanceId();
   if (!instanceId) return;
   loading.value = true;
+  hasApplicationFields.value = false;
+  applicationFormApi.setState({ schema: [] });
   try {
     const [workflowDetail] = await Promise.all([
       getWorkflowInstanceDetailApi(instanceId),
       loadUserAvatars(),
     ]);
     detail.value = workflowDetail;
+    await renderApplicationForm(workflowDetail);
   } catch {
     message.error($t('flow.runtime.message.loadFailed'));
   } finally {
     loading.value = false;
   }
+}
+
+/** 使用实例中的 Schema 快照渲染只读申请表单。 */
+async function renderApplicationForm(
+  workflowDetail: WorkflowRuntimeApi.WorkflowInstanceDetail,
+) {
+  const schema = compileVbenFormSchema(
+    workflowDetail.instance.formSchema ?? [],
+  ).map(
+    (field) =>
+      ({
+        ...field,
+        disabled: true,
+        rules: undefined,
+      }) as VbenFormSchema,
+  );
+  hasApplicationFields.value = schema.length > 0;
+  await nextTick();
+  applicationFormApi.setState({
+    schema,
+    wrapperClass: getFormSchemaWrapperClass(workflowDetail.instance.formLayout),
+  });
+  await nextTick();
+  await applicationFormApi.setValues(workflowDetail.instance.variables);
 }
 
 async function loadUserAvatars() {
@@ -278,41 +288,6 @@ function nodeAvatarUsers(node: WorkflowRuntimeApi.WorkflowNodeInstance) {
     realName: person.tooltip,
     userId: person.id,
   }));
-}
-
-function formatVariableValue(value: unknown) {
-  if (value === null || value === undefined || value === '') return '-';
-  if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
-}
-
-function formatApplicationValue(
-  field: WorkflowDefinitionApi.WorkflowFormField,
-  value: unknown,
-) {
-  if (value === null || value === undefined || value === '') return '-';
-  if (field.type === 'switch') {
-    return value ? $t('flow.form.common.yes') : $t('flow.form.common.no');
-  }
-  if (field.type === 'checkbox') {
-    const values = Array.isArray(value)
-      ? value.filter((item): item is string => typeof item === 'string')
-      : [];
-    return values
-      .map((item) => applicationOptionLabel(field, item))
-      .join($t('flow.form.common.separator'));
-  }
-  if (field.type === 'radio' || field.type === 'select') {
-    return applicationOptionLabel(field, String(value));
-  }
-  return formatVariableValue(value);
-}
-
-function applicationOptionLabel(
-  field: WorkflowDefinitionApi.WorkflowFormField,
-  value: string,
-) {
-  return field.options?.find((item) => item.value === value)?.label ?? value;
 }
 
 watch(() => route.params.instanceId, loadDetail, { immediate: true });
@@ -541,21 +516,7 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
                   </div>
                 </template>
 
-                <Descriptions
-                  v-if="applicationEntries.length"
-                  class="application-descriptions"
-                  :column="1"
-                  bordered
-                  size="small"
-                >
-                  <DescriptionsItem
-                    v-for="entry in applicationEntries"
-                    :key="entry.key"
-                    :label="entry.label"
-                  >
-                    {{ entry.value }}
-                  </DescriptionsItem>
-                </Descriptions>
+                <ApplicationForm v-if="hasApplicationFields" />
                 <div v-else class="variables-empty">
                   <IconifyIcon icon="lucide:braces" />
                   <span>{{ $t('flow.runtime.detail.noVariables') }}</span>
@@ -629,8 +590,7 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
   border-radius: 50%;
 }
 
-.basic-descriptions :deep(.ant-descriptions-item-content),
-.application-descriptions :deep(.ant-descriptions-item-content) {
+.basic-descriptions :deep(.ant-descriptions-item-content) {
   min-width: 0;
   overflow-wrap: anywhere;
 }

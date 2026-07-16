@@ -1,0 +1,83 @@
+{
+  "title": "表单管理",
+  "status": { "disabled": "禁用", "enabled": "启用" },
+  "fields": {
+    "schemaName": "Schema 名称",
+    "schemaKey": "Schema 标识",
+    "category": "分类",
+    "layout": "表单布局",
+    "status": "状态",
+    "remark": "备注",
+    "creator": "创建人",
+    "updateDate": "更新时间",
+    "component": "组件",
+    "label": "字段名称",
+    "fieldName": "字段标识",
+    "formItemClass": "栅格列数",
+    "required": "必填",
+    "minimum": "最小值/长度",
+    "maximum": "最大值/长度",
+    "length": "固定长度",
+    "pattern": "正则表达式",
+    "componentProps": "组件属性 JSON",
+    "dependencies": "联动配置 JSON"
+  },
+  "layout": {
+    "single": "单列",
+    "double": "双列",
+    "triple": "三列"
+  },
+  "componentGroups": {
+    "basic": "基础组件",
+    "choice": "选择组件",
+    "date": "日期时间",
+    "extended": "扩展组件"
+  },
+  "components": {
+    "input": "单行文本",
+    "textarea": "多行文本",
+    "inputNumber": "数字",
+    "inputPassword": "密码",
+    "select": "下拉选择",
+    "apiSelect": "远程下拉",
+    "radioGroup": "单选组",
+    "checkbox": "复选框",
+    "checkboxGroup": "复选框组",
+    "switch": "开关",
+    "datePicker": "日期",
+    "rangePicker": "日期范围",
+    "timePicker": "时间",
+    "upload": "文件上传",
+    "richEditor": "富文本"
+  },
+  "actions": {
+    "operation": "操作",
+    "createSchema": "新建 Schema",
+    "editSchema": "编辑 Schema",
+    "design": "设计",
+    "edit": "编辑",
+    "delete": "删除",
+    "apply": "应用",
+    "back": "返回",
+    "save": "保存"
+  },
+  "designer": {
+    "title": "表单设计器",
+    "design": "表单设计",
+    "preview": "预览",
+    "components": "组件",
+    "canvas": "表单画布",
+    "properties": "字段属性",
+    "basic": "基础配置",
+    "advanced": "高级 JSON",
+    "empty": "从左侧拖入或点击添加组件",
+    "selectField": "请选择一个字段"
+  },
+  "messages": {
+    "saveSuccess": "保存成功",
+    "deleteSuccess": "删除成功",
+    "deleteConfirm": "确定删除“{0}”吗？",
+    "invalidJson": "JSON 格式不正确",
+    "invalidSchemaJson": "Schema JSON 缺少 component 或 fieldName"
+  }
+}

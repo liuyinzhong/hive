@@ -16,6 +16,8 @@ import {
 import { getAllRoleListApi, getUserListAllApi } from '#/api/system';
 import type { WorkflowDefinitionApi } from '#/api/workflow';
 import { $t } from '#/locales';
+import type { PersistentFormSchema } from '#/utils/form-schema';
+import { getFormComponentMeta } from '#/utils/form-schema';
 
 import type {
   WorkflowAssigneeType,
@@ -55,7 +57,7 @@ interface PropertyFormState {
 const props = defineProps<{
   conditionEdge?: boolean;
   element?: WorkflowElement;
-  formFields?: WorkflowDefinitionApi.WorkflowFormField[];
+  formFields?: PersistentFormSchema[];
 }>();
 
 const emit = defineEmits<{
@@ -134,8 +136,8 @@ const fieldPermissionOptions = [
 
 const formFieldOptions = computed(() =>
   (props.formFields ?? []).map((field) => ({
-    label: `${field.label} (${field.key})`,
-    value: field.key,
+    label: `${field.label || field.fieldName} (${field.fieldName})`,
+    value: field.fieldName,
   })),
 );
 
@@ -153,8 +155,8 @@ const activeCopyOptions = computed(() =>
 const generatedConditionExpression = computed(() => buildConditionExpression());
 
 watch(
-  () => props.element,
-  (element) => {
+  [() => props.element, () => props.formFields],
+  ([element]) => {
     const properties = element?.properties ?? {};
     formState.text = normalizeText(element?.text);
     formState.assigneeType = properties.assigneeType ?? 'user';
@@ -230,9 +232,9 @@ function normalizeFieldPermissions(value: unknown) {
   const source = isRecord(value) ? value : {};
   return Object.fromEntries(
     (props.formFields ?? []).map((field) => {
-      const permission = source[field.key];
+      const permission = source[field.fieldName];
       return [
-        field.key,
+        field.fieldName,
         permission === 'editable' || permission === 'hidden'
           ? permission
           : 'readonly',
@@ -266,7 +268,9 @@ function readConditionRules(value: unknown): WorkflowConditionRule[] {
   if (!Array.isArray(value) || value.length === 0) {
     return [createConditionRule()];
   }
-  const rules = value.filter(isConditionRule).map((item) => ({ ...item }));
+  const rules = value
+    .filter((item) => isConditionRule(item))
+    .map((item) => ({ ...item }));
   return rules.length > 0 ? rules : [createConditionRule()];
 }
 
@@ -291,18 +295,32 @@ function operatorNeedsValue(operator: string) {
 
 /** 根据表单字段类型返回可用的条件比较操作符。 */
 function conditionOperatorsForField(fieldKey: string) {
-  const type = props.formFields?.find((field) => field.key === fieldKey)?.type;
-  if (type === 'number') {
+  const component = props.formFields?.find(
+    (field) => field.fieldName === fieldKey,
+  )?.component;
+  const meta = component ? getFormComponentMeta(component) : undefined;
+  if (meta?.valueType === 'number') {
     return conditionOperatorOptions.filter(
       (option) => !['contains', 'notContains'].includes(option.value),
     );
   }
-  if (type === 'checkbox') {
+  if (component === 'CheckboxGroup') {
     return conditionOperatorOptions.filter((option) =>
       ['contains', 'notContains', 'empty', 'notEmpty'].includes(option.value),
     );
   }
-  if (type === 'input' || type === 'textarea') {
+  if (
+    [
+      'AutoComplete',
+      'Input',
+      'InputPassword',
+      'Mentions',
+      'RichEditor',
+      'Textarea',
+      'VbenInput',
+      'VbenInputPassword',
+    ].includes(component ?? '')
+  ) {
     return conditionOperatorOptions.filter(
       (option) =>
         ![
@@ -326,16 +344,27 @@ function onConditionFieldChange(rule: WorkflowConditionRule) {
 
 /** 返回选择类或开关字段可直接选择的条件值。 */
 function conditionValueOptions(fieldKey: string) {
-  const field = props.formFields?.find((item) => item.key === fieldKey);
-  if (field?.type === 'switch') {
+  const field = props.formFields?.find((item) => item.fieldName === fieldKey);
+  if (field?.component === 'Switch') {
     return [
       { label: $t('flow.form.common.yes'), value: 'true' },
       { label: $t('flow.form.common.no'), value: 'false' },
     ];
   }
-  return ['checkbox', 'radio', 'select'].includes(field?.type ?? '')
-    ? (field?.options ?? [])
-    : [];
+  const optionProp = field
+    ? getFormComponentMeta(field.component)?.optionProp
+    : undefined;
+  const options = optionProp ? field?.componentProps?.[optionProp] : undefined;
+  if (!Array.isArray(options)) return [];
+  return options.flatMap((option) => {
+    if (!isRecord(option) || option.value === undefined) return [];
+    return [
+      {
+        label: String(option.label ?? option.value),
+        value: String(option.value),
+      },
+    ];
+  });
 }
 
 /** 新增一条条件规则。 */
@@ -416,7 +445,9 @@ function getValidConditionRules() {
 
 /** 组合所有填写完整的规则，生成最终条件表达式。 */
 function buildConditionExpression() {
-  const expressions = getValidConditionRules().map(formatConditionRule);
+  const expressions = getValidConditionRules().map((rule) =>
+    formatConditionRule(rule),
+  );
   const connector = formState.conditionLogic === 'or' ? ' || ' : ' && ';
   return expressions.join(connector);
 }
@@ -579,15 +610,15 @@ defineExpose({ submit });
           <div v-if="formFields?.length" class="field-permission-list">
             <div
               v-for="field in formFields"
-              :key="field.key"
+              :key="field.fieldName"
               class="field-permission-item"
             >
               <div class="field-permission-name">
-                <span>{{ field.label }}</span>
-                <small>{{ field.key }}</small>
+                <span>{{ field.label || field.fieldName }}</span>
+                <small>{{ field.fieldName }}</small>
               </div>
               <Select
-                v-model:value="formState.fieldPermissions[field.key]"
+                v-model:value="formState.fieldPermissions[field.fieldName]"
                 :options="fieldPermissionOptions"
               />
             </div>
@@ -747,7 +778,6 @@ defineExpose({ submit });
       <div v-if="isEdge && !conditionEdge" class="field-hint">
         {{ $t('flow.designer.branch.normalEdgeHint') }}
       </div>
-
     </div>
   </div>
 </template>
@@ -886,5 +916,4 @@ defineExpose({ submit });
   width: 28px;
   padding-inline: 0;
 }
-
 </style>

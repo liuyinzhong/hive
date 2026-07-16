@@ -1,0 +1,83 @@
+{
+  "title": "Form Management",
+  "status": { "disabled": "Disabled", "enabled": "Enabled" },
+  "fields": {
+    "schemaName": "Schema Name",
+    "schemaKey": "Schema Key",
+    "category": "Category",
+    "layout": "Form Layout",
+    "status": "Status",
+    "remark": "Remark",
+    "creator": "Creator",
+    "updateDate": "Updated At",
+    "component": "Component",
+    "label": "Label",
+    "fieldName": "Field Name",
+    "formItemClass": "Grid Span",
+    "required": "Required",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "length": "Exact Length",
+    "pattern": "Regular Expression",
+    "componentProps": "Component Props JSON",
+    "dependencies": "Dependencies JSON"
+  },
+  "layout": {
+    "single": "Single Column",
+    "double": "Two Columns",
+    "triple": "Three Columns"
+  },
+  "componentGroups": {
+    "basic": "Basic",
+    "choice": "Selection",
+    "date": "Date & Time",
+    "extended": "Extended"
+  },
+  "components": {
+    "input": "Single-line Text",
+    "textarea": "Multi-line Text",
+    "inputNumber": "Number",
+    "inputPassword": "Password",
+    "select": "Select",
+    "apiSelect": "Remote Select",
+    "radioGroup": "Radio Group",
+    "checkbox": "Checkbox",
+    "checkboxGroup": "Checkbox Group",
+    "switch": "Switch",
+    "datePicker": "Date",
+    "rangePicker": "Date Range",
+    "timePicker": "Time",
+    "upload": "Upload",
+    "richEditor": "Rich Text"
+  },
+  "actions": {
+    "operation": "Actions",
+    "createSchema": "New Schema",
+    "editSchema": "Edit Schema",
+    "design": "Design",
+    "edit": "Edit",
+    "delete": "Delete",
+    "apply": "Apply",
+    "back": "Back",
+    "save": "Save"
+  },
+  "designer": {
+    "title": "Form Designer",
+    "design": "Design",
+    "preview": "Preview",
+    "components": "Components",
+    "canvas": "Form Canvas",
+    "properties": "Field Properties",
+    "basic": "Basic",
+    "advanced": "Advanced JSON",
+    "empty": "Drag or click a component from the left",
+    "selectField": "Select a field"
+  },
+  "messages": {
+    "saveSuccess": "Saved successfully",
+    "deleteSuccess": "Deleted successfully",
+    "deleteConfirm": "Delete “{0}”?",
+    "invalidJson": "Invalid JSON",
+    "invalidSchemaJson": "Schema JSON requires component and fieldName"
+  }
+}

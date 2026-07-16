@@ -1,6 +1,19 @@
 import type { RouteRecordRaw } from 'vue-router';
 
+import { $t } from '#/locales';
+
 const routes: RouteRecordRaw[] = [
+  {
+    name: 'FormSchemaDesigner',
+    path: '/form/schema/designer/:formSchemaId',
+    component: () => import('#/views/form/schema/designer.vue'),
+    meta: {
+      activePath: '/form/schema/list',
+      hideInMenu: true,
+      maxNumOfOpenTab: 3,
+      title: $t('form.designer.title'),
+    },
+  },
   {
     name: 'WorkflowDefinitionDesigner',
     path: '/workflow/definition/designer/:definitionId',
@@ -9,7 +22,7 @@ const routes: RouteRecordRaw[] = [
       activePath: '/workflow/definition/list',
       hideInMenu: true,
       maxNumOfOpenTab: 3,
-      title: '流程设计器',
+      title: $t('flow.designer.title'),
     },
   },
 ];

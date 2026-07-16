@@ -16,6 +16,8 @@
   "designer": {
     "title": "Workflow Designer",
     "flowTab": "Flow Design",
+    "formSchema": "Form Schema",
+    "selectFormSchema": "Select an enabled form schema",
     "property": "Properties",
     "selectElement": "Select a node or edge",
     "id": "ID",
@@ -103,6 +105,7 @@
       "selectCopy": "Select at least one CC user or role",
       "conditionRequired": "Complete at least one condition rule",
       "propertyApplied": "Properties applied",
+      "formSchemaRequired": "Select an enabled form schema with business fields",
       "saveSuccess": "Saved successfully",
       "publishSuccess": "Published successfully",
       "canvasParseFailed": "Failed to parse canvas data; the default canvas was loaded",
@@ -116,60 +119,7 @@
   "form": {
     "common": {
       "yes": "Yes",
-      "no": "No",
-      "separator": ", "
-    },
-    "fieldType": {
-      "input": "Single-line Text",
-      "textarea": "Multi-line Text",
-      "number": "Number",
-      "select": "Select",
-      "radio": "Radio",
-      "checkbox": "Checkbox",
-      "date": "Date",
-      "grid": "Grid Layout",
-      "switch": "Switch"
-    },
-    "designer": {
-      "tab": "Form Design",
-      "components": "Fields",
-      "layoutComponents": "Layout Components",
-      "preview": "Form Preview",
-      "empty": "Add fields from the left panel",
-      "properties": "Field Properties",
-      "selectField": "Select a form field",
-      "optionDefault": "Option 1",
-      "optionNumber": "Option {0}",
-      "moveUp": "Move Up",
-      "moveDown": "Move Down",
-      "fieldType": "Field Type",
-      "fieldLabel": "Field Label",
-      "fieldKey": "Field Key",
-      "fieldKeyHint": "Start with a letter and use only letters, numbers, or underscores. Branch conditions use this key.",
-      "placeholder": "Placeholder",
-      "required": "Required",
-      "defaultValue": "Default Value",
-      "dateDefaultHint": "YYYY-MM-DD",
-      "options": "Options",
-      "optionLabel": "Option Label",
-      "optionValue": "Option Value",
-      "gridColumns": "Columns",
-      "allocatedSpan": "Allocated Span",
-      "columnSettings": "Column Settings",
-      "addColumn": "Add Column",
-      "removeColumn": "Remove Column",
-      "columnNumber": "Column {0}",
-      "columnEmpty": "Select this column to add fields, or drag fields here",
-      "rootDrop": "Drop here to move out of the grid",
-      "gridHint": "Each row uses a 24-column grid. Column spans must total no more than 24. New fields are added to the selected column."
-    },
-    "message": {
-      "saveSuccess": "Form saved",
-      "fieldRequired": "The workflow form needs at least one field",
-      "fieldInvalid": "The label or key for field “{0}” is invalid",
-      "fieldDuplicate": "Field key “{0}” must be unique",
-      "optionInvalid": "Field “{0}” needs at least one complete option",
-      "gridInvalid": "Grid column spans must be between 1 and 24 and total no more than 24"
+      "no": "No"
     },
     "runtime": {
       "startApplication": "Start Request",
@@ -178,8 +128,7 @@
       "noApplications": "No requests are available. Configure and publish a workflow first.",
       "fillApplication": "Fill in the request and submit it for approval",
       "changeApplication": "Change Request",
-      "applicationContent": "Request Details",
-      "required": "Enter {0}"
+      "applicationContent": "Request Details"
     }
   },
   "runtime": {

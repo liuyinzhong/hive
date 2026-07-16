@@ -1,4 +1,8 @@
 import type { Recordable } from '@vben/types';
+import type {
+  FormSchemaLayout,
+  PersistentFormSchema,
+} from '#/utils/form-schema';
 
 import type { WorkflowDefinitionApi } from './definition';
 
@@ -25,7 +29,8 @@ export namespace WorkflowRuntimeApi {
     definitionName: string;
     definitionVersion: number;
     endDate?: null | string;
-    formSchema?: null | string;
+    formSchema?: null | PersistentFormSchema[];
+    formLayout: FormSchemaLayout;
     instanceId: string;
     instanceNo: string;
     startDate?: null | string;
