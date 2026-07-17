@@ -247,5 +247,30 @@
       "invalidVariables": "流程变量必须是合法的 JSON 对象",
       "loadFailed": "流程数据加载失败"
     }
+  },
+  "permission": {
+    "copyList": "列表",
+    "copyRead": "查看",
+    "definitionCanvasUpdate": "修改画布",
+    "definitionCreate": "新增",
+    "definitionDelete": "删除",
+    "definitionDetail": "详情",
+    "definitionFormSchemaUpdate": "修改表单",
+    "definitionList": "列表",
+    "definitionPublish": "发布",
+    "definitionStatus": "启停",
+    "definitionUpdate": "修改",
+    "instanceCancel": "撤销",
+    "instanceDetail": "详情",
+    "instanceList": "列表",
+    "instanceStart": "发起",
+    "taskAddSign": "加签",
+    "taskApprove": "通过",
+    "taskList": "列表",
+    "taskReject": "驳回",
+    "taskRemoveSign": "减签",
+    "taskReturn": "退回",
+    "taskReturnTargetList": "退回节点",
+    "taskTransfer": "转交"
   }
 }

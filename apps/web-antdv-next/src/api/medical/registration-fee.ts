@@ -56,13 +56,13 @@ export function getRegistrationFeeRuleListApi(
   return requestClient.get<{
     items: MedicalRegistrationFeeApi.RegistrationFeeRule[];
     total: number;
-  }>('/medical/registration-fee-rules', { params });
+  }>('/medical/registrationFeeRules', { params });
 }
 
 export function createRegistrationFeeRuleApi(
   data: MedicalRegistrationFeeApi.CreateRegistrationFeeRule,
 ) {
-  return requestClient.post('/medical/registration-fee-rules', data);
+  return requestClient.post('/medical/registrationFeeRules', data);
 }
 
 export function adjustRegistrationFeeRuleApi(
@@ -70,7 +70,7 @@ export function adjustRegistrationFeeRuleApi(
   data: MedicalRegistrationFeeApi.AdjustRegistrationFeeRule,
 ) {
   return requestClient.post(
-    `/medical/registration-fee-rules/${feeRuleId}/adjustments`,
+    `/medical/registrationFeeRules/${feeRuleId}/adjustments`,
     data,
   );
 }

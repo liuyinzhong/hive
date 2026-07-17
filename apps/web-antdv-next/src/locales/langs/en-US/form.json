@@ -79,5 +79,12 @@
     "deleteConfirm": "Delete “{0}”?",
     "invalidJson": "Invalid JSON",
     "invalidSchemaJson": "Schema JSON requires component and fieldName"
+  },
+  "permission": {
+    "schemaCreate": "Create",
+    "schemaDelete": "Delete",
+    "schemaDetail": "Details",
+    "schemaList": "List",
+    "schemaUpdate": "Update"
   }
 }

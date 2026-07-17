@@ -78,7 +78,7 @@ export namespace SystemMenuApi {
       title?: string;
     };
     /** 菜单名称 */
-    name: string;
+    name: null | string;
     /** 路由路径 */
     path: string;
     /** 父级ID */
@@ -108,7 +108,7 @@ export const isMenuNameExistsApi = async (
   name: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
 ) => {
-  return requestClient.get<boolean>('/system/menus/name-exists', {
+  return requestClient.get<boolean>('/system/menus/nameExists', {
     params: { id, name },
   });
 };
@@ -122,7 +122,7 @@ export const isMenuPathExistsApi = async (
   path: string,
   id?: SystemMenuApi.SystemMenuFace['id'],
 ) => {
-  return requestClient.get<boolean>('/system/menus/path-exists', {
+  return requestClient.get<boolean>('/system/menus/pathExists', {
     params: { id, path },
   });
 };

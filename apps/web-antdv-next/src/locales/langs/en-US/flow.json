@@ -247,5 +247,30 @@
       "invalidVariables": "Flow variables must be a valid JSON object",
       "loadFailed": "Failed to load flow data"
     }
+  },
+  "permission": {
+    "copyList": "List",
+    "copyRead": "View",
+    "definitionCanvasUpdate": "Update Canvas",
+    "definitionCreate": "Create",
+    "definitionDelete": "Delete",
+    "definitionDetail": "Details",
+    "definitionFormSchemaUpdate": "Update Form",
+    "definitionList": "List",
+    "definitionPublish": "Publish",
+    "definitionStatus": "Enable/Disable",
+    "definitionUpdate": "Update",
+    "instanceCancel": "Cancel",
+    "instanceDetail": "Details",
+    "instanceList": "List",
+    "instanceStart": "Start",
+    "taskAddSign": "Add Sign",
+    "taskApprove": "Approve",
+    "taskList": "List",
+    "taskReject": "Reject",
+    "taskRemoveSign": "Remove Sign",
+    "taskReturn": "Return",
+    "taskReturnTargetList": "Return Targets",
+    "taskTransfer": "Transfer"
   }
 }

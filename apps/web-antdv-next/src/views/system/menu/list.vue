@@ -67,7 +67,9 @@ function onAppend(row: SystemMenuApi.SystemMenuFace) {
 
 function onDelete(row: SystemMenuApi.SystemMenuFace) {
   const hideLoading = message.loading({
-    content: $t('ui.actionMessage.deleting', [row.name]),
+    content: $t('ui.actionMessage.deleting', [
+      row.name ?? (row.meta?.title ? $t(row.meta.title) : row.id),
+    ]),
     duration: 0,
     key: 'action_process_msg',
   });

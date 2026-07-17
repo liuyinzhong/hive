@@ -31,6 +31,22 @@ const emit = defineEmits<{
 }>();
 const formData = ref<SystemMenuApi.SystemMenuFace>();
 const titleSuffix = ref<string>();
+function createAuthCodeSchema(required: boolean) {
+  const stringSchema = required
+    ? z.string().min(1, $t("ui.formRules.required", [$t("system.menu.authCode")]))
+    : z.string();
+  const schema = stringSchema
+    .max(512, $t("ui.formRules.maxLength", [$t("system.menu.authCode"), 512]))
+    .refine((value) => {
+      if (!value) return true;
+      return value
+        .split(",")
+        .every((code) =>
+          /^[a-z][a-zA-Z0-9]*:[a-z][a-zA-Z0-9]*:[a-z][a-zA-Z0-9]*$/.test(code.trim()),
+        );
+    }, $t("system.menu.authCodeInvalid"));
+  return required ? schema : schema.optional();
+}
 const schema: VbenFormSchema[] = [
   {
     component: "RadioGroup",
@@ -68,6 +84,12 @@ const schema: VbenFormSchema[] = [
           message: $t("ui.formRules.alreadyExists", [$t("system.menu.pathName"), value]),
         }),
       ),
+    dependencies: {
+      show: (values) => {
+        return ["menu"].includes(values.type);
+      },
+      triggerFields: ["type"],
+    },
   },
   {
     component: "ApiTreeSelect",
@@ -231,7 +253,7 @@ const schema: VbenFormSchema[] = [
     component: "Input",
     dependencies: {
       rules: (values) => {
-        return values.type === "button" ? "required" : null;
+        return createAuthCodeSchema(values.type === "button");
       },
       show: (values) => {
         return ["button", "catalog", "embedded", "menu"].includes(values.type);
@@ -239,6 +261,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ["type"],
     },
     fieldName: "authCode",
+    help: $t("system.menu.authCodeHelp"),
     label: $t("system.menu.authCode"),
   },
   {

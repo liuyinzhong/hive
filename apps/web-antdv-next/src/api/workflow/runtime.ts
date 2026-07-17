@@ -202,19 +202,19 @@ export function addWorkflowTaskSignApi(
   taskId: string,
   data: WorkflowRuntimeApi.WorkflowTaskOperationRequest,
 ) {
-  return requestClient.put(`/workflow/tasks/${taskId}/add-sign`, data);
+  return requestClient.put(`/workflow/tasks/${taskId}/addSign`, data);
 }
 
 export function removeWorkflowTaskSignApi(
   taskId: string,
   data: WorkflowRuntimeApi.WorkflowTaskOperationRequest,
 ) {
-  return requestClient.put(`/workflow/tasks/${taskId}/remove-sign`, data);
+  return requestClient.put(`/workflow/tasks/${taskId}/removeSign`, data);
 }
 
 export function getWorkflowTaskReturnTargetsApi(taskId: string) {
   return requestClient.get<WorkflowRuntimeApi.WorkflowReturnTarget[]>(
-    `/workflow/tasks/${taskId}/return-targets`,
+    `/workflow/tasks/${taskId}/returnTargets`,
   );
 }
 

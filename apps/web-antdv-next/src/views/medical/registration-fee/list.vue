@@ -76,7 +76,7 @@ function periodStatusColor(status: MedicalRegistrationFeeApi.PeriodStatus) {
     <Grid :table-title="$t('medical.registrationFee.list')">
       <template #toolbar-tools>
         <Button
-          v-if="hasAccessByCodes(['medical:registration-fee:create'])"
+          v-if="hasAccessByCodes(['medical:registrationFee:create'])"
           type="primary"
           @click="openCreate"
         >
@@ -96,7 +96,7 @@ function periodStatusColor(status: MedicalRegistrationFeeApi.PeriodStatus) {
               ? []
               : [
                   {
-                    auth: 'medical:registration-fee:adjust',
+                    auth: 'medical:registrationFee:adjust',
                     icon: 'lucide:badge-dollar-sign',
                     text: $t('medical.registrationFee.adjust'),
                     onClick: () => openAdjust(row),

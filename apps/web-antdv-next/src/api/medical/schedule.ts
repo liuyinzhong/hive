@@ -59,6 +59,10 @@ export namespace MedicalScheduleApi {
     weekday: number;
   }
 
+  export type CreateScheduleTemplate = Omit<SaveScheduleTemplate, 'weekday'> & {
+    weekdays: number[];
+  };
+
   export interface Schedule {
     bookedQuota: number;
     createDate?: string;
@@ -142,29 +146,33 @@ export function getScheduleTemplateListApi(params: Record<string, unknown>) {
   return requestClient.get<{
     items: MedicalScheduleApi.ScheduleTemplate[];
     total: number;
-  }>('/medical/schedule-templates', { params });
+  }>('/medical/scheduleTemplates', { params });
 }
 
 export function createScheduleTemplateApi(
-  data: MedicalScheduleApi.SaveScheduleTemplate,
+  data: MedicalScheduleApi.CreateScheduleTemplate,
 ) {
-  return requestClient.post('/medical/schedule-templates', data);
+  return requestClient.post('/medical/scheduleTemplates', data);
 }
 
 export function updateScheduleTemplateApi(
   templateId: string,
   data: MedicalScheduleApi.SaveScheduleTemplate,
 ) {
-  return requestClient.put(`/medical/schedule-templates/${templateId}`, data);
+  return requestClient.put(`/medical/scheduleTemplates/${templateId}`, data);
 }
 
 export function updateScheduleTemplateStatusApi(
   templateId: string,
   status: 0 | 1,
 ) {
-  return requestClient.put(`/medical/schedule-templates/${templateId}/status`, {
+  return requestClient.put(`/medical/scheduleTemplates/${templateId}/status`, {
     status,
   });
+}
+
+export function deleteScheduleTemplateApi(templateId: string) {
+  return requestClient.delete(`/medical/scheduleTemplates/${templateId}`);
 }
 
 export function getScheduleListApi(params: Record<string, unknown>) {
@@ -210,5 +218,5 @@ export function getScheduleAutoTaskListApi(params: Record<string, unknown>) {
   return requestClient.get<{
     items: MedicalScheduleApi.AutoTask[];
     total: number;
-  }>('/medical/schedule-tasks', { params });
+  }>('/medical/scheduleTasks', { params });
 }

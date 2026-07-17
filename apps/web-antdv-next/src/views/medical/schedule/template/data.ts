@@ -15,7 +15,7 @@ import {
   weekdayOptions,
 } from '../shared';
 
-export function useTemplateFormSchema(): VbenFormSchema[] {
+export function useTemplateFormSchema(isCreate = false): VbenFormSchema[] {
   return [
     {
       component: 'Input',
@@ -28,10 +28,14 @@ export function useTemplateFormSchema(): VbenFormSchema[] {
     ...useScheduleDimensionSchemas(),
     {
       component: 'Select',
-      componentProps: { options: weekdayOptions() },
+      componentProps: {
+        maxTagCount: 'responsive',
+        mode: isCreate ? 'multiple' : undefined,
+        options: weekdayOptions(),
+      },
       fieldName: 'weekday',
       label: $t('medical.schedule.weekday'),
-      rules: 'selectRequired',
+      rules: isCreate ? 'required' : 'selectRequired',
     },
     ...scheduleTimeSchemas(),
     {

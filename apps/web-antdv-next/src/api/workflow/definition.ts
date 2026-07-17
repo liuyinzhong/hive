@@ -84,7 +84,7 @@ export const saveWorkflowDefinitionFormApi = async (
   formSchemaId: string,
 ) => {
   return requestClient.put(
-    `/workflow/definitions/${definitionId}/form-schema`,
+    `/workflow/definitions/${definitionId}/formSchema`,
     {
       formSchemaId,
     },

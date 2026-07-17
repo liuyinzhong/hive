@@ -79,5 +79,12 @@
     "deleteConfirm": "确定删除“{0}”吗？",
     "invalidJson": "JSON 格式不正确",
     "invalidSchemaJson": "Schema JSON 缺少 component 或 fieldName"
+  },
+  "permission": {
+    "schemaCreate": "新增",
+    "schemaDelete": "删除",
+    "schemaDetail": "详情",
+    "schemaList": "列表",
+    "schemaUpdate": "修改"
   }
 }

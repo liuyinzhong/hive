@@ -6,10 +6,13 @@ import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button } from 'antdv-next';
+import { Button, message } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getScheduleTemplateListApi } from '#/api/medical';
+import {
+  deleteScheduleTemplateApi,
+  getScheduleTemplateListApi,
+} from '#/api/medical';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
@@ -50,6 +53,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
 function openForm(row?: MedicalScheduleApi.ScheduleTemplate) {
   formDrawerApi.setData(row ?? {}).open();
 }
+
+async function removeTemplate(row: MedicalScheduleApi.ScheduleTemplate) {
+  await deleteScheduleTemplateApi(row.templateId);
+  message.success($t('medical.common.deleteSuccess'));
+  gridApi.query();
+}
 </script>
 
 <template>
@@ -58,7 +67,7 @@ function openForm(row?: MedicalScheduleApi.ScheduleTemplate) {
     <Grid :table-title="$t('medical.schedule.templateTitle')">
       <template #toolbar-tools>
         <Button
-          v-if="hasAccessByCodes(['medical:schedule-template:create'])"
+          v-if="hasAccessByCodes(['medical:scheduleTemplate:create'])"
           type="primary"
           @click="openForm()"
         >
@@ -70,10 +79,22 @@ function openForm(row?: MedicalScheduleApi.ScheduleTemplate) {
         <VbenTableAction
           :actions="[
             {
-              auth: 'medical:schedule-template:update',
+              auth: 'medical:scheduleTemplate:update',
               icon: 'lucide:edit',
               text: $t('common.edit'),
               onClick: () => openForm(row),
+            },
+          ]"
+          :dropdown-actions="[
+            {
+              auth: 'medical:scheduleTemplate:delete',
+              danger: true,
+              icon: 'lucide:trash-2',
+              text: $t('common.delete'),
+              popConfirm: {
+                title: $t('medical.common.deleteConfirm', [row.templateName]),
+                confirm: () => removeTemplate(row),
+              },
             },
           ]"
           align="center"
