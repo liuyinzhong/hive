@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-import type { DataNode } from 'antdv-next/dist/tree/index';
+import type { DataNode } from "antdv-next/dist/tree/index";
 
-import type { Recordable } from '@vben/types';
+import type { Recordable } from "@vben/types";
 
-import type { SystemRoleApi } from '#/api/system';
+import type { SystemRoleApi } from "#/api/system";
 
-import { computed, ref } from 'vue';
+import { ref } from "vue";
 
-import { Tree, useVbenDrawer } from '@vben/common-ui';
-import { IconifyIcon } from '@vben/icons';
+import { Tree, useVbenDrawer } from "@vben/common-ui";
+import { IconifyIcon } from "@vben/icons";
 
-import { Spin } from 'antdv-next';
+import { Spin } from "antdv-next";
 
-import { useVbenForm } from '#/adapter/form';
-import { createRoleApi, getMenuListApi, updateRoleApi, getRoleDetailApi } from '#/api/system';
-import { $t } from '#/locales';
+import { useVbenForm } from "#/adapter/form";
+import { createRoleApi, getMenuListApi, updateRoleApi, getRoleDetailApi } from "#/api/system";
+import { $t } from "#/locales";
 
-import { useFormSchema } from '../data';
+import { useFormSchema } from "../data";
 
-const emits = defineEmits(['success']);
+const emits = defineEmits(["success"]);
 
 const [Form, formApi] = useVbenForm({
   schema: useFormSchema(),
@@ -36,7 +36,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     drawerApi.lock();
     (values.roleId ? updateRoleApi(values.roleId, values) : createRoleApi(values))
       .then(() => {
-        emits('success');
+        emits("success");
         drawerApi.close();
       })
       .catch(() => {})
@@ -51,11 +51,11 @@ const [Drawer, drawerApi] = useVbenDrawer({
         data = await getRoleDetailApi(data.roleId);
         formApi.setValues(data);
         drawerApi.setState({
-          title: $t('ui.actionTitle.edit', [$t('system.role.name')]),
+          title: $t("ui.actionTitle.edit", [$t("system.role.name")]),
         });
       } else {
         drawerApi.setState({
-          title: $t('ui.actionTitle.create', [$t('system.role.name')]),
+          title: $t("ui.actionTitle.create", [$t("system.role.name")]),
         });
         formApi.resetForm();
       }
@@ -79,14 +79,14 @@ async function loadPermissions() {
 
 function getNodeClass(node: Recordable<any>) {
   const classes: string[] = [];
-  if (node.value?.type === 'button') {
-    classes.push('inline-flex');
-    if (node.index % 3 >= 1) {
-      classes.push('!pl-0');
+  if (node.value?.type === "button") {
+    classes.push("permission-button-node");
+    if (node.index % 5 === 0) {
+      classes.push("permission-button-node--row-start");
     }
   }
 
-  return classes.join(' ');
+  return classes.join(" ");
 }
 </script>
 <template>
@@ -95,6 +95,7 @@ function getNodeClass(node: Recordable<any>) {
       <template #permissions="slotProps">
         <Spin :spinning="loadingPermissions" wrapper-class-name="w-full">
           <Tree
+            class="permission-tree"
             :tree-data="permissions"
             multiple
             bordered
@@ -107,6 +108,7 @@ function getNodeClass(node: Recordable<any>) {
           >
             <template #node="{ value }">
               <IconifyIcon v-if="value.meta.icon" :icon="value.meta.icon" />
+              <IconifyIcon v-if="value.type == 'button'" icon="carbon:security" />
               {{ $t(value.meta.title) }}
             </template>
           </Tree>
@@ -116,6 +118,29 @@ function getNodeClass(node: Recordable<any>) {
   </Drawer>
 </template>
 <style lang="css" scoped>
+:deep(.permission-tree) {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+:deep(.permission-tree > :not(.permission-button-node)) {
+  grid-column: 1 / -1;
+}
+
+:deep(.permission-button-node) {
+  min-width: 0;
+  margin-left: 0 !important;
+}
+
+:deep(.permission-button-node--row-start) {
+  padding-left: 2rem;
+}
+
+:deep(.permission-button-node .item-checkbox) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 :deep(.ant-tree-title) {
   .tree-actions {
     display: none;
