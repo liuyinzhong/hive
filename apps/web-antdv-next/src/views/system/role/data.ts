@@ -1,54 +1,59 @@
-import type { VbenFormSchema } from '#/adapter/form';
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemRoleApi } from '#/api';
+import type { VbenFormSchema } from "#/adapter/form";
+import type { VxeTableGridOptions } from "#/adapter/vxe-table";
+import type { SystemRoleApi } from "#/api";
 
-import { updateRoleStatusApi } from '#/api/system';
-import { $t } from '#/locales';
+import { updateRoleStatusApi } from "#/api/system";
+import { $t } from "#/locales";
 
 export function useFormSchema(): VbenFormSchema[] {
   return [
     {
-      component: 'Input',
-      fieldName: 'roleTitle',
-      label: $t('system.role.roleName'),
-      rules: 'required',
+      component: "Input",
+      fieldName: "roleTitle",
+      label: $t("system.role.roleName"),
+      rules: "required",
     },
     {
-      component: 'Input',
-      fieldName: 'roleId',
-      label: '主键id',
+      component: "Input",
+      fieldName: "roleId",
+      label: "主键id",
       dependencies: {
-        triggerFields: ['roleId'],
+        triggerFields: ["roleId"],
         show() {
           return false;
         },
       },
     },
     {
-      component: 'RadioGroup',
+      component: "RadioGroup",
       componentProps: {
-        buttonStyle: 'solid',
+        buttonStyle: "solid",
         options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
+          { label: $t("common.enabled"), value: 1 },
+          { label: $t("common.disabled"), value: 0 },
         ],
-        optionType: 'button',
+        optionType: "button",
       },
       defaultValue: 1,
-      fieldName: 'status',
-      label: $t('system.role.status'),
+      fieldName: "status",
+      label: $t("system.role.status"),
     },
     {
-      component: 'Textarea',
-      fieldName: 'remark',
-      label: $t('system.role.remark'),
+      component: "Textarea",
+      fieldName: "remark",
+      label: $t("system.role.remark"),
     },
     {
-      component: 'Input',
-      fieldName: 'permissions',
-      formItemClass: 'items-start',
-      label: $t('system.role.setPermissions'),
-      modelPropName: 'modelValue',
+      component: "Input",
+      fieldName: "permissions",
+      formItemClass: "items-start",
+      label: $t("system.role.setPermissions"),
+      modelPropName: "modelValue",
+      componentProps: {
+        bordered: true,
+        autoCheckParent: true,
+        selectAllLabel: "全选",
+      },
     },
   ];
 }
@@ -56,47 +61,47 @@ export function useFormSchema(): VbenFormSchema[] {
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
-      component: 'Input',
-      fieldName: 'roleTitle',
-      label: $t('system.role.roleName'),
+      component: "Input",
+      fieldName: "roleTitle",
+      label: $t("system.role.roleName"),
     },
     {
-      component: 'Select',
+      component: "Select",
       componentProps: {
         allowClear: true,
         options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
+          { label: $t("common.enabled"), value: 1 },
+          { label: $t("common.disabled"), value: 0 },
         ],
       },
-      fieldName: 'status',
-      label: $t('system.role.status'),
+      fieldName: "status",
+      label: $t("system.role.status"),
     },
     {
-      component: 'Input',
-      fieldName: 'remark',
-      label: $t('system.role.remark'),
+      component: "Input",
+      fieldName: "remark",
+      label: $t("system.role.remark"),
     },
     {
-      component: 'RangePicker',
-      fieldName: 'createDate',
-      label: $t('system.role.createDate'),
+      component: "RangePicker",
+      fieldName: "createDate",
+      label: $t("system.role.createDate"),
     },
   ];
 }
 
-export function useColumns(): VxeTableGridOptions['columns'] {
+export function useColumns(): VxeTableGridOptions["columns"] {
   return [
     {
-      field: 'roleTitle',
-      title: $t('system.role.roleName'),
+      field: "roleTitle",
+      title: $t("system.role.roleName"),
       width: 200,
       sortable: true,
-      sortBy: 'roleTitle',
+      sortBy: "roleTitle",
     },
     {
-      field: 'roleId',
-      title: $t('system.role.id'),
+      field: "roleId",
+      title: $t("system.role.id"),
       width: 200,
     },
     {
@@ -105,30 +110,30 @@ export function useColumns(): VxeTableGridOptions['columns'] {
           onChange: (newStatus: 0 | 1, row: SystemRoleApi.SystemRoleFace) =>
             updateRoleStatusApi(row.roleId, { status: newStatus }),
         },
-        name: 'CellSwitch',
+        name: "CellSwitch",
       },
-      field: 'status',
-      title: $t('system.role.status'),
+      field: "status",
+      title: $t("system.role.status"),
       width: 100,
     },
     {
-      field: 'remark',
+      field: "remark",
       minWidth: 100,
-      title: $t('system.role.remark'),
+      title: $t("system.role.remark"),
     },
     {
-      field: 'createDate',
-      title: $t('system.role.createDate'),
+      field: "createDate",
+      title: $t("system.role.createDate"),
       width: 200,
       sortable: true,
-      sortBy: 'createDate',
+      sortBy: "createDate",
     },
     {
-      align: 'center',
-      field: 'operation',
-      fixed: 'right',
-      slots: { default: 'action' },
-      title: $t('system.role.operation'),
+      align: "center",
+      field: "operation",
+      fixed: "right",
+      slots: { default: "action" },
+      title: $t("system.role.operation"),
       width: 130,
     },
   ];

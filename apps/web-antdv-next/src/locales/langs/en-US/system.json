@@ -142,6 +142,35 @@
     "remark": "Remark",
     "leader": "Direct Superior"
   },
+  "log": {
+    "title": "Log Management",
+    "operationTitle": "Operation Logs",
+    "loginTitle": "Login Logs",
+    "operationDetail": "Operation Log Details",
+    "loginDetail": "Login Log Details",
+    "username": "Username",
+    "realName": "Real Name",
+    "requestMethod": "Request Method",
+    "requestUrl": "Request URL",
+    "queryParams": "Query Parameters",
+    "requestBody": "Request Body",
+    "responseBody": "Response Body",
+    "httpStatus": "HTTP Status",
+    "status": "Status",
+    "success": "Success",
+    "failed": "Failed",
+    "duration": "Duration (ms)",
+    "milliseconds": "{0} ms",
+    "ip": "Client IP",
+    "userAgent": "Browser / User-Agent",
+    "contentType": "Content Type",
+    "createDate": "Time",
+    "eventType": "Event Type",
+    "login": "Login",
+    "logout": "Logout",
+    "operation": "Operation",
+    "truncatedTip": "The request or response exceeded 64 KB and has been truncated."
+  },
   "permission": {
     "deptCreate": "Create",
     "deptDelete": "Delete",
@@ -171,7 +200,11 @@
     "userDetail": "Details",
     "userList": "List",
     "userStatus": "Enable/Disable",
-    "userUpdate": "Update"
+    "userUpdate": "Update",
+    "operationLogList": "List",
+    "operationLogDetail": "Details",
+    "loginLogList": "List",
+    "loginLogDetail": "Details"
   },
   "title": "System Management"
 }

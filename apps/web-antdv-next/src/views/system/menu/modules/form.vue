@@ -256,7 +256,7 @@ const schema: VbenFormSchema[] = [
         return createAuthCodeSchema(values.type === "button");
       },
       show: (values) => {
-        return ["button", "catalog", "embedded", "menu"].includes(values.type);
+        return ["button"].includes(values.type);
       },
       triggerFields: ["type"],
     },

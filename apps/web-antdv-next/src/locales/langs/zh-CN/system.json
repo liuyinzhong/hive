@@ -142,6 +142,35 @@
     "remark": "备注",
     "leader": "直属上级"
   },
+  "log": {
+    "title": "日志管理",
+    "operationTitle": "操作日志",
+    "loginTitle": "登录日志",
+    "operationDetail": "操作日志详情",
+    "loginDetail": "登录日志详情",
+    "username": "用户名",
+    "realName": "真实姓名",
+    "requestMethod": "请求方法",
+    "requestUrl": "请求 URL",
+    "queryParams": "Query 参数",
+    "requestBody": "请求体",
+    "responseBody": "响应体",
+    "httpStatus": "HTTP 状态",
+    "status": "执行状态",
+    "success": "成功",
+    "failed": "失败",
+    "duration": "耗时 (ms)",
+    "milliseconds": "{0} 毫秒",
+    "ip": "客户端 IP",
+    "userAgent": "浏览器 / User-Agent",
+    "contentType": "内容类型",
+    "createDate": "发生时间",
+    "eventType": "事件类型",
+    "login": "登录",
+    "logout": "退出",
+    "operation": "操作",
+    "truncatedTip": "请求体或响应体超过 64 KB，当前内容已截断。"
+  },
   "permission": {
     "deptCreate": "新增",
     "deptDelete": "删除",
@@ -171,7 +200,11 @@
     "userDetail": "详情",
     "userList": "列表",
     "userStatus": "启停",
-    "userUpdate": "修改"
+    "userUpdate": "修改",
+    "operationLogList": "列表",
+    "operationLogDetail": "详情",
+    "loginLogList": "列表",
+    "loginLogDetail": "详情"
   },
   "title": "系统管理"
 }
