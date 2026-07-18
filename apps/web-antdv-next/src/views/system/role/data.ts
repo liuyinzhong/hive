@@ -51,7 +51,7 @@ export function useFormSchema(): VbenFormSchema[] {
       modelPropName: "modelValue",
       componentProps: {
         bordered: true,
-        autoCheckParent: true,
+        checkStrictly: true,
         selectAllLabel: "全选",
       },
     },

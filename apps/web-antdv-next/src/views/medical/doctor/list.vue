@@ -1,27 +1,23 @@
 <script lang="ts" setup>
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { MedicalDepartmentApi, MedicalDoctorApi } from '#/api/medical';
+import type { VxeTableGridOptions } from "#/adapter/vxe-table";
+import type { MedicalDepartmentApi, MedicalDoctorApi } from "#/api/medical";
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from "vue";
 
-import { useAccess } from '@vben/access';
-import { Page, Tree, useVbenDrawer } from '@vben/common-ui';
-import { Plus } from '@vben/icons';
+import { useAccess } from "@vben/access";
+import { Page, Tree, useVbenDrawer } from "@vben/common-ui";
+import { Plus } from "@vben/icons";
 
-import { Button, Card, message } from 'antdv-next';
+import { Button, Card, message } from "antdv-next";
 
-import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import {
-  deleteDoctorsApi,
-  getAllMedicalDepartmentsApi,
-  getDoctorListApi,
-} from '#/api/medical';
-import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { useVbenVxeGrid, VbenTableAction } from "#/adapter/vxe-table";
+import { deleteDoctorsApi, getAllMedicalDepartmentsApi, getDoctorListApi } from "#/api/medical";
+import { $t } from "#/locales";
+import { formatSorts } from "#/utils";
 
-import { useDoctorColumns, useDoctorSearchSchema } from './data';
-import DetailDrawerComponent from './detail-drawer.vue';
-import FormDrawerComponent from './form-drawer.vue';
+import { useDoctorColumns, useDoctorSearchSchema } from "./data";
+import DetailDrawerComponent from "./detail-drawer.vue";
+import FormDrawerComponent from "./form-drawer.vue";
 
 interface DepartmentSelectEvent {
   value?: { departmentId?: string };
@@ -44,7 +40,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
     schema: useDoctorSearchSchema(),
     showCollapseButton: false,
-    wrapperClass: 'sm:grid-cols-2 xl:grid-cols-4',
+    wrapperClass: "sm:grid-cols-2 xl:grid-cols-4",
   },
   gridOptions: {
     columns: useDoctorColumns(),
@@ -75,11 +71,6 @@ function selectDepartment(event: DepartmentSelectEvent) {
   gridApi.query();
 }
 
-function clearDepartment() {
-  selectedDepartmentId.value = undefined;
-  gridApi.query();
-}
-
 function openCreate() {
   formDrawerApi.setData({}).open();
 }
@@ -94,7 +85,7 @@ function openDetail(row: MedicalDoctorApi.Doctor) {
 
 async function removeDoctor(row: MedicalDoctorApi.Doctor) {
   await deleteDoctorsApi([row.doctorId]);
-  message.success($t('medical.common.deleteSuccess'));
+  message.success($t("medical.common.deleteSuccess"));
   gridApi.query();
 }
 </script>
@@ -105,14 +96,12 @@ async function removeDoctor(row: MedicalDoctorApi.Doctor) {
     <DetailDrawer />
     <div class="flex size-full">
       <Card class="w-1/6 min-w-48">
-        <Button class="mb-3 w-full" type="text" @click="clearDepartment">
-          {{ $t('medical.common.allDepartments') }}
-        </Button>
         <Tree
           :default-expanded-level="2"
           label-field="departmentName"
           :tree-data="departments"
           value-field="departmentId"
+          selectAllLabel="展开/收起"
           @select="selectDepartment"
         />
       </Card>
@@ -126,7 +115,7 @@ async function removeDoctor(row: MedicalDoctorApi.Doctor) {
               @click="openCreate"
             >
               <Plus class="size-5" />
-              {{ $t('medical.doctor.create') }}
+              {{ $t("medical.doctor.create") }}
             </Button>
           </template>
           <template #action="{ row }">

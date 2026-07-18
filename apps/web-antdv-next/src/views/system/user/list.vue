@@ -10,11 +10,7 @@ import { Plus } from "@vben/icons";
 import { Button, message, Card } from "antdv-next";
 
 import { useVbenVxeGrid, VbenTableAction } from "#/adapter/vxe-table";
-import {
-  getUsersListApi,
-  deleteUserApi,
-  getAllDeptListApi,
-} from "#/api/system";
+import { getUsersListApi, deleteUserApi, getAllDeptListApi } from "#/api/system";
 import { $t } from "#/locales";
 import { useColumns, useGridFormSchema } from "./data";
 import ExtraDrawer from "./drawer.vue";
@@ -140,6 +136,7 @@ function onRefresh() {
           value-field="deptId"
           :tree-data="deptList"
           :default-expanded-level="2"
+          selectAllLabel="展开/收起"
           @select="selectDept"
         />
       </Card>
