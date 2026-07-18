@@ -86,30 +86,24 @@ const [Drawer, drawerApi] = useVbenDrawer({
     drawerApi.lock();
     try {
       const defaultSlotQuota = Number(values.defaultSlotQuota);
-      const payload: Omit<MedicalScheduleApi.SaveScheduleTemplate, 'weekday'> =
-        {
-          defaultSlotQuota,
-          departmentId: values.departmentId as string,
-          doctorId: values.doctorId as string,
-          effectiveDate: values.effectiveDate as string,
-          endTime: values.endTime as string,
-          expiryDate: (values.expiryDate as string) || null,
-          registrationType: values.registrationType as string,
-          remark: (values.remark as string) || null,
-          slotQuotaConfig: toSlotQuotaConfig(slots.value, defaultSlotQuota),
-          startTime: values.startTime as string,
-          status: Number(values.status) as 0 | 1,
-          templateName: values.templateName as string,
-        };
+      const payload: MedicalScheduleApi.SaveScheduleTemplate = {
+        defaultSlotQuota,
+        departmentId: values.departmentId as string,
+        doctorId: values.doctorId as string,
+        effectiveDate: values.effectiveDate as string,
+        endTime: values.endTime as string,
+        expiryDate: (values.expiryDate as string) || null,
+        registrationType: values.registrationType as string,
+        remark: (values.remark as string) || null,
+        slotQuotaConfig: toSlotQuotaConfig(slots.value, defaultSlotQuota),
+        startTime: values.startTime as string,
+        status: Number(values.status) as 0 | 1,
+        templateName: values.templateName as string,
+        weekdays: (values.weekdays as number[]).map(Number),
+      };
       await (templateId.value
-        ? updateScheduleTemplateApi(templateId.value, {
-            ...payload,
-            weekday: Number(values.weekday),
-          })
-        : createScheduleTemplateApi({
-            ...payload,
-            weekdays: (values.weekday as number[]).map(Number),
-          }));
+        ? updateScheduleTemplateApi(templateId.value, payload)
+        : createScheduleTemplateApi(payload));
       message.success($t('medical.common.saveSuccess'));
       drawerApi.close();
       emit('success');
@@ -122,9 +116,6 @@ const [Drawer, drawerApi] = useVbenDrawer({
     const data =
       drawerApi.getData<Partial<MedicalScheduleApi.ScheduleTemplate>>() ?? {};
     templateId.value = data.templateId;
-    await formApi.setState({
-      schema: useTemplateFormSchema(!templateId.value),
-    });
     await formApi.resetForm();
     previousDefaultQuota.value = data.defaultSlotQuota ?? 1;
     slots.value = buildEditableSlots(
@@ -140,7 +131,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
       endTime: normalizeScheduleTime(data.endTime) || '12:00',
       startTime: normalizeScheduleTime(data.startTime) || '08:00',
       status: data.status ?? 1,
-      weekday: templateId.value ? (data.weekday ?? 1) : [],
+      weekdays: data.weekdays ?? [],
     });
   },
 });

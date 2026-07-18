@@ -15,7 +15,7 @@ import {
   weekdayOptions,
 } from '../shared';
 
-export function useTemplateFormSchema(isCreate = false): VbenFormSchema[] {
+export function useTemplateFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
@@ -30,12 +30,12 @@ export function useTemplateFormSchema(isCreate = false): VbenFormSchema[] {
       component: 'Select',
       componentProps: {
         maxTagCount: 'responsive',
-        mode: isCreate ? 'multiple' : undefined,
+        mode: 'multiple',
         options: weekdayOptions(),
       },
-      fieldName: 'weekday',
+      fieldName: 'weekdays',
       label: $t('medical.schedule.weekday'),
-      rules: isCreate ? 'required' : 'selectRequired',
+      rules: 'selectRequired',
     },
     ...scheduleTimeSchemas(),
     {
@@ -139,10 +139,13 @@ export function useTemplateColumns(): VxeTableGridOptions<MedicalScheduleApi.Sch
       width: 100,
     },
     {
-      field: 'weekday',
-      formatter: ({ row }) => $t(`medical.schedule.weekday${row.weekday}`),
+      field: 'weekdays',
+      formatter: ({ row }) =>
+        row.weekdays
+          .map((weekday) => $t(`medical.schedule.weekday${weekday}`))
+          .join('、'),
       title: $t('medical.schedule.weekday'),
-      width: 90,
+      minWidth: 160,
     },
     {
       field: 'startTime',

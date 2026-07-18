@@ -40,7 +40,7 @@ export namespace MedicalScheduleApi {
     templateName: string;
     totalQuota: number;
     updateDate?: string;
-    weekday: number;
+    weekdays: number[];
   }
 
   export interface SaveScheduleTemplate {
@@ -56,12 +56,8 @@ export namespace MedicalScheduleApi {
     startTime: string;
     status: 0 | 1;
     templateName: string;
-    weekday: number;
-  }
-
-  export type CreateScheduleTemplate = Omit<SaveScheduleTemplate, 'weekday'> & {
     weekdays: number[];
-  };
+  }
 
   export interface Schedule {
     bookedQuota: number;
@@ -150,7 +146,7 @@ export function getScheduleTemplateListApi(params: Record<string, unknown>) {
 }
 
 export function createScheduleTemplateApi(
-  data: MedicalScheduleApi.CreateScheduleTemplate,
+  data: MedicalScheduleApi.SaveScheduleTemplate,
 ) {
   return requestClient.post('/medical/scheduleTemplates', data);
 }
