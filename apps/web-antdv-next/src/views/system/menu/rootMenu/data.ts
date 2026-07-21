@@ -1,6 +1,7 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemMenuApi } from '#/api/system';
 
+import { updateMenuStatusApi } from '#/api/system';
 import { $t } from '#/locales';
 
 export function getMenuTypeOptions() {
@@ -84,7 +85,13 @@ export function useColumns(): VxeTableGridOptions<SystemMenuApi.SystemMenuFace>[
       title: $t('system.menu.component'),
     },
     {
-      cellRender: { name: 'CellTag' },
+      cellRender: {
+        attrs: {
+          onChange: (newStatus: 0 | 1, row: SystemMenuApi.SystemMenuFace) =>
+            updateMenuStatusApi(row.id, { status: newStatus }),
+        },
+        name: 'CellSwitch',
+      },
       field: 'status',
       title: $t('system.menu.status'),
       width: 100,

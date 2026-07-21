@@ -1,26 +1,14 @@
-import type { Recordable } from '@vben/types';
+import type { Recordable } from "@vben/types";
 
-import { requestClient } from '#/api/request';
+import { requestClient } from "#/api/request";
 
 export namespace SystemMenuApi {
   /** 徽标颜色集合 */
-  export const BadgeVariants = [
-    'default',
-    'destructive',
-    'primary',
-    'success',
-    'warning',
-  ] as const;
+  export const BadgeVariants = ["default", "destructive", "primary", "success", "warning"] as const;
   /** 徽标类型集合 */
-  export const BadgeTypes = ['dot', 'normal'] as const;
+  export const BadgeTypes = ["dot", "normal"] as const;
   /** 菜单类型集合 */
-  export const MenuTypes = [
-    'catalog',
-    'menu',
-    'embedded',
-    'link',
-    'button',
-  ] as const;
+  export const MenuTypes = ["catalog", "menu", "embedded", "link", "button"] as const;
   /** 系统菜单 */
   export interface SystemMenuFace {
     [key: string]: any;
@@ -85,18 +73,28 @@ export namespace SystemMenuApi {
     pid: string;
     /** 重定向 */
     redirect?: string;
+    /** 状态 */
+    status: 0 | 1;
     /** 菜单类型 */
     type: (typeof MenuTypes)[number];
+  }
+
+  export interface MenuListParams {
+    hasButton?: 0 | 1;
+    name?: string;
+    path?: string;
+    status?: 0 | 1 | null;
+    type?: (typeof MenuTypes)[number];
   }
 }
 
 /**
  * 获取菜单数据列表
  */
-export const getMenuListApi = async () => {
-  return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>(
-    '/system/menus',
-  );
+export const getMenuListApi = async (data: SystemMenuApi.MenuListParams = {}) => {
+  return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>("/system/menus", {
+    params: { ...data },
+  });
 };
 
 /**
@@ -106,9 +104,9 @@ export const getMenuListApi = async () => {
  */
 export const isMenuNameExistsApi = async (
   name: string,
-  id?: SystemMenuApi.SystemMenuFace['id'],
+  id?: SystemMenuApi.SystemMenuFace["id"],
 ) => {
-  return requestClient.get<boolean>('/system/menus/nameExists', {
+  return requestClient.get<boolean>("/system/menus/nameExists", {
     params: { id, name },
   });
 };
@@ -120,9 +118,9 @@ export const isMenuNameExistsApi = async (
  */
 export const isMenuPathExistsApi = async (
   path: string,
-  id?: SystemMenuApi.SystemMenuFace['id'],
+  id?: SystemMenuApi.SystemMenuFace["id"],
 ) => {
-  return requestClient.get<boolean>('/system/menus/pathExists', {
+  return requestClient.get<boolean>("/system/menus/pathExists", {
     params: { id, path },
   });
 };
@@ -132,9 +130,9 @@ export const isMenuPathExistsApi = async (
  * @param data 菜单数据
  */
 export const createMenuApi = async (
-  data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
+  data: Omit<SystemMenuApi.SystemMenuFace, "children" | "id">,
 ) => {
-  return requestClient.post('/system/menus', data);
+  return requestClient.post("/system/menus", data);
 };
 
 /**
@@ -145,9 +143,16 @@ export const createMenuApi = async (
  */
 export const updateMenuApi = async (
   id: string,
-  data: Omit<SystemMenuApi.SystemMenuFace, 'children' | 'id'>,
+  data: Omit<SystemMenuApi.SystemMenuFace, "children" | "id">,
 ) => {
   return requestClient.put(`/system/menus/${id}`, data);
+};
+
+/**
+ * 更新菜单状态
+ */
+export const updateMenuStatusApi = async (id: string, data: { status: 0 | 1 }) => {
+  return requestClient.put(`/system/menus/${id}/status`, data);
 };
 
 /**

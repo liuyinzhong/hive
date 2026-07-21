@@ -89,7 +89,7 @@ const schema: VbenFormSchema[] = [
     component: "ApiTreeSelect",
     componentProps: {
       allowClear: true,
-      api: async () => await getMenuListApi(),
+      api: async () => await getMenuListApi({ status: 1 }),
       class: "w-full",
       filterTreeNode(input: string, node: Recordable<any>) {
         if (!input || input.length === 0) {
