@@ -11,6 +11,14 @@ import { useAuthStore } from "#/store";
 
 import { generateAccess } from "./access";
 
+function fallbackNotFound(path: string) {
+  return {
+    name: "FallbackNotFound",
+    params: { path: path.replace(/^\//, "").split("/") },
+    replace: true,
+  };
+}
+
 /**
  * 通用守卫配置
  * @param router
@@ -64,6 +72,10 @@ function setupAccessGuard(router: Router) {
     }
 
     if (to.meta.ignoreAccess) {
+      return true;
+    }
+
+    if (to.name === "FallbackNotFound" && to.path.startsWith("/external/")) {
       return true;
     }
 
@@ -126,23 +138,20 @@ function setupExternalPageGuard(router: Router) {
       return true;
     }
     if (typeof to.name !== "string") {
-      return { name: "FallbackNotFound", replace: true };
+      return fallbackNotFound(to.path);
     }
     const candidate = findExternalRouteCandidate(to.name);
-    if (!candidate || candidate.path !== to.path) {
-      return { name: "FallbackNotFound", replace: true };
+    if (!candidate) {
+      return fallbackNotFound(to.path);
     }
     try {
       const registered = await getPublicExternalPageApi(to.name);
       if (registered.name !== candidate.name || registered.path !== candidate.path) {
-        return { name: "FallbackNotFound", replace: true };
+        return fallbackNotFound(to.path);
       }
       return true;
     } catch (error: any) {
-      if (error?.response?.status === 404) {
-        return { name: "FallbackNotFound", replace: true };
-      }
-      return false;
+      return fallbackNotFound(to.path);
     }
   });
 }
