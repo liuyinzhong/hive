@@ -5,7 +5,7 @@ import { preferences } from "@vben/preferences";
 import { useAccessStore, useUserStore } from "@vben/stores";
 import { startProgress, stopProgress } from "@vben/utils";
 
-import { accessRoutes, coreRouteNames } from "#/router/routes";
+import { accessRoutes, coreRouteNames, findExternalRouteCandidate } from "#/router/routes";
 import { getPublicExternalPageApi } from "#/api/system";
 import { useAuthStore } from "#/store";
 
@@ -126,21 +126,21 @@ function setupExternalPageGuard(router: Router) {
       return true;
     }
     if (typeof to.name !== "string") {
-      return { name: "ExternalNotFound", replace: true };
+      return { name: "FallbackNotFound", replace: true };
     }
-    const candidate: any = {};
+    const candidate = findExternalRouteCandidate(to.name);
     if (!candidate || candidate.path !== to.path) {
-      return { name: "ExternalNotFound", replace: true };
+      return { name: "FallbackNotFound", replace: true };
     }
     try {
       const registered = await getPublicExternalPageApi(to.name);
       if (registered.name !== candidate.name || registered.path !== candidate.path) {
-        return { name: "ExternalNotFound", replace: true };
+        return { name: "FallbackNotFound", replace: true };
       }
       return true;
     } catch (error: any) {
       if (error?.response?.status === 404) {
-        return { name: "ExternalNotFound", replace: true };
+        return { name: "FallbackNotFound", replace: true };
       }
       return false;
     }

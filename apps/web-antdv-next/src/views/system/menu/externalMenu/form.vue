@@ -2,7 +2,6 @@
 import type { ExternalPageApi } from "#/api/system";
 
 import { computed, ref } from "vue";
-import type { RouteRecordRaw } from "vue-router";
 
 import { useVbenDrawer } from "@vben/common-ui";
 import { $te } from "@vben/locales";
@@ -13,40 +12,11 @@ import { useVbenForm, z } from "#/adapter/form";
 import { createExternalPageApi, updateExternalPageApi } from "#/api/system";
 import { $t } from "#/locales";
 
-import { externalRoutes } from "#/router/routes";
-
-interface ExternalRouteCandidate {
-  name: string;
-  path: string;
-  title: string;
-}
+import { externalRouteCandidates } from "#/router/routes";
 
 function getTranslatedTitle(title?: string) {
   return title && $te(title) ? $t(title) : title;
 }
-
-function collectExternalRouteCandidates(routeList: RouteRecordRaw[]): ExternalRouteCandidate[] {
-  const candidates: ExternalRouteCandidate[] = [];
-  const visit = (route: RouteRecordRaw) => {
-    if (
-      route.meta?.externalPage === true &&
-      typeof route.name === "string" &&
-      route.path.startsWith("/external/") &&
-      !route.path.includes(":")
-    ) {
-      candidates.push({
-        name: route.name,
-        path: route.path,
-        title: String(route.meta.title ?? route.name),
-      });
-    }
-    route.children?.forEach((child) => visit(child));
-  };
-  routeList.forEach((route) => visit(route));
-  return candidates;
-}
-
-const externalRouteCandidates = collectExternalRouteCandidates(externalRoutes);
 
 const emit = defineEmits<{ success: [] }>();
 const externalPageId = ref<string>();

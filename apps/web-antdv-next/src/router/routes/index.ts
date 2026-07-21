@@ -20,6 +20,37 @@ const externalRouteFiles = import.meta.glob("./external/**/*.ts", {
 });
 const externalRoutes: RouteRecordRaw[] = mergeRouteModules(externalRouteFiles);
 
+interface ExternalRouteCandidate {
+  name: string;
+  path: string;
+  title: string;
+}
+
+const externalRouteCandidates = (() => {
+  const candidates: ExternalRouteCandidate[] = [];
+  const visit = (route: RouteRecordRaw) => {
+    if (
+      route.meta?.externalPage === true &&
+      typeof route.name === "string" &&
+      route.path.startsWith("/external/") &&
+      !route.path.includes(":")
+    ) {
+      candidates.push({
+        name: route.name,
+        path: route.path,
+        title: String(route.meta.title ?? route.name),
+      });
+    }
+    route.children?.forEach((child) => visit(child));
+  };
+  externalRoutes.forEach((route) => visit(route));
+  return candidates;
+})();
+
+function findExternalRouteCandidate(name: string) {
+  return externalRouteCandidates.find((route) => route.name === name);
+}
+
 /** 静态路由本地文件。所有登录用户共有，不配置 authority */
 const staticRouteFiles = import.meta.glob("./static/**/*.ts", { eager: true });
 const staticRoutes: RouteRecordRaw[] = mergeRouteModules(staticRouteFiles);
@@ -61,4 +92,12 @@ const componentKeys: string[] = Object.keys(import.meta.glob("../../views/**/*.v
     return path.endsWith(".vue") ? path.slice(0, -4) : path;
   });
 
-export { accessRoutes, componentKeys, coreRouteNames, externalRoutes, routes };
+export {
+  accessRoutes,
+  componentKeys,
+  coreRouteNames,
+  externalRouteCandidates,
+  externalRoutes,
+  findExternalRouteCandidate,
+  routes,
+};
