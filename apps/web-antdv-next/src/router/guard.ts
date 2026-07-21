@@ -1,14 +1,15 @@
-import type { Router } from 'vue-router';
+import type { Router } from "vue-router";
 
-import { LOGIN_PATH } from '@vben/constants';
-import { preferences } from '@vben/preferences';
-import { useAccessStore, useUserStore } from '@vben/stores';
-import { startProgress, stopProgress } from '@vben/utils';
+import { LOGIN_PATH } from "@vben/constants";
+import { preferences } from "@vben/preferences";
+import { useAccessStore, useUserStore } from "@vben/stores";
+import { startProgress, stopProgress } from "@vben/utils";
 
-import { accessRoutes, coreRouteNames } from '#/router/routes';
-import { useAuthStore } from '#/store';
+import { accessRoutes, coreRouteNames } from "#/router/routes";
+import { getPublicExternalPageApi } from "#/api/system";
+import { useAuthStore } from "#/store";
 
-import { generateAccess } from './access';
+import { generateAccess } from "./access";
 
 /**
  * 通用守卫配置
@@ -62,13 +63,12 @@ function setupAccessGuard(router: Router) {
       return true;
     }
 
+    if (to.meta.ignoreAccess) {
+      return true;
+    }
+
     // accessToken 检查
     if (!accessStore.accessToken) {
-      // 明确声明忽略权限访问权限，则可以访问
-      if (to.meta.ignoreAccess) {
-        return true;
-      }
-
       // 没有访问权限，跳转登录页面
       if (to.fullPath !== LOGIN_PATH) {
         return {
@@ -119,6 +119,34 @@ function setupAccessGuard(router: Router) {
   });
 }
 
+/** 外部页面必须同时存在于静态路由和启用的数据库记录中。 */
+function setupExternalPageGuard(router: Router) {
+  router.beforeEach(async (to) => {
+    if (!to.meta.externalPage) {
+      return true;
+    }
+    if (typeof to.name !== "string") {
+      return { name: "ExternalNotFound", replace: true };
+    }
+    const candidate: any = {};
+    if (!candidate || candidate.path !== to.path) {
+      return { name: "ExternalNotFound", replace: true };
+    }
+    try {
+      const registered = await getPublicExternalPageApi(to.name);
+      if (registered.name !== candidate.name || registered.path !== candidate.path) {
+        return { name: "ExternalNotFound", replace: true };
+      }
+      return true;
+    } catch (error: any) {
+      if (error?.response?.status === 404) {
+        return { name: "ExternalNotFound", replace: true };
+      }
+      return false;
+    }
+  });
+}
+
 /**
  * 项目守卫配置
  * @param router
@@ -126,6 +154,8 @@ function setupAccessGuard(router: Router) {
 function createRouterGuard(router: Router) {
   /** 通用 */
   setupCommonGuard(router);
+  /** 外部页面启用状态 */
+  setupExternalPageGuard(router);
   /** 权限访问 */
   setupAccessGuard(router);
 }

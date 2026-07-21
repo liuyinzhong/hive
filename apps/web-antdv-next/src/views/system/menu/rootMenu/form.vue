@@ -24,7 +24,7 @@ import {
 import { $t } from "#/locales";
 import { componentKeys } from "#/router/routes";
 
-import { getMenuTypeOptions } from "../data";
+import { getMenuTypeOptions } from "../rootMenu/data";
 
 const emit = defineEmits<{
   success: [];
@@ -84,16 +84,11 @@ const schema: VbenFormSchema[] = [
           message: $t("ui.formRules.alreadyExists", [$t("system.menu.pathName"), value]),
         }),
       ),
-    dependencies: {
-      show: (values) => {
-        return ["menu"].includes(values.type);
-      },
-      triggerFields: ["type"],
-    },
   },
   {
     component: "ApiTreeSelect",
     componentProps: {
+      allowClear: true,
       api: async () => await getMenuListApi(),
       class: "w-full",
       filterTreeNode(input: string, node: Recordable<any>) {

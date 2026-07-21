@@ -23,7 +23,11 @@ import { refreshTokenApi } from '#/api/auth';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 
-function createRequestClient(baseURL: string, options?: RequestClientOptions) {
+function createRequestClient(
+  baseURL: string,
+  options?: RequestClientOptions,
+  shouldShowError: (error: any) => boolean = () => true,
+) {
   const client = new RequestClient({
     ...options,
     baseURL,
@@ -108,6 +112,9 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   // 通用的错误处理,如果没有进入上面的错误处理逻辑，就会进入这里
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
+      if (!shouldShowError(error)) {
+        return;
+      }
       // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
       // 当前mock接口返回的错误字段是 error 或者 message
       const responseData = error?.response?.data ?? {};
@@ -124,6 +131,13 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 export const requestClient = createRequestClient(apiURL, {
   responseReturn: 'data',
 });
+
+/** 外部页面访问校验：404 由路由守卫静默转到全局 404，其余错误沿用统一提示。 */
+export const externalAccessRequestClient = createRequestClient(
+  apiURL,
+  { responseReturn: 'data' },
+  (error) => error?.response?.status !== 404,
+);
 
 /* 直接使用 vben的基本请求 */
 export const baseRequestClient = new RequestClient({ baseURL: apiURL });

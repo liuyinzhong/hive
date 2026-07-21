@@ -1,5 +1,6 @@
 export * from './dept';
 export * from './dict';
+export * from './external-page';
 export * from './file';
 export * from './log';
 export * from './menu';
