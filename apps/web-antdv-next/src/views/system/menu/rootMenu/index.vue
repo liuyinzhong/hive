@@ -91,7 +91,7 @@ function onDelete(row: SystemMenuApi.SystemMenuFace) {
 }
 </script>
 <template>
-  <div>
+  <div class="h-[calc(100%_-_30px)]">
     <FormDrawer @success="onRefresh" />
     <Grid>
       <template #action="{ row }">
