@@ -1,29 +1,26 @@
 <script lang="ts" setup>
-import type { Recordable } from '@vben/types';
+import type { Recordable } from "@vben/types";
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-import type { DevBugApi } from '#/api/dev';
-import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
-import { Plus } from '@vben/icons';
+import type { OnActionClickParams, VxeTableGridOptions } from "#/adapter/vxe-table";
+import type { DevBugApi } from "#/api/dev";
+import { Page, useVbenDrawer, useVbenModal } from "@vben/common-ui";
+import { Plus } from "@vben/icons";
 
-import { Button, message } from 'antdv-next';
+import { Button, message } from "antdv-next";
 
-import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getBugListApi, deleteBugApi, updateBugFieldApi } from '#/api/dev/bug';
-import { formatSorts } from '#/utils';
+import { useVbenVxeGrid, VbenTableAction } from "#/adapter/vxe-table";
+import { getBugListApi, deleteBugApi, updateBugFieldApi } from "#/api/dev/bug";
+import { formatSorts } from "#/utils";
 
-import addFormModal from './add-modal.vue';
-import { useColumns, useGridFormSchema } from './data';
-import detailDrawer from './detail-drawer.vue';
-import nextModal from './next-modal.vue';
-import confirmModal from './confirm-modal.vue';
+import addFormModal from "./add-modal.vue";
+import { useColumns, useGridFormSchema } from "./data";
+import detailDrawer from "./detail-drawer.vue";
+import nextModal from "./next-modal.vue";
+import confirmModal from "./confirm-modal.vue";
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
+    wrapperClass: "sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4",
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),
@@ -38,8 +35,8 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     exportConfig: {},
     editConfig: {
-      trigger: 'click',
-      mode: 'cell',
+      trigger: "click",
+      mode: "cell",
     },
     sortConfig: {
       remote: true,
@@ -48,10 +45,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async (
-          { page, sorts, filters }: any,
-          formValues: Recordable<any>,
-        ) => {
+        query: async ({ page, sorts, filters }: any, formValues: Recordable<any>) => {
           return await getBugListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -66,17 +60,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
 });
 
 // #region 表格操作按钮的回调函数
-function onActionClick({
-  code,
-  row,
-}: OnActionClickParams<DevBugApi.DevBugFace>) {
+function onActionClick({ code, row }: OnActionClickParams<DevBugApi.DevBugFace>) {
   switch (code) {
-    case 'bugTitle': {
+    case "bugTitle": {
       DetailDrawerApi.setData(row).open();
       break;
     }
-    case 'updateField': {
-      updateBugFieldApi(row.bugId ?? '', {
+    case "updateField": {
+      updateBugFieldApi(row.bugId ?? "", {
         key: row.key,
         value: row.value,
       }).finally(() => {
@@ -97,13 +88,13 @@ function onEdit(row: DevBugApi.DevBugFace) {
 
 async function onDelete(_row: DevBugApi.DevBugFace) {
   const hideLoading = message.loading({
-    content: '正在删除',
+    content: "正在删除",
     duration: 0,
   });
 
   try {
-    await deleteBugApi([_row.bugId ?? '']);
-    message.success('删除成功');
+    await deleteBugApi([_row.bugId ?? ""]);
+    message.success("删除成功");
     gridApi.query();
   } finally {
     hideLoading();
