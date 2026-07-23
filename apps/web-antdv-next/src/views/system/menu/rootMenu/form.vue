@@ -84,6 +84,12 @@ const schema: VbenFormSchema[] = [
           message: $t("ui.formRules.alreadyExists", [$t("system.menu.pathName"), value]),
         }),
       ),
+    dependencies: {
+      show: (values) => {
+        return ["embedded", "menu", "link"].includes(values.type);
+      },
+      triggerFields: ["type"],
+    },
   },
   {
     component: "ApiTreeSelect",
@@ -145,7 +151,7 @@ const schema: VbenFormSchema[] = [
     component: "Input",
     dependencies: {
       show: (values) => {
-        return ["catalog", "embedded", "menu"].includes(values.type);
+        return ["embedded", "menu", "link"].includes(values.type);
       },
       triggerFields: ["type"],
     },
