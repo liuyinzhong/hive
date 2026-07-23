@@ -86,7 +86,7 @@ const schema: VbenFormSchema[] = [
       ),
     dependencies: {
       show: (values) => {
-        return ["embedded", "menu", "link"].includes(values.type);
+        return ["menu"].includes(values.type);
       },
       triggerFields: ["type"],
     },
@@ -151,7 +151,7 @@ const schema: VbenFormSchema[] = [
     component: "Input",
     dependencies: {
       show: (values) => {
-        return ["embedded", "menu", "link"].includes(values.type);
+        return ["menu"].includes(values.type);
       },
       triggerFields: ["type"],
     },
