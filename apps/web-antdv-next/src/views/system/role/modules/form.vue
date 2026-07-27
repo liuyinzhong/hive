@@ -57,7 +57,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
         drawerApi.setState({
           title: $t("ui.actionTitle.create", [$t("system.role.name")]),
         });
-        formApi.resetForm();
+        formApi.reset();
       }
 
       if (permissions.value.length === 0) {

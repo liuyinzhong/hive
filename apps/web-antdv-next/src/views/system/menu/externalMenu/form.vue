@@ -130,7 +130,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     externalPageId.value = data.id;
     isInitializing.value = true;
     try {
-      await formApi.resetForm();
+      await formApi.reset();
       updateTitleSuffix(data.title);
       await formApi.setValues({
         name: data.name,

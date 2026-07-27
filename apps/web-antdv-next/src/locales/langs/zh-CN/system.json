@@ -62,7 +62,7 @@
     "linkSrc": "链接地址",
     "pathName": "路由名称",
     "pathNameHelp": "路由名称，对应路由里的name字段 例如：'SystemRole'",
-    "menuTitle": "标题",
+    "menuTitle": "菜单标题",
     "menuTitleHelp": "可以使用国际化配置，例如：'system.menu.menuTitle'，也可以直接输入标题",
     "name": "菜单",
     "operation": "操作",

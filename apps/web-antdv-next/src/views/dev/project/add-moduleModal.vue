@@ -36,7 +36,7 @@ const [Modal, modalApi] = useVbenModal({
       formApi.setValues(data);
       modalApi.setState({ title: data.moduleId ? '编辑模块' : '添加模块' });
     } else {
-      formApi.resetForm();
+      formApi.reset();
     }
   },
 });

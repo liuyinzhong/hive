@@ -130,7 +130,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     const data =
       drawerApi.getData<Partial<MedicalScheduleApi.Schedule>>() ?? {};
     scheduleId.value = data.scheduleId;
-    await formApi.resetForm();
+    await formApi.reset();
     const startTime = normalizeScheduleTime(data.startTime) || '08:00';
     const endTime = normalizeScheduleTime(data.endTime) || '12:00';
     const defaultSlotQuota = data.defaultSlotQuota ?? 1;

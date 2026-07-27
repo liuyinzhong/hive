@@ -71,7 +71,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
         Partial<MedicalRegistrationFeeApi.RegistrationFeeRule>
       >() ?? {};
     feeRuleId.value = data.feeRuleId;
-    await formApi.resetForm();
+    await formApi.reset();
 
     let effectiveDate = dayjs().format('YYYY-MM-DD');
     if (data.feeRuleId && data.effectiveDate) {

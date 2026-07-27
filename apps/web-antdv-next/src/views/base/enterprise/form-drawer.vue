@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { MedicalDoctorApi } from '#/api/medical';
+import type { BaseEnterpriseApi } from '#/api/base';
 
 import { computed, ref } from 'vue';
 
@@ -9,31 +9,33 @@ import { message } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
 import {
-  createDoctorApi,
-  getDoctorDetailApi,
-  updateDoctorApi,
-} from '#/api/medical';
+  createEnterpriseApi,
+  getEnterpriseDetailApi,
+  updateEnterpriseApi,
+} from '#/api/base';
 import { $t } from '#/locales';
-import { filesToUrlString, urlStringToFiles } from '#/utils';
 
-import { useDoctorFormSchema } from './data';
+import { useEnterpriseFormSchema } from './data';
 
 const emit = defineEmits<{ success: [] }>();
-const doctorId = ref<string>();
+
+const enterpriseId = ref<string>();
+const rowVersion = ref<number>();
 const title = computed(() =>
-  doctorId.value ? $t('medical.doctor.edit') : $t('medical.doctor.create'),
+  enterpriseId.value
+    ? $t('base.enterprise.edit')
+    : $t('base.enterprise.create'),
 );
 
 const [Form, formApi] = useVbenForm({
   commonConfig: { componentProps: { class: 'w-full' } },
   layout: 'vertical',
-  schema: useDoctorFormSchema(),
+  schema: useEnterpriseFormSchema(),
   showDefaultActions: false,
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
 
 const [Drawer, drawerApi] = useVbenDrawer({
-  zIndex: 999,
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -43,12 +45,12 @@ const [Drawer, drawerApi] = useVbenDrawer({
       const values = await formApi.getValues();
       const payload = {
         ...values,
-        avatar: filesToUrlString(values.avatar) || null,
-      } as MedicalDoctorApi.SaveDoctor;
-      await (doctorId.value
-        ? updateDoctorApi(doctorId.value, payload)
-        : createDoctorApi(payload));
-      message.success($t('medical.common.saveSuccess'));
+        expectedRowVersion: rowVersion.value,
+      } as BaseEnterpriseApi.SaveEnterprise;
+      await (enterpriseId.value
+        ? updateEnterpriseApi(enterpriseId.value, payload)
+        : createEnterpriseApi(payload));
+      message.success($t('base.enterprise.saveSuccess'));
       drawerApi.close();
       emit('success');
     } finally {
@@ -57,35 +59,35 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<Partial<MedicalDoctorApi.Doctor>>() ?? {};
-    doctorId.value = data.doctorId;
+
+    const data = drawerApi.getData<Partial<BaseEnterpriseApi.Enterprise>>() ?? {};
+    enterpriseId.value = data.enterpriseId;
+    rowVersion.value = data.rowVersion;
     await formApi.reset();
 
     let detail = data;
-    if (data.doctorId) {
+    if (data.enterpriseId) {
       drawerApi.lock();
       try {
-        detail = await getDoctorDetailApi(data.doctorId);
+        detail = await getEnterpriseDetailApi(data.enterpriseId);
       } finally {
         drawerApi.unlock();
       }
     }
+
+    rowVersion.value = detail.rowVersion;
     await formApi.setValues({
-      appointmentEnabled: 1,
-      defaultVisitMinutes: 15,
-      onlineConsultation: 0,
-      profileVisible: 1,
-      sort: 0,
+      enterpriseType: 'ENTERPRISE',
+      roles: [],
       status: 1,
       ...detail,
-      avatar: urlStringToFiles(detail.avatar ?? ''),
     });
   },
 });
 </script>
 
 <template>
-  <Drawer class="w-[900px]" :title="title">
+  <Drawer class="w-[860px]" :title="title">
     <Form />
   </Drawer>
 </template>

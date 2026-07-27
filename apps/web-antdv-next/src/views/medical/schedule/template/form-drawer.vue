@@ -116,7 +116,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     const data =
       drawerApi.getData<Partial<MedicalScheduleApi.ScheduleTemplate>>() ?? {};
     templateId.value = data.templateId;
-    await formApi.resetForm();
+    await formApi.reset();
     previousDefaultQuota.value = data.defaultSlotQuota ?? 1;
     slots.value = buildEditableSlots(
       normalizeScheduleTime(data.startTime) || '08:00',

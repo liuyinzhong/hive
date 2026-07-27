@@ -39,7 +39,7 @@ const [Modal, modalApi] = useVbenModal({
     if (!isOpen) {
       return;
     }
-    formApi.resetForm();
+    formApi.reset();
     const data = modalApi.getData() || {};
     modalApi.setState({
       title: data.definitionId ? '编辑流程定义' : '新建流程定义',

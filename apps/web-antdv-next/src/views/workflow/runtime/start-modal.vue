@@ -105,7 +105,7 @@ async function selectDefinition(item: StartableDefinition) {
       wrapperClass: loaded.wrapperClass,
     });
     await nextTick();
-    await applicationFormApi.resetForm();
+    await applicationFormApi.reset();
   } catch {
     selectedDefinitionId.value = undefined;
     message.error($t('flow.runtime.message.loadFailed'));
@@ -183,55 +183,55 @@ function backToApplications() {
 
 .catalog-heading {
   margin-bottom: 14px;
-  color: hsl(var(--foreground));
   font-size: 14px;
   font-weight: 600;
+  color: hsl(var(--foreground));
 }
 
 .application-grid {
   display: grid;
-  gap: 10px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .application-item {
   display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto 16px;
+  gap: 10px;
+  align-items: center;
   min-width: 0;
   min-height: 88px;
-  align-items: center;
+  padding: 14px;
+  color: hsl(var(--foreground));
+  text-align: left;
+  cursor: pointer;
+  background: hsl(var(--background));
   border: 1px solid hsl(var(--border));
   border-radius: 7px;
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
-  cursor: pointer;
-  gap: 10px;
-  grid-template-columns: 38px minmax(0, 1fr) auto 16px;
-  padding: 14px;
-  text-align: left;
 }
 
 .application-item:hover {
+  background: hsl(var(--primary) / 4%);
   border-color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.04);
 }
 
 .application-icon {
   display: flex;
-  width: 38px;
-  height: 38px;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  background: hsl(var(--primary) / 0.1);
+  width: 38px;
+  height: 38px;
   color: hsl(var(--primary));
+  background: hsl(var(--primary) / 10%);
+  border-radius: 6px;
 }
 
 .application-content,
 .form-heading > div {
   display: flex;
-  min-width: 0;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .application-content strong,
@@ -245,23 +245,23 @@ function backToApplications() {
 
 .application-content span,
 .form-heading span {
-  color: hsl(var(--muted-foreground));
   font-size: 12px;
+  color: hsl(var(--muted-foreground));
 }
 
 .form-heading {
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
   align-items: center;
+  padding-bottom: 14px;
   margin-bottom: 18px;
   border-bottom: 1px solid hsl(var(--border));
-  gap: 12px;
-  grid-template-columns: auto minmax(0, 1fr);
-  padding-bottom: 14px;
 }
 
 .form-heading strong {
-  color: hsl(var(--foreground));
   font-size: 15px;
+  color: hsl(var(--foreground));
 }
 
 @media (max-width: 640px) {

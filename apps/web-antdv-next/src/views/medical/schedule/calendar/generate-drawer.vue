@@ -93,7 +93,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     const monday = anchor
       .subtract((anchor.day() + 6) % 7, 'day')
       .startOf('day');
-    await formApi.resetForm();
+    await formApi.reset();
     await formApi.setValues({
       endDate: monday.add(6, 'day').format('YYYY-MM-DD'),
       startDate: monday.format('YYYY-MM-DD'),

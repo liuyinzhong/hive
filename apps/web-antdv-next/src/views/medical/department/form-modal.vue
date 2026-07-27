@@ -55,7 +55,7 @@ const [Modal, modalApi] = useVbenModal({
     if (!isOpen) return;
     const data = modalApi.getData<Partial<MedicalDepartmentApi.Department>>();
     formData.value = data ?? {};
-    await formApi.resetForm();
+    await formApi.reset();
     await formApi.setValues({ status: 1, sort: 0, ...formData.value });
   },
 });

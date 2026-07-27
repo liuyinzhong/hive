@@ -27,8 +27,8 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-function resetForm() {
-  formApi.resetForm();
+function resetFormHandler() {
+  formApi.reset();
   formApi.setValues(formData.value || {});
 }
 
@@ -66,7 +66,7 @@ const [Modal, modalApi] = useVbenModal({
     <Form class="mx-4" />
     <template #prepend-footer>
       <div class="flex-auto">
-        <Button type="primary" danger @click="resetForm">
+        <Button type="primary" danger @click="resetFormHandler">
           {{ $t('common.reset') }}
         </Button>
       </div>

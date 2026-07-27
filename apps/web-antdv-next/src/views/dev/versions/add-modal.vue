@@ -48,7 +48,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      formApi.resetForm();
+      formApi.reset();
       const data = modalApi.getData();
       if (data.versionId) {
         modalApi.setState({

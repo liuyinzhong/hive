@@ -23,7 +23,7 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: () => formApi.validateAndSubmitForm(),
   async onOpenChange(open) {
     if (!open) return;
-    await formApi.resetForm();
+    await formApi.reset();
     const data = modalApi.getData<FormSchemaApi.FormSchemaRecord>();
     modalApi.setState({
       title: data?.formSchemaId

@@ -68,6 +68,22 @@ const schema: VbenFormSchema[] = [
   },
   {
     component: "Input",
+    componentProps() {
+      // 不需要处理多语言时就无需这么做
+      return {
+        ...(titleSuffix.value && { addonAfter: titleSuffix.value }),
+        onChange({ target: { value } }) {
+          titleSuffix.value = value && $te(value) ? $t(value) : undefined;
+        },
+      };
+    },
+    fieldName: "meta.title",
+    help: $t("system.menu.menuTitleHelp"),
+    label: $t("system.menu.menuTitle"),
+    rules: "required",
+  },
+  {
+    component: "Input",
     fieldName: "name",
     label: $t("system.menu.pathName"),
     help: $t("system.menu.pathNameHelp"),
@@ -131,22 +147,7 @@ const schema: VbenFormSchema[] = [
     fieldName: "pid",
     label: $t("system.menu.parent"),
   },
-  {
-    component: "Input",
-    componentProps() {
-      // 不需要处理多语言时就无需这么做
-      return {
-        ...(titleSuffix.value && { addonAfter: titleSuffix.value }),
-        onChange({ target: { value } }) {
-          titleSuffix.value = value && $te(value) ? $t(value) : undefined;
-        },
-      };
-    },
-    fieldName: "meta.title",
-    help: $t("system.menu.menuTitleHelp"),
-    label: $t("system.menu.menuTitle"),
-    rules: "required",
-  },
+  
   {
     component: "Input",
     dependencies: {
@@ -653,7 +654,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
         formApi.setValues(formData.value);
         titleSuffix.value = formData.value.meta?.title ? $t(formData.value.meta.title) : "";
       } else {
-        formApi.resetForm();
+        formApi.reset();
         titleSuffix.value = "";
       }
     }
