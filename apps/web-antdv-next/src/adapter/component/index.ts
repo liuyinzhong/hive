@@ -653,12 +653,10 @@ async function initComponentAdapter() {
       inputComponent: Input,
       modelValueProp: "value",
     }),
-    Input: withDefaultPlaceholder(Input, "input"),
-    InputNumber: withDefaultPlaceholder(InputNumber, "input", {
-      style: { width: "100%" },
-    }),
-    InputPassword: withDefaultPlaceholder(InputPassword, "input"),
-    Mentions: withDefaultPlaceholder(Mentions, "input"),
+    Input: withDefaultPlaceholder(Input, 'input'),
+    InputNumber: withDefaultPlaceholder(InputNumber, 'input'),
+    InputPassword: withDefaultPlaceholder(InputPassword, 'input'),
+    Mentions: withDefaultPlaceholder(Mentions, 'input'),
     // 自定义主要按钮
     PrimaryButton: (props, { attrs, slots }) => {
       return h(Button, { ...props, attrs, type: "primary" }, slots);
