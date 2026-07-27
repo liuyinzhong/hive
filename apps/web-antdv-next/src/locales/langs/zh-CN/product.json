@@ -1,0 +1,32 @@
+{
+  "permission": {
+    "spuCreate": "新增通用产品",
+    "spuDetail": "查看通用产品详情",
+    "spuList": "列表",
+    "spuStatus": "启停通用产品",
+    "spuUpdate": "修改通用产品"
+  },
+  "spu": {
+    "create": "新增通用产品",
+    "description": "描述",
+    "edit": "编辑通用产品",
+    "keyword": "编码、通用名称或简称",
+    "keywordLabel": "关键字",
+    "list": "通用产品列表",
+    "operation": "操作",
+    "productName": "通用名称",
+    "productType": "产品类型",
+    "saveSuccess": "保存成功",
+    "shortName": "简称",
+    "spuCode": "SPU编码",
+    "status": "状态",
+    "title": "通用产品",
+    "typeConsumable": "医用耗材",
+    "typeDevice": "医疗器械",
+    "typeDrug": "药品",
+    "typeFsmp": "特医食品",
+    "typeOther": "其他",
+    "updateDate": "更新时间"
+  },
+  "title": "产品档案"
+}

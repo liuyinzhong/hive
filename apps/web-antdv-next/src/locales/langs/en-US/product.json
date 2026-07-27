@@ -1,0 +1,32 @@
+{
+  "permission": {
+    "spuCreate": "Create Generic Product",
+    "spuDetail": "View Generic Product Details",
+    "spuList": "List",
+    "spuStatus": "Change Generic Product Status",
+    "spuUpdate": "Update Generic Product"
+  },
+  "spu": {
+    "create": "Create Generic Product",
+    "description": "Description",
+    "edit": "Edit Generic Product",
+    "keyword": "Code, generic name or short name",
+    "keywordLabel": "Keyword",
+    "list": "Generic Product List",
+    "operation": "Operation",
+    "productName": "Generic Name",
+    "productType": "Product Type",
+    "saveSuccess": "Saved successfully",
+    "shortName": "Short Name",
+    "spuCode": "SPU Code",
+    "status": "Status",
+    "title": "Generic Products",
+    "typeConsumable": "Medical Consumable",
+    "typeDevice": "Medical Device",
+    "typeDrug": "Drug",
+    "typeFsmp": "FSMP",
+    "typeOther": "Other",
+    "updateDate": "Updated At"
+  },
+  "title": "Product Archive"
+}
