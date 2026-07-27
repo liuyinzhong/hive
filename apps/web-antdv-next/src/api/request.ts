@@ -140,7 +140,7 @@ export const externalAccessRequestClient = createRequestClient(
 );
 
 /* 直接使用 vben的基本请求 */
-export const baseRequestClient = new RequestClient({ baseURL: apiURL });
+// export const baseRequestClient = new RequestClient({ baseURL: apiURL });
 
 export interface PageFetchParams {
   [key: string]: any;
