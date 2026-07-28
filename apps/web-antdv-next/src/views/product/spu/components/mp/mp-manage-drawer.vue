@@ -14,6 +14,7 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getProductMpListApi } from '#/api/product';
 import { $t } from '#/locales';
 
+import SkuManageDrawerComponent from '../sku/sku-manage-drawer.vue';
 import MpFormModalComponent from './mp-form-modal.vue';
 import { useProductMpColumns } from './mp-data';
 
@@ -24,6 +25,11 @@ const title = computed(() => $t('product.mp.manageTitle'));
 
 const [MpFormModal, mpFormModalApi] = useVbenModal({
   connectedComponent: MpFormModalComponent,
+  destroyOnClose: true,
+});
+
+const [SkuManageDrawer, skuManageDrawerApi] = useVbenDrawer({
+  connectedComponent: SkuManageDrawerComponent,
   destroyOnClose: true,
 });
 
@@ -77,11 +83,15 @@ function openEdit(row: ProductMpApi.ProductMp) {
   mpFormModalApi.setData({ mp: row, rp: currentRp.value }).open();
 }
 
+function openSkuManage(row: ProductMpApi.ProductMp) {
+  skuManageDrawerApi.setData(row).open();
+}
 </script>
 
 <template>
   <Drawer class="w-[1120px]" :title="title">
     <MpFormModal @success="refreshTable" />
+    <SkuManageDrawer />
 
     <div v-if="currentRp" class="mb-4 rounded border p-3">
       <div class="flex flex-wrap items-center gap-2">
@@ -110,6 +120,12 @@ function openEdit(row: ProductMpApi.ProductMp) {
       <template #action="{ row }">
         <VbenTableAction
           :actions="[
+            {
+              auth: 'product:sku:list',
+              icon: 'lucide:package',
+              text: $t('product.sku.title'),
+              onClick: () => openSkuManage(row),
+            },
             {
               auth: 'product:mp:update',
               icon: 'lucide:edit',

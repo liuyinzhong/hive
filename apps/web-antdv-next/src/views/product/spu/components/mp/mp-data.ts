@@ -152,7 +152,7 @@ export function useProductMpColumns(): VxeTableGridOptions<ProductMpApi.ProductM
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('product.mp.operation'),
-      width: 120,
+      width: 180,
     },
   ];
 }
