@@ -6,9 +6,6 @@ import { updateExternalPageStatusApi } from "#/api/system";
 
 import { $t } from "#/locales";
 
-import { useAccess } from "@vben/access";
-const { hasAccessByCodes } = useAccess();
-
 export function useExternalPageSearchSchema(): VbenFormSchema[] {
   return [
     {
@@ -57,15 +54,14 @@ export function useExternalPageColumns(): VxeTableGridOptions<ExternalPageApi.Ex
       title: $t("system.externalPage.path"),
     },
     {
-      cellRender: hasAccessByCodes(["system:externalPage:status"])
-        ? {
-            attrs: {
-              onChange: (status: 0 | 1, row: ExternalPageApi.ExternalPage) =>
-                updateExternalPageStatusApi(row.id, status),
-            },
-            name: "CellSwitch",
-          }
-        : { name: "CellTag" },
+      cellRender: {
+        attrs: {
+          auth: "system:externalPage:status",
+          onChange: (status: 0 | 1, row: ExternalPageApi.ExternalPage) =>
+            updateExternalPageStatusApi(row.id, status),
+        },
+        name: "CellSwitch",
+      },
       field: "status",
       title: $t("system.externalPage.status"),
       width: 100,

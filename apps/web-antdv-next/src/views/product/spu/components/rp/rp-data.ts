@@ -3,6 +3,7 @@ import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ProductRpApi } from '#/api/product';
 
 import { z } from '#/adapter/form';
+import { updateProductRpStatusApi } from '#/api/product';
 import { $t } from '#/locales';
 
 export function useProductRpFormSchema(): VbenFormSchema[] {
@@ -110,8 +111,24 @@ export function useProductRpColumns(): VxeTableGridOptions<ProductRpApi.ProductR
       title: $t('product.rp.description'),
     },
     {
+      cellRender: {
+        attrs: {
+          auth: 'product:rp:status',
+          onChange: async (
+            newStatus: 0 | 1,
+            row: ProductRpApi.ProductRp,
+          ) => {
+            const updated = await updateProductRpStatusApi(row.rpId, {
+              expectedRowVersion: row.rowVersion,
+              status: newStatus,
+            });
+            row.rowVersion = updated.rowVersion;
+            row.updateDate = updated.updateDate;
+          },
+        },
+        name: 'CellSwitch',
+      },
       field: 'status',
-      slots: { default: 'status' },
       sortable: true,
       title: $t('product.rp.status'),
       width: 100,

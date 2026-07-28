@@ -9,10 +9,10 @@ import { useAccess } from '@vben/access';
 import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button, message, Modal, Switch, Tag } from 'antdv-next';
+import { Button, Tag } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getProductRpListApi, updateProductRpStatusApi } from '#/api/product';
+import { getProductRpListApi } from '#/api/product';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
@@ -20,10 +20,6 @@ import { productTypeLabel } from '../../data';
 import MpManageDrawerComponent from '../mp/mp-manage-drawer.vue';
 import RpFormModalComponent from './rp-form-modal.vue';
 import { useProductRpColumns, useProductRpSearchSchema } from './rp-data';
-
-type ProductRpRow = ProductRpApi.ProductRp & {
-  __loading_status?: boolean;
-};
 
 const { hasAccessByCodes } = useAccess();
 
@@ -103,46 +99,6 @@ function openMpManage(row: ProductRpApi.ProductRp) {
   mpManageDrawerApi.setData(row).open();
 }
 
-function confirmStatusChange(newStatus: 0 | 1) {
-  const statusText =
-    newStatus === 1 ? $t('common.enabled') : $t('common.disabled');
-  return new Promise<boolean>((resolve) => {
-    Modal.confirm({
-      content: $t('ui.actionMessage.statusChangeConfirm', [statusText]),
-      onCancel: () => resolve(false),
-      onOk: () => resolve(true),
-    });
-  });
-}
-
-function getStatusLoading(row: ProductRpApi.ProductRp) {
-  return Boolean((row as ProductRpRow).__loading_status);
-}
-
-function setStatusLoading(row: ProductRpApi.ProductRp, loading: boolean) {
-  (row as ProductRpRow).__loading_status = loading;
-}
-
-async function handleStatusChange(value: unknown, row: ProductRpApi.ProductRp) {
-  const newStatus: 0 | 1 = value === 1 ? 1 : 0;
-  if (!(await confirmStatusChange(newStatus))) return;
-
-  setStatusLoading(row, true);
-  try {
-    const updated = await updateProductRpStatusApi(row.rpId, {
-      expectedRowVersion: row.rowVersion,
-      status: newStatus,
-    });
-    row.status = newStatus;
-    row.rowVersion = updated.rowVersion;
-    row.updateDate = updated.updateDate;
-    message.success($t('ui.actionMessage.operationSuccess'));
-  } catch {
-    // 接口错误提示由统一请求拦截器处理。
-  } finally {
-    setStatusLoading(row, false);
-  }
-}
 </script>
 
 <template>
@@ -173,18 +129,6 @@ async function handleStatusChange(value: unknown, row: ProductRpApi.ProductRp) {
           <Plus class="size-5" />
           {{ $t('product.rp.create') }}
         </Button>
-      </template>
-      <template #status="{ row }">
-        <Switch
-          :checked="row.status"
-          :checked-children="$t('common.enabled')"
-          :checked-value="1"
-          :disabled="!hasAccessByCodes(['product:rp:status'])"
-          :loading="getStatusLoading(row)"
-          :un-checked-children="$t('common.disabled')"
-          :un-checked-value="0"
-          @update:checked="(value) => handleStatusChange(value, row)"
-        />
       </template>
       <template #action="{ row }">
         <VbenTableAction

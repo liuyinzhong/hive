@@ -8,18 +8,14 @@ import { useAccess } from '@vben/access';
 import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button, message, Modal, Switch, Tag } from 'antdv-next';
+import { Button, Tag } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getProductMpListApi, updateProductMpStatusApi } from '#/api/product';
+import { getProductMpListApi } from '#/api/product';
 import { $t } from '#/locales';
 
 import MpFormModalComponent from './mp-form-modal.vue';
 import { useProductMpColumns } from './mp-data';
-
-type ProductMpRow = ProductMpApi.ProductMp & {
-  __loading_status?: boolean;
-};
 
 const { hasAccessByCodes } = useAccess();
 
@@ -81,46 +77,6 @@ function openEdit(row: ProductMpApi.ProductMp) {
   mpFormModalApi.setData({ mp: row, rp: currentRp.value }).open();
 }
 
-function confirmStatusChange(newStatus: 0 | 1) {
-  const statusText =
-    newStatus === 1 ? $t('common.enabled') : $t('common.disabled');
-  return new Promise<boolean>((resolve) => {
-    Modal.confirm({
-      content: $t('ui.actionMessage.statusChangeConfirm', [statusText]),
-      onCancel: () => resolve(false),
-      onOk: () => resolve(true),
-    });
-  });
-}
-
-function getStatusLoading(row: ProductMpApi.ProductMp) {
-  return Boolean((row as ProductMpRow).__loading_status);
-}
-
-function setStatusLoading(row: ProductMpApi.ProductMp, loading: boolean) {
-  (row as ProductMpRow).__loading_status = loading;
-}
-
-async function handleStatusChange(value: unknown, row: ProductMpApi.ProductMp) {
-  const newStatus: 0 | 1 = value === 1 ? 1 : 0;
-  if (!(await confirmStatusChange(newStatus))) return;
-
-  setStatusLoading(row, true);
-  try {
-    const updated = await updateProductMpStatusApi(row.mpId, {
-      expectedRowVersion: row.rowVersion,
-      status: newStatus,
-    });
-    row.status = newStatus;
-    row.rowVersion = updated.rowVersion;
-    row.updateDate = updated.updateDate;
-    message.success($t('ui.actionMessage.operationSuccess'));
-  } catch {
-    // 接口错误提示由统一请求拦截器处理。
-  } finally {
-    setStatusLoading(row, false);
-  }
-}
 </script>
 
 <template>
@@ -150,18 +106,6 @@ async function handleStatusChange(value: unknown, row: ProductMpApi.ProductMp) {
           <Plus class="size-5" />
           {{ $t('product.mp.create') }}
         </Button>
-      </template>
-      <template #status="{ row }">
-        <Switch
-          :checked="row.status"
-          :checked-children="$t('common.enabled')"
-          :checked-value="1"
-          :disabled="!hasAccessByCodes(['product:mp:status'])"
-          :loading="getStatusLoading(row)"
-          :un-checked-children="$t('common.disabled')"
-          :un-checked-value="0"
-          @update:checked="(value) => handleStatusChange(value, row)"
-        />
       </template>
       <template #action="{ row }">
         <VbenTableAction

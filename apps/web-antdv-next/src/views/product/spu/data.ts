@@ -138,6 +138,7 @@ export function useProductSpuColumns(): VxeTableGridOptions<ProductSpuApi.Produc
     {
       cellRender: {
         attrs: {
+          auth: 'product:spu:status',
           onChange: async (
             newStatus: 0 | 1,
             row: ProductSpuApi.ProductSpu,

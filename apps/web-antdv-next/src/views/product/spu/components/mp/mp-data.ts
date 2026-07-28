@@ -4,6 +4,7 @@ import type { ProductMpApi } from '#/api/product';
 
 import { z } from '#/adapter/form';
 import { getEnterpriseOptionsApi } from '#/api/base';
+import { updateProductMpStatusApi } from '#/api/product';
 import { $t } from '#/locales';
 
 export function useProductMpFormSchema(): VbenFormSchema[] {
@@ -118,8 +119,24 @@ export function useProductMpColumns(): VxeTableGridOptions<ProductMpApi.ProductM
       title: $t('product.mp.description'),
     },
     {
+      cellRender: {
+        attrs: {
+          auth: 'product:mp:status',
+          onChange: async (
+            newStatus: 0 | 1,
+            row: ProductMpApi.ProductMp,
+          ) => {
+            const updated = await updateProductMpStatusApi(row.mpId, {
+              expectedRowVersion: row.rowVersion,
+              status: newStatus,
+            });
+            row.rowVersion = updated.rowVersion;
+            row.updateDate = updated.updateDate;
+          },
+        },
+        name: 'CellSwitch',
+      },
       field: 'status',
-      slots: { default: 'status' },
       title: $t('product.mp.status'),
       width: 100,
     },
