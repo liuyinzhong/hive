@@ -1,10 +1,34 @@
 {
   "permission": {
+    "rpCreate": "Create Specification Product",
+    "rpDetail": "View Specification Product Details",
+    "rpList": "Specification List",
+    "rpStatus": "Change Specification Product Status",
+    "rpUpdate": "Update Specification Product",
     "spuCreate": "Create Generic Product",
     "spuDetail": "View Generic Product Details",
     "spuList": "List",
     "spuStatus": "Change Generic Product Status",
     "spuUpdate": "Update Generic Product"
+  },
+  "rp": {
+    "create": "Create Specification",
+    "description": "Description",
+    "dosageForm": "Dosage Form / Shape",
+    "edit": "Edit Specification",
+    "keyword": "RP code, specification name, dosage form or strength",
+    "keywordLabel": "Keyword",
+    "list": "Specification Product List",
+    "manageTitle": "Specification Product Management",
+    "operation": "Operation",
+    "rpCode": "RP Code",
+    "saveSuccess": "Saved successfully",
+    "specName": "Specification Name",
+    "spuDisabledReadonly": "The current generic product is disabled. Specification products are read-only and cannot be created, edited, enabled, or disabled.",
+    "status": "Status",
+    "strengthText": "Strength / Specification Text",
+    "title": "Specifications",
+    "updateDate": "Updated At"
   },
   "spu": {
     "create": "Create Generic Product",

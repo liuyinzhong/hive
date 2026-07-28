@@ -1,10 +1,34 @@
 {
   "permission": {
+    "rpCreate": "新增规格产品",
+    "rpDetail": "查看规格产品详情",
+    "rpList": "规格列表",
+    "rpStatus": "启停规格产品",
+    "rpUpdate": "修改规格产品",
     "spuCreate": "新增通用产品",
     "spuDetail": "查看通用产品详情",
     "spuList": "列表",
     "spuStatus": "启停通用产品",
     "spuUpdate": "修改通用产品"
+  },
+  "rp": {
+    "create": "新增规格",
+    "description": "描述",
+    "dosageForm": "剂型/形态",
+    "edit": "编辑规格",
+    "keyword": "RP编码、规格名称、剂型或规格文本",
+    "keywordLabel": "关键字",
+    "list": "规格产品列表",
+    "manageTitle": "规格产品管理",
+    "operation": "操作",
+    "rpCode": "RP编码",
+    "saveSuccess": "保存成功",
+    "specName": "规格名称",
+    "spuDisabledReadonly": "当前通用产品已停用，规格产品只读，不能新增、编辑或启停。",
+    "status": "状态",
+    "strengthText": "含量/规格文本",
+    "title": "规格",
+    "updateDate": "更新时间"
   },
   "spu": {
     "create": "新增通用产品",

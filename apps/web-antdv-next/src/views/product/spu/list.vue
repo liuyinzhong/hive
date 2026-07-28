@@ -14,6 +14,7 @@ import { getProductSpuListApi } from '#/api/product';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
+import RpManageDrawerComponent from './components/rp-manage-drawer.vue';
 import { useProductSpuColumns, useProductSpuSearchSchema } from './data';
 import FormDrawerComponent from './form-drawer.vue';
 
@@ -21,6 +22,11 @@ const { hasAccessByCodes } = useAccess();
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: FormDrawerComponent,
+  destroyOnClose: true,
+});
+
+const [RpManageDrawer, rpManageDrawerApi] = useVbenDrawer({
+  connectedComponent: RpManageDrawerComponent,
   destroyOnClose: true,
 });
 
@@ -62,11 +68,16 @@ function openEdit(row: ProductSpuApi.ProductSpu) {
     spuId: row.spuId,
   }).open();
 }
+
+function openRpManage(row: ProductSpuApi.ProductSpu) {
+  rpManageDrawerApi.setData(row).open();
+}
 </script>
 
 <template>
   <Page auto-content-height>
     <FormDrawer @success="gridApi.query()" />
+    <RpManageDrawer />
     <Grid :table-title="$t('product.spu.list')">
       <template #toolbar-tools>
         <Button
@@ -81,6 +92,12 @@ function openEdit(row: ProductSpuApi.ProductSpu) {
       <template #action="{ row }">
         <VbenTableAction
           :actions="[
+            {
+              auth: 'product:rp:list',
+              icon: 'lucide:list-tree',
+              text: $t('product.rp.title'),
+              onClick: () => openRpManage(row),
+            },
             {
               auth: 'product:spu:update',
               icon: 'lucide:edit',

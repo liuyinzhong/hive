@@ -170,7 +170,7 @@ export function useProductSpuColumns(): VxeTableGridOptions<ProductSpuApi.Produc
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('product.spu.operation'),
-      width: 120,
+      width: 180,
     },
   ];
 }
