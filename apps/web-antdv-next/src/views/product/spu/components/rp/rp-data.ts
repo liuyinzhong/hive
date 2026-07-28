@@ -19,14 +19,14 @@ export function useProductRpFormSchema(): VbenFormSchema[] {
       componentProps: { maxlength: 64 },
       fieldName: 'dosageForm',
       label: $t('product.rp.dosageForm'),
-      rules: z.string().max(64).optional(),
+      rules: z.string().max(64).nullish(),
     },
     {
       component: 'Input',
       componentProps: { maxlength: 128 },
       fieldName: 'strengthText',
       label: $t('product.rp.strengthText'),
-      rules: z.string().max(128).optional(),
+      rules: z.string().max(128).nullish(),
     },
     {
       component: 'RadioGroup',
@@ -46,7 +46,7 @@ export function useProductRpFormSchema(): VbenFormSchema[] {
       fieldName: 'description',
       formItemClass: 'md:col-span-2',
       label: $t('product.rp.description'),
-      rules: z.string().max(2000).optional(),
+      rules: z.string().max(2000).nullish(),
     },
   ];
 }
@@ -129,7 +129,7 @@ export function useProductRpColumns(): VxeTableGridOptions<ProductRpApi.ProductR
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('product.rp.operation'),
-      width: 120,
+      width: 180,
     },
   ];
 }

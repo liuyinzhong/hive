@@ -14,7 +14,7 @@ import { getProductSpuListApi } from '#/api/product';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
-import RpManageDrawerComponent from './components/rp-manage-drawer.vue';
+import RpManageDrawerComponent from './components/rp/rp-manage-drawer.vue';
 import { useProductSpuColumns, useProductSpuSearchSchema } from './data';
 import FormDrawerComponent from './form-drawer.vue';
 

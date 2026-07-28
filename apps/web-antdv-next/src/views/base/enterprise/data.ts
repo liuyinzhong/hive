@@ -59,7 +59,6 @@ export function useEnterpriseFormSchema(): VbenFormSchema[] {
       componentProps: { maxlength: 64 },
       fieldName: 'shortName',
       label: $t('base.enterprise.shortName'),
-      rules: z.string().max(64).optional(),
     },
     {
       component: 'Select',
@@ -74,11 +73,6 @@ export function useEnterpriseFormSchema(): VbenFormSchema[] {
       componentProps: { maxlength: 32 },
       fieldName: 'unifiedCreditCode',
       label: $t('base.enterprise.unifiedCreditCode'),
-      rules: z
-        .string()
-        .max(32)
-        .regex(/^[A-Za-z0-9]*$/, $t('base.enterprise.creditCodeRule'))
-        .optional(),
     },
     {
       component: 'Select',
@@ -97,14 +91,12 @@ export function useEnterpriseFormSchema(): VbenFormSchema[] {
       componentProps: { maxlength: 64 },
       fieldName: 'contactName',
       label: $t('base.enterprise.contactName'),
-      rules: z.string().max(64).optional(),
     },
     {
       component: 'Input',
       componentProps: { maxlength: 32 },
       fieldName: 'contactPhone',
       label: $t('base.enterprise.contactPhone'),
-      rules: z.string().max(32).optional(),
     },
     {
       component: 'Input',
@@ -112,7 +104,6 @@ export function useEnterpriseFormSchema(): VbenFormSchema[] {
       fieldName: 'address',
       formItemClass: 'md:col-span-2',
       label: $t('base.enterprise.address'),
-      rules: z.string().max(512).optional(),
     },
     {
       component: 'RadioGroup',
@@ -132,7 +123,7 @@ export function useEnterpriseFormSchema(): VbenFormSchema[] {
       fieldName: 'remark',
       formItemClass: 'md:col-span-2',
       label: $t('base.enterprise.remark'),
-      rules: z.string().max(512).optional(),
+      rules: z.string().max(512).nullish(),
     },
   ];
 }

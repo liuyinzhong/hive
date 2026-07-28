@@ -3,7 +3,7 @@ import type { Recordable } from '@vben/types';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ProductRpApi, ProductSpuApi } from '#/api/product';
 
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { useAccess } from '@vben/access';
 import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
@@ -16,7 +16,8 @@ import { getProductRpListApi, updateProductRpStatusApi } from '#/api/product';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
-import { productTypeLabel } from '../data';
+import { productTypeLabel } from '../../data';
+import MpManageDrawerComponent from '../mp/mp-manage-drawer.vue';
 import RpFormModalComponent from './rp-form-modal.vue';
 import { useProductRpColumns, useProductRpSearchSchema } from './rp-data';
 
@@ -27,11 +28,15 @@ type ProductRpRow = ProductRpApi.ProductRp & {
 const { hasAccessByCodes } = useAccess();
 
 const currentSpu = ref<ProductSpuApi.ProductSpu>();
-const canMaintain = computed(() => currentSpu.value?.status === 1);
 const title = computed(() => $t('product.rp.manageTitle'));
 
 const [RpFormModal, rpFormModalApi] = useVbenModal({
   connectedComponent: RpFormModalComponent,
+  destroyOnClose: true,
+});
+
+const [MpManageDrawer, mpManageDrawerApi] = useVbenDrawer({
+  connectedComponent: MpManageDrawerComponent,
   destroyOnClose: true,
 });
 
@@ -45,6 +50,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     columns: useProductRpColumns(),
     height: 'auto',
     proxyConfig: {
+      autoLoad: false,
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues: Recordable<unknown>) => {
@@ -68,22 +74,33 @@ const [Grid, gridApi] = useVbenVxeGrid({
 });
 
 const [Drawer, drawerApi] = useVbenDrawer({
-  async onOpenChange(isOpen) {
+  onOpenChange(isOpen) {
     if (!isOpen) return;
 
     currentSpu.value = drawerApi.getData<ProductSpuApi.ProductSpu>();
-    await gridApi.query();
+  },
+  async onOpened() {
+    await refreshTable();
   },
 });
 
+async function refreshTable() {
+  await nextTick();
+  await gridApi.query();
+}
+
 function openCreate() {
-  if (!currentSpu.value || !canMaintain.value) return;
+  if (!currentSpu.value) return;
   rpFormModalApi.setData({ spu: currentSpu.value }).open();
 }
 
 function openEdit(row: ProductRpApi.ProductRp) {
-  if (!currentSpu.value || !canMaintain.value) return;
+  if (!currentSpu.value) return;
   rpFormModalApi.setData({ rp: row, spu: currentSpu.value }).open();
+}
+
+function openMpManage(row: ProductRpApi.ProductRp) {
+  mpManageDrawerApi.setData(row).open();
 }
 
 function confirmStatusChange(newStatus: 0 | 1) {
@@ -107,8 +124,6 @@ function setStatusLoading(row: ProductRpApi.ProductRp, loading: boolean) {
 }
 
 async function handleStatusChange(value: unknown, row: ProductRpApi.ProductRp) {
-  if (!canMaintain.value) return;
-
   const newStatus: 0 | 1 = value === 1 ? 1 : 0;
   if (!(await confirmStatusChange(newStatus))) return;
 
@@ -132,7 +147,8 @@ async function handleStatusChange(value: unknown, row: ProductRpApi.ProductRp) {
 
 <template>
   <Drawer class="w-[1120px]" :title="title">
-    <RpFormModal @success="gridApi.query()" />
+    <RpFormModal @success="refreshTable" />
+    <MpManageDrawer />
 
     <div v-if="currentSpu" class="mb-4 rounded border p-3">
       <div class="flex flex-wrap items-center gap-2">
@@ -145,16 +161,12 @@ async function handleStatusChange(value: unknown, row: ProductRpApi.ProductRp) {
           }}
         </Tag>
       </div>
-      <div v-if="!canMaintain" class="mt-2 text-sm text-muted-foreground">
-        {{ $t('product.rp.spuDisabledReadonly') }}
-      </div>
     </div>
 
     <Grid :table-title="$t('product.rp.list')">
       <template #toolbar-tools>
         <Button
           v-if="hasAccessByCodes(['product:rp:create'])"
-          :disabled="!canMaintain"
           type="primary"
           @click="openCreate"
         >
@@ -167,7 +179,7 @@ async function handleStatusChange(value: unknown, row: ProductRpApi.ProductRp) {
           :checked="row.status"
           :checked-children="$t('common.enabled')"
           :checked-value="1"
-          :disabled="!canMaintain || !hasAccessByCodes(['product:rp:status'])"
+          :disabled="!hasAccessByCodes(['product:rp:status'])"
           :loading="getStatusLoading(row)"
           :un-checked-children="$t('common.disabled')"
           :un-checked-value="0"
@@ -178,8 +190,13 @@ async function handleStatusChange(value: unknown, row: ProductRpApi.ProductRp) {
         <VbenTableAction
           :actions="[
             {
+              auth: 'product:mp:list',
+              icon: 'lucide:factory',
+              text: $t('product.mp.title'),
+              onClick: () => openMpManage(row),
+            },
+            {
               auth: 'product:rp:update',
-              disabled: !canMaintain,
               icon: 'lucide:edit',
               text: $t('common.edit'),
               onClick: () => openEdit(row),

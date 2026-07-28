@@ -1,5 +1,10 @@
 {
   "permission": {
+    "mpCreate": "Create Manufacturer Product",
+    "mpDetail": "View Manufacturer Product Details",
+    "mpList": "Manufacturer List",
+    "mpStatus": "Change Manufacturer Product Status",
+    "mpUpdate": "Update Manufacturer Product",
     "rpCreate": "Create Specification Product",
     "rpDetail": "View Specification Product Details",
     "rpList": "Specification List",
@@ -10,6 +15,22 @@
     "spuList": "List",
     "spuStatus": "Change Generic Product Status",
     "spuUpdate": "Update Generic Product"
+  },
+  "mp": {
+    "approvalNo": "Approval / Registration / Filing No.",
+    "brandName": "Brand / Trade Name",
+    "create": "Create Manufacturer Product",
+    "description": "Description",
+    "edit": "Edit Manufacturer Product",
+    "enterprise": "Manufacturer",
+    "list": "Manufacturer Product List",
+    "manageTitle": "Manufacturer Product Management",
+    "mpCode": "MP Code",
+    "operation": "Operation",
+    "saveSuccess": "Saved successfully",
+    "status": "Status",
+    "title": "Manufacturer",
+    "updateDate": "Updated At"
   },
   "rp": {
     "create": "Create Specification",
@@ -24,7 +45,6 @@
     "rpCode": "RP Code",
     "saveSuccess": "Saved successfully",
     "specName": "Specification Name",
-    "spuDisabledReadonly": "The current generic product is disabled. Specification products are read-only and cannot be created, edited, enabled, or disabled.",
     "status": "Status",
     "strengthText": "Strength / Specification Text",
     "title": "Specifications",

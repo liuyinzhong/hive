@@ -99,7 +99,7 @@ function getNodeClass(node: Recordable<any>) {
             :tree-data="permissions"
             multiple
             bordered
-            :default-expanded-level="3"
+            :default-expanded-level="0"
             :get-node-class="getNodeClass"
             v-bind="slotProps"
             value-field="id"

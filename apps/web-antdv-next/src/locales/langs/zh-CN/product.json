@@ -1,5 +1,10 @@
 {
   "permission": {
+    "mpCreate": "新增厂家产品",
+    "mpDetail": "查看厂家产品详情",
+    "mpList": "厂家列表",
+    "mpStatus": "启停厂家产品",
+    "mpUpdate": "修改厂家产品",
     "rpCreate": "新增规格产品",
     "rpDetail": "查看规格产品详情",
     "rpList": "规格列表",
@@ -10,6 +15,22 @@
     "spuList": "列表",
     "spuStatus": "启停通用产品",
     "spuUpdate": "修改通用产品"
+  },
+  "mp": {
+    "approvalNo": "批准文号/注册证号/备案号",
+    "brandName": "品牌/商品名",
+    "create": "新增厂家产品",
+    "description": "描述",
+    "edit": "编辑厂家产品",
+    "enterprise": "生产企业",
+    "list": "厂家产品列表",
+    "manageTitle": "厂家产品管理",
+    "mpCode": "MP编码",
+    "operation": "操作",
+    "saveSuccess": "保存成功",
+    "status": "状态",
+    "title": "厂家",
+    "updateDate": "更新时间"
   },
   "rp": {
     "create": "新增规格",
@@ -24,7 +45,6 @@
     "rpCode": "RP编码",
     "saveSuccess": "保存成功",
     "specName": "规格名称",
-    "spuDisabledReadonly": "当前通用产品已停用，规格产品只读，不能新增、编辑或启停。",
     "status": "状态",
     "strengthText": "含量/规格文本",
     "title": "规格",

@@ -36,7 +36,7 @@ export function useProductSpuFormSchema(): VbenFormSchema[] {
       componentProps: { maxlength: 64 },
       fieldName: 'shortName',
       label: $t('product.spu.shortName'),
-      rules: z.string().max(64).optional(),
+      rules: z.string().max(64).nullish(),
     },
     {
       component: 'Select',
@@ -64,7 +64,7 @@ export function useProductSpuFormSchema(): VbenFormSchema[] {
       fieldName: 'description',
       formItemClass: 'md:col-span-2',
       label: $t('product.spu.description'),
-      rules: z.string().max(2000).optional(),
+      rules: z.string().max(2000).nullish(),
     },
   ];
 }
