@@ -68,6 +68,14 @@ export function weekdayOptions() {
 }
 
 export function statusOptions() {
+  const dictItems = getLocalDictList('MED_SCHEDULE_STATUS');
+  if (dictItems.length > 0) {
+    return dictItems.map((item) => ({
+      label: item.label ?? '',
+      value: Number(item.value),
+    }));
+  }
+
   return [0, 1, 2, 3].map((value) => ({
     label: $t(`medical.schedule.status${value}`),
     value,

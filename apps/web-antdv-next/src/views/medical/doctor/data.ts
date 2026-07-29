@@ -77,7 +77,7 @@ export function useDoctorFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       componentProps: {
         allowClear: true,
-        api: () => getLocalDictList('MED_DOCTOR_GENDER'),
+        api: () => getLocalDictList('GENDER'),
       },
       fieldName: 'gender',
       label: $t('medical.doctor.gender'),
@@ -376,7 +376,7 @@ export function useDoctorBasicDescriptionItems(
     {
       content: () =>
         h(DictTag, {
-          dictType: 'MED_DOCTOR_GENDER',
+          dictType: 'GENDER',
           value: doctor?.gender,
         }),
       label: $t('medical.doctor.gender'),

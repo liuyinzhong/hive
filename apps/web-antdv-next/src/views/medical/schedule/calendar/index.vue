@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import type {
-  MedicalDepartmentApi,
-  MedicalDoctorApi,
-  MedicalScheduleApi,
-} from '#/api/medical';
+import type { MedicalScheduleApi } from '#/api/medical';
 import type { Dayjs } from 'dayjs';
 
 import { computed, onMounted, ref, watch } from 'vue';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
+import {
+  ApiComponent,
+  Page,
+  useVbenDrawer,
+  useVbenModal,
+} from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import {
@@ -23,10 +24,11 @@ import {
   Progress,
   Select,
   Spin,
-  Tag,
+  TreeSelect,
 } from 'antdv-next';
 import dayjs from 'dayjs';
 
+import DictTag from '#/components/DictTag/index.vue';
 import {
   deleteDraftSchedulesApi,
   getAllDoctorsApi,
@@ -34,18 +36,14 @@ import {
   getScheduleListApi,
   publishSchedulesApi,
 } from '#/api/medical';
-import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 
+import { statusOptions as getScheduleStatusOptions } from '../shared';
 import FormDrawerComponent from './form-drawer.vue';
 import GenerateDrawerComponent from './generate-drawer.vue';
 import StopModalComponent from './stop-modal.vue';
 
 type ViewMode = 'month' | 'week';
-interface SelectOption {
-  label: string;
-  value: number | string;
-}
 
 const { hasAccessByCodes } = useAccess();
 const viewMode = ref<ViewMode>('week');
@@ -55,9 +53,7 @@ const loading = ref(false);
 const doctorId = ref<string>();
 const departmentId = ref<string>();
 const status = ref<number>();
-const doctors = ref<MedicalDoctorApi.DoctorOption[]>([]);
-const departments = ref<SelectOption[]>([]);
-const registrationTypes = ref<SelectOption[]>([]);
+const statusOptions = getScheduleStatusOptions();
 const selectedDraftIds = ref<string[]>([]);
 const selectedDate = ref<string>();
 let requestSequence = 0;
@@ -116,20 +112,6 @@ const selectedDaySchedules = computed(() =>
     : [],
 );
 
-const doctorOptions = computed(() =>
-  doctors.value.map((item) => ({
-    label: `${item.name} (${item.doctorNo})`,
-    value: item.doctorId,
-  })),
-);
-
-const statusOptions = computed(() =>
-  [0, 1, 2, 3].map((value) => ({
-    label: $t(`medical.schedule.status${value}`),
-    value,
-  })),
-);
-
 const rangeTitle = computed(() => {
   if (viewMode.value === 'month') {
     return $t('medical.schedule.monthTitle', [
@@ -139,17 +121,12 @@ const rangeTitle = computed(() => {
   return `${range.value.start.format('YYYY-MM-DD')} ~ ${range.value.end.format('YYYY-MM-DD')}`;
 });
 
-function flattenDepartments(
-  values: MedicalDepartmentApi.Department[],
-  depth = 0,
-): SelectOption[] {
-  return values.flatMap((item) => [
-    {
-      label: `${'　'.repeat(depth)}${item.departmentName}`,
-      value: item.departmentId,
-    },
-    ...flattenDepartments(item.children ?? [], depth + 1),
-  ]);
+function dateKey(day: Dayjs) {
+  return day.format('YYYY-MM-DD');
+}
+
+function getDaySchedules(day: Dayjs) {
+  return schedulesByDate.value.get(dateKey(day)) ?? [];
 }
 
 async function fetchSchedules() {
@@ -185,17 +162,7 @@ async function fetchSchedules() {
   }
 }
 
-onMounted(async () => {
-  const [doctorItems, departmentItems, dictItems] = await Promise.all([
-    getAllDoctorsApi(),
-    getAllMedicalDepartmentsApi(),
-    getLocalDictList('MED_REGISTRATION_TYPE'),
-  ]);
-  doctors.value = doctorItems;
-  departments.value = flattenDepartments(departmentItems);
-  registrationTypes.value = dictItems as SelectOption[];
-  await fetchSchedules();
-});
+onMounted(fetchSchedules);
 
 watch([viewMode, doctorId, departmentId, status], fetchSchedules);
 
@@ -216,18 +183,6 @@ function changeAnchor(value: Dayjs | Dayjs[] | null) {
   if (!value || Array.isArray(value)) return;
   anchorDate.value = value;
   fetchSchedules();
-}
-
-function scheduleStatusColor(statusValue: number) {
-  return (
-    ['default', 'processing', 'error', 'success'][statusValue] ?? 'default'
-  );
-}
-
-function registrationTypeName(value: string) {
-  return (
-    registrationTypes.value.find((item) => item.value === value)?.label ?? value
-  );
 }
 
 function quotaPercent(schedule: MedicalScheduleApi.Schedule) {
@@ -297,26 +252,44 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
     <div class="flex h-full flex-col gap-3">
       <Card size="small">
         <div class="flex flex-wrap items-center gap-2">
-          <Select
-            v-model:value="departmentId"
+          <ApiComponent
+            v-model="departmentId"
             allow-clear
+            :api="getAllMedicalDepartmentsApi"
             class="w-48"
-            :options="departments"
+            children-field="children"
+            :component="TreeSelect"
+            label-field="departmentName"
+            loading-slot="suffixIcon"
+            model-prop-name="value"
+            options-prop-name="treeData"
             :placeholder="$t('medical.schedule.department')"
+            result-field=""
             show-search
+            value-field="departmentId"
+            visible-event="onOpenChange"
           />
-          <Select
-            v-model:value="doctorId"
+          <ApiComponent
+            v-model="doctorId"
             allow-clear
+            :api="getAllDoctorsApi"
             class="w-48"
-            :options="doctorOptions"
+            :component="Select"
+            label-field="name"
+            loading-slot="suffixIcon"
+            model-prop-name="value"
             :placeholder="$t('medical.schedule.doctor')"
+            result-field=""
             show-search
+            value-field="doctorId"
+            visible-event="onOpenChange"
           />
-          <Select
-            v-model:value="status"
+          <ApiComponent
+            v-model="status"
             allow-clear
             class="w-36"
+            :component="Select"
+            model-prop-name="value"
             :options="statusOptions"
             :placeholder="$t('medical.schedule.status')"
           />
@@ -386,7 +359,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
           >
             <section
               v-for="day in displayDays"
-              :key="day.format('YYYY-MM-DD')"
+              :key="dateKey(day)"
               class="min-h-[560px] rounded border bg-muted/20 p-2"
             >
               <header class="mb-2 flex items-center justify-between">
@@ -402,7 +375,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                   v-if="hasAccessByCodes(['medical:schedule:create'])"
                   size="small"
                   type="text"
-                  @click="openCreate(day.format('YYYY-MM-DD'))"
+                  @click="openCreate(dateKey(day))"
                 >
                   <Plus class="size-4" />
                 </Button>
@@ -410,9 +383,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
 
               <div class="space-y-2">
                 <Card
-                  v-for="schedule in schedulesByDate.get(
-                    day.format('YYYY-MM-DD'),
-                  ) ?? []"
+                  v-for="schedule in getDaySchedules(day)"
                   :key="schedule.scheduleId"
                   size="small"
                 >
@@ -427,9 +398,10 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                     <strong class="min-w-0 flex-1 truncate">{{
                       schedule.doctorName
                     }}</strong>
-                    <Tag :color="scheduleStatusColor(schedule.status)">
-                      {{ $t(`medical.schedule.status${schedule.status}`) }}
-                    </Tag>
+                    <DictTag
+                      dict-type="MED_SCHEDULE_STATUS"
+                      :value="schedule.status"
+                    />
                   </div>
                   <div class="text-sm">
                     {{ schedule.startTime.slice(0, 5) }}–{{
@@ -438,7 +410,10 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                   </div>
                   <div class="truncate text-xs text-muted-foreground">
                     {{ schedule.departmentName }} ·
-                    {{ registrationTypeName(schedule.registrationType) }}
+                    <DictTag
+                      dict-type="MED_REGISTRATION_TYPE"
+                      :value="schedule.registrationType"
+                    />
                   </div>
                   <div class="mt-2 flex items-center justify-between text-xs">
                     <span>
@@ -512,7 +487,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                   </div>
                 </Card>
                 <Empty
-                  v-if="!schedulesByDate.get(day.format('YYYY-MM-DD'))?.length"
+                  v-if="getDaySchedules(day).length === 0"
                   :description="$t('medical.schedule.noSchedule')"
                   :image="Empty.PRESENTED_IMAGE_SIMPLE"
                 />
@@ -530,33 +505,25 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
             </div>
             <button
               v-for="day in displayDays"
-              :key="day.format('YYYY-MM-DD')"
+              :key="dateKey(day)"
               class="min-h-28 border-b border-r p-2 text-left hover:bg-muted/30"
               :class="{ 'opacity-50': day.month() !== anchorDate.month() }"
               type="button"
-              @click="openDay(day.format('YYYY-MM-DD'))"
+              @click="openDay(dateKey(day))"
             >
               <div class="mb-1 font-medium">{{ day.date() }}</div>
               <div
-                v-for="schedule in (
-                  schedulesByDate.get(day.format('YYYY-MM-DD')) ?? []
-                ).slice(0, 3)"
+                v-for="schedule in getDaySchedules(day).slice(0, 3)"
                 :key="schedule.scheduleId"
                 class="mb-1 truncate rounded bg-primary/10 px-1 py-0.5 text-xs"
               >
                 {{ schedule.startTime.slice(0, 5) }} {{ schedule.doctorName }}
               </div>
               <div
-                v-if="
-                  (schedulesByDate.get(day.format('YYYY-MM-DD'))?.length ?? 0) >
-                  3
-                "
+                v-if="getDaySchedules(day).length > 3"
                 class="text-xs text-primary"
               >
-                +{{
-                  (schedulesByDate.get(day.format('YYYY-MM-DD'))?.length ?? 0) -
-                  3
-                }}
+                +{{ getDaySchedules(day).length - 3 }}
               </div>
             </button>
           </div>
@@ -585,9 +552,10 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                 schedule.endTime.slice(0, 5)
               }}</span
             >
-            <Tag :color="scheduleStatusColor(schedule.status)">
-              {{ $t(`medical.schedule.status${schedule.status}`) }}
-            </Tag>
+            <DictTag
+              dict-type="MED_SCHEDULE_STATUS"
+              :value="schedule.status"
+            />
             <span class="ml-auto">
               {{
                 $t('medical.schedule.quotaSummary', [
