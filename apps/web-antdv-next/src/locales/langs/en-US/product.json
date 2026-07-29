@@ -79,6 +79,7 @@
     "updateDate": "Updated At"
   },
   "spu": {
+    "backList": "Back to List",
     "create": "Create Generic Product",
     "description": "Description",
     "edit": "Edit Generic Product",
@@ -88,10 +89,12 @@
     "operation": "Operation",
     "productName": "Generic Name",
     "productType": "Product Type",
+    "saveSpu": "Save SPU",
     "saveSuccess": "Saved successfully",
     "shortName": "Short Name",
     "spuCode": "SPU Code",
     "status": "Status",
+    "structure": "Specification / Manufacturer / SKU Structure",
     "title": "Generic Products",
     "typeConsumable": "Medical Consumable",
     "typeDevice": "Medical Device",

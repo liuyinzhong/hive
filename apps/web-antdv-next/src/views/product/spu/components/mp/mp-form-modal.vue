@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ProductMpApi, ProductRpApi } from '#/api/product';
+import type { ProductMpApi } from '#/api/product';
 
 import { computed, ref } from 'vue';
 
@@ -18,16 +18,16 @@ import { $t } from '#/locales';
 import { useProductMpFormSchema } from './mp-data';
 
 interface ModalData {
-  mp?: ProductMpApi.ProductMp;
-  rp: ProductRpApi.ProductRp;
+  mpId?: string;
+  rpId: string;
 }
 
 const emit = defineEmits<{ success: [] }>();
 
-const currentRp = ref<ProductRpApi.ProductRp>();
 const mpId = ref<string>();
 const enterpriseId = ref<string>();
 const rowVersion = ref<number>();
+const rpId = ref<string>();
 const title = computed(() =>
   mpId.value ? $t('product.mp.edit') : $t('product.mp.create'),
 );
@@ -43,7 +43,7 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   async onConfirm() {
     const { valid } = await formApi.validate();
-    if (!valid || !currentRp.value) return;
+    if (!valid || !rpId.value) return;
 
     modalApi.lock();
     try {
@@ -52,7 +52,7 @@ const [Modal, modalApi] = useVbenModal({
         ...values,
         enterpriseId: enterpriseId.value || values.enterpriseId,
         expectedRowVersion: rowVersion.value,
-        rpId: currentRp.value.rpId,
+        rpId: rpId.value,
       } as ProductMpApi.SaveProductMp;
       await (mpId.value
         ? updateProductMpApi(mpId.value, payload)
@@ -68,17 +68,17 @@ const [Modal, modalApi] = useVbenModal({
     if (!isOpen) return;
 
     const data = modalApi.getData<ModalData>();
-    currentRp.value = data.rp;
-    mpId.value = data.mp?.mpId;
-    enterpriseId.value = data.mp?.enterpriseId;
-    rowVersion.value = data.mp?.rowVersion;
+    enterpriseId.value = undefined;
+    mpId.value = data.mpId;
+    rowVersion.value = undefined;
+    rpId.value = data.rpId;
     await formApi.reset();
 
-    let detail = data.mp;
-    if (data.mp?.mpId) {
+    let detail: ProductMpApi.ProductMp | undefined;
+    if (data.mpId) {
       modalApi.lock();
       try {
-        detail = await getProductMpDetailApi(data.mp.mpId);
+        detail = await getProductMpDetailApi(data.mpId);
       } finally {
         modalApi.unlock();
       }

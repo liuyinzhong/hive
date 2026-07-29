@@ -14,6 +14,7 @@ interface CellSwitchAttrs {
     newStatus: 0 | 1,
     row: Record<string, any>,
   ) => PromiseLike<unknown> | unknown;
+  visible?: (row: Record<string, any>) => boolean;
 }
 
 interface CellSwitchRenderOptions {
@@ -32,6 +33,10 @@ export default {
     { attrs, props }: CellSwitchRenderOptions,
     { column, row }: { column: { field: string }; row: Record<string, any> },
   ) {
+    if (attrs?.visible && !attrs.visible(row)) {
+      return '-';
+    }
+
     const auth = attrs?.auth;
     if (auth) {
       const { hasAccessByCodes } = useAccess();

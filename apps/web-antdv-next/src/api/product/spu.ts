@@ -27,6 +27,44 @@ export namespace ProductSpuApi {
     updateDate?: null | string;
   }
 
+  export interface ProductSpuDetailRow {
+    allowSplit?: null | 0 | 1;
+    approvalNo?: null | string;
+    barcode?: null | string;
+    brandName?: null | string;
+    dosageForm?: null | string;
+    enterpriseCode?: null | string;
+    enterpriseId?: null | string;
+    enterpriseName?: null | string;
+    gtin?: null | string;
+    minUnitName?: null | string;
+    mpCode?: null | string;
+    mpId?: null | string;
+    mpRowVersion?: null | number;
+    packageQuantity?: null | number;
+    packageSpecName?: null | string;
+    packageUnitName?: null | string;
+    productName: string;
+    productType: ProductType;
+    rpCode?: null | string;
+    rpId?: null | string;
+    rpRowVersion?: null | number;
+    shortName?: null | string;
+    skuCode?: null | string;
+    skuId?: null | string;
+    skuRowVersion?: null | number;
+    specName?: null | string;
+    spuCode: string;
+    spuId: string;
+    status?: null | ProductSpuStatus;
+    strengthText?: null | string;
+    udiDi?: null | string;
+  }
+
+  export interface ProductSpuDetail extends ProductSpu {
+    rows: ProductSpuDetailRow[];
+  }
+
   export type SaveProductSpu = Partial<ProductSpu> & {
     expectedRowVersion?: number;
     productName: string;
@@ -56,7 +94,9 @@ export function getProductSpuListApi(params: Recordable<unknown>) {
 }
 
 export function getProductSpuDetailApi(spuId: string) {
-  return requestClient.get<ProductSpuApi.ProductSpu>(`/product/spus/${spuId}`);
+  return requestClient.get<ProductSpuApi.ProductSpuDetail>(
+    `/product/spus/${spuId}`,
+  );
 }
 
 export function createProductSpuApi(data: ProductSpuApi.SaveProductSpu) {

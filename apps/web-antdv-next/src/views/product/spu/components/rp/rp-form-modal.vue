@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ProductRpApi, ProductSpuApi } from '#/api/product';
+import type { ProductRpApi } from '#/api/product';
 
 import { computed, ref } from 'vue';
 
@@ -18,15 +18,15 @@ import { $t } from '#/locales';
 import { useProductRpFormSchema } from './rp-data';
 
 interface ModalData {
-  rp?: ProductRpApi.ProductRp;
-  spu: ProductSpuApi.ProductSpu;
+  rpId?: string;
+  spuId: string;
 }
 
 const emit = defineEmits<{ success: [] }>();
 
-const currentSpu = ref<ProductSpuApi.ProductSpu>();
 const rpId = ref<string>();
 const rowVersion = ref<number>();
+const spuId = ref<string>();
 const title = computed(() =>
   rpId.value ? $t('product.rp.edit') : $t('product.rp.create'),
 );
@@ -42,7 +42,7 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   async onConfirm() {
     const { valid } = await formApi.validate();
-    if (!valid || !currentSpu.value) return;
+    if (!valid || !spuId.value) return;
 
     modalApi.lock();
     try {
@@ -50,7 +50,7 @@ const [Modal, modalApi] = useVbenModal({
       const payload = {
         ...values,
         expectedRowVersion: rowVersion.value,
-        spuId: currentSpu.value.spuId,
+        spuId: spuId.value,
       } as ProductRpApi.SaveProductRp;
       await (rpId.value
         ? updateProductRpApi(rpId.value, payload)
@@ -66,16 +66,16 @@ const [Modal, modalApi] = useVbenModal({
     if (!isOpen) return;
 
     const data = modalApi.getData<ModalData>();
-    currentSpu.value = data.spu;
-    rpId.value = data.rp?.rpId;
-    rowVersion.value = data.rp?.rowVersion;
+    rpId.value = data.rpId;
+    rowVersion.value = undefined;
+    spuId.value = data.spuId;
     await formApi.reset();
 
-    let detail = data.rp;
-    if (data.rp?.rpId) {
+    let detail: ProductRpApi.ProductRp | undefined;
+    if (data.rpId) {
       modalApi.lock();
       try {
-        detail = await getProductRpDetailApi(data.rp.rpId);
+        detail = await getProductRpDetailApi(data.rpId);
       } finally {
         modalApi.unlock();
       }

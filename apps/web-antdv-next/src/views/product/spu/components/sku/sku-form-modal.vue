@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ProductMpApi, ProductSkuApi } from '#/api/product';
+import type { ProductSkuApi } from '#/api/product';
 
 import { computed, ref } from 'vue';
 
@@ -18,13 +18,13 @@ import { $t } from '#/locales';
 import { useProductSkuFormSchema } from './sku-data';
 
 interface ModalData {
-  mp: ProductMpApi.ProductMp;
-  sku?: ProductSkuApi.ProductSku;
+  mpId: string;
+  skuId?: string;
 }
 
 const emit = defineEmits<{ success: [] }>();
 
-const currentMp = ref<ProductMpApi.ProductMp>();
+const mpId = ref<string>();
 const rowVersion = ref<number>();
 const skuId = ref<string>();
 const title = computed(() =>
@@ -44,7 +44,7 @@ const [Modal, modalApi] = useVbenModal({
     await fillDefaultPackageSpecName();
 
     const { valid } = await formApi.validate();
-    if (!valid || !currentMp.value) return;
+    if (!valid || !mpId.value) return;
 
     modalApi.lock();
     try {
@@ -52,7 +52,7 @@ const [Modal, modalApi] = useVbenModal({
       const payload = {
         ...values,
         expectedRowVersion: rowVersion.value,
-        mpId: currentMp.value.mpId,
+        mpId: mpId.value,
       } as ProductSkuApi.SaveProductSku;
       await (skuId.value
         ? updateProductSkuApi(skuId.value, payload)
@@ -68,16 +68,16 @@ const [Modal, modalApi] = useVbenModal({
     if (!isOpen) return;
 
     const data = modalApi.getData<ModalData>();
-    currentMp.value = data.mp;
-    skuId.value = data.sku?.skuId;
-    rowVersion.value = data.sku?.rowVersion;
+    mpId.value = data.mpId;
+    skuId.value = data.skuId;
+    rowVersion.value = undefined;
     await formApi.reset();
 
-    let detail = data.sku;
-    if (data.sku?.skuId) {
+    let detail: ProductSkuApi.ProductSku | undefined;
+    if (data.skuId) {
       modalApi.lock();
       try {
-        detail = await getProductSkuDetailApi(data.sku.skuId);
+        detail = await getProductSkuDetailApi(data.skuId);
       } finally {
         modalApi.unlock();
       }
