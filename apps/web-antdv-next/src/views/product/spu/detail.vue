@@ -6,7 +6,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
 import { IconifyIcon, Plus } from '@vben/icons';
 
@@ -23,6 +23,7 @@ import { $t } from '#/locales';
 
 import MpFormModalComponent from './components/mp/mp-form-modal.vue';
 import RpFormModalComponent from './components/rp/rp-form-modal.vue';
+import SkuPriceDrawerComponent from './components/sku-price/sku-price-drawer.vue';
 import SkuFormModalComponent from './components/sku/sku-form-modal.vue';
 import type { ProductSpuDetailGridRow } from './components/structure/structure-data';
 import {
@@ -62,6 +63,10 @@ const [MpFormModal, mpFormModalApi] = useVbenModal({
 });
 const [SkuFormModal, skuFormModalApi] = useVbenModal({
   connectedComponent: SkuFormModalComponent,
+  destroyOnClose: true,
+});
+const [SkuPriceDrawer, skuPriceDrawerApi] = useVbenDrawer({
+  connectedComponent: SkuPriceDrawerComponent,
   destroyOnClose: true,
 });
 
@@ -198,6 +203,11 @@ function openEditSku(row: ProductSpuDetailGridRow) {
   skuFormModalApi.setData({ mpId: row.mpId, skuId: row.skuId }).open();
 }
 
+function openSkuPrice(row: ProductSpuDetailGridRow) {
+  if (!row.skuId) return;
+  skuPriceDrawerApi.setData(row).open();
+}
+
 watch(routeSpuId, loadDetail);
 
 onMounted(loadDetail);
@@ -208,6 +218,7 @@ onMounted(loadDetail);
     <RpFormModal @success="loadDetail" />
     <MpFormModal @success="loadDetail" />
     <SkuFormModal @success="loadDetail" />
+    <SkuPriceDrawer />
 
     <div class="product-detail space-y-4">
       <Card>
@@ -317,6 +328,15 @@ onMounted(loadDetail);
                 v-access:code="['product:sku:update']"
               >
                 {{ $t('product.sku.edit') }}
+              </Button>
+              <Button
+                v-if="row.skuId"
+                size="small"
+                type="link"
+                @click="openSkuPrice(row)"
+                v-access:code="['product:skuPrice:list']"
+              >
+                {{ $t('product.skuPrice.title') }}
               </Button>
             </template>
           </Grid>
