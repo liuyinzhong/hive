@@ -57,7 +57,7 @@
     "updateDate": "更新时间"
   },
   "sku": {
-    "allowSplit": "是否允许拆零",
+    "allowSplit": "允许拆零",
     "allowSplitNo": "否",
     "allowSplitYes": "是",
     "barcode": "商品条码",

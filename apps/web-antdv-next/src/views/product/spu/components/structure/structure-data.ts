@@ -182,7 +182,7 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
               ? $t('product.sku.allowSplitYes')
               : $t('product.sku.allowSplitNo');
           },
-          minWidth: 100,
+          minWidth: 70,
           title: $t('product.sku.allowSplit'),
         },
         {

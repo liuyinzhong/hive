@@ -156,10 +156,7 @@ export function useProductSkuColumns(): VxeTableGridOptions<ProductSkuApi.Produc
       cellRender: {
         attrs: {
           auth: 'product:sku:status',
-          onChange: async (
-            newStatus: 0 | 1,
-            row: ProductSkuApi.ProductSku,
-          ) => {
+          onChange: async (newStatus: 0 | 1, row: ProductSkuApi.ProductSku) => {
             const updated = await updateProductSkuStatusApi(row.skuId, {
               expectedRowVersion: row.rowVersion,
               status: newStatus,
