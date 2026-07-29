@@ -72,6 +72,12 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
           minWidth: 100,
         },
         {
+          cellRender: {
+            name: 'DictTag',
+            props: {
+              type: 'PRODUCT_DOSAGE_FORM',
+            },
+          },
           field: 'dosageForm',
           title: $t('product.rp.dosageForm'),
           minWidth: 100,
@@ -147,11 +153,23 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
           title: $t('product.sku.packageQuantity'),
         },
         {
+          cellRender: {
+            name: 'DictTag',
+            props: {
+              type: 'PRODUCT_MIN_UNIT',
+            },
+          },
           field: 'minUnitName',
           minWidth: 70,
           title: $t('product.sku.minUnitName'),
         },
         {
+          cellRender: {
+            name: 'DictTag',
+            props: {
+              type: 'PRODUCT_PACKAGE_UNIT',
+            },
+          },
           field: 'packageUnitName',
           minWidth: 70,
           title: $t('product.sku.packageUnitName'),

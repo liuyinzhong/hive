@@ -4,6 +4,7 @@ import type { ProductRpApi } from '#/api/product';
 
 import { z } from '#/adapter/form';
 import { updateProductRpStatusApi } from '#/api/product';
+import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 
 export function useProductRpFormSchema(): VbenFormSchema[] {
@@ -16,8 +17,12 @@ export function useProductRpFormSchema(): VbenFormSchema[] {
       rules: 'required',
     },
     {
-      component: 'Input',
-      componentProps: { maxlength: 64 },
+      component: 'ApiSelect',
+      componentProps: {
+        allowClear: true,
+        api: () => getLocalDictList('PRODUCT_DOSAGE_FORM'),
+        showSearch: true,
+      },
       fieldName: 'dosageForm',
       label: $t('product.rp.dosageForm'),
       rules: z.string().max(64).nullish(),
@@ -95,6 +100,12 @@ export function useProductRpColumns(): VxeTableGridOptions<ProductRpApi.ProductR
       title: $t('product.rp.specName'),
     },
     {
+      cellRender: {
+        name: 'DictTag',
+        props: {
+          type: 'PRODUCT_DOSAGE_FORM',
+        },
+      },
       field: 'dosageForm',
       minWidth: 120,
       title: $t('product.rp.dosageForm'),

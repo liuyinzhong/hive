@@ -4,6 +4,7 @@ import type { ProductSkuApi } from '#/api/product';
 
 import { z } from '#/adapter/form';
 import { updateProductSkuStatusApi } from '#/api/product';
+import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 
 export function useProductSkuFormSchema(): VbenFormSchema[] {
@@ -28,18 +29,24 @@ export function useProductSkuFormSchema(): VbenFormSchema[] {
       rules: 'required',
     },
     {
-      component: 'Input',
-      componentProps: { maxlength: 32 },
+      component: 'ApiSelect',
+      componentProps: {
+        api: () => getLocalDictList('PRODUCT_MIN_UNIT'),
+        showSearch: true,
+      },
       fieldName: 'minUnitName',
       label: $t('product.sku.minUnitName'),
-      rules: 'required',
+      rules: 'selectRequired',
     },
     {
-      component: 'Input',
-      componentProps: { maxlength: 32 },
+      component: 'ApiSelect',
+      componentProps: {
+        api: () => getLocalDictList('PRODUCT_PACKAGE_UNIT'),
+        showSearch: true,
+      },
       fieldName: 'packageUnitName',
       label: $t('product.sku.packageUnitName'),
-      rules: 'required',
+      rules: 'selectRequired',
     },
     {
       component: 'Input',
@@ -119,11 +126,23 @@ export function useProductSkuColumns(): VxeTableGridOptions<ProductSkuApi.Produc
       title: $t('product.sku.packageQuantity'),
     },
     {
+      cellRender: {
+        name: 'DictTag',
+        props: {
+          type: 'PRODUCT_MIN_UNIT',
+        },
+      },
       field: 'minUnitName',
       minWidth: 100,
       title: $t('product.sku.minUnitName'),
     },
     {
+      cellRender: {
+        name: 'DictTag',
+        props: {
+          type: 'PRODUCT_PACKAGE_UNIT',
+        },
+      },
       field: 'packageUnitName',
       minWidth: 100,
       title: $t('product.sku.packageUnitName'),

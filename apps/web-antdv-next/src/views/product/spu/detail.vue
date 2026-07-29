@@ -13,7 +13,7 @@ import { IconifyIcon, Plus } from '@vben/icons';
 import { Button, Card, message, Space, Spin } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
-import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   createProductSpuApi,
   getProductSpuDetailApi,
