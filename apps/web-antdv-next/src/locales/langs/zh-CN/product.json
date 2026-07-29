@@ -34,7 +34,8 @@
     "operation": "操作",
     "saveSuccess": "保存成功",
     "status": "状态",
-    "title": "添加厂家",
+    "title": "厂家",
+    "addTitle": "添加厂家",
     "updateDate": "更新时间"
   },
   "rp": {
@@ -74,7 +75,8 @@
     "saveSuccess": "保存成功",
     "skuCode": "SKU编码",
     "status": "状态",
-    "title": "添加SKU",
+    "title": "SKU",
+    "addTitle": "添加SKU",
     "udiDi": "UDI-DI",
     "updateDate": "更新时间"
   },

@@ -121,7 +121,7 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
         {
           align: 'center',
           field: 'mpOperation',
-          minWidth: 100,
+          minWidth: 90,
           slots: { default: 'mpAction' },
           title: $t('product.mp.operation'),
         },
@@ -214,7 +214,7 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
           align: 'center',
           field: 'skuOperation',
           fixed: 'right',
-          minWidth: 100,
+          minWidth: 90,
           slots: { default: 'skuAction' },
           title: $t('product.sku.operation'),
         },

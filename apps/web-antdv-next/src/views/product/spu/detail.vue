@@ -280,7 +280,7 @@ onMounted(loadDetail);
                 @click="openCreateMp(row)"
                 v-access:code="['product:mp:create']"
               >
-                {{ $t('product.mp.title') }}
+                {{ $t('product.mp.addTitle') }}
               </Button>
             </template>
 
@@ -304,7 +304,7 @@ onMounted(loadDetail);
                 @click="openCreateSku(row)"
                 v-access:code="['product:sku:create']"
               >
-                {{ $t('product.sku.title') }}
+                {{ $t('product.sku.addTitle') }}
               </Button>
             </template>
 

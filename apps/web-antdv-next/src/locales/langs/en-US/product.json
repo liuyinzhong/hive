@@ -1,4 +1,20 @@
 {
+  "mp": {
+    "approvalNo": "Approval / Registration / Filing No.",
+    "brandName": "Brand / Trade Name",
+    "create": "Create Manufacturer Product",
+    "description": "Description",
+    "edit": "Edit Manufacturer Product",
+    "enterprise": "Manufacturer",
+    "list": "Manufacturer Product List",
+    "manageTitle": "Manufacturer Product Management",
+    "mpCode": "MP Code",
+    "operation": "Operation",
+    "saveSuccess": "Saved successfully",
+    "status": "Status",
+    "title": "",
+    "updateDate": "Updated At"
+  },
   "permission": {
     "mpCreate": "Create Manufacturer Product",
     "mpDetail": "View Manufacturer Product Details",
@@ -20,22 +36,6 @@
     "spuList": "List",
     "spuStatus": "Change Generic Product Status",
     "spuUpdate": "Update Generic Product"
-  },
-  "mp": {
-    "approvalNo": "Approval / Registration / Filing No.",
-    "brandName": "Brand / Trade Name",
-    "create": "Create Manufacturer Product",
-    "description": "Description",
-    "edit": "Edit Manufacturer Product",
-    "enterprise": "Manufacturer",
-    "list": "Manufacturer Product List",
-    "manageTitle": "Manufacturer Product Management",
-    "mpCode": "MP Code",
-    "operation": "Operation",
-    "saveSuccess": "Saved successfully",
-    "status": "Status",
-    "title": "Manufacturer",
-    "updateDate": "Updated At"
   },
   "rp": {
     "create": "Create Specification",
@@ -74,7 +74,7 @@
     "saveSuccess": "Saved successfully",
     "skuCode": "SKU Code",
     "status": "Status",
-    "title": "SKU",
+    "title": "Add SKU",
     "udiDi": "UDI-DI",
     "updateDate": "Updated At"
   },
