@@ -22,6 +22,18 @@ interface ModalData {
   skuId?: string;
 }
 
+interface SkuPackChainValue {
+  cartonConversion?: number;
+  cartonUnitName?: string;
+  minUnitName?: string;
+  packConversion?: number;
+  packageUnitName?: string;
+}
+
+interface ProductSkuFormValues extends Record<string, unknown> {
+  packChain?: SkuPackChainValue;
+}
+
 const emit = defineEmits<{ success: [] }>();
 
 const mpId = ref<string>();
@@ -43,12 +55,57 @@ function toTrimmedString(value: unknown) {
   return typeof value === 'string' ? value.trim() : '';
 }
 
+function encodeSkuFormValues(values: Readonly<ProductSkuFormValues>) {
+  const { packChain, ...formValues } = values;
+  if (!packChain) {
+    return formValues;
+  }
+
+  return {
+    ...formValues,
+    cartonConversion: packChain.cartonConversion,
+    cartonUnitName: packChain.cartonUnitName,
+    minUnitName: packChain.minUnitName,
+    packConversion: packChain.packConversion,
+    packageUnitName: packChain.packageUnitName,
+  };
+}
+
+function decodeSkuFormValues(
+  values: Readonly<Record<string, unknown>>,
+): ProductSkuFormValues {
+  return {
+    ...values,
+    packChain: {
+      cartonConversion: values.cartonConversion as number | undefined,
+      cartonUnitName: values.cartonUnitName as string | undefined,
+      minUnitName: values.minUnitName as string | undefined,
+      packConversion: values.packConversion as number | undefined,
+      packageUnitName: values.packageUnitName as string | undefined,
+    },
+  };
+}
+
+function getSpecSourceValues(values: Record<string, unknown>) {
+  const packChain = values.packChain as SkuPackChainValue | undefined;
+  return {
+    cartonConversion: packChain?.cartonConversion ?? values.cartonConversion,
+    cartonUnitName: packChain?.cartonUnitName ?? values.cartonUnitName,
+    minUnitName: packChain?.minUnitName ?? values.minUnitName,
+    packConversion: packChain?.packConversion ?? values.packConversion,
+    packageUnitName: packChain?.packageUnitName ?? values.packageUnitName,
+  };
+}
+
 function buildSkuSpecPreview(values: Record<string, unknown>) {
-  const packConversion = toPositiveInteger(values.packConversion);
-  const cartonConversion = toPositiveInteger(values.cartonConversion);
-  const minUnitName = toTrimmedString(values.minUnitName);
-  const packageUnitName = toTrimmedString(values.packageUnitName);
-  const cartonUnitName = toTrimmedString(values.cartonUnitName);
+  const specSourceValues = getSpecSourceValues(values);
+  const packConversion = toPositiveInteger(specSourceValues.packConversion);
+  const cartonConversion = toPositiveInteger(
+    specSourceValues.cartonConversion,
+  );
+  const minUnitName = toTrimmedString(specSourceValues.minUnitName);
+  const packageUnitName = toTrimmedString(specSourceValues.packageUnitName);
+  const cartonUnitName = toTrimmedString(specSourceValues.cartonUnitName);
 
   const packageSpecName =
     packConversion && minUnitName && packageUnitName
@@ -91,6 +148,10 @@ async function refreshSpecPreview() {
 }
 
 const [Form, formApi] = useVbenForm({
+  codec: {
+    decode: decodeSkuFormValues,
+    encode: encodeSkuFormValues,
+  },
   commonConfig: { componentProps: { class: 'w-full' } },
   layout: 'vertical',
   schema: useProductSkuFormSchema(() => {
@@ -107,7 +168,7 @@ const [Modal, modalApi] = useVbenModal({
 
     modalApi.lock();
     try {
-      const values = await formApi.getValues();
+      const values = encodeSkuFormValues(await formApi.getValues());
       const payload = {
         ...values,
         expectedRowVersion: rowVersion.value,
@@ -143,11 +204,13 @@ const [Modal, modalApi] = useVbenModal({
     }
 
     rowVersion.value = detail?.rowVersion;
-    await formApi.setValues({
-      allowSplit: 0,
-      status: 1,
-      ...detail,
-    });
+    await formApi.setValues(
+      decodeSkuFormValues({
+        allowSplit: 0,
+        status: 1,
+        ...detail,
+      }),
+    );
     await refreshSpecPreview();
   },
 });

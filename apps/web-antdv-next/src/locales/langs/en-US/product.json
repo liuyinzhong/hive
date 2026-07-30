@@ -79,6 +79,8 @@
     "manageTitle": "SKU Management",
     "minUnitName": "Minimum Unit",
     "operation": "Operation",
+    "packChain": "Package Conversion Relation",
+    "packChainRequired": "Complete the package conversion relation",
     "packConversion": "Package Conversion",
     "packageSpecName": "Package Specification",
     "packageUnitName": "Package Unit",

@@ -1,13 +1,46 @@
 import type { VbenFormSchema } from '#/adapter/form';
 
+import { markRaw } from 'vue';
+
 import { z } from '#/adapter/form';
-import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
+
+import SkuPackChainField from './sku-pack-chain-field.vue';
 
 export function useProductSkuFormSchema(
   onSpecSourceChange?: () => void,
 ): VbenFormSchema[] {
   return [
+    {
+      changeEventFallback: true,
+      component: markRaw(SkuPackChainField),
+      componentProps: {
+        onChange: () => onSpecSourceChange?.(),
+      },
+      defaultValue: {},
+      fieldName: 'packChain',
+      formItemClass: 'md:col-span-2',
+      label: $t('product.sku.packChain'),
+      rules: z
+        .object({
+          cartonConversion: z.number().optional(),
+          cartonUnitName: z.string().optional(),
+          minUnitName: z.string().optional(),
+          packConversion: z.number().optional(),
+          packageUnitName: z.string().optional(),
+        })
+        .refine(
+          (value) =>
+            !!value.packConversion &&
+            !!value.minUnitName &&
+            !!value.packageUnitName &&
+            !!value.cartonConversion &&
+            !!value.cartonUnitName,
+          {
+            message: $t('product.sku.packChainRequired'),
+          },
+        ),
+    },
     {
       component: 'Input',
       componentProps: {
@@ -32,67 +65,6 @@ export function useProductSkuFormSchema(
       fieldName: 'fullChainSpecName',
       label: $t('product.sku.fullChainSpecName'),
     },
-    {
-      component: 'InputNumber',
-      componentProps: {
-        max: 999_999,
-        min: 1,
-        onChange: () => onSpecSourceChange?.(),
-        precision: 0,
-        step: 1,
-      },
-      fieldName: 'packConversion',
-      label: $t('product.sku.packConversion'),
-      rules: 'required',
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        api: () => getLocalDictList('PRODUCT_MIN_UNIT'),
-        onChange: () => onSpecSourceChange?.(),
-        showSearch: true,
-      },
-      fieldName: 'minUnitName',
-      label: $t('product.sku.minUnitName'),
-      rules: 'selectRequired',
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        api: () => getLocalDictList('PRODUCT_PACKAGE_UNIT'),
-        onChange: () => onSpecSourceChange?.(),
-        showSearch: true,
-      },
-      fieldName: 'packageUnitName',
-      label: $t('product.sku.packageUnitName'),
-      rules: 'selectRequired',
-    },
-
-    {
-      component: 'InputNumber',
-      componentProps: {
-        max: 999_999,
-        min: 1,
-        onChange: () => onSpecSourceChange?.(),
-        precision: 0,
-        step: 1,
-      },
-      fieldName: 'cartonConversion',
-      label: $t('product.sku.cartonConversion'),
-      rules: 'required',
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        api: () => getLocalDictList('PRODUCT_CARTON_UNIT'),
-        onChange: () => onSpecSourceChange?.(),
-        showSearch: true,
-      },
-      fieldName: 'cartonUnitName',
-      label: $t('product.sku.cartonUnitName'),
-      rules: 'selectRequired',
-    },
-
     {
       component: 'Input',
       componentProps: { maxlength: 64 },

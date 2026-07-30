@@ -80,6 +80,8 @@
     "manageTitle": "SKU管理",
     "minUnitName": "最小单位",
     "operation": "操作",
+    "packChain": "包装换算关系",
+    "packChainRequired": "请完整填写包装换算关系",
     "packConversion": "包装换算系数",
     "packageSpecName": "包装规格名称",
     "packageUnitName": "包装单位",
