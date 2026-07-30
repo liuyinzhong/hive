@@ -144,13 +144,13 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
         },
         {
           field: 'packageSpecName',
-          minWidth: 100,
+          minWidth: 120,
           title: $t('product.sku.packageSpecName'),
         },
         {
-          field: 'packageQuantity',
+          field: 'packConversion',
           minWidth: 70,
-          title: $t('product.sku.packageQuantity'),
+          title: $t('product.sku.packConversion'),
         },
         {
           cellRender: {
@@ -173,6 +173,34 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
           field: 'packageUnitName',
           minWidth: 70,
           title: $t('product.sku.packageUnitName'),
+        },
+        {
+          field: 'cartonSpecName',
+          minWidth: 120,
+          title: $t('product.sku.cartonSpecName'),
+        },
+        {
+          field: 'fullChainSpecName',
+          minWidth: 150,
+          title: $t('product.sku.fullChainSpecName'),
+        },
+        {
+          field: 'cartonConversion',
+          minWidth: 80,
+          title: $t('product.sku.cartonConversion'),
+          visible: false,
+        },
+        {
+          cellRender: {
+            name: 'DictTag',
+            props: {
+              type: 'PRODUCT_CARTON_UNIT',
+            },
+          },
+          field: 'cartonUnitName',
+          minWidth: 80,
+          title: $t('product.sku.cartonUnitName'),
+          visible: false,
         },
         {
           field: 'barcode',

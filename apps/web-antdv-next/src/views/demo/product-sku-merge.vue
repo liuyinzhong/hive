@@ -231,14 +231,24 @@ const gridOptions: VxeTableGridOptions<DemoSkuRow> = {
           title: $t('product.sku.packageSpecName'),
         },
         {
-          field: 'packageQuantity',
+          field: 'packConversion',
           minWidth: 110,
-          title: $t('product.sku.packageQuantity'),
+          title: $t('product.sku.packConversion'),
         },
         {
           field: 'packageUnitName',
           minWidth: 110,
           title: $t('product.sku.packageUnitName'),
+        },
+        {
+          field: 'cartonSpecName',
+          minWidth: 140,
+          title: $t('product.sku.cartonSpecName'),
+        },
+        {
+          field: 'fullChainSpecName',
+          minWidth: 180,
+          title: $t('product.sku.fullChainSpecName'),
         },
         {
           field: 'minUnitName',

@@ -87,7 +87,7 @@ export function useProductSkuPriceFormSchema(): VbenFormSchema[] {
     {
       component: 'InputNumber',
       componentProps: {
-        max: 99_999_999_999_999.9999,
+        max: 9999.9999,
         min: 0.0001,
         precision: 4,
         prefix: '¥',

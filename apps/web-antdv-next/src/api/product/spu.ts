@@ -50,6 +50,12 @@ export namespace ProductSpuApi {
     barcode?: null | string;
     /** 品牌/商品名。 */
     brandName?: null | string;
+    /** 大包装换算系数。 */
+    cartonConversion?: null | number;
+    /** 大包装规格名称。 */
+    cartonSpecName?: null | string;
+    /** 大包装单位。 */
+    cartonUnitName?: null | string;
     /** 剂型/形态。 */
     dosageForm?: null | string;
     /** 企业编码。 */
@@ -60,6 +66,8 @@ export namespace ProductSpuApi {
     enterpriseName?: null | string;
     /** GTIN。 */
     gtin?: null | string;
+    /** 全链路规格名称。 */
+    fullChainSpecName?: null | string;
     /** 最小单位。 */
     minUnitName?: null | string;
     /** 厂家产品编码。 */
@@ -68,8 +76,8 @@ export namespace ProductSpuApi {
     mpId?: null | string;
     /** 厂家产品数据版本号。 */
     mpRowVersion?: null | number;
-    /** 包装数量。 */
-    packageQuantity?: null | number;
+    /** 包装换算系数。 */
+    packConversion?: null | number;
     /** 包装规格名称。 */
     packageSpecName?: null | string;
     /** 包装单位。 */

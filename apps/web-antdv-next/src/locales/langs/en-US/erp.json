@@ -1,0 +1,40 @@
+{
+  "permission": {
+    "warehouseCreate": "Create Warehouse",
+    "warehouseDelete": "Delete Warehouse",
+    "warehouseDetail": "View Warehouse Details",
+    "warehouseList": "Warehouse List",
+    "warehouseStatus": "Change Warehouse Status",
+    "warehouseUpdate": "Update Warehouse"
+  },
+  "title": "ERP",
+  "warehouse": {
+    "address": "Address",
+    "businessScope": "Business Scope",
+    "businessScopeComprehensive": "Comprehensive",
+    "businessScopeConsumable": "Consumables",
+    "businessScopeDevice": "Devices",
+    "businessScopeDrug": "Drugs",
+    "create": "Create Warehouse",
+    "deleteConfirm": "Delete this warehouse?",
+    "deleteSuccess": "Deleted successfully",
+    "edit": "Edit Warehouse",
+    "keyword": "Warehouse code or name",
+    "keywordLabel": "Keyword",
+    "list": "Warehouse List",
+    "operation": "Operation",
+    "remark": "Remark",
+    "saveSuccess": "Saved successfully",
+    "status": "Status",
+    "storageType": "Storage Type",
+    "storageTypeCool": "Cool",
+    "storageTypeFrozen": "Frozen",
+    "storageTypeHazardous": "Hazardous",
+    "storageTypeNormal": "Normal",
+    "storageTypeRefrigerated": "Refrigerated",
+    "title": "Warehouse Management",
+    "updateDate": "Updated At",
+    "warehouseCode": "Warehouse Code",
+    "warehouseName": "Warehouse Name"
+  }
+}

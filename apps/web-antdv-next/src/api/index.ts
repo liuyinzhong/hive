@@ -1,6 +1,7 @@
 export * from './auth';
 export * from './base';
 export * from './dev';
+export * from './erp';
 export * from './examples';
 export * from './product';
 export * from './statistics';

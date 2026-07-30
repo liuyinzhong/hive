@@ -21,6 +21,12 @@ export namespace ProductSkuApi {
     barcode?: null | string;
     /** 品牌/商品名。 */
     brandName?: null | string;
+    /** 大包装换算系数。 */
+    cartonConversion: number;
+    /** 大包装规格名称。 */
+    cartonSpecName: string;
+    /** 大包装单位。 */
+    cartonUnitName: string;
     /** 创建时间。 */
     createDate?: null | string;
     /** 描述。 */
@@ -33,14 +39,16 @@ export namespace ProductSkuApi {
     enterpriseName: string;
     /** GTIN。 */
     gtin?: null | string;
+    /** 全链路规格名称。 */
+    fullChainSpecName: string;
     /** 最小单位。 */
     minUnitName: string;
     /** MP 编码。 */
     mpCode: string;
     /** MP ID。 */
     mpId: string;
-    /** 包装数量。 */
-    packageQuantity: number;
+    /** 包装换算系数。 */
+    packConversion: number;
     /** 包装规格名称。 */
     packageSpecName: string;
     /** 包装单位。 */
@@ -83,10 +91,12 @@ export namespace ProductSkuApi {
     minUnitName: string;
     /** 所属 MP ID。 */
     mpId: string;
-    /** 包装数量。 */
-    packageQuantity: number;
-    /** 包装规格名称。 */
-    packageSpecName: string;
+    /** 大包装换算系数。 */
+    cartonConversion: number;
+    /** 大包装单位。 */
+    cartonUnitName: string;
+    /** 包装换算系数。 */
+    packConversion: number;
     /** 包装单位。 */
     packageUnitName: string;
     /** 状态：0 停用，1 启用。 */
@@ -109,6 +119,8 @@ export namespace ProductSkuApi {
     approvalNo: string;
     /** 品牌/商品名。 */
     brandName?: null | string;
+    /** 大包装规格名称。 */
+    cartonSpecName?: string;
     /** 企业主体 ID。 */
     enterpriseId: string;
     /** 企业名称。 */
@@ -119,6 +131,8 @@ export namespace ProductSkuApi {
     mpId: string;
     /** 包装规格名称。 */
     packageSpecName: string;
+    /** 全链路规格名称。 */
+    fullChainSpecName?: string;
     /** 通用名称。 */
     productName: string;
     /** 产品类型。 */
@@ -276,11 +290,14 @@ export function createProductSkuApi(data: ProductSkuApi.SaveProductSku) {
   const newData = objectOmit(data, [
     'approvalNo',
     'brandName',
+    'cartonSpecName',
     'createDate',
+    'fullChainSpecName',
     'enterpriseCode',
     'enterpriseId',
     'enterpriseName',
     'mpCode',
+    'packageSpecName',
     'productName',
     'productType',
     'rowVersion',
@@ -303,11 +320,14 @@ export function updateProductSkuApi(
   const newData = objectOmit(data, [
     'approvalNo',
     'brandName',
+    'cartonSpecName',
     'createDate',
+    'fullChainSpecName',
     'enterpriseCode',
     'enterpriseId',
     'enterpriseName',
     'mpCode',
+    'packageSpecName',
     'productName',
     'productType',
     'rowVersion',

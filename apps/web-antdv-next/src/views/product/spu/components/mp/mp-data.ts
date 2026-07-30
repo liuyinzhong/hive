@@ -1,10 +1,7 @@
 import type { VbenFormSchema } from '#/adapter/form';
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { ProductMpApi } from '#/api/product';
 
 import { z } from '#/adapter/form';
 import { getEnterpriseOptionsApi } from '#/api/base';
-import { updateProductMpStatusApi } from '#/api/product';
 import { $t } from '#/locales';
 
 export function useProductMpFormSchema(): VbenFormSchema[] {
@@ -84,75 +81,6 @@ export function useProductMpFormSchema(): VbenFormSchema[] {
       formItemClass: 'md:col-span-2',
       label: $t('product.mp.description'),
       rules: z.string().max(2000).nullish(),
-    },
-  ];
-}
-
-export function useProductMpColumns(): VxeTableGridOptions<ProductMpApi.ProductMp>['columns'] {
-  return [
-    {
-      field: 'mpCode',
-      fixed: 'left',
-      title: $t('product.mp.mpCode'),
-      width: 130,
-    },
-    {
-      field: 'enterpriseName',
-      fixed: 'left',
-      minWidth: 180,
-      title: $t('product.mp.enterprise'),
-    },
-    {
-      field: 'approvalNo',
-      minWidth: 180,
-      title: $t('product.mp.approvalNo'),
-    },
-    {
-      field: 'brandName',
-      minWidth: 140,
-      title: $t('product.mp.brandName'),
-    },
-    {
-      field: 'description',
-      minWidth: 220,
-      showOverflow: 'tooltip',
-      title: $t('product.mp.description'),
-    },
-    {
-      cellRender: {
-        attrs: {
-          auth: 'product:mp:status',
-          onChange: async (
-            newStatus: 0 | 1,
-            row: ProductMpApi.ProductMp,
-          ) => {
-            const updated = await updateProductMpStatusApi(row.mpId, {
-              expectedRowVersion: row.rowVersion,
-              status: newStatus,
-            });
-            row.rowVersion = updated.rowVersion;
-            row.updateDate = updated.updateDate;
-          },
-        },
-        name: 'CellSwitch',
-      },
-      field: 'status',
-      title: $t('product.mp.status'),
-      width: 100,
-    },
-    {
-      field: 'updateDate',
-      title: $t('product.mp.updateDate'),
-      width: 180,
-    },
-    {
-      align: 'center',
-      field: 'operation',
-      fixed: 'right',
-      showOverflow: false,
-      slots: { default: 'action' },
-      title: $t('product.mp.operation'),
-      width: 180,
     },
   ];
 }

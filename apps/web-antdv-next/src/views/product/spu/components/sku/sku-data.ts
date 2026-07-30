@@ -1,37 +1,55 @@
 import type { VbenFormSchema } from '#/adapter/form';
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { ProductSkuApi } from '#/api/product';
 
 import { z } from '#/adapter/form';
-import { updateProductSkuStatusApi } from '#/api/product';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 
-export function useProductSkuFormSchema(): VbenFormSchema[] {
+export function useProductSkuFormSchema(
+  onSpecSourceChange?: () => void,
+): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      componentProps: { maxlength: 128 },
+      componentProps: {
+        disabled: true,
+      },
       fieldName: 'packageSpecName',
       label: $t('product.sku.packageSpecName'),
-      rules: 'required',
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        disabled: true,
+      },
+      fieldName: 'cartonSpecName',
+      label: $t('product.sku.cartonSpecName'),
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        disabled: true,
+      },
+      fieldName: 'fullChainSpecName',
+      label: $t('product.sku.fullChainSpecName'),
     },
     {
       component: 'InputNumber',
       componentProps: {
         max: 999_999,
         min: 1,
+        onChange: () => onSpecSourceChange?.(),
         precision: 0,
         step: 1,
       },
-      fieldName: 'packageQuantity',
-      label: $t('product.sku.packageQuantity'),
+      fieldName: 'packConversion',
+      label: $t('product.sku.packConversion'),
       rules: 'required',
     },
     {
       component: 'ApiSelect',
       componentProps: {
         api: () => getLocalDictList('PRODUCT_MIN_UNIT'),
+        onChange: () => onSpecSourceChange?.(),
         showSearch: true,
       },
       fieldName: 'minUnitName',
@@ -42,12 +60,39 @@ export function useProductSkuFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       componentProps: {
         api: () => getLocalDictList('PRODUCT_PACKAGE_UNIT'),
+        onChange: () => onSpecSourceChange?.(),
         showSearch: true,
       },
       fieldName: 'packageUnitName',
       label: $t('product.sku.packageUnitName'),
       rules: 'selectRequired',
     },
+
+    {
+      component: 'InputNumber',
+      componentProps: {
+        max: 999_999,
+        min: 1,
+        onChange: () => onSpecSourceChange?.(),
+        precision: 0,
+        step: 1,
+      },
+      fieldName: 'cartonConversion',
+      label: $t('product.sku.cartonConversion'),
+      rules: 'required',
+    },
+    {
+      component: 'ApiSelect',
+      componentProps: {
+        api: () => getLocalDictList('PRODUCT_CARTON_UNIT'),
+        onChange: () => onSpecSourceChange?.(),
+        showSearch: true,
+      },
+      fieldName: 'cartonUnitName',
+      label: $t('product.sku.cartonUnitName'),
+      rules: 'selectRequired',
+    },
+
     {
       component: 'Input',
       componentProps: { maxlength: 64 },
@@ -100,117 +145,6 @@ export function useProductSkuFormSchema(): VbenFormSchema[] {
       formItemClass: 'md:col-span-2',
       label: $t('product.sku.description'),
       rules: z.string().max(2000).nullish(),
-    },
-  ];
-}
-
-export function useProductSkuColumns(): VxeTableGridOptions<ProductSkuApi.ProductSku>['columns'] {
-  return [
-    {
-      field: 'skuCode',
-      fixed: 'left',
-      sortable: true,
-      title: $t('product.sku.skuCode'),
-      width: 130,
-    },
-    {
-      field: 'packageSpecName',
-      fixed: 'left',
-      minWidth: 160,
-      sortable: true,
-      title: $t('product.sku.packageSpecName'),
-    },
-    {
-      field: 'packageQuantity',
-      minWidth: 110,
-      title: $t('product.sku.packageQuantity'),
-    },
-    {
-      cellRender: {
-        name: 'DictTag',
-        props: {
-          type: 'PRODUCT_MIN_UNIT',
-        },
-      },
-      field: 'minUnitName',
-      minWidth: 100,
-      title: $t('product.sku.minUnitName'),
-    },
-    {
-      cellRender: {
-        name: 'DictTag',
-        props: {
-          type: 'PRODUCT_PACKAGE_UNIT',
-        },
-      },
-      field: 'packageUnitName',
-      minWidth: 100,
-      title: $t('product.sku.packageUnitName'),
-    },
-    {
-      field: 'barcode',
-      minWidth: 150,
-      title: $t('product.sku.barcode'),
-    },
-    {
-      field: 'gtin',
-      minWidth: 150,
-      title: $t('product.sku.gtin'),
-    },
-    {
-      field: 'udiDi',
-      minWidth: 180,
-      title: $t('product.sku.udiDi'),
-    },
-    {
-      field: 'allowSplit',
-      formatter: ({ cellValue }) =>
-        cellValue === 1
-          ? $t('product.sku.allowSplitYes')
-          : $t('product.sku.allowSplitNo'),
-      minWidth: 110,
-      title: $t('product.sku.allowSplit'),
-    },
-    {
-      cellRender: {
-        attrs: {
-          auth: 'product:sku:status',
-          onChange: async (newStatus: 0 | 1, row: ProductSkuApi.ProductSku) => {
-            const updated = await updateProductSkuStatusApi(row.skuId, {
-              expectedRowVersion: row.rowVersion,
-              status: newStatus,
-            });
-            row.rowVersion = updated.rowVersion;
-            row.updateDate = updated.updateDate;
-          },
-        },
-        name: 'CellSwitch',
-      },
-      field: 'status',
-      sortable: true,
-      title: $t('product.sku.status'),
-      width: 100,
-    },
-    {
-      field: 'description',
-      minWidth: 220,
-      showOverflow: 'tooltip',
-      title: $t('product.sku.description'),
-    },
-    {
-      field: 'updateDate',
-      sortable: true,
-      title: $t('product.sku.updateDate'),
-      width: 180,
-    },
-    {
-      align: 'center',
-      field: 'operation',
-      fixed: 'right',
-      showOverflow: false,
-      slots: { default: 'action' },
-      title: $t('product.sku.operation'),
-      width: 120,
     },
   ];
 }

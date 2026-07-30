@@ -1,0 +1,40 @@
+{
+  "permission": {
+    "warehouseCreate": "新增仓库",
+    "warehouseDelete": "删除仓库",
+    "warehouseDetail": "查看仓库详情",
+    "warehouseList": "仓库列表",
+    "warehouseStatus": "启停仓库",
+    "warehouseUpdate": "修改仓库"
+  },
+  "title": "进销存",
+  "warehouse": {
+    "address": "地址",
+    "businessScope": "业务范围",
+    "businessScopeComprehensive": "综合",
+    "businessScopeConsumable": "耗材",
+    "businessScopeDevice": "器械",
+    "businessScopeDrug": "药品",
+    "create": "新增仓库",
+    "deleteConfirm": "确认删除该仓库？",
+    "deleteSuccess": "删除成功",
+    "edit": "编辑仓库",
+    "keyword": "仓库编码或仓库名称",
+    "keywordLabel": "关键字",
+    "list": "仓库列表",
+    "operation": "操作",
+    "remark": "备注",
+    "saveSuccess": "保存成功",
+    "status": "状态",
+    "storageType": "储存类型",
+    "storageTypeCool": "阴凉",
+    "storageTypeFrozen": "冷冻",
+    "storageTypeHazardous": "危险品",
+    "storageTypeNormal": "普通",
+    "storageTypeRefrigerated": "冷藏",
+    "title": "仓库管理",
+    "updateDate": "更新时间",
+    "warehouseCode": "仓库编码",
+    "warehouseName": "仓库名称"
+  }
+}

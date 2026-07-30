@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { ProductSkuApi } from '#/api/product';
 
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 
@@ -31,18 +31,77 @@ const title = computed(() =>
   skuId.value ? $t('product.sku.edit') : $t('product.sku.create'),
 );
 
+function toPositiveInteger(value: unknown) {
+  const numberValue = Number(value);
+  if (!Number.isFinite(numberValue) || numberValue <= 0) {
+    return undefined;
+  }
+  return Math.trunc(numberValue);
+}
+
+function toTrimmedString(value: unknown) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function buildSkuSpecPreview(values: Record<string, unknown>) {
+  const packConversion = toPositiveInteger(values.packConversion);
+  const cartonConversion = toPositiveInteger(values.cartonConversion);
+  const minUnitName = toTrimmedString(values.minUnitName);
+  const packageUnitName = toTrimmedString(values.packageUnitName);
+  const cartonUnitName = toTrimmedString(values.cartonUnitName);
+
+  const packageSpecName =
+    packConversion && minUnitName && packageUnitName
+      ? `${packConversion}${minUnitName}/${packageUnitName}`
+      : '';
+  const cartonSpecName =
+    cartonConversion && packageUnitName && cartonUnitName
+      ? `${cartonConversion}${packageUnitName}/${cartonUnitName}`
+      : '';
+  const fullChainSpecName =
+    cartonConversion &&
+    cartonUnitName &&
+    packageUnitName &&
+    packConversion &&
+    minUnitName
+      ? `1${cartonUnitName}/${cartonConversion}${packageUnitName}/${cartonConversion * packConversion}${minUnitName}`
+      : '';
+
+  return {
+    cartonSpecName,
+    fullChainSpecName,
+    packageSpecName,
+  };
+}
+
+async function refreshSpecPreview() {
+  await nextTick();
+  const values = await formApi.getValues();
+  const preview = buildSkuSpecPreview(values);
+
+  await Promise.all([
+    formApi.setFieldValue('packageSpecName', preview.packageSpecName, false),
+    formApi.setFieldValue('cartonSpecName', preview.cartonSpecName, false),
+    formApi.setFieldValue(
+      'fullChainSpecName',
+      preview.fullChainSpecName,
+      false,
+    ),
+  ]);
+}
+
 const [Form, formApi] = useVbenForm({
   commonConfig: { componentProps: { class: 'w-full' } },
   layout: 'vertical',
-  schema: useProductSkuFormSchema(),
+  schema: useProductSkuFormSchema(() => {
+    void refreshSpecPreview();
+  }),
   showDefaultActions: false,
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
 
 const [Modal, modalApi] = useVbenModal({
   async onConfirm() {
-    await fillDefaultPackageSpecName();
-
     const { valid } = await formApi.validate();
     if (!valid || !mpId.value) return;
 
@@ -89,25 +148,9 @@ const [Modal, modalApi] = useVbenModal({
       status: 1,
       ...detail,
     });
+    await refreshSpecPreview();
   },
 });
-
-async function fillDefaultPackageSpecName() {
-  if (skuId.value) return;
-
-  const values = await formApi.getValues();
-  if (String(values.packageSpecName || '').trim()) return;
-
-  const packageQuantity = values.packageQuantity;
-  const minUnitName = String(values.minUnitName || '').trim();
-  const packageUnitName = String(values.packageUnitName || '').trim();
-  if (!packageQuantity || !minUnitName || !packageUnitName) return;
-
-  await formApi.setFieldValue(
-    'packageSpecName',
-    `${packageQuantity}${minUnitName}/${packageUnitName}`,
-  );
-}
 </script>
 
 <template>

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import type { ExternalPageApi } from "#/api/system";
+import type { ExternalPageApi } from '#/api/system';
 
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from "@vben/common-ui";
-import { $te } from "@vben/locales";
+import { useVbenDrawer } from '@vben/common-ui';
+import { $te } from '@vben/locales';
 
-import { message } from "antdv-next";
+import { message } from 'antdv-next';
 
-import { useVbenForm, z } from "#/adapter/form";
-import { createExternalPageApi, updateExternalPageApi } from "#/api/system";
-import { $t } from "#/locales";
+import { useVbenForm, z } from '#/adapter/form';
+import { createExternalPageApi, updateExternalPageApi } from '#/api/system';
+import { $t } from '#/locales';
 
-import { externalRouteCandidates } from "#/router/routes";
+import { externalRouteCandidates } from '#/router/routes';
 
 function getTranslatedTitle(title?: string) {
   return title && $te(title) ? $t(title) : title;
@@ -23,7 +23,9 @@ const externalPageId = ref<string>();
 const isInitializing = ref(false);
 const titleSuffix = ref<string>();
 const drawerTitle = computed(() =>
-  externalPageId.value ? $t("system.externalPage.edit") : $t("system.externalPage.create"),
+  externalPageId.value
+    ? $t('system.externalPage.edit')
+    : $t('system.externalPage.create'),
 );
 
 function updateTitleSuffix(title?: string) {
@@ -32,7 +34,9 @@ function updateTitleSuffix(title?: string) {
 
 async function fillCandidateFields(name?: string) {
   if (isInitializing.value) return;
-  const candidate = externalRouteCandidates.find((route) => route.name === name);
+  const candidate = externalRouteCandidates.find(
+    (route) => route.name === name,
+  );
   if (!candidate) return;
   updateTitleSuffix(candidate.title);
   await formApi.setValues({
@@ -43,11 +47,11 @@ async function fillCandidateFields(name?: string) {
 }
 
 const [Form, formApi] = useVbenForm({
-  commonConfig: { componentProps: { class: "w-full" } },
-  layout: "vertical",
+  commonConfig: { componentProps: { class: 'w-full' } },
+  layout: 'vertical',
   schema: [
     {
-      component: "Select",
+      component: 'Select',
       componentProps: () => {
         return {
           disabled: !!externalPageId.value,
@@ -56,16 +60,16 @@ const [Form, formApi] = useVbenForm({
             label: `${getTranslatedTitle(route.title)} (${route.path})`,
             value: route.name,
           })),
-          placeholder: $t("system.externalPage.candidatePlaceholder"),
+          placeholder: $t('system.externalPage.candidatePlaceholder'),
           showSearch: true,
         };
       },
-      fieldName: "name",
-      label: $t("system.externalPage.registeredPage"),
+      fieldName: 'name',
+      label: $t('system.externalPage.registeredPage'),
       rules: z.string().min(1),
     },
     {
-      component: "Input",
+      component: 'Input',
       componentProps() {
         return {
           maxlength: 128,
@@ -75,29 +79,29 @@ const [Form, formApi] = useVbenForm({
           },
         };
       },
-      fieldName: "title",
-      label: $t("system.externalPage.title"),
+      fieldName: 'title',
+      label: $t('system.externalPage.title'),
       rules: z.string().min(1).max(128),
     },
     {
-      component: "Input",
+      component: 'Input',
       componentProps: { disabled: true },
-      fieldName: "path",
-      help: $t("system.externalPage.pathHelp"),
-      label: $t("system.externalPage.path"),
+      fieldName: 'path',
+      help: $t('system.externalPage.pathHelp'),
+      label: $t('system.externalPage.path'),
       rules: z.string().min(1).max(128),
     },
     {
-      component: "RadioGroup",
+      component: 'RadioGroup',
       componentProps: {
         options: [
-          { label: $t("common.enabled"), value: 1 },
-          { label: $t("common.disabled"), value: 0 },
+          { label: $t('common.enabled'), value: 1 },
+          { label: $t('common.disabled'), value: 0 },
         ],
       },
       defaultValue: 1,
-      fieldName: "status",
-      label: $t("system.externalPage.status"),
+      fieldName: 'status',
+      label: $t('system.externalPage.status'),
     },
   ],
   showDefaultActions: false,
@@ -110,23 +114,25 @@ const [Drawer, drawerApi] = useVbenDrawer({
 
     drawerApi.lock();
     try {
-      const values = await formApi.getValues<ExternalPageApi.SaveExternalPage>();
+      const values =
+        await formApi.getValues<ExternalPageApi.SaveExternalPage>();
       await (externalPageId.value
         ? updateExternalPageApi(externalPageId.value, {
             path: values.path,
             title: values.title,
           })
         : createExternalPageApi(values));
-      message.success($t("system.externalPage.saveSuccess"));
+      message.success($t('system.externalPage.saveSuccess'));
       drawerApi.close();
-      emit("success");
+      emit('success');
     } finally {
       drawerApi.unlock();
     }
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<Partial<ExternalPageApi.ExternalPage>>() ?? {};
+    const data =
+      drawerApi.getData<Partial<ExternalPageApi.ExternalPage>>() ?? {};
     externalPageId.value = data.id;
     isInitializing.value = true;
     try {
