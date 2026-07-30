@@ -33,6 +33,8 @@
     "skuPriceDelete": "Delete SKU Price",
     "skuPriceList": "SKU Price List",
     "skuPriceStatus": "Change SKU Price Status",
+    "skuPriceTierList": "SKU Price Tier List",
+    "skuPriceTierSave": "Save SKU Price Tiers",
     "skuPriceUpdate": "Update SKU Price",
     "skuStatus": "Change SKU Status",
     "skuUpdate": "Update SKU",
@@ -115,6 +117,23 @@
     "typeInsurance": "Insurance Price",
     "typePurchase": "Purchase Price",
     "typeRetail": "Retail Price"
+  },
+  "skuPriceTier": {
+    "add": "Add Tier",
+    "duplicateMinQuantity": "Start quantity cannot be duplicated",
+    "intervalOverlap": "Tier quantity ranges cannot overlap",
+    "invalidPrice": "Enter a tier unit price greater than 0 with up to 4 decimals",
+    "invalidQuantity": "Tier quantities must be positive integers",
+    "manageTitle": "Tier Price Management",
+    "maxLessThanMin": "End quantity cannot be less than start quantity",
+    "maxQuantity": "End Quantity",
+    "maxQuantityPlaceholder": "Empty = and above",
+    "minQuantity": "Start Quantity",
+    "noSaveAccess": "No permission to save tier prices",
+    "saveSuccess": "Saved successfully",
+    "tierPrice": "Tier Unit Price",
+    "tiers": "Tiers",
+    "title": "Tiers"
   },
   "spu": {
     "backList": "Back to List",

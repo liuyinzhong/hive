@@ -178,6 +178,8 @@ export namespace ProductSkuApi {
     status: ProductSkuPriceStatus;
     /** 是否含税：0 不含税，1 含税。 */
     taxIncluded: ProductSkuPriceTaxIncluded;
+    /** 阶梯价格数量。 */
+    tierCount: number;
     /** 更新时间。 */
     updateDate?: null | string;
   }
@@ -218,6 +220,44 @@ export namespace ProductSkuApi {
   export interface DeleteProductSkuPrice {
     /** 期望数据版本号。 */
     expectedRowVersion: number;
+  }
+
+  /** 产品品规价格阶梯信息。 */
+  export interface ProductSkuPriceTier {
+    /** 创建时间。 */
+    createDate?: null | string;
+    /** 结束数量，空表示以上。 */
+    maxQuantity?: null | number;
+    /** 起始数量。 */
+    minQuantity: number;
+    /** 价格 ID。 */
+    priceId: string;
+    /** 阶梯 ID。 */
+    tierId: string;
+    /** 阶梯单价，十进制定点字符串。 */
+    tierPrice: string;
+    /** 更新时间。 */
+    updateDate?: null | string;
+  }
+
+  /** 保存产品品规价格阶梯明细。 */
+  export interface SaveProductSkuPriceTierItem {
+    /** 结束数量，空表示以上。 */
+    maxQuantity?: null | number;
+    /** 起始数量。 */
+    minQuantity: number;
+    /** 阶梯 ID，新建时为空。 */
+    tierId?: null | string;
+    /** 阶梯单价，十进制定点字符串。 */
+    tierPrice: string;
+  }
+
+  /** 保存产品品规价格阶梯请求。 */
+  export interface SaveProductSkuPriceTiers {
+    /** 期望父级价格数据版本号。 */
+    expectedPriceRowVersion: number;
+    /** 完整阶梯数组，空数组表示清空阶梯。 */
+    tiers: SaveProductSkuPriceTierItem[];
   }
 }
 
@@ -367,4 +407,21 @@ export function deleteProductSkuPriceApi(
   return requestClient.delete(`/product/skus/${skuId}/prices/${priceId}`, {
     data,
   });
+}
+
+export function getProductSkuPriceTiersApi(skuId: string, priceId: string) {
+  return requestClient.get<ProductSkuApi.ProductSkuPriceTier[]>(
+    `/product/skus/${skuId}/prices/${priceId}/tiers`,
+  );
+}
+
+export function saveProductSkuPriceTiersApi(
+  skuId: string,
+  priceId: string,
+  data: ProductSkuApi.SaveProductSkuPriceTiers,
+) {
+  return requestClient.put<ProductSkuApi.ProductSkuPrice>(
+    `/product/skus/${skuId}/prices/${priceId}/tiers`,
+    data,
+  );
 }

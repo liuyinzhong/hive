@@ -254,7 +254,7 @@ export function useProductSkuPriceColumns(): VxeTableGridOptions<ProductSkuApi.P
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('product.skuPrice.operation'),
-      width: 130,
+      width: 220,
     },
   ];
 }

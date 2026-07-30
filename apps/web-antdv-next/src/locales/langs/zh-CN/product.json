@@ -17,6 +17,8 @@
     "skuPriceDelete": "删除SKU价格",
     "skuPriceList": "SKU价格列表",
     "skuPriceStatus": "启停SKU价格",
+    "skuPriceTierList": "SKU价格阶梯列表",
+    "skuPriceTierSave": "保存SKU价格阶梯",
     "skuPriceUpdate": "修改SKU价格",
     "skuStatus": "启停SKU",
     "skuUpdate": "修改SKU",
@@ -117,6 +119,23 @@
     "typeInsurance": "医保价",
     "typePurchase": "采购价",
     "typeRetail": "零售价"
+  },
+  "skuPriceTier": {
+    "add": "添加阶梯",
+    "duplicateMinQuantity": "起始数量不能重复",
+    "intervalOverlap": "阶梯数量区间不能重叠",
+    "invalidPrice": "请输入大于 0 的阶梯单价",
+    "invalidQuantity": "阶梯数量必须是正整数",
+    "manageTitle": "阶梯价格维护",
+    "maxLessThanMin": "结束数量不能小于起始数量",
+    "maxQuantity": "结束数量",
+    "maxQuantityPlaceholder": "空=以上",
+    "minQuantity": "起始数量",
+    "noSaveAccess": "没有保存阶梯价格的权限",
+    "saveSuccess": "保存成功",
+    "tierPrice": "阶梯单价",
+    "tiers": "阶梯",
+    "title": "阶梯"
   },
   "spu": {
     "backList": "返回",

@@ -18,6 +18,7 @@ import { $t } from '#/locales';
 
 import { useProductSkuPriceColumns } from './sku-price-data';
 import SkuPriceFormModalComponent from './sku-price-form-modal.vue';
+import SkuPriceTierModalComponent from './sku-price-tier-modal.vue';
 
 const emit = defineEmits<{
   success: [];
@@ -68,6 +69,11 @@ const [SkuPriceFormModal, skuPriceFormModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
+const [SkuPriceTierModal, skuPriceTierModalApi] = useVbenModal({
+  connectedComponent: SkuPriceTierModalComponent,
+  destroyOnClose: true,
+});
+
 async function loadPrices() {
   if (!currentSku.value?.skuId) return;
   loading.value = true;
@@ -91,7 +97,19 @@ function openEdit(row: ProductSkuApi.ProductSkuPrice) {
     .open();
 }
 
+function openTiers(row: ProductSkuApi.ProductSkuPrice) {
+  if (!currentSku.value?.skuId) return;
+  skuPriceTierModalApi
+    .setData({ price: row, skuId: currentSku.value.skuId })
+    .open();
+}
+
 async function handlePriceSaved() {
+  await loadPrices();
+  emit('success');
+}
+
+async function handleTierSaved() {
   await loadPrices();
   emit('success');
 }
@@ -110,6 +128,7 @@ async function deletePrice(row: ProductSkuApi.ProductSkuPrice) {
 <template>
   <Drawer :footer="false" class="w-[980px]" :title="title">
     <SkuPriceFormModal @success="handlePriceSaved" />
+    <SkuPriceTierModal @success="handleTierSaved" />
     <div class="space-y-4">
       <Grid :loading="loading" :table-title="$t('product.skuPrice.list')">
         <template #toolbar-tools>
@@ -129,6 +148,12 @@ async function deletePrice(row: ProductSkuApi.ProductSkuPrice) {
                 icon: 'lucide:edit',
                 text: $t('common.edit'),
                 onClick: () => openEdit(row),
+              },
+              {
+                auth: 'product:skuPriceTier:list',
+                icon: 'lucide:layers',
+                text: `${$t('product.skuPriceTier.title')}(${row.tierCount || 0})`,
+                onClick: () => openTiers(row),
               },
               {
                 auth: 'product:skuPrice:delete',
