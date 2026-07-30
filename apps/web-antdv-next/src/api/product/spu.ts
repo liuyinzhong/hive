@@ -90,6 +90,8 @@ export namespace ProductSpuApi {
     skuCode?: null | string;
     /** SKU ID。 */
     skuId?: null | string;
+    /** SKU 已维护价格数量。 */
+    skuPriceCount: number;
     /** SKU 数据版本号。 */
     skuRowVersion?: null | number;
     /** 规格名称。 */

@@ -7,18 +7,21 @@ import { computed, ref } from 'vue';
 import { useAccess } from '@vben/access';
 import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
 
-import { Button, message, Tag } from 'antdv-next';
+import { Button, message } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   deleteProductSkuPriceApi,
   getProductSkuPriceListApi,
-  updateProductSkuPriceStatusApi,
 } from '#/api/product';
 import { $t } from '#/locales';
 
 import { useProductSkuPriceColumns } from './sku-price-data';
 import SkuPriceFormModalComponent from './sku-price-form-modal.vue';
+
+const emit = defineEmits<{
+  success: [];
+}>();
 
 const { hasAccessByCodes } = useAccess();
 
@@ -88,15 +91,9 @@ function openEdit(row: ProductSkuApi.ProductSkuPrice) {
     .open();
 }
 
-async function toggleStatus(row: ProductSkuApi.ProductSkuPrice) {
-  if (!currentSku.value?.skuId) return;
-  const nextStatus = row.status === 1 ? 0 : 1;
-  await updateProductSkuPriceStatusApi(currentSku.value.skuId, row.priceId, {
-    expectedRowVersion: row.rowVersion,
-    status: nextStatus,
-  });
-  message.success($t('product.skuPrice.saveSuccess'));
+async function handlePriceSaved() {
   await loadPrices();
+  emit('success');
 }
 
 async function deletePrice(row: ProductSkuApi.ProductSkuPrice) {
@@ -106,12 +103,13 @@ async function deletePrice(row: ProductSkuApi.ProductSkuPrice) {
   });
   message.success($t('product.skuPrice.deleteSuccess'));
   await loadPrices();
+  emit('success');
 }
 </script>
 
 <template>
   <Drawer :footer="false" class="w-[980px]" :title="title">
-    <SkuPriceFormModal @success="loadPrices" />
+    <SkuPriceFormModal @success="handlePriceSaved" />
     <div class="space-y-4">
       <Grid :loading="loading" :table-title="$t('product.skuPrice.list')">
         <template #toolbar-tools>
@@ -123,13 +121,6 @@ async function deletePrice(row: ProductSkuApi.ProductSkuPrice) {
             {{ $t('product.skuPrice.create') }}
           </Button>
         </template>
-        <template #status="{ row }">
-          <Tag :color="row.status === 1 ? 'green' : 'default'">
-            {{
-              row.status === 1 ? $t('common.enabled') : $t('common.disabled')
-            }}
-          </Tag>
-        </template>
         <template #action="{ row }">
           <VbenTableAction
             :actions="[
@@ -138,18 +129,6 @@ async function deletePrice(row: ProductSkuApi.ProductSkuPrice) {
                 icon: 'lucide:edit',
                 text: $t('common.edit'),
                 onClick: () => openEdit(row),
-              },
-              {
-                auth: 'product:skuPrice:status',
-                icon: row.status === 1 ? 'lucide:ban' : 'lucide:check',
-                text:
-                  row.status === 1
-                    ? $t('common.disabled')
-                    : $t('common.enabled'),
-                popConfirm: {
-                  title: $t('product.skuPrice.statusConfirm'),
-                  confirm: () => toggleStatus(row),
-                },
               },
               {
                 auth: 'product:skuPrice:delete',

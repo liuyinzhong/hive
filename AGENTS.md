@@ -107,6 +107,7 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 ```
 
 - 表格配置、分页、排序、筛选和操作列保持同模块一致。
+- 表格中的启用/停用状态切换优先使用 `CellSwitch` 列渲染，并在 `attrs.auth` 配置对应权限码；不要在操作列额外实现启用/停用按钮。无权限时应沿用 `CellSwitch` 的只读降级展示。
 - 表单优先使用项目现有表单适配器和 Schema 方案。
 - 保持校验、布局、弹窗/抽屉和提交状态处理一致。
 - 不为单一页面重新封装一套 Table 或 Form。

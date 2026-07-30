@@ -232,7 +232,7 @@ export function useProductSpuStructureColumns(): VxeTableGridOptions<ProductSpuD
           align: 'center',
           field: 'skuOperation',
           fixed: 'right',
-          minWidth: 140,
+          minWidth: 160,
           slots: { default: 'skuAction' },
           title: $t('product.sku.operation'),
         },

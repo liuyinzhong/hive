@@ -218,7 +218,7 @@ onMounted(loadDetail);
     <RpFormModal @success="loadDetail" />
     <MpFormModal @success="loadDetail" />
     <SkuFormModal @success="loadDetail" />
-    <SkuPriceDrawer />
+    <SkuPriceDrawer @success="loadDetail" />
 
     <div class="product-detail space-y-4">
       <Card>
@@ -336,7 +336,9 @@ onMounted(loadDetail);
                 @click="openSkuPrice(row)"
                 v-access:code="['product:skuPrice:list']"
               >
-                {{ $t('product.skuPrice.title') }}
+                {{ $t('product.skuPrice.title') }}({{
+                  row.skuPriceCount || 0
+                }})
               </Button>
             </template>
           </Grid>

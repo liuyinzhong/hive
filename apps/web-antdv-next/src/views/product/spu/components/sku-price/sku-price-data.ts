@@ -3,6 +3,7 @@ import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ProductSkuApi } from '#/api/product';
 
 import { getEnterpriseOptionsApi } from '#/api/base';
+import { updateProductSkuPriceStatusApi } from '#/api/product';
 import { $t } from '#/locales';
 
 export function skuPriceTypeOptions() {
@@ -17,7 +18,6 @@ export function skuPriceTypeOptions() {
 export function skuPriceScopeOptions() {
   return [
     { label: $t('product.skuPrice.scopeGlobal'), value: 'GLOBAL' },
-    { label: $t('product.skuPrice.scopeOrg'), value: 'ORG' },
     { label: $t('product.skuPrice.scopeCustomer'), value: 'CUSTOMER' },
     { label: $t('product.skuPrice.scopeChannel'), value: 'CHANNEL' },
   ];
@@ -215,10 +215,31 @@ export function useProductSkuPriceColumns(): VxeTableGridOptions<ProductSkuApi.P
       title: $t('product.skuPrice.effectiveEnd'),
     },
     {
+      align: 'center',
+      cellRender: {
+        attrs: {
+          auth: 'product:skuPrice:status',
+          onChange: async (
+            newStatus: ProductSkuApi.ProductSkuPriceStatus,
+            row: ProductSkuApi.ProductSkuPrice,
+          ) => {
+            const updated = await updateProductSkuPriceStatusApi(
+              row.skuId,
+              row.priceId,
+              {
+                expectedRowVersion: row.rowVersion,
+                status: newStatus,
+              },
+            );
+            row.rowVersion = updated.rowVersion;
+            row.updateDate = updated.updateDate;
+          },
+        },
+        name: 'CellSwitch',
+      },
       field: 'status',
-      slots: { default: 'status' },
       title: $t('product.skuPrice.status'),
-      width: 90,
+      width: 100,
     },
     {
       field: 'remark',
@@ -233,7 +254,7 @@ export function useProductSkuPriceColumns(): VxeTableGridOptions<ProductSkuApi.P
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('product.skuPrice.operation'),
-      width: 170,
+      width: 130,
     },
   ];
 }

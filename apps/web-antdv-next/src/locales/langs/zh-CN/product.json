@@ -106,7 +106,6 @@
     "scopeCustomer": "客户价",
     "scopeGlobal": "全局价",
     "scopeObject": "范围对象",
-    "scopeOrg": "机构价",
     "scopeType": "价格范围",
     "status": "状态",
     "statusConfirm": "确认切换该价格状态？",
