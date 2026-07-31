@@ -133,6 +133,27 @@
     "value": "Dict Value",
     "label": "Dict Label"
   },
+  "param": {
+    "title": "Param Management",
+    "list": "Param List",
+    "name": "Param",
+    "id": "Param ID",
+    "paramKey": "Param Key",
+    "paramValue": "Param Value",
+    "paramType": "Param Type",
+    "isPublic": "Public",
+    "remark": "Remark",
+    "createDate": "Create Time",
+    "updateDate": "Update Time",
+    "operation": "Operation",
+    "create": "New Param",
+    "edit": "Edit Param",
+    "delete": "Delete",
+    "yes": "Yes",
+    "no": "No",
+    "true": "Yes",
+    "false": "No"
+  },
   "file": {
     "title": "File Management",
     "list": "File List",
@@ -240,7 +261,12 @@
     "operationLogList": "List",
     "operationLogDetail": "Details",
     "loginLogList": "List",
-    "loginLogDetail": "Details"
+    "loginLogDetail": "Details",
+    "paramList": "List",
+    "paramCreate": "Create",
+    "paramDetail": "Details",
+    "paramUpdate": "Update",
+    "paramDelete": "Delete"
   },
   "title": "System Management"
 }

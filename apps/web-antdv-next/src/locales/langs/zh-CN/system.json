@@ -133,6 +133,27 @@
     "value": "字典值",
     "label": "字典标题"
   },
+  "param": {
+    "title": "参数管理",
+    "list": "参数列表",
+    "name": "参数",
+    "id": "参数ID",
+    "paramKey": "参数键",
+    "paramValue": "参数值",
+    "paramType": "参数类型",
+    "isPublic": "是否公开",
+    "remark": "备注",
+    "createDate": "创建时间",
+    "updateDate": "更新时间",
+    "operation": "操作",
+    "create": "新增参数",
+    "edit": "编辑参数",
+    "delete": "删除",
+    "yes": "是",
+    "no": "否",
+    "true": "是",
+    "false": "否"
+  },
   "file": {
     "title": "文件管理",
     "list": "文件列表",
@@ -240,7 +261,12 @@
     "operationLogList": "列表",
     "operationLogDetail": "详情",
     "loginLogList": "列表",
-    "loginLogDetail": "详情"
+    "loginLogDetail": "详情",
+    "paramList": "列表",
+    "paramCreate": "新增",
+    "paramDetail": "详情",
+    "paramUpdate": "修改",
+    "paramDelete": "删除"
   },
   "title": "系统管理"
 }
