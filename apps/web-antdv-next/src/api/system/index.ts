@@ -5,5 +5,6 @@ export * from './file';
 export * from './log';
 export * from './menu';
 export * from './param';
+export * from './payChannel';
 export * from './role';
 export * from './user';
