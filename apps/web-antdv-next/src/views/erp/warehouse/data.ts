@@ -27,6 +27,17 @@ export const warehouseBusinessScopeOptions = () => [
   },
 ];
 
+export const warehouseZoneTypeOptions = () => [
+  { label: $t('erp.warehouseZone.typeNormal'), value: 'NORMAL' },
+  {
+    label: $t('erp.warehouseZone.typePendingInspection'),
+    value: 'PENDING_INSPECTION',
+  },
+  { label: $t('erp.warehouseZone.typeQualified'), value: 'QUALIFIED' },
+  { label: $t('erp.warehouseZone.typeUnqualified'), value: 'UNQUALIFIED' },
+  { label: $t('erp.warehouseZone.typeReturned'), value: 'RETURNED' },
+];
+
 export function warehouseStorageTypeLabel(type?: string) {
   return (
     warehouseStorageTypeOptions().find((item) => item.value === type)?.label ||
@@ -40,6 +51,14 @@ export function warehouseBusinessScopeLabel(scope?: string) {
     warehouseBusinessScopeOptions().find((item) => item.value === scope)
       ?.label ||
     scope ||
+    '-'
+  );
+}
+
+export function warehouseZoneTypeLabel(type?: string) {
+  return (
+    warehouseZoneTypeOptions().find((item) => item.value === type)?.label ||
+    type ||
     '-'
   );
 }
@@ -99,6 +118,54 @@ export function useWarehouseFormSchema(): VbenFormSchema[] {
   ];
 }
 
+export function useWarehouseZoneFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: { maxlength: 128 },
+      fieldName: 'zoneName',
+      label: $t('erp.warehouseZone.zoneName'),
+      rules: 'required',
+    },
+    {
+      component: 'Select',
+      componentProps: { options: warehouseZoneTypeOptions() },
+      defaultValue: 'NORMAL',
+      fieldName: 'zoneType',
+      label: $t('erp.warehouseZone.zoneType'),
+      rules: 'selectRequired',
+    },
+    {
+      component: 'Textarea',
+      componentProps: { maxlength: 512, rows: 3, showCount: true },
+      fieldName: 'remark',
+      formItemClass: 'md:col-span-2',
+      label: $t('erp.warehouse.remark'),
+      rules: z.string().max(512).nullish(),
+    },
+  ];
+}
+
+export function useWarehouseLocationFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: { maxlength: 128 },
+      fieldName: 'locationName',
+      label: $t('erp.warehouseLocation.locationName'),
+      rules: 'required',
+    },
+    {
+      component: 'Textarea',
+      componentProps: { maxlength: 512, rows: 3, showCount: true },
+      fieldName: 'remark',
+      formItemClass: 'md:col-span-2',
+      label: $t('erp.warehouse.remark'),
+      rules: z.string().max(512).nullish(),
+    },
+  ];
+}
+
 export function useWarehouseSearchSchema(): VbenFormSchema[] {
   return [
     {
@@ -139,6 +206,43 @@ export function useWarehouseSearchSchema(): VbenFormSchema[] {
       },
       fieldName: 'status',
       label: $t('erp.warehouse.status'),
+    },
+  ];
+}
+
+export function useWarehouseZoneSearchSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        placeholder: $t('erp.warehouseZone.keyword'),
+      },
+      fieldName: 'keyword',
+      label: $t('erp.warehouse.keywordLabel'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        options: warehouseZoneTypeOptions(),
+      },
+      fieldName: 'zoneType',
+      label: $t('erp.warehouseZone.zoneType'),
+    },
+  ];
+}
+
+export function useWarehouseLocationSearchSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        placeholder: $t('erp.warehouseLocation.keyword'),
+      },
+      fieldName: 'keyword',
+      label: $t('erp.warehouse.keywordLabel'),
     },
   ];
 }
@@ -203,6 +307,93 @@ export function useWarehouseColumns(): VxeTableGridOptions<ErpWarehouseApi.Wareh
       sortable: true,
       title: $t('erp.warehouse.status'),
       width: 100,
+    },
+    {
+      field: 'updateDate',
+      sortable: true,
+      title: $t('erp.warehouse.updateDate'),
+      width: 180,
+    },
+    {
+      align: 'center',
+      field: 'operation',
+      fixed: 'right',
+      showOverflow: false,
+      slots: { default: 'action' },
+      title: $t('erp.warehouse.operation'),
+      width: 240,
+    },
+  ];
+}
+
+export function useWarehouseZoneColumns(): VxeTableGridOptions<ErpWarehouseApi.WarehouseZone>['columns'] {
+  return [
+    {
+      field: 'zoneCode',
+      fixed: 'left',
+      sortable: true,
+      title: $t('erp.warehouseZone.zoneCode'),
+      width: 130,
+    },
+    {
+      field: 'zoneName',
+      fixed: 'left',
+      minWidth: 180,
+      sortable: true,
+      title: $t('erp.warehouseZone.zoneName'),
+    },
+    {
+      field: 'zoneType',
+      formatter: ({ row }) => warehouseZoneTypeLabel(row.zoneType),
+      minWidth: 140,
+      sortable: true,
+      title: $t('erp.warehouseZone.zoneType'),
+    },
+    {
+      field: 'remark',
+      minWidth: 180,
+      showOverflow: 'tooltip',
+      title: $t('erp.warehouse.remark'),
+    },
+    {
+      field: 'updateDate',
+      sortable: true,
+      title: $t('erp.warehouse.updateDate'),
+      width: 180,
+    },
+    {
+      align: 'center',
+      field: 'operation',
+      fixed: 'right',
+      showOverflow: false,
+      slots: { default: 'action' },
+      title: $t('erp.warehouse.operation'),
+      width: 240,
+    },
+  ];
+}
+
+export function useWarehouseLocationColumns(): VxeTableGridOptions<ErpWarehouseApi.WarehouseLocation>['columns'] {
+  return [
+    {
+      field: 'locationCode',
+      fixed: 'left',
+      sortable: true,
+      title: $t('erp.warehouseLocation.locationCode'),
+      width: 130,
+    },
+    {
+      field: 'locationName',
+      fixed: 'left',
+      minWidth: 180,
+      sortable: true,
+      title: $t('erp.warehouseLocation.locationName'),
+    },
+    {
+      field: 'remark',
+      minWidth: 200,
+      showOverflow: 'tooltip',
+      title: $t('erp.warehouse.remark'),
     },
     {
       field: 'updateDate',

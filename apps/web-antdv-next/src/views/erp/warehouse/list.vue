@@ -4,7 +4,7 @@ import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ErpWarehouseApi } from '#/api/erp';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, message } from 'antdv-next';
@@ -16,11 +16,17 @@ import { formatSorts } from '#/utils';
 
 import { useWarehouseColumns, useWarehouseSearchSchema } from './data';
 import FormModalComponent from './form-modal.vue';
+import ZoneDrawerComponent from './zone-drawer.vue';
 
 const { hasAccessByCodes } = useAccess();
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: FormModalComponent,
+  destroyOnClose: true,
+});
+
+const [ZoneDrawer, zoneDrawerApi] = useVbenDrawer({
+  connectedComponent: ZoneDrawerComponent,
   destroyOnClose: true,
 });
 
@@ -65,6 +71,10 @@ function openEdit(row: ErpWarehouseApi.Warehouse) {
     .open();
 }
 
+function openZones(row: ErpWarehouseApi.Warehouse) {
+  zoneDrawerApi.setData(row).open();
+}
+
 async function deleteWarehouse(row: ErpWarehouseApi.Warehouse) {
   await deleteWarehouseApi(row.warehouseId, {
     expectedRowVersion: row.rowVersion,
@@ -77,6 +87,7 @@ async function deleteWarehouse(row: ErpWarehouseApi.Warehouse) {
 <template>
   <Page auto-content-height>
     <FormModal @success="gridApi.query()" />
+    <ZoneDrawer @success="gridApi.query()" />
     <Grid :table-title="$t('erp.warehouse.list')">
       <template #toolbar-tools>
         <Button
@@ -96,6 +107,12 @@ async function deleteWarehouse(row: ErpWarehouseApi.Warehouse) {
               icon: 'lucide:edit',
               text: $t('common.edit'),
               onClick: () => openEdit(row),
+            },
+            {
+              auth: 'erp:warehouseZone:list',
+              icon: 'lucide:layout-grid',
+              text: `${$t('erp.warehouseZone.title')}(${row.zoneCount || 0})`,
+              onClick: () => openZones(row),
             },
             {
               auth: 'erp:warehouse:delete',
