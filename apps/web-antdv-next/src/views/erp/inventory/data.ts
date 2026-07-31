@@ -2,6 +2,7 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ErpInventoryApi } from '#/api/erp';
 import type { ProductSkuApi } from '#/api/product';
+import type { InputNumberProps } from 'antdv-next';
 
 import { z } from '#/adapter/form';
 import { getWarehouseOptionsApi } from '#/api/erp';
@@ -11,6 +12,17 @@ import { $t } from '#/locales';
 type InventorySkuOption = ProductSkuApi.ProductSkuOption & {
   skuLabel: string;
 };
+
+export interface InventoryInitialStockFormItem
+  extends ErpInventoryApi.InitialStockItem {
+  packageUnitName?: string;
+}
+
+export interface InventoryInitialStockFormValues
+  extends Record<string, unknown> {
+  items: InventoryInitialStockFormItem[];
+  warehouseId: string;
+}
 
 export function inventorySourceBillTypeLabel(value?: string) {
   if (value === 'INITIAL_STOCK') {
@@ -49,7 +61,7 @@ export function inventoryUnitCountLabel(
   return `${count}${unitName || ''}`;
 }
 
-let inventorySkuOptionsCache: any[] = [];
+let inventorySkuOptionsCache: InventorySkuOption[] = [];
 
 function inventorySkuOptionLabel(option: ProductSkuApi.ProductSkuOption) {
   return [
@@ -71,6 +83,30 @@ function getInventorySkuOptions(): Promise<InventorySkuOption[]> {
       }))),
   );
 }
+
+function getInventorySkuPackageUnitName(skuId?: string) {
+  if (!skuId) return '';
+  return (
+    inventorySkuOptionsCache.find((option) => option.skuId === skuId)
+      ?.packageUnitName || ''
+  );
+}
+
+const quantityFormatter =
+  (unitName?: string): InputNumberProps['formatter'] =>
+  (value) => {
+    if (value === undefined || value === null || value === '') {
+      return '';
+    }
+    return unitName ? `${value}${unitName}` : `${value}`;
+  };
+
+const quantityParser =
+  (unitName?: string): InputNumberProps['parser'] =>
+  (value) => {
+    const rawValue = unitName ? value?.replace(unitName, '') : value;
+    return rawValue?.replace(/[^\d]/g, '') as unknown as number;
+  };
 
 export function useInventoryBalanceSearchSchema(): VbenFormSchema[] {
   return [
@@ -108,10 +144,7 @@ export function useInventoryBalanceSearchSchema(): VbenFormSchema[] {
   ];
 }
 
-export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
-  items: ErpInventoryApi.InitialStockItem[];
-  warehouseId: string;
-}>[] {
+export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryInitialStockFormValues>[] {
   return [
     {
       component: 'ApiSelect',
@@ -132,6 +165,7 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
         createRow: () => ({
           batchNo: '',
           expiryDate: undefined,
+          packageUnitName: '',
           quantity: 1,
           remark: '',
           skuId: '',
@@ -148,9 +182,6 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
             labelField: 'skuLabel',
             resultField: '',
             valueField: 'skuId',
-            onSelect: (value, option) => {
-              console.log(value, option);
-            },
           },
           fieldName: 'skuId',
           label: $t('erp.inventory.sku'),
@@ -158,12 +189,9 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
           dependencies: {
             async trigger(_values, actions, _controller, ctx) {
               if (!ctx?.rowPath) return;
-              const option = inventorySkuOptionsCache.find(
-                (item) => item.skuId === ctx.row?.skuId,
-              );
               await actions.setFieldValue(
                 `${ctx.rowPath}.packageUnitName`,
-                option?.packageUnitName,
+                getInventorySkuPackageUnitName(ctx.row?.skuId as string),
                 false,
               );
             },
@@ -217,12 +245,16 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
           label: $t('erp.inventory.quantity'),
           rules: 'required',
           dependencies: {
-            triggerFields: ['skuId'],
+            triggerFields: ['packageUnitName'],
             resolve: ({ schema }) => {
-              const row = schema.row;
+              const row = schema.row as
+                | InventoryInitialStockFormItem
+                | undefined;
+              const unitName = row?.packageUnitName || '';
               return {
-                renderComponentContent: {
-                  suffix: () => row?.packageUnitName || '',
+                componentProps: {
+                  formatter: quantityFormatter(unitName),
+                  parser: quantityParser(unitName),
                 },
               };
             },
@@ -239,6 +271,7 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
         {
           batchNo: '',
           expiryDate: undefined,
+          packageUnitName: '',
           quantity: 1,
           remark: '',
           skuId: '',

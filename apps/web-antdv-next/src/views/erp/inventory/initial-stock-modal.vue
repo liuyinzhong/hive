@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { ErpInventoryApi } from '#/api/erp';
+import type { InventoryInitialStockFormValues } from './data';
 
 import { useVbenModal } from '@vben/common-ui';
 
@@ -11,14 +12,9 @@ import { $t } from '#/locales';
 
 import { useInventoryInitialStockFormSchema } from './data';
 
-interface InitialStockFormValues extends Record<string, unknown> {
-  items: ErpInventoryApi.InitialStockItem[];
-  warehouseId: string;
-}
-
 function encodeInitialStockFormValues(
-  values: Readonly<InitialStockFormValues>,
-): InitialStockFormValues {
+  values: Readonly<InventoryInitialStockFormValues>,
+): InventoryInitialStockFormValues {
   return {
     ...values,
     items: (values.items || []).map((item) => {
@@ -26,6 +22,7 @@ function encodeInitialStockFormValues(
       return {
         batchNo: item.batchNo.trim(),
         expiryDate: item.expiryDate,
+        packageUnitName: item.packageUnitName,
         quantity: Number(item.quantity),
         remark: remark || undefined,
         skuId: item.skuId,
@@ -36,8 +33,8 @@ function encodeInitialStockFormValues(
 }
 
 function decodeInitialStockFormValues(
-  values: Readonly<InitialStockFormValues>,
-): InitialStockFormValues {
+  values: Readonly<InventoryInitialStockFormValues>,
+): InventoryInitialStockFormValues {
   return {
     ...values,
     items: (values.items || []).map((item) => ({
@@ -49,7 +46,7 @@ function decodeInitialStockFormValues(
 
 const emit = defineEmits<{ success: [] }>();
 
-const [Form, formApi] = useVbenForm<InitialStockFormValues>({
+const [Form, formApi] = useVbenForm<InventoryInitialStockFormValues>({
   codec: {
     decode: decodeInitialStockFormValues,
     encode: encodeInitialStockFormValues,
@@ -76,7 +73,9 @@ const [Modal, modalApi] = useVbenModal({
   },
 });
 
-function validateInitialStockItems(items: ErpInventoryApi.InitialStockItem[]) {
+function validateInitialStockItems(
+  items: InventoryInitialStockFormValues['items'],
+) {
   const seen = new Set<string>();
   for (const item of items || []) {
     if (!item.skuId) {
@@ -116,7 +115,7 @@ function validateInitialStockItems(items: ErpInventoryApi.InitialStockItem[]) {
   return true;
 }
 
-async function saveInitialStocks(values: InitialStockFormValues) {
+async function saveInitialStocks(values: InventoryInitialStockFormValues) {
   if (!validateInitialStockItems(values.items)) return;
 
   modalApi.lock();
