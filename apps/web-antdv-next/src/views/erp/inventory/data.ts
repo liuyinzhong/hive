@@ -49,6 +49,8 @@ export function inventoryUnitCountLabel(
   return `${count}${unitName || ''}`;
 }
 
+let inventorySkuOptionsCache: any[] = [];
+
 function inventorySkuOptionLabel(option: ProductSkuApi.ProductSkuOption) {
   return [
     option.productName,
@@ -61,11 +63,12 @@ function inventorySkuOptionLabel(option: ProductSkuApi.ProductSkuOption) {
 }
 
 function getInventorySkuOptions(): Promise<InventorySkuOption[]> {
-  return getProductSkuOptionsApi({ pageSize: 100 }).then((options) =>
-    options.map((option) => ({
-      ...option,
-      skuLabel: inventorySkuOptionLabel(option),
-    })),
+  return getProductSkuOptionsApi({ pageSize: 100 }).then(
+    (options) =>
+      (inventorySkuOptionsCache = options.map((option) => ({
+        ...option,
+        skuLabel: inventorySkuOptionLabel(option),
+      }))),
   );
 }
 
@@ -145,10 +148,27 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
             labelField: 'skuLabel',
             resultField: '',
             valueField: 'skuId',
+            onSelect: (value, option) => {
+              console.log(value, option);
+            },
           },
           fieldName: 'skuId',
           label: $t('erp.inventory.sku'),
           rules: 'selectRequired',
+          dependencies: {
+            async trigger(_values, actions, _controller, ctx) {
+              if (!ctx?.rowPath) return;
+              const option = inventorySkuOptionsCache.find(
+                (item) => item.skuId === ctx.row?.skuId,
+              );
+              await actions.setFieldValue(
+                `${ctx.rowPath}.packageUnitName`,
+                option?.packageUnitName,
+                false,
+              );
+            },
+            triggerFields: ['skuId'],
+          },
         },
         {
           component: 'Input',
@@ -196,6 +216,17 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
           fieldName: 'quantity',
           label: $t('erp.inventory.quantity'),
           rules: 'required',
+          dependencies: {
+            triggerFields: ['skuId'],
+            resolve: ({ schema }) => {
+              const row = schema.row;
+              return {
+                renderComponentContent: {
+                  suffix: () => row?.packageUnitName || '',
+                },
+              };
+            },
+          },
         },
         {
           component: 'Input',
