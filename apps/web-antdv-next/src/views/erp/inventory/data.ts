@@ -1,11 +1,16 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ErpInventoryApi } from '#/api/erp';
+import type { ProductSkuApi } from '#/api/product';
 
 import { z } from '#/adapter/form';
 import { getWarehouseOptionsApi } from '#/api/erp';
 import { getProductSkuOptionsApi } from '#/api/product';
 import { $t } from '#/locales';
+
+type InventorySkuOption = ProductSkuApi.ProductSkuOption & {
+  skuLabel: string;
+};
 
 export function inventorySourceBillTypeLabel(value?: string) {
   if (value === 'INITIAL_STOCK') {
@@ -42,6 +47,26 @@ export function inventoryUnitCountLabel(
 ) {
   if (count === undefined || count === null) return '-';
   return `${count}${unitName || ''}`;
+}
+
+function inventorySkuOptionLabel(option: ProductSkuApi.ProductSkuOption) {
+  return [
+    option.productName,
+    option.specName,
+    option.packageSpecName,
+    option.enterpriseName,
+  ]
+    .filter(Boolean)
+    .join(' / ');
+}
+
+function getInventorySkuOptions(): Promise<InventorySkuOption[]> {
+  return getProductSkuOptionsApi({ pageSize: 100 }).then((options) =>
+    options.map((option) => ({
+      ...option,
+      skuLabel: inventorySkuOptionLabel(option),
+    })),
+  );
 }
 
 export function useInventoryBalanceSearchSchema(): VbenFormSchema[] {
@@ -116,10 +141,9 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
         {
           component: 'ApiSelect',
           componentProps: {
-            api: () => getProductSkuOptionsApi({ pageSize: 100 }),
-            labelField: 'skuCode',
+            api: getInventorySkuOptions,
+            labelField: 'skuLabel',
             resultField: '',
-            showSearch: true,
             valueField: 'skuId',
           },
           fieldName: 'skuId',
@@ -151,7 +175,7 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
         {
           component: 'InputNumber',
           componentProps: {
-            max: 999_999_999_999.9999,
+            max: 9999.9999,
             min: 0.0001,
             precision: 4,
             prefix: '¥',
@@ -159,17 +183,15 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<{
           },
           fieldName: 'unitCost',
           label: $t('erp.inventory.unitCost'),
-          rules: z
-            .string()
-            .trim()
-            .min(1, $t('erp.inventory.unitCostRequired')),
+          rules: z.string().trim().min(1, $t('erp.inventory.unitCostRequired')),
         },
         {
           component: 'InputNumber',
           componentProps: {
-            max: 999_999_999,
+            max: 9999,
             min: 1,
             precision: 0,
+            changeOnWheel: true,
           },
           fieldName: 'quantity',
           label: $t('erp.inventory.quantity'),
@@ -209,43 +231,69 @@ export function useInventoryBalanceColumns(): VxeTableGridOptions<ErpInventoryAp
       minWidth: 130,
       sortable: true,
       title: $t('erp.inventory.warehouseCode'),
+      visible: false,
     },
     {
       field: 'warehouseName',
       fixed: 'left',
-      minWidth: 160,
+      minWidth: 100,
       sortable: true,
       title: $t('erp.inventory.warehouseName'),
     },
     {
       field: 'skuCode',
-      minWidth: 130,
+      minWidth: 100,
       sortable: true,
       title: $t('erp.inventory.skuCode'),
     },
     {
+      field: 'productName',
+      minWidth: 100,
+      sortable: true,
+      title: $t('erp.inventory.productName'),
+    },
+    {
+      field: 'specName',
+      minWidth: 80,
+      sortable: true,
+      title: $t('erp.inventory.specName'),
+    },
+    {
+      field: 'enterpriseName',
+      minWidth: 100,
+      showOverflow: 'tooltip',
+      sortable: true,
+      title: $t('erp.inventory.enterpriseName'),
+    },
+    {
       field: 'packageSpecName',
-      minWidth: 160,
+      minWidth: 80,
       showOverflow: 'tooltip',
       title: $t('erp.inventory.packageSpecName'),
     },
     {
+      field: 'approvalNo',
+      minWidth: 100,
+      showOverflow: 'tooltip',
+      title: $t('erp.inventory.approvalNo'),
+    },
+    {
       field: 'batchNo',
-      minWidth: 150,
+      minWidth: 100,
       showOverflow: 'tooltip',
       sortable: true,
       title: $t('erp.inventory.batchNo'),
     },
     {
       field: 'expiryDate',
-      minWidth: 120,
+      minWidth: 100,
       sortable: true,
       title: $t('erp.inventory.expiryDate'),
     },
     {
       field: 'unitCost',
       formatter: ({ row }) => inventoryAmountLabel(row.unitCost),
-      minWidth: 120,
+      minWidth: 100,
       sortable: true,
       title: $t('erp.inventory.unitCost'),
     },
@@ -274,7 +322,7 @@ export function useInventoryBalanceColumns(): VxeTableGridOptions<ErpInventoryAp
     },
     {
       field: 'updateDate',
-      minWidth: 180,
+      minWidth: 100,
       sortable: true,
       title: $t('erp.inventory.updateDate'),
     },
@@ -285,7 +333,7 @@ export function useInventoryBalanceColumns(): VxeTableGridOptions<ErpInventoryAp
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('erp.inventory.operation'),
-      width: 150,
+      width: 100,
     },
   ];
 }
@@ -298,6 +346,17 @@ export function useInventoryMovementColumns(): VxeTableGridOptions<ErpInventoryA
       minWidth: 150,
       sortable: true,
       title: $t('erp.inventory.sourceBillNo'),
+    },
+    {
+      field: 'productName',
+      minWidth: 180,
+      showOverflow: 'tooltip',
+      title: $t('erp.inventory.productName'),
+    },
+    {
+      field: 'specName',
+      minWidth: 120,
+      title: $t('erp.inventory.specName'),
     },
     {
       field: 'sourceBillType',
@@ -343,10 +402,7 @@ export function useInventoryMovementColumns(): VxeTableGridOptions<ErpInventoryA
     {
       field: 'afterPackageUnitCount',
       formatter: ({ row }) =>
-        inventoryUnitCountLabel(
-          row.afterPackageUnitCount,
-          row.packageUnitName,
-        ),
+        inventoryUnitCountLabel(row.afterPackageUnitCount, row.packageUnitName),
       minWidth: 140,
       title: $t('erp.inventory.packageUnitAfter'),
     },

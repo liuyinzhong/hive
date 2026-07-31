@@ -1,5 +1,7 @@
 import type { Recordable } from '@vben/types';
 import type { ProductMpApi } from './mp';
+import type { ProductRpApi } from './rp';
+import type { ProductSpuApi } from './spu';
 
 import { objectOmit } from '@vueuse/core';
 
@@ -112,46 +114,67 @@ export namespace ProductSkuApi {
   }
 
   /** 产品品规（SKU）下拉选项。 */
-  export interface ProductSkuOption {
-    /** 是否允许拆零：0 否，1 是。 */
-    allowSplit?: ProductSkuAllowSplit;
-    /** 批准文号/注册证号/备案号。 */
-    approvalNo: string;
-    /** 品牌/商品名。 */
-    brandName?: null | string;
-    /** 大包装规格名称。 */
-    cartonSpecName?: string;
-    /** 企业主体 ID。 */
-    enterpriseId: string;
-    /** 企业名称。 */
-    enterpriseName: string;
-    /** MP 编码。 */
-    mpCode: string;
-    /** MP ID。 */
-    mpId: string;
-    /** 包装规格名称。 */
-    packageSpecName: string;
-    /** 全链路规格名称。 */
-    fullChainSpecName?: string;
-    /** 通用名称。 */
-    productName: string;
-    /** 产品类型。 */
-    productType: ProductMpApi.ProductMp['productType'];
-    /** RP 编码。 */
-    rpCode: string;
-    /** RP ID。 */
-    rpId: string;
-    /** SKU 编码。 */
-    skuCode: string;
-    /** SKU ID。 */
-    skuId: string;
-    /** 规格名称。 */
-    specName: string;
-    /** SPU 编码。 */
-    spuCode: string;
-    /** SPU ID。 */
-    spuId: string;
-  }
+  export type ProductSkuOptionSku = Pick<
+    ProductSku,
+    | 'allowSplit'
+    | 'barcode'
+    | 'cartonConversion'
+    | 'cartonSpecName'
+    | 'cartonUnitName'
+    | 'description'
+    | 'fullChainSpecName'
+    | 'gtin'
+    | 'minUnitName'
+    | 'packConversion'
+    | 'packageSpecName'
+    | 'packageUnitName'
+    | 'createDate'
+    | 'rowVersion'
+    | 'skuCode'
+    | 'skuId'
+    | 'udiDi'
+    | 'updateDate'
+  >;
+
+  /** 产品品规（SKU）下拉选项中的 MP 信息。 */
+  export type ProductSkuOptionMp = Pick<
+    ProductMpApi.ProductMp,
+    | 'approvalNo'
+    | 'brandName'
+    | 'enterpriseCode'
+    | 'enterpriseId'
+    | 'enterpriseName'
+    | 'mpCode'
+    | 'mpId'
+  > & {
+    /** MP 描述。 */
+    mpDescription?: ProductMpApi.ProductMp['description'];
+  };
+
+  /** 产品品规（SKU）下拉选项中的 RP 信息。 */
+  export type ProductSkuOptionRp = Pick<
+    ProductRpApi.ProductRp,
+    'dosageForm' | 'rpCode' | 'rpId' | 'specName' | 'strengthText'
+  > & {
+    /** RP 描述。 */
+    rpDescription?: ProductRpApi.ProductRp['description'];
+  };
+
+  /** 产品品规（SKU）下拉选项中的 SPU 信息。 */
+  export type ProductSkuOptionSpu = Pick<
+    ProductSpuApi.ProductSpu,
+    'productName' | 'productType' | 'shortName' | 'spuCode' | 'spuId'
+  > & {
+    /** SPU 描述。 */
+    spuDescription?: ProductSpuApi.ProductSpu['description'];
+  };
+
+  /** 产品品规（SKU）下拉选项，聚合 SPU/RP/MP/SKU 信息。 */
+  export interface ProductSkuOption
+    extends ProductSkuOptionSpu,
+      ProductSkuOptionRp,
+      ProductSkuOptionMp,
+      ProductSkuOptionSku {}
 
   /** SKU 价格状态：0 停用，1 启用。 */
   export type ProductSkuPriceStatus = 0 | 1;

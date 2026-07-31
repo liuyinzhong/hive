@@ -18,8 +18,9 @@ const currentBalance = ref<ErpInventoryApi.InventoryBalance>();
 
 const title = computed(() => {
   const skuCode = currentBalance.value?.skuCode || '-';
+  const productName = currentBalance.value?.productName || '-';
   const batchNo = currentBalance.value?.batchNo || '-';
-  return `${$t('erp.inventory.movementManageTitle')}：${skuCode} / ${batchNo}`;
+  return `${$t('erp.inventory.movementManageTitle')}：${skuCode} / ${productName} / ${batchNo}`;
 });
 
 const [Grid, gridApi] = useVbenVxeGrid({

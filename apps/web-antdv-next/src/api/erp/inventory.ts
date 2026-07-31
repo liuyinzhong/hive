@@ -18,12 +18,16 @@ export namespace ErpInventoryApi {
     batchId: string;
     /** 批号。 */
     batchNo: string;
+    /** 品牌/商品名。 */
+    brandName?: null | string;
     /** 库存余额 ID。 */
     balanceId: string;
     /** 创建时间。 */
     createDate?: null | string;
     /** 有效期，格式 YYYY-MM-DD。 */
     expiryDate: string;
+    /** 生产企业。 */
+    enterpriseName: string;
     /** 库存金额，后端按包装单位数量 * 包装单位成本价计算。 */
     inventoryAmount: string;
     /** 最小单位库存数量。 */
@@ -34,6 +38,8 @@ export namespace ErpInventoryApi {
     movementCount: number;
     /** 包装规格。 */
     packageSpecName: string;
+    /** 通用名称。 */
+    productName: string;
     /** 包装单位库存数量。 */
     packageUnitCount: number;
     /** 包装单位名称。 */
@@ -44,6 +50,10 @@ export namespace ErpInventoryApi {
     skuCode: string;
     /** SKU ID。 */
     skuId: string;
+    /** 规格名称。 */
+    specName: string;
+    /** 批准文号/注册证号/备案号。 */
+    approvalNo: string;
     /** 包装单位成本价。 */
     unitCost: string;
     /** 更新时间。 */
@@ -66,6 +76,8 @@ export namespace ErpInventoryApi {
     batchId: string;
     /** 批号。 */
     batchNo: string;
+    /** 品牌/商品名。 */
+    brandName?: null | string;
     /** 库存余额 ID。 */
     balanceId: string;
     /** 变更前最小单位数量。 */
@@ -82,6 +94,8 @@ export namespace ErpInventoryApi {
     direction: InventoryDirection;
     /** 有效期，格式 YYYY-MM-DD。 */
     expiryDate: string;
+    /** 生产企业。 */
+    enterpriseName: string;
     /** 最小单位名称。 */
     minUnitName: string;
     /** 库存业务类型。 */
@@ -90,6 +104,8 @@ export namespace ErpInventoryApi {
     movementId: string;
     /** 包装规格。 */
     packageSpecName: string;
+    /** 通用名称。 */
+    productName: string;
     /** 包装单位名称。 */
     packageUnitName: string;
     /** 备注。 */
@@ -98,6 +114,10 @@ export namespace ErpInventoryApi {
     skuCode: string;
     /** SKU ID。 */
     skuId: string;
+    /** 规格名称。 */
+    specName: string;
+    /** 批准文号/注册证号/备案号。 */
+    approvalNo: string;
     /** 来源单据 ID，初始库存为空。 */
     sourceBillId?: null | string;
     /** 来源单据号。 */

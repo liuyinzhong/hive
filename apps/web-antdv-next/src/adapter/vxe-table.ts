@@ -1,10 +1,9 @@
-import type { FormValues } from '@vben/common-ui';
+import type { FormValues, TableActionProps } from '@vben/common-ui';
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { Recordable } from '@vben/types';
 import type { ComponentPropsMap, ComponentType } from './component';
 import { defineComponent, h } from 'vue';
 import { VbenTableAction as VbenTableActionCore } from '@vben/common-ui';
-import type { TableActionProps } from '@vben/common-ui';
 import {
   setupVbenVxeTable,
   useVbenVxeGrid as useGrid,
@@ -37,6 +36,10 @@ setupVbenVxeTable({
           resizable: true,
         },
         minHeight: 180,
+        rowConfig: {
+          isHover: true,
+          isCurrent: true,
+        },
         formConfig: {
           // 全局禁用vxe-table的表单配置，使用formOptions
           enabled: false,

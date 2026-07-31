@@ -29,21 +29,21 @@ import type {
   UploadChangeParam,
   UploadFile,
   UploadProps,
-} from "antdv-next";
+} from 'antdv-next';
 
-import type { Component, Ref } from "vue";
+import type { Component, Ref } from 'vue';
 
 import type {
   ApiComponentSharedProps,
   BaseFormComponentType,
   CollapsibleParamsProps,
   IconPickerProps,
-} from "@vben/common-ui";
-import type { Sortable } from "@vben/hooks";
-import type { TipTapProps } from "@vben/plugins/tiptap";
-import type { Recordable } from "@vben/types";
+} from '@vben/common-ui';
+import type { Sortable } from '@vben/hooks';
+import type { TipTapProps } from '@vben/plugins/tiptap';
+import type { Recordable } from '@vben/types';
 
-import { upload_file } from "#/api/examples/upload";
+import { upload_file } from '#/api/examples/upload';
 
 import {
   computed,
@@ -57,7 +57,7 @@ import {
   render,
   unref,
   watch,
-} from "vue";
+} from 'vue';
 
 import {
   ApiComponent,
@@ -65,14 +65,14 @@ import {
   IconPicker,
   VbenCollapsibleParams,
   VCropper,
-} from "@vben/common-ui";
-import { useSortable } from "@vben/hooks";
-import { IconifyIcon } from "@vben/icons";
-import { $t } from "@vben/locales";
-import { VbenTiptap } from "@vben/plugins/tiptap";
-import { isEmpty } from "@vben/utils";
+} from '@vben/common-ui';
+import { useSortable } from '@vben/hooks';
+import { IconifyIcon } from '@vben/icons';
+import { $t } from '@vben/locales';
+import { VbenTiptap } from '@vben/plugins/tiptap';
+import { isEmpty } from '@vben/utils';
 
-import { message, Modal, notification } from "antdv-next";
+import { message, Modal, notification } from 'antdv-next';
 
 type AdapterUploadProps = UploadProps & {
   aspectRatio?: string;
@@ -84,53 +84,88 @@ type AdapterUploadProps = UploadProps & {
   onHandleChange?: (event: UploadChangeParam) => void;
 };
 
-const AutoComplete = defineAsyncComponent(() => import("antdv-next/dist/auto-complete/index"));
-const Button = defineAsyncComponent(() => import("antdv-next/dist/button/index"));
-const Checkbox = defineAsyncComponent(() => import("antdv-next/dist/checkbox/index"));
+const AutoComplete = defineAsyncComponent(
+  () => import('antdv-next/dist/auto-complete/index'),
+);
+const Button = defineAsyncComponent(
+  () => import('antdv-next/dist/button/index'),
+);
+const Checkbox = defineAsyncComponent(
+  () => import('antdv-next/dist/checkbox/index'),
+);
 const CheckboxGroup = defineAsyncComponent(() =>
-  import("antdv-next/dist/checkbox/index").then((res) => res.CheckboxGroup),
+  import('antdv-next/dist/checkbox/index').then((res) => res.CheckboxGroup),
 );
-const DatePicker = defineAsyncComponent(() => import("antdv-next/dist/date-picker/index"));
-const Divider = defineAsyncComponent(() => import("antdv-next/dist/divider/index"));
-const Input = defineAsyncComponent(() => import("antdv-next/dist/input/index"));
-const InputNumber = defineAsyncComponent(() => import("antdv-next/dist/input-number/index"));
+const DatePicker = defineAsyncComponent(
+  () => import('antdv-next/dist/date-picker/index'),
+);
+const Divider = defineAsyncComponent(
+  () => import('antdv-next/dist/divider/index'),
+);
+const Input = defineAsyncComponent(() => import('antdv-next/dist/input/index'));
+const InputNumber = defineAsyncComponent(
+  () => import('antdv-next/dist/input-number/index'),
+);
 const InputPassword = defineAsyncComponent(() =>
-  import("antdv-next/dist/input/index").then((res) => res.InputPassword),
+  import('antdv-next/dist/input/index').then((res) => res.InputPassword),
 );
-const Mentions = defineAsyncComponent(() => import("antdv-next/dist/mentions/index"));
-const Radio = defineAsyncComponent(() => import("antdv-next/dist/radio/index"));
+const Mentions = defineAsyncComponent(
+  () => import('antdv-next/dist/mentions/index'),
+);
+const Radio = defineAsyncComponent(() => import('antdv-next/dist/radio/index'));
 const RadioGroup = defineAsyncComponent(() =>
-  import("antdv-next/dist/radio/index").then((res) => res.RadioGroup),
+  import('antdv-next/dist/radio/index').then((res) => res.RadioGroup),
 );
 const RangePicker = defineAsyncComponent(() =>
-  import("antdv-next/dist/date-picker/index").then((res) => res.DateRangePicker),
+  import('antdv-next/dist/date-picker/index').then(
+    (res) => res.DateRangePicker,
+  ),
 );
-const Rate = defineAsyncComponent(() => import("antdv-next/dist/rate/index"));
-const Select = defineAsyncComponent(() => import("antdv-next/dist/select/index"));
-const Space = defineAsyncComponent(() => import("antdv-next/dist/space/index"));
-const Switch = defineAsyncComponent(() => import("antdv-next/dist/switch/index"));
-const Textarea = defineAsyncComponent(() => import("antdv-next/dist/input/TextArea"));
-const TimePicker = defineAsyncComponent(() => import("antdv-next/dist/time-picker/index"));
-const TreeSelect = defineAsyncComponent(() => import("antdv-next/dist/tree-select/index"));
-const Cascader = defineAsyncComponent(() => import("antdv-next/dist/cascader/index"));
-const Upload = defineAsyncComponent(() => import("antdv-next/dist/upload/index"));
-const Image = defineAsyncComponent(() => import("antdv-next/dist/image/index"));
+const Rate = defineAsyncComponent(() => import('antdv-next/dist/rate/index'));
+const Select = defineAsyncComponent(
+  () => import('antdv-next/dist/select/index'),
+);
+const Space = defineAsyncComponent(() => import('antdv-next/dist/space/index'));
+const Switch = defineAsyncComponent(
+  () => import('antdv-next/dist/switch/index'),
+);
+const Textarea = defineAsyncComponent(
+  () => import('antdv-next/dist/input/TextArea'),
+);
+const TimePicker = defineAsyncComponent(
+  () => import('antdv-next/dist/time-picker/index'),
+);
+const TreeSelect = defineAsyncComponent(
+  () => import('antdv-next/dist/tree-select/index'),
+);
+const Cascader = defineAsyncComponent(
+  () => import('antdv-next/dist/cascader/index'),
+);
+const Upload = defineAsyncComponent(
+  () => import('antdv-next/dist/upload/index'),
+);
+const Image = defineAsyncComponent(() => import('antdv-next/dist/image/index'));
 const PreviewGroup = defineAsyncComponent(() =>
-  import("antdv-next/dist/image/index").then((res) => res.ImagePreviewGroup),
+  import('antdv-next/dist/image/index').then((res) => res.ImagePreviewGroup),
 );
 
-const ColorSelect = defineAsyncComponent(() => import("#/components/ColorSelect/index.vue"));
+const ColorSelect = defineAsyncComponent(
+  () => import('#/components/ColorSelect/index.vue'),
+);
 
 const withDefaultPlaceholder = (
   component: Component,
-  type: "input" | "select",
+  type: 'input' | 'select',
   componentProps: Recordable<any> = {},
 ) => {
   return defineComponent({
     name: component.name,
     inheritAttrs: false,
     setup: (props: any, { attrs, expose, slots }) => {
-      const placeholder = props?.placeholder || attrs?.placeholder || $t(`ui.placeholder.${type}`);
+      const placeholder =
+        props?.placeholder ||
+        attrs?.placeholder ||
+        $t(`ui.placeholder.${type}`);
       // 透传组件暴露的方法
       const innerRef = ref();
       expose(
@@ -143,12 +178,24 @@ const withDefaultPlaceholder = (
         ),
       );
       return () =>
-        h(component, { ...componentProps, placeholder, ...props, ...attrs, ref: innerRef }, slots);
+        h(
+          component,
+          { ...componentProps, placeholder, ...props, ...attrs, ref: innerRef },
+          slots,
+        );
     },
   });
 };
 
-const IMAGE_EXTENSIONS = new Set(["bmp", "gif", "jpeg", "jpg", "png", "svg", "webp"]);
+const IMAGE_EXTENSIONS = new Set([
+  'bmp',
+  'gif',
+  'jpeg',
+  'jpg',
+  'png',
+  'svg',
+  'webp',
+]);
 
 /**
  * 检查是否为图片文件
@@ -156,26 +203,26 @@ const IMAGE_EXTENSIONS = new Set(["bmp", "gif", "jpeg", "jpg", "png", "svg", "we
 function isImageFile(file: UploadFile): boolean {
   if (file.url) {
     try {
-      const pathname = new URL(file.url, "http://localhost").pathname;
-      const ext = pathname.split(".").pop()?.toLowerCase();
+      const pathname = new URL(file.url, 'http://localhost').pathname;
+      const ext = pathname.split('.').pop()?.toLowerCase();
       return ext ? IMAGE_EXTENSIONS.has(ext) : false;
     } catch {
-      const ext = file.url?.split(".").pop()?.toLowerCase();
+      const ext = file.url?.split('.').pop()?.toLowerCase();
       return ext ? IMAGE_EXTENSIONS.has(ext) : false;
     }
   }
   if (!file.type) {
-    const ext = file.name?.split(".").pop()?.toLowerCase();
+    const ext = file.name?.split('.').pop()?.toLowerCase();
     return ext ? IMAGE_EXTENSIONS.has(ext) : false;
   }
-  return file.type.startsWith("image/");
+  return file.type.startsWith('image/');
 }
 
 /**
  * 创建默认的上传按钮插槽
  */
 function createDefaultUploadSlots(listType: string, placeholder: string) {
-  if (listType === "picture-card") {
+  if (listType === 'picture-card') {
     return { default: () => placeholder };
   }
   return {
@@ -184,8 +231,8 @@ function createDefaultUploadSlots(listType: string, placeholder: string) {
         Button,
         {
           icon: h(IconifyIcon, {
-            icon: "ant-design:upload-outlined",
-            class: "mb-1 size-4",
+            icon: 'ant-design:upload-outlined',
+            class: 'mb-1 size-4',
           }),
         },
         () => placeholder,
@@ -200,8 +247,8 @@ function getBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.addEventListener("load", () => resolve(reader.result as string));
-    reader.addEventListener("error", reject);
+    reader.addEventListener('load', () => resolve(reader.result as string));
+    reader.addEventListener('error', reject);
   });
 }
 
@@ -211,22 +258,25 @@ function getBase64(file: File): Promise<string> {
 async function previewImage(
   file: UploadFile,
   open: Ref<boolean>,
-  fileList: Ref<UploadProps["fileList"]>,
+  fileList: Ref<UploadProps['fileList']>,
 ) {
   // 非图片文件直接打开链接
   if (!isImageFile(file)) {
     const url = file.url || file.preview;
     if (url) {
-      window.open(url, "_blank");
+      window.open(url, '_blank');
     } else if (file.preview) {
-      window.open(file.preview, "_blank");
+      window.open(file.preview, '_blank');
     } else {
-      message.error($t("ui.formRules.previewWarning"));
+      message.error($t('ui.formRules.previewWarning'));
     }
     return;
   }
 
-  const [ImageComponent, PreviewGroupComponent] = await Promise.all([Image, PreviewGroup]);
+  const [ImageComponent, PreviewGroupComponent] = await Promise.all([
+    Image,
+    PreviewGroup,
+  ]);
 
   // 过滤图片文件并生成预览
   const imageFiles = (unref(fileList) || []).filter((f) => isImageFile(f));
@@ -237,7 +287,7 @@ async function previewImage(
     }
   }
 
-  const container = document.createElement("div");
+  const container = document.createElement('div');
   document.body.append(container);
   let isUnmounted = false;
 
@@ -250,7 +300,7 @@ async function previewImage(
         return h(
           PreviewGroupComponent,
           {
-            class: "hidden",
+            class: 'hidden',
             preview: {
               open: open.value,
               current: currentIndex,
@@ -288,7 +338,7 @@ async function previewImage(
  */
 function cropImage(file: File, aspectRatio: string | undefined) {
   return new Promise<Blob | string | undefined>((resolve, reject) => {
-    const container = document.createElement("div");
+    const container = document.createElement('div');
     document.body.append(container);
 
     let isUnmounted = false;
@@ -322,14 +372,14 @@ function cropImage(file: File, aspectRatio: string | undefined) {
             Modal,
             {
               open: open.value,
-              title: h("div", {}, [
-                $t("ui.crop.title"),
+              title: h('div', {}, [
+                $t('ui.crop.title'),
                 h(
-                  "span",
+                  'span',
                   {
-                    class: `${aspectRatio ? "" : "hidden"} ml-2 text-sm text-gray-400 font-normal`,
+                    class: `${aspectRatio ? '' : 'hidden'} ml-2 text-sm text-gray-400 font-normal`,
                   },
-                  $t("ui.crop.titleTip", [aspectRatio]),
+                  $t('ui.crop.titleTip', [aspectRatio]),
                 ),
               ]),
               centered: true,
@@ -338,13 +388,13 @@ function cropImage(file: File, aspectRatio: string | undefined) {
               keyboard: false,
               maskClosable: false,
               closable: false,
-              cancelText: $t("common.cancel"),
-              okText: $t("ui.crop.confirm"),
+              cancelText: $t('common.cancel'),
+              okText: $t('ui.crop.confirm'),
               destroyOnHidden: true,
               onOk: async () => {
                 const cropper = cropperRef.value;
                 if (!cropper) {
-                  reject(new Error("Cropper not found"));
+                  reject(new Error('Cropper not found'));
                   closeModal();
                   return;
                 }
@@ -353,16 +403,16 @@ function cropImage(file: File, aspectRatio: string | undefined) {
                   if (dataUrl) {
                     resolve(dataUrl);
                   } else {
-                    reject(new Error($t("ui.crop.errorTip")));
+                    reject(new Error($t('ui.crop.errorTip')));
                   }
                 } catch {
-                  reject(new Error($t("ui.crop.errorTip")));
+                  reject(new Error($t('ui.crop.errorTip')));
                 } finally {
                   closeModal();
                 }
               },
               onCancel() {
-                resolve("");
+                resolve('');
                 closeModal();
               },
             },
@@ -387,30 +437,45 @@ function cropImage(file: File, aspectRatio: string | undefined) {
 function withPreviewUpload() {
   return defineComponent({
     name: Upload.name,
-    emits: ["update:modelValue"],
-    setup(props: any, { attrs, slots, emit }: { attrs: any; emit: any; slots: any }) {
+    emits: ['update:modelValue'],
+    setup(
+      props: any,
+      { attrs, slots, emit }: { attrs: any; emit: any; slots: any },
+    ) {
       const previewVisible = ref<boolean>(false);
-      const placeholder = attrs?.placeholder || $t("ui.placeholder.upload");
-      const listType = attrs?.listType || attrs?.["list-type"] || "text";
-      const fileList = ref<UploadProps["fileList"]>(attrs?.fileList || attrs?.["file-list"] || []);
+      const placeholder = attrs?.placeholder || $t('ui.placeholder.upload');
+      const listType = attrs?.listType || attrs?.['list-type'] || 'text';
+      const fileList = ref<UploadProps['fileList']>(
+        attrs?.fileList || attrs?.['file-list'] || [],
+      );
 
-      const maxSize = computed(() => attrs?.maxSize ?? attrs?.["max-size"]);
-      const aspectRatio = computed(() => attrs?.aspectRatio ?? attrs?.["aspect-ratio"]);
+      const maxSize = computed(() => attrs?.maxSize ?? attrs?.['max-size']);
+      const aspectRatio = computed(
+        () => attrs?.aspectRatio ?? attrs?.['aspect-ratio'],
+      );
 
-      async function handleBeforeUpload(file: UploadFile, originFileList: Array<File>) {
+      async function handleBeforeUpload(
+        file: UploadFile,
+        originFileList: Array<File>,
+      ) {
         // 文件大小限制
         if (maxSize.value && (file.size || 0) / 1024 / 1024 > maxSize.value) {
-          message.error($t("ui.formRules.sizeLimit", [maxSize.value]));
-          file.status = "removed";
+          message.error($t('ui.formRules.sizeLimit', [maxSize.value]));
+          file.status = 'removed';
           return false;
         }
 
         // 图片裁剪处理
-        if (attrs.crop && !attrs.multiple && originFileList[0] && isImageFile(file)) {
-          file.status = "removed";
+        if (
+          attrs.crop &&
+          !attrs.multiple &&
+          originFileList[0] &&
+          isImageFile(file)
+        ) {
+          file.status = 'removed';
           const blob = await cropImage(originFileList[0], aspectRatio.value);
           if (!blob) {
-            throw new Error($t("ui.crop.errorTip"));
+            throw new Error($t('ui.crop.errorTip'));
           }
           return blob;
         }
@@ -425,8 +490,13 @@ function withPreviewUpload() {
         } catch (error) {
           console.error(error);
         }
-        fileList.value = event.fileList.filter((file) => file.status !== "removed");
-        emit("update:modelValue", event.fileList?.length ? fileList.value : undefined);
+        fileList.value = event.fileList.filter(
+          (file) => file.status !== 'removed',
+        );
+        emit(
+          'update:modelValue',
+          event.fileList?.length ? fileList.value : undefined,
+        );
       }
 
       function handlePreview(file: UploadFile) {
@@ -436,11 +506,15 @@ function withPreviewUpload() {
 
       function renderUploadButton() {
         if (attrs.disabled) return null;
-        return isEmpty(slots) ? createDefaultUploadSlots(listType, placeholder) : slots;
+        return isEmpty(slots)
+          ? createDefaultUploadSlots(listType, placeholder)
+          : slots;
       }
 
       // 拖拽排序
-      const draggable = computed(() => (attrs.draggable ?? false) && !attrs.disabled);
+      const draggable = computed(
+        () => (attrs.draggable ?? false) && !attrs.disabled,
+      );
       const uploadId = `upload-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
       const sortableInstance = ref<null | Sortable>(null);
 
@@ -448,7 +522,7 @@ function withPreviewUpload() {
 
       function injectDragStyle() {
         if (!document.querySelector(`[id="${styleId}"]`)) {
-          const style = document.createElement("style");
+          const style = document.createElement('style');
           style.id = styleId;
           style.textContent = `
             [data-upload-id="${uploadId}"] .ant-upload-list-item { cursor: move; }
@@ -485,10 +559,14 @@ function withPreviewUpload() {
           delay: 400,
           delayOnTouchOnly: true,
           filter:
-            ".ant-upload-select, .ant-upload-list-item-error, .ant-upload-list-item-uploading",
+            '.ant-upload-select, .ant-upload-list-item-error, .ant-upload-list-item-uploading',
           onEnd: (evt) => {
             const { oldIndex, newIndex } = evt;
-            if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) {
+            if (
+              oldIndex === undefined ||
+              newIndex === undefined ||
+              oldIndex === newIndex
+            ) {
               return;
             }
 
@@ -500,7 +578,7 @@ function withPreviewUpload() {
             }
 
             attrs.onDragSort?.(oldIndex, newIndex);
-            emit("update:modelValue", fileList.value);
+            emit('update:modelValue', fileList.value);
           },
         });
 
@@ -523,8 +601,8 @@ function withPreviewUpload() {
 
       return () =>
         h(
-          "div",
-          { "data-upload-id": uploadId, class: "w-full" },
+          'div',
+          { 'data-upload-id': uploadId, class: 'w-full' },
           h(
             Upload,
             {
@@ -544,36 +622,36 @@ function withPreviewUpload() {
 
 // 这里需要自行根据业务组件库进行适配，需要用到的组件都需要在这里类型说明
 export type ComponentType =
-  | "ApiCascader"
-  | "ApiSelect"
-  | "ApiTreeSelect"
-  | "AutoComplete"
-  | "Cascader"
-  | "Checkbox"
-  | "CheckboxGroup"
-  | "CollapsibleParams"
-  | "ColorSelect"
-  | "DatePicker"
-  | "DefaultButton"
-  | "Divider"
-  | "IconPicker"
-  | "Input"
-  | "InputNumber"
-  | "InputPassword"
-  | "Mentions"
-  | "PrimaryButton"
-  | "Radio"
-  | "RadioGroup"
-  | "RangePicker"
-  | "Rate"
-  | "RichEditor"
-  | "Select"
-  | "Space"
-  | "Switch"
-  | "Textarea"
-  | "TimePicker"
-  | "TreeSelect"
-  | "Upload"
+  | 'ApiCascader'
+  | 'ApiSelect'
+  | 'ApiTreeSelect'
+  | 'AutoComplete'
+  | 'Cascader'
+  | 'Checkbox'
+  | 'CheckboxGroup'
+  | 'CollapsibleParams'
+  | 'ColorSelect'
+  | 'DatePicker'
+  | 'DefaultButton'
+  | 'Divider'
+  | 'IconPicker'
+  | 'Input'
+  | 'InputNumber'
+  | 'InputPassword'
+  | 'Mentions'
+  | 'PrimaryButton'
+  | 'Radio'
+  | 'RadioGroup'
+  | 'RangePicker'
+  | 'Rate'
+  | 'RichEditor'
+  | 'Select'
+  | 'Space'
+  | 'Switch'
+  | 'Textarea'
+  | 'TimePicker'
+  | 'TreeSelect'
+  | 'Upload'
   | BaseFormComponentType;
 
 /**
@@ -617,26 +695,30 @@ async function initComponentAdapter() {
     // Button: () =>
     // import('xxx').then((res) => res.Button),
 
-    ApiCascader: withDefaultPlaceholder(ApiComponent, "select", {
+    ApiCascader: withDefaultPlaceholder(ApiComponent, 'select', {
       component: Cascader,
-      fieldNames: { label: "label", value: "value", children: "children" },
-      loadingSlot: "suffixIcon",
-      modelPropName: "value",
-      visibleEvent: "onOpenChange",
+      fieldNames: { label: 'label', value: 'value', children: 'children' },
+      loadingSlot: 'suffixIcon',
+      modelPropName: 'value',
+      visibleEvent: 'onOpenChange',
     }),
-    ApiSelect: withDefaultPlaceholder(ApiComponent, "select", {
+    ApiSelect: withDefaultPlaceholder(ApiComponent, 'select', {
       component: Select,
-      loadingSlot: "suffixIcon",
-      modelPropName: "value",
-      visibleEvent: "onOpenChange",
+      loadingSlot: 'suffixIcon',
+      modelPropName: 'value',
+      visibleEvent: 'onOpenChange',
+      showSearch: true,
+      popupMatchSelectWidth: false,
+      optionFilterProp: 'label',
+      allowClear: true,
     }),
-    ApiTreeSelect: withDefaultPlaceholder(ApiComponent, "select", {
+    ApiTreeSelect: withDefaultPlaceholder(ApiComponent, 'select', {
       component: TreeSelect,
-      fieldNames: { label: "label", value: "value", children: "children" },
-      loadingSlot: "suffixIcon",
-      modelPropName: "value",
-      optionsPropName: "treeData",
-      visibleEvent: "onOpenChange",
+      fieldNames: { label: 'label', value: 'value', children: 'children' },
+      loadingSlot: 'suffixIcon',
+      modelPropName: 'value',
+      optionsPropName: 'treeData',
+      visibleEvent: 'onOpenChange',
     }),
     AutoComplete,
     Cascader,
@@ -645,13 +727,13 @@ async function initComponentAdapter() {
     DatePicker,
     // 自定义默认按钮
     DefaultButton: (props, { attrs, slots }) => {
-      return h(Button, { ...props, attrs, type: "default" }, slots);
+      return h(Button, { ...props, attrs, type: 'default' }, slots);
     },
     Divider,
-    IconPicker: withDefaultPlaceholder(IconPicker, "select", {
-      iconSlot: "addonAfter",
+    IconPicker: withDefaultPlaceholder(IconPicker, 'select', {
+      iconSlot: 'addonAfter',
       inputComponent: Input,
-      modelValueProp: "value",
+      modelValueProp: 'value',
     }),
     Input: withDefaultPlaceholder(Input, 'input'),
     InputNumber: withDefaultPlaceholder(InputNumber, 'input'),
@@ -659,15 +741,15 @@ async function initComponentAdapter() {
     Mentions: withDefaultPlaceholder(Mentions, 'input'),
     // 自定义主要按钮
     PrimaryButton: (props, { attrs, slots }) => {
-      return h(Button, { ...props, attrs, type: "primary" }, slots);
+      return h(Button, { ...props, attrs, type: 'primary' }, slots);
     },
     Radio,
     RadioGroup,
     RangePicker,
     Rate,
-    RichEditor: withDefaultPlaceholder(VbenTiptap, "input", {
+    RichEditor: withDefaultPlaceholder(VbenTiptap, 'input', {
       imageUpload: {
-        accept: "image/*",
+        accept: 'image/*',
         maxSize: 5 * 1024 * 1024, // 5MB
         upload: (file: any, onProgress: any) => {
           return new Promise((resolve, reject) => {
@@ -678,25 +760,30 @@ async function initComponentAdapter() {
               },
               onSuccess(response) {
                 // 从响应中提取图片URL
-                resolve(response?.data?.url ?? response?.url ?? "");
+                resolve(response?.data?.url ?? response?.url ?? '');
               },
               onError() {
-                reject(new Error($t("ui.tiptap.upload.uploadFailed")));
+                reject(new Error($t('ui.tiptap.upload.uploadFailed')));
               },
             });
           });
         },
       },
     }),
-    Select: withDefaultPlaceholder(Select, "select"),
+    Select: withDefaultPlaceholder(Select, 'select', {
+      showSearch: true,
+      popupMatchSelectWidth: false,
+      optionFilterProp: 'label',
+      allowClear: true,
+    }),
     Space,
     Switch,
-    Textarea: withDefaultPlaceholder(Textarea, "input"),
+    Textarea: withDefaultPlaceholder(Textarea, 'input'),
     TimePicker,
-    TreeSelect: withDefaultPlaceholder(TreeSelect, "select"),
+    TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload: withPreviewUpload(),
     CollapsibleParams: VbenCollapsibleParams,
-    ColorSelect: withDefaultPlaceholder(ColorSelect, "select"),
+    ColorSelect: withDefaultPlaceholder(ColorSelect, 'select'),
   };
 
   // 将组件注册到全局共享状态中
@@ -709,7 +796,7 @@ async function initComponentAdapter() {
       notification.success({
         description: content,
         title,
-        placement: "bottomRight",
+        placement: 'bottomRight',
       });
     },
   });
