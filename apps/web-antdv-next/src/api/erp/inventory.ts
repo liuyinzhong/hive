@@ -4,10 +4,10 @@ import { requestClient } from '#/api/request';
 
 export namespace ErpInventoryApi {
   /** 库存来源单据类型。 */
-  export type InventorySourceBillType = 'INITIAL_STOCK';
+  export type InventorySourceBillType = 'INITIAL_STOCK' | 'PURCHASE_INBOUND';
 
   /** 库存业务类型。 */
-  export type InventoryMovementType = 'INITIAL_IN';
+  export type InventoryMovementType = 'INITIAL_IN' | 'PURCHASE_IN';
 
   /** 库存流水方向。 */
   export type InventoryDirection = 'IN';
@@ -182,6 +182,20 @@ export function getInventoryMovementsApi(
     items: ErpInventoryApi.InventoryMovement[];
     total: number;
   }>(`/erp/inventory/balances/${balanceId}/movements`, { params });
+}
+
+/** 按来源单据查询库存流水。 */
+export function getInventorySourceMovementsApi(
+  sourceBillType: ErpInventoryApi.InventorySourceBillType,
+  sourceBillId: string,
+  params: Recordable<unknown> = {},
+) {
+  return requestClient.get<{
+    items: ErpInventoryApi.InventoryMovement[];
+    total: number;
+  }>('/erp/inventory/movements', {
+    params: { ...params, sourceBillId, sourceBillType },
+  });
 }
 
 export function createInventoryInitialStocksApi(

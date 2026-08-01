@@ -18,8 +18,10 @@ export interface InventoryInitialStockFormItem
   packageUnitName?: string;
 }
 
-export interface InventoryInitialStockFormValues
-  extends Record<string, unknown> {
+export interface InventoryInitialStockFormValues extends Record<
+  string,
+  unknown
+> {
   items: InventoryInitialStockFormItem[];
   warehouseId: string;
 }
@@ -28,12 +30,18 @@ export function inventorySourceBillTypeLabel(value?: string) {
   if (value === 'INITIAL_STOCK') {
     return $t('erp.inventory.sourceBillTypeInitialStock');
   }
+  if (value === 'PURCHASE_INBOUND') {
+    return $t('erp.inventory.sourceBillTypePurchaseInbound');
+  }
   return value || '-';
 }
 
 export function inventoryMovementTypeLabel(value?: string) {
   if (value === 'INITIAL_IN') {
     return $t('erp.inventory.movementTypeInitialIn');
+  }
+  if (value === 'PURCHASE_IN') {
+    return $t('erp.inventory.movementTypePurchaseIn');
   }
   return value || '-';
 }

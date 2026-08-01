@@ -8,18 +8,38 @@ import { computed, ref } from 'vue';
 import { useVbenDrawer } from '@vben/common-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getInventoryMovementsApi } from '#/api/erp';
+import {
+  getInventoryMovementsApi,
+  getInventorySourceMovementsApi,
+} from '#/api/erp';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
 import { useInventoryMovementColumns } from './data';
 
-const currentBalance = ref<ErpInventoryApi.InventoryBalance>();
+interface InventorySourceMovementData {
+  sourceBillId: string;
+  sourceBillNo: string;
+  sourceBillType: ErpInventoryApi.InventorySourceBillType;
+}
+
+type InventoryMovementDrawerData =
+  | ErpInventoryApi.InventoryBalance
+  | InventorySourceMovementData;
+
+const currentData = ref<InventoryMovementDrawerData>();
 
 const title = computed(() => {
-  const skuCode = currentBalance.value?.skuCode || '-';
-  const productName = currentBalance.value?.productName || '-';
-  const batchNo = currentBalance.value?.batchNo || '-';
+  const data = currentData.value;
+  if (!data) {
+    return `${$t('erp.inventory.movementManageTitle')}：-`;
+  }
+  if ('sourceBillId' in data) {
+    return `${$t('erp.inventory.movementManageTitle')}：${data.sourceBillNo}`;
+  }
+  const skuCode = data.skuCode || '-';
+  const productName = data.productName || '-';
+  const batchNo = data.batchNo || '-';
   return `${$t('erp.inventory.movementManageTitle')}：${skuCode} / ${productName} / ${batchNo}`;
 });
 
@@ -31,15 +51,24 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues: Recordable<unknown>) => {
-          if (!currentBalance.value?.balanceId) {
+          const data = currentData.value;
+          if (!data) {
             return { items: [], total: 0 };
           }
-          return getInventoryMovementsApi(currentBalance.value.balanceId, {
+          const params = {
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
             sorts: formatSorts(sorts),
-          });
+          };
+          if ('sourceBillId' in data) {
+            return getInventorySourceMovementsApi(
+              data.sourceBillType,
+              data.sourceBillId,
+              params,
+            );
+          }
+          return getInventoryMovementsApi(data.balanceId, params);
         },
       },
     },
@@ -52,7 +81,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 const [Drawer, drawerApi] = useVbenDrawer({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    currentBalance.value = drawerApi.getData<ErpInventoryApi.InventoryBalance>();
+    currentData.value = drawerApi.getData<InventoryMovementDrawerData>();
     await gridApi.query();
   },
 });
