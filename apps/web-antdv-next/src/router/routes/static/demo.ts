@@ -3,7 +3,7 @@ const routes: RouteRecordRaw[] = [
   {
     name: 'productSkuMerge',
     path: '/demo/skuMerge',
-    component: () => import('#/views/demo/product-sku-merge.vue'),
+    component: () => import('#/views/demo/index.vue'),
     meta: {
       title: 'SKU 合并',
       hideInMenu: true,
