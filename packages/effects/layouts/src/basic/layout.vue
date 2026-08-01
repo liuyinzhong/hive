@@ -46,6 +46,7 @@ withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   clearPreferencesAndLogout: [];
   clickLogo: [];
+  menuSelect: [path: string];
   logout: [];
 }>();
 
@@ -147,7 +148,7 @@ const sidebarExtraTitleHeight = computed<number | undefined>(() => {
 });
 
 const {
-  handleMenuSelect,
+  handleMenuSelect: handleNavigationMenuSelect,
   handleMenuOpen,
   headerActive,
   headerMenus,
@@ -163,10 +164,24 @@ const {
   extraMenus,
   handleDefaultSelect,
   handleMenuMouseEnter,
-  handleMixedMenuSelect,
+  handleMixedMenuSelect: handleNavigationMixedMenuSelect,
   handleSideMouseLeave,
   sidebarExtraVisible,
 } = useExtraMenu(mixHeaderMenus);
+
+function handleMenuSelect(key: string, mode?: string) {
+  emit('menuSelect', key);
+  handleNavigationMenuSelect(key, mode);
+}
+
+async function handleMixedMenuSelect(menu: MenuRecordRaw) {
+  emit('menuSelect', menu.path);
+  await handleNavigationMixedMenuSelect(menu);
+}
+
+function handleExtraMenuSelect(path: string) {
+  emit('menuSelect', path);
+}
 
 /**
  * 包装菜单，翻译菜单名称
@@ -413,6 +428,7 @@ const headerSlots = computed(() => {
         :menus="wrapperMenus(extraMenus)"
         :rounded="isMenuRounded"
         :theme="sidebarThemeSub"
+        @select="handleExtraMenuSelect"
       />
     </template>
     <template #side-extra-title>

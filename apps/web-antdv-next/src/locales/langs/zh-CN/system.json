@@ -79,6 +79,15 @@
     "systemMenuTab": "系统菜单",
     "externalPageTab": "外部页面"
   },
+  "message": {
+    "title": "消息推送",
+    "user": "目标用户",
+    "menu": "目标菜单",
+    "count": "未读数量",
+    "menuHelp": "只能选择叶子页面菜单，目录仅用于汇总",
+    "create": "创建测试消息",
+    "createSuccess": "测试消息创建成功"
+  },
   "externalPage": {
     "batchDelete": "批量删除",
     "batchDeleteConfirm": "确定删除选中的 {0} 个外部页面吗？",
@@ -312,7 +321,9 @@
     "payChannelDetail": "详情",
     "payChannelUpdate": "修改",
     "payChannelDelete": "删除",
-    "payChannelStatus": "状态"
+    "payChannelStatus": "状态",
+    "messageDemoList": "列表",
+    "messageDemoCreate": "创建"
   },
   "title": "系统管理"
 }

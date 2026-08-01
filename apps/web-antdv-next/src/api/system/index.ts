@@ -4,6 +4,7 @@ export * from './external-page';
 export * from './file';
 export * from './log';
 export * from './menu';
+export * from './message';
 export * from './param';
 export * from './payChannel';
 export * from './role';

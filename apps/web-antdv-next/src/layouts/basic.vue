@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { NotificationItem } from '@vben/layouts';
 
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
@@ -19,7 +19,7 @@ import { useAccessStore, useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
 
 import { $t } from '#/locales';
-import { useAuthStore } from '#/store';
+import { useAuthStore, useMenuMessageStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
 const notifications = ref<NotificationItem[]>([
@@ -78,6 +78,7 @@ const notifications = ref<NotificationItem[]>([
 const router = useRouter();
 const userStore = useUserStore();
 const authStore = useAuthStore();
+const menuMessageStore = useMenuMessageStore();
 const accessStore = useAccessStore();
 const { destroyWatermark, updateWatermark } = useWatermark();
 const { isDark } = usePreferences();
@@ -158,6 +159,18 @@ const handleClick = (item: NotificationItem) => {
   }
 };
 
+function handleMenuSelect(path: string) {
+  void menuMessageStore.markMenuRead(path);
+}
+
+onMounted(() => {
+  void menuMessageStore.start();
+});
+
+onUnmounted(() => {
+  menuMessageStore.stop();
+});
+
 function navigateTo(
   link: string,
   query?: Record<string, any>,
@@ -221,6 +234,7 @@ watch(
     :avatar
     :text="userStore.userInfo?.realName"
     @clear-preferences-and-logout="handleLogout"
+    @menu-select="handleMenuSelect"
     @logout="handleLogout"
   >
     <template #user-dropdown>

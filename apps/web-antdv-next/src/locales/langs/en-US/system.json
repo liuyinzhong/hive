@@ -79,6 +79,15 @@
     "systemMenuTab": "System Menus",
     "externalPageTab": "External Pages"
   },
+  "message": {
+    "title": "Message Push",
+    "user": "Target Users",
+    "menu": "Target Menu",
+    "count": "Unread Count",
+    "menuHelp": "Only leaf page menus can be selected; directories only aggregate counts",
+    "create": "Create Test Message",
+    "createSuccess": "Test message created successfully"
+  },
   "externalPage": {
     "batchDelete": "Batch Delete",
     "batchDeleteConfirm": "Delete the selected {0} external pages?",
@@ -312,7 +321,9 @@
     "payChannelDetail": "Details",
     "payChannelUpdate": "Update",
     "payChannelDelete": "Delete",
-    "payChannelStatus": "Status"
+    "payChannelStatus": "Status",
+    "messageDemoList": "List",
+    "messageDemoCreate": "Create"
   },
   "title": "System Management"
 }

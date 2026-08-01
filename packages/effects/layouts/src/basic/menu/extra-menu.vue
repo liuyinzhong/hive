@@ -19,10 +19,15 @@ withDefaults(defineProps<Props>(), {
   menus: () => [],
 });
 
+const emit = defineEmits<{
+  select: [path: string];
+}>();
+
 const route = useRoute();
 const { navigation } = useNavigation();
 
 async function handleSelect(key: string) {
+  emit('select', key);
   await navigation(key);
 }
 </script>
