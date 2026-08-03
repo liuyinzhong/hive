@@ -5,10 +5,9 @@ import type { ErpPurchaseInboundApi } from '#/api/erp';
 
 import { computed, nextTick, ref } from 'vue';
 
-import { useAccess } from '@vben/access';
 import { useVbenDrawer, VbenDescriptions } from '@vben/common-ui';
 
-import { Button, Spin } from 'antdv-next';
+import { Spin } from 'antdv-next';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getPurchaseInboundDetailApi } from '#/api/erp';
@@ -16,9 +15,6 @@ import { $t } from '#/locales';
 
 import { inventoryAmountLabel } from '../inventory/data';
 import { usePurchaseInboundDetailColumns } from './data';
-import MovementDrawerComponent from '../inventory/movement-drawer.vue';
-
-const { hasAccessByCodes } = useAccess();
 
 const detail = ref<ErpPurchaseInboundApi.PurchaseInbound>();
 const loading = ref(false);
@@ -70,11 +66,6 @@ const [Grid, gridApi] =
     } as VxeTableGridOptions<ErpPurchaseInboundApi.PurchaseInboundItem>,
   });
 
-const [MovementDrawer, movementDrawerApi] = useVbenDrawer({
-  connectedComponent: MovementDrawerComponent,
-  destroyOnClose: true,
-});
-
 const [Drawer, drawerApi] = useVbenDrawer({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
@@ -94,17 +85,6 @@ const [Drawer, drawerApi] = useVbenDrawer({
     }
   },
 });
-
-function openMovements() {
-  if (!detail.value) return;
-  movementDrawerApi
-    .setData({
-      sourceBillId: detail.value.inboundId,
-      sourceBillNo: detail.value.inboundNo,
-      sourceBillType: 'PURCHASE_INBOUND',
-    })
-    .open();
-}
 </script>
 
 <template>
@@ -113,7 +93,6 @@ function openMovements() {
     class="w-[1280px]"
     :title="$t('erp.purchaseInbound.detail')"
   >
-    <MovementDrawer />
     <Spin :spinning="loading">
       <template v-if="detail">
         <VbenDescriptions
@@ -122,16 +101,7 @@ function openMovements() {
           :items="basicItems"
           size="small"
         />
-        <Grid :table-title="$t('erp.purchaseInbound.items')">
-          <template #toolbar-tools>
-            <Button
-              v-if="hasAccessByCodes(['erp:inventorySourceMovement:list'])"
-              @click="openMovements"
-            >
-              {{ $t('erp.purchaseInbound.viewMovements') }}
-            </Button>
-          </template>
-        </Grid>
+        <Grid :table-title="$t('erp.purchaseInbound.items')" />
       </template>
     </Spin>
   </Drawer>

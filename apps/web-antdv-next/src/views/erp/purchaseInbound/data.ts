@@ -73,7 +73,7 @@ const quantityParser =
   (unitName?: string): InputNumberProps['parser'] =>
   (value) => {
     const rawValue = unitName ? value?.replace(unitName, '') : value;
-    return rawValue?.replace(/[^\d]/g, '') as unknown as number;
+    return rawValue?.replaceAll(/[^\d]/g, '') as unknown as number;
   };
 
 export function usePurchaseInboundSearchSchema(): VbenFormSchema[] {
@@ -375,7 +375,7 @@ export function usePurchaseInboundColumns(): VxeTableGridOptions<ErpPurchaseInbo
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('erp.purchaseInbound.operation'),
-      width: 110,
+      width: 150,
     },
   ];
 }

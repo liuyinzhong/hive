@@ -30,6 +30,9 @@ export function inventorySourceBillTypeLabel(value?: string) {
   if (value === 'INITIAL_STOCK') {
     return $t('erp.inventory.sourceBillTypeInitialStock');
   }
+  if (value === 'OTHER_OUTBOUND') {
+    return $t('erp.inventory.sourceBillTypeOtherOutbound');
+  }
   if (value === 'PURCHASE_INBOUND') {
     return $t('erp.inventory.sourceBillTypePurchaseInbound');
   }
@@ -40,6 +43,9 @@ export function inventoryMovementTypeLabel(value?: string) {
   if (value === 'INITIAL_IN') {
     return $t('erp.inventory.movementTypeInitialIn');
   }
+  if (value === 'OTHER_OUT') {
+    return $t('erp.inventory.movementTypeOtherOut');
+  }
   if (value === 'PURCHASE_IN') {
     return $t('erp.inventory.movementTypePurchaseIn');
   }
@@ -49,6 +55,9 @@ export function inventoryMovementTypeLabel(value?: string) {
 export function inventoryDirectionLabel(value?: string) {
   if (value === 'IN') {
     return $t('erp.inventory.directionIn');
+  }
+  if (value === 'OUT') {
+    return $t('erp.inventory.directionOut');
   }
   return value || '-';
 }

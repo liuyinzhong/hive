@@ -4,13 +4,19 @@ import { requestClient } from '#/api/request';
 
 export namespace ErpInventoryApi {
   /** 库存来源单据类型。 */
-  export type InventorySourceBillType = 'INITIAL_STOCK' | 'PURCHASE_INBOUND';
+  export type InventorySourceBillType =
+    | 'INITIAL_STOCK'
+    | 'OTHER_OUTBOUND'
+    | 'PURCHASE_INBOUND';
 
   /** 库存业务类型。 */
-  export type InventoryMovementType = 'INITIAL_IN' | 'PURCHASE_IN';
+  export type InventoryMovementType =
+    | 'INITIAL_IN'
+    | 'OTHER_OUT'
+    | 'PURCHASE_IN';
 
   /** 库存流水方向。 */
-  export type InventoryDirection = 'IN';
+  export type InventoryDirection = 'IN' | 'OUT';
 
   /** 库存余额，第一版按仓库 + 库存批次维度展示。 */
   export interface InventoryBalance {

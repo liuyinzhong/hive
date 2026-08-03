@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { ErpPurchaseInboundApi } from '#/api/erp';
+import type { ErpOtherOutboundApi } from '#/api/erp';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
@@ -10,14 +10,11 @@ import { Plus } from '@vben/icons';
 import { Button } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getPurchaseInboundListApi } from '#/api/erp';
+import { getOtherOutboundListApi } from '#/api/erp';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
-import {
-  usePurchaseInboundColumns,
-  usePurchaseInboundSearchSchema,
-} from './data';
+import { useOtherOutboundColumns, useOtherOutboundSearchSchema } from './data';
 import DetailDrawerComponent from './detail-drawer.vue';
 import FormDrawerComponent from './form-drawer.vue';
 import MovementDrawerComponent from '../inventory/movement-drawer.vue';
@@ -41,18 +38,18 @@ const [MovementDrawer, movementDrawerApi] = useVbenDrawer({
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    schema: usePurchaseInboundSearchSchema(),
+    schema: useOtherOutboundSearchSchema(),
     showCollapseButton: false,
     wrapperClass: 'sm:grid-cols-2 xl:grid-cols-4',
   },
   gridOptions: {
-    columns: usePurchaseInboundColumns(),
+    columns: useOtherOutboundColumns(),
     height: 'auto',
     proxyConfig: {
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues: Recordable<unknown>) => {
-          return getPurchaseInboundListApi({
+          return getOtherOutboundListApi({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -61,26 +58,26 @@ const [Grid, gridApi] = useVbenVxeGrid({
         },
       },
     },
-    rowConfig: { keyField: 'inboundId' },
+    rowConfig: { keyField: 'outboundId' },
     sortConfig: { multiple: true, remote: true },
     toolbarConfig: { custom: true, refresh: true, zoom: true },
-  } as VxeTableGridOptions<ErpPurchaseInboundApi.PurchaseInboundListItem>,
+  } as VxeTableGridOptions<ErpOtherOutboundApi.OtherOutboundListItem>,
 });
 
 function openCreate() {
   formDrawerApi.setData({}).open();
 }
 
-function openDetail(row: ErpPurchaseInboundApi.PurchaseInboundListItem) {
-  detailDrawerApi.setData({ inboundId: row.inboundId }).open();
+function openDetail(row: ErpOtherOutboundApi.OtherOutboundListItem) {
+  detailDrawerApi.setData({ outboundId: row.outboundId }).open();
 }
 
-function openMovements(row: ErpPurchaseInboundApi.PurchaseInboundListItem) {
+function openMovements(row: ErpOtherOutboundApi.OtherOutboundListItem) {
   movementDrawerApi
     .setData({
-      sourceBillId: row.inboundId,
-      sourceBillNo: row.inboundNo,
-      sourceBillType: 'PURCHASE_INBOUND',
+      sourceBillId: row.outboundId,
+      sourceBillNo: row.outboundNo,
+      sourceBillType: 'OTHER_OUTBOUND',
     })
     .open();
 }
@@ -91,22 +88,22 @@ function openMovements(row: ErpPurchaseInboundApi.PurchaseInboundListItem) {
     <FormDrawer @success="gridApi.query()" />
     <DetailDrawer />
     <MovementDrawer />
-    <Grid :table-title="$t('erp.purchaseInbound.list')">
+    <Grid :table-title="$t('erp.otherOutbound.list')">
       <template #toolbar-tools>
         <Button
-          v-if="hasAccessByCodes(['erp:purchaseInbound:create'])"
+          v-if="hasAccessByCodes(['erp:otherOutbound:create'])"
           type="primary"
           @click="openCreate"
         >
           <Plus class="size-5" />
-          {{ $t('erp.purchaseInbound.create') }}
+          {{ $t('erp.otherOutbound.create') }}
         </Button>
       </template>
       <template #action="{ row }">
         <VbenTableAction
           :actions="[
             {
-              auth: 'erp:purchaseInbound:detail',
+              auth: 'erp:otherOutbound:detail',
               icon: 'lucide:eye',
               text: $t('common.detail'),
               onClick: () => openDetail(row),
