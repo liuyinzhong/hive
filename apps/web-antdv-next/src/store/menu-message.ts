@@ -67,6 +67,10 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
     syncMenuBadges();
   }
 
+  function $reset() {
+    stop();
+  }
+
   async function loadSummary(currentLifecycleId = lifecycleId) {
     try {
       const nextSummaries = await getMenuMessageUnreadSummaryApi();
@@ -209,6 +213,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
   }
 
   return {
+    $reset,
     markMenuRead,
     start,
     stop,
