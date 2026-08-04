@@ -1,11 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
-    name: 'productSkuMerge',
-    path: '/demo/skuMerge',
+    name: 'demoIndex',
+    path: '/demo/index',
     component: () => import('#/views/demo/index.vue'),
     meta: {
-      title: 'SKU 合并',
+      title: '提示',
       hideInMenu: true,
     },
   },

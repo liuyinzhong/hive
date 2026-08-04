@@ -1,21 +1,16 @@
 ﻿<script lang="ts" setup>
-import type { Recordable } from '@vben/types';
+import { Page } from '@vben/common-ui';
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-import type { DevBugApi } from '#/api/dev';
-import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
-import { Plus } from '@vben/icons';
-
-import { Button, message } from 'antdv-next';
-
-import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getBugListApi, deleteBugApi, updateBugFieldApi } from '#/api/dev/bug';
-import { formatSorts } from '#/utils';
+import { message, Button } from 'antdv-next';
+function onSubmit(values: Record<string, any>) {
+  message.success({
+    content: `form values: ${JSON.stringify(values)}`,
+  });
+}
 </script>
 
 <template>
-  <Page auto-content-height> </Page>
+  <Page auto-content-height>
+    <Button type="primary" @click="onSubmit">打开提示</Button>
+  </Page>
 </template>
