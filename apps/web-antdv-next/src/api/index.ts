@@ -4,5 +4,6 @@ export * from './dev';
 export * from './erp';
 export * from './examples';
 export * from './product';
+export * from './print';
 export * from './statistics';
 export * from './system';

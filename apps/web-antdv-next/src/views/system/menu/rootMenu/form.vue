@@ -109,7 +109,7 @@ const schema: VbenFormSchema[] = [
       ),
     dependencies: {
       show: (values) => {
-        return ['menu'].includes(values.type);
+        return ['catalog', 'menu'].includes(values.type);
       },
       triggerFields: ['type'],
     },

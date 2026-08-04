@@ -92,7 +92,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
 /** 加载全量体系列表，默认选中第一个 */
 async function loadSystems(preserveSelectedId?: string) {
   systems.value = await getClassificationSystemListApi();
-  if (preserveSelectedId && systems.value.some((s) => s.classificationSystemId === preserveSelectedId)) {
+  if (
+    preserveSelectedId &&
+    systems.value.some((s) => s.classificationSystemId === preserveSelectedId)
+  ) {
     selectedSystemId.value = preserveSelectedId;
     return;
   }
@@ -111,7 +114,9 @@ onMounted(() => loadSystems());
 
 /** 按 ID 查找体系名称 */
 function getSystemName(id: string) {
-  return systems.value.find((s) => s.classificationSystemId === id)?.systemName ?? '';
+  return (
+    systems.value.find((s) => s.classificationSystemId === id)?.systemName ?? ''
+  );
 }
 
 /** 新增体系 */
@@ -215,7 +220,7 @@ async function removeNode(row: BaseClassificationApi.ClassificationNode) {
             block
             class="classification-system-segmented"
           >
-            <template #label="{ value }">
+            <template #labelRender="{ value }">
               <div class="group flex w-full items-center justify-between gap-2">
                 <span class="flex-1 truncate">{{ getSystemName(value) }}</span>
                 <div
@@ -225,11 +230,13 @@ async function removeNode(row: BaseClassificationApi.ClassificationNode) {
                       'base:classificationSystem:delete',
                     ])
                   "
-                  class="flex items-center opacity-0 transition group-hover:opacity-100"
+                  class="flex items-center"
                   @click.stop
                 >
                   <Button
-                    v-if="hasAccessByCodes(['base:classificationSystem:update'])"
+                    v-if="
+                      hasAccessByCodes(['base:classificationSystem:update'])
+                    "
                     size="small"
                     type="text"
                     @click="openEditSystem(value)"
@@ -237,7 +244,9 @@ async function removeNode(row: BaseClassificationApi.ClassificationNode) {
                     {{ $t('common.edit') }}
                   </Button>
                   <Button
-                    v-if="hasAccessByCodes(['base:classificationSystem:delete'])"
+                    v-if="
+                      hasAccessByCodes(['base:classificationSystem:delete'])
+                    "
                     size="small"
                     type="text"
                     danger
@@ -249,10 +258,7 @@ async function removeNode(row: BaseClassificationApi.ClassificationNode) {
               </div>
             </template>
           </Segmented>
-          <Empty
-            v-else
-            :description="$t('base.classification.systemEmpty')"
-          />
+          <Empty v-else :description="$t('base.classification.systemEmpty')" />
         </div>
       </div>
 
@@ -324,11 +330,12 @@ async function removeNode(row: BaseClassificationApi.ClassificationNode) {
 /* Segmented 垂直排列 */
 .classification-system-segmented :deep(.ant-segmented-group) {
   flex-direction: column;
-  width: 100%;
   align-items: stretch;
-}
-.classification-system-segmented :deep(.ant-segmented-item) {
   width: 100%;
+}
+
+.classification-system-segmented :deep(.ant-segmented-item) {
   justify-content: stretch;
+  width: 100%;
 }
 </style>
