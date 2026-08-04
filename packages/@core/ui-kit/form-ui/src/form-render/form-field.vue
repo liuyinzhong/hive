@@ -264,7 +264,7 @@ watch(
 );
 
 const shouldDisabled = computed(() => {
-  return isDisabled.value || disabled || computedProps.value?.disabled;
+  return Boolean(isDisabled.value || disabled || computedProps.value?.disabled);
 });
 
 const customContentRender = computed(() => {
@@ -307,13 +307,19 @@ function createFieldSlotProps(slotProps: RuntimeFieldSlotProps) {
   };
 }
 
-function fieldBindEvent(componentField: Record<string, any>) {
+function resolveModelPropName() {
+  return (
+    modelPropName ||
+    (isString(component) ? componentBindEventMap.value?.[component] : null)
+  );
+}
+
+function fieldBindEvent(
+  componentField: Record<string, any>,
+  bindEventField: null | string | undefined,
+) {
   const modelValue = componentField.modelValue;
   const handler = componentField['onUpdate:modelValue'];
-
-  const bindEventField =
-    modelPropName ||
-    (isString(component) ? componentBindEventMap.value?.[component] : null);
 
   let value = modelValue;
   // antd design 的一些组件会传递一个 event 对象
@@ -348,12 +354,17 @@ function fieldBindEvent(componentField: Record<string, any>) {
 
 function createComponentProps(slotProps: RuntimeFieldSlotProps) {
   const normalizedSlotProps = createFieldSlotProps(slotProps);
-  const bindEvents = fieldBindEvent(normalizedSlotProps.componentField);
+  const bindEventField = resolveModelPropName();
+  const bindEvents = fieldBindEvent(
+    normalizedSlotProps.componentField,
+    bindEventField,
+  );
 
   const binds = {
-    ...normalizedSlotProps.componentField,
     ...computedProps.value,
+    ...normalizedSlotProps.componentField,
     ...bindEvents,
+    disabled: shouldDisabled.value,
     ...(Reflect.has(computedProps.value, 'onChange')
       ? { onChange: computedProps.value.onChange }
       : {}),
@@ -361,8 +372,23 @@ function createComponentProps(slotProps: RuntimeFieldSlotProps) {
       ? { onInput: computedProps.value.onInput }
       : {}),
   };
+  if (bindEventField && bindEventField !== 'modelValue') {
+    Reflect.deleteProperty(binds, 'modelValue');
+    Reflect.deleteProperty(binds, 'onUpdate:modelValue');
+  }
 
   return binds;
+}
+
+function createFieldSlotScope(slotProps: RuntimeFieldSlotProps) {
+  return {
+    ...createFieldSlotProps(slotProps),
+    componentProps: createComponentProps(slotProps),
+    disabled: shouldDisabled.value,
+    isInValid: isInValid.value,
+    modelValue: fieldValue.value,
+    name: fieldName,
+  };
 }
 
 function autofocus() {
@@ -470,14 +496,7 @@ onUnmounted(() => {
                 :class="cn('relative flex w-full items-center', wrapperClass)"
               >
                 <FormControl :class="cn(controlClass)">
-                  <slot
-                    v-bind="{
-                      ...createFieldSlotProps(slotProps),
-                      ...createComponentProps(slotProps),
-                      disabled: shouldDisabled,
-                      isInValid,
-                    }"
-                  >
+                  <slot v-bind="createFieldSlotScope(slotProps)">
                     <component
                       :is="FieldComponent"
                       ref="fieldComponentRef"
@@ -486,7 +505,6 @@ onUnmounted(() => {
                           shouldApplyInvalidStyle,
                       }"
                       v-bind="createComponentProps(slotProps)"
-                      :disabled="shouldDisabled"
                     >
                       <template
                         v-for="name in renderContentKey"
