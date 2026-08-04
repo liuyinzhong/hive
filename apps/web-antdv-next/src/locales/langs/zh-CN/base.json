@@ -19,6 +19,7 @@
     "status": "状态",
     "systemCode": "体系编码",
     "systemCreate": "新增分类体系",
+    "systemDeleteConfirm": "确定删除分类体系「{0}」吗？存在节点时将禁止删除。",
     "systemEdit": "编辑分类体系",
     "systemEmpty": "暂无分类体系",
     "systemName": "体系名称",

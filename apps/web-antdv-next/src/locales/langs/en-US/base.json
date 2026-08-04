@@ -19,6 +19,7 @@
     "status": "Status",
     "systemCode": "System Code",
     "systemCreate": "Add Classification System",
+    "systemDeleteConfirm": "Are you sure to delete classification system \"{0}\"? It cannot be deleted when nodes exist.",
     "systemEdit": "Edit Classification System",
     "systemEmpty": "No classification system",
     "systemName": "System Name",

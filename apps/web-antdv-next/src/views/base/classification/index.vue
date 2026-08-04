@@ -5,7 +5,7 @@ import type { BaseClassificationApi } from '#/api/base';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
+import { confirm, Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, Empty, message, Segmented } from 'antdv-next';
@@ -136,13 +136,27 @@ function openEditSystem(id: string) {
     .open();
 }
 
-/** 删除体系 */
-async function removeSystem(id: string) {
+/** 删除体系（二次确认） */
+function removeSystem(id: string) {
   const system = systems.value.find((s) => s.classificationSystemId === id);
   if (!system) return;
-  await deleteClassificationSystemApi(system.classificationSystemId);
-  message.success($t('base.classification.deleteSuccess'));
-  await loadSystems();
+  confirm({
+    beforeClose({ isConfirm }) {
+      if (!isConfirm) return;
+      return deleteClassificationSystemApi(system.classificationSystemId)
+        .then(() => loadSystems())
+        .then(() => {
+          message.success($t('base.classification.deleteSuccess'));
+          return true;
+        });
+    },
+    content: $t('base.classification.systemDeleteConfirm', [
+      system.systemName,
+    ]),
+    icon: 'question',
+  }).catch(() => {
+    // 用户取消，无需处理
+  });
 }
 
 /** 体系操作成功后重新加载 */
