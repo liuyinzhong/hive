@@ -55,8 +55,6 @@ export {
   LoaderCircle,
   LockKeyhole,
   LogOut,
-  LucidePlus,
-  LucideTrash,
   MailCheck,
   Maximize,
   ArrowRightFromLine as MdiMenuClose,
