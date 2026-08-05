@@ -3,9 +3,7 @@ import { Page } from '@vben/common-ui';
 
 import { message, Button } from 'antdv-next';
 function onSubmit(values: Record<string, any>) {
-  message.success({
-    content: `form values: ${JSON.stringify(values)}`,
-  });
+  message.info('How many roads must a man walk down');
 }
 </script>
 

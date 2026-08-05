@@ -2,13 +2,13 @@ import {
   appCopyrightPreferences,
   defineOverridesPreferences,
   definePreferencesExtension,
-} from "@vben/preferences";
+} from '@vben/preferences';
 
 interface WebAntdPreferencesExtension {
   defaultTableSize: number;
   enableFormFullscreen: boolean;
   reportTitle: string;
-  tenantMode: "multi" | "single";
+  tenantMode: 'multi' | 'single';
 }
 
 /**
@@ -18,7 +18,7 @@ interface WebAntdPreferencesExtension {
  */
 export const overridesPreferences = defineOverridesPreferences({
   theme: {
-    mode: "auto",
+    mode: 'auto',
   },
   // overrides
   app: {
@@ -32,7 +32,7 @@ export const overridesPreferences = defineOverridesPreferences({
     /* 权限文档： https://doc.vben.pro/guide/in-depth/access.html#%E5%89%8D%E7%AB%AF%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6 */
     // accessMode: "frontend", // 默认值 前端控制
     // accessMode: "backend", //后端控制
-    accessMode: "mixed", //混合模式
+    accessMode: 'mixed', //混合模式
   },
   copyright: appCopyrightPreferences,
   widget: {
@@ -41,50 +41,51 @@ export const overridesPreferences = defineOverridesPreferences({
   },
 });
 
-export const preferencesExtension = definePreferencesExtension<WebAntdPreferencesExtension>({
-  tabLabel: "preferences.antd.tabLabel",
-  title: "preferences.antd.title",
-  fields: [
-    {
-      component: "switch",
-      defaultValue: true,
-      key: "enableFormFullscreen",
-      label: "preferences.antd.fields.enableFormFullscreen.label",
-      tip: "preferences.antd.fields.enableFormFullscreen.tip",
-    },
-    {
-      component: "select",
-      defaultValue: "single",
-      key: "tenantMode",
-      label: "preferences.antd.fields.tenantMode.label",
-      options: [
-        {
-          label: "preferences.antd.fields.tenantMode.options.single.label",
-          value: "single",
-        },
-        {
-          label: "preferences.antd.fields.tenantMode.options.multi.label",
-          value: "multi",
-        },
-      ],
-    },
-    {
-      component: "number",
-      componentProps: {
-        max: 200,
-        min: 10,
-        step: 10,
+export const preferencesExtension =
+  definePreferencesExtension<WebAntdPreferencesExtension>({
+    tabLabel: 'preferences.antd.tabLabel',
+    title: 'preferences.antd.title',
+    fields: [
+      {
+        component: 'switch',
+        defaultValue: true,
+        key: 'enableFormFullscreen',
+        label: 'preferences.antd.fields.enableFormFullscreen.label',
+        tip: 'preferences.antd.fields.enableFormFullscreen.tip',
       },
-      defaultValue: 20,
-      key: "defaultTableSize",
-      label: "preferences.antd.fields.defaultTableSize.label",
-    },
-    {
-      component: "input",
-      defaultValue: "",
-      key: "reportTitle",
-      label: "preferences.antd.fields.reportTitle.label",
-      placeholder: "preferences.antd.fields.reportTitle.placeholder",
-    },
-  ],
-});
+      {
+        component: 'select',
+        defaultValue: 'single',
+        key: 'tenantMode',
+        label: 'preferences.antd.fields.tenantMode.label',
+        options: [
+          {
+            label: 'preferences.antd.fields.tenantMode.options.single.label',
+            value: 'single',
+          },
+          {
+            label: 'preferences.antd.fields.tenantMode.options.multi.label',
+            value: 'multi',
+          },
+        ],
+      },
+      {
+        component: 'number',
+        componentProps: {
+          max: 200,
+          min: 10,
+          step: 10,
+        },
+        defaultValue: 20,
+        key: 'defaultTableSize',
+        label: 'preferences.antd.fields.defaultTableSize.label',
+      },
+      {
+        component: 'input',
+        defaultValue: '',
+        key: 'reportTitle',
+        label: 'preferences.antd.fields.reportTitle.label',
+        placeholder: 'preferences.antd.fields.reportTitle.placeholder',
+      },
+    ],
+  });
