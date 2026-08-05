@@ -1,24 +1,29 @@
 <script lang="ts" setup>
-import type { DataNode } from "antdv-next/dist/tree/index";
+import type { DataNode } from 'antdv-next/dist/tree/index';
 
-import type { Recordable } from "@vben/types";
+import type { Recordable } from '@vben/types';
 
-import type { SystemRoleApi } from "#/api/system";
+import type { SystemRoleApi } from '#/api/system';
 
-import { ref } from "vue";
+import { ref } from 'vue';
 
-import { Tree, useVbenDrawer } from "@vben/common-ui";
-import { IconifyIcon } from "@vben/icons";
+import { Tree, useVbenDrawer } from '@vben/common-ui';
+import { IconifyIcon } from '@vben/icons';
 
-import { Spin } from "antdv-next";
+import { Spin } from 'antdv-next';
 
-import { useVbenForm } from "#/adapter/form";
-import { createRoleApi, getMenuListApi, updateRoleApi, getRoleDetailApi } from "#/api/system";
-import { $t } from "#/locales";
+import { useVbenForm } from '#/adapter/form';
+import {
+  createRoleApi,
+  getMenuListApi,
+  updateRoleApi,
+  getRoleDetailApi,
+} from '#/api/system';
+import { $t } from '#/locales';
 
-import { useFormSchema } from "../data";
+import { useFormSchema } from '../data';
 
-const emits = defineEmits(["success"]);
+const emits = defineEmits(['success']);
 
 const [Form, formApi] = useVbenForm({
   schema: useFormSchema(),
@@ -34,9 +39,12 @@ const [Drawer, drawerApi] = useVbenDrawer({
     if (!valid) return;
     const values = await formApi.getValues();
     drawerApi.lock();
-    (values.roleId ? updateRoleApi(values.roleId, values) : createRoleApi(values))
+    (values.roleId
+      ? updateRoleApi(values.roleId, values)
+      : createRoleApi(values)
+    )
       .then(() => {
-        emits("success");
+        emits('success');
         drawerApi.close();
       })
       .catch(() => {})
@@ -51,11 +59,11 @@ const [Drawer, drawerApi] = useVbenDrawer({
         data = await getRoleDetailApi(data.roleId);
         formApi.setValues(data);
         drawerApi.setState({
-          title: $t("ui.actionTitle.edit", [$t("system.role.name")]),
+          title: $t('ui.actionTitle.edit', [$t('system.role.name')]),
         });
       } else {
         drawerApi.setState({
-          title: $t("ui.actionTitle.create", [$t("system.role.name")]),
+          title: $t('ui.actionTitle.create', [$t('system.role.name')]),
         });
         formApi.reset();
       }
@@ -79,14 +87,14 @@ async function loadPermissions() {
 
 function getNodeClass(node: Recordable<any>) {
   const classes: string[] = [];
-  if (node.value?.type === "button") {
-    classes.push("permission-button-node");
+  if (node.value?.type === 'button') {
+    classes.push('permission-button-node');
     if (node.index % 5 === 0) {
-      classes.push("permission-button-node--row-start");
+      classes.push('permission-button-node--row-start');
     }
   }
 
-  return classes.join(" ");
+  return classes.join(' ');
 }
 </script>
 <template>
@@ -101,14 +109,17 @@ function getNodeClass(node: Recordable<any>) {
             bordered
             :default-expanded-level="0"
             :get-node-class="getNodeClass"
-            v-bind="slotProps"
+            v-bind="slotProps.componentProps"
             value-field="id"
             label-field="meta.title"
             icon-field="meta.icon"
           >
             <template #node="{ value }">
               <IconifyIcon v-if="value.meta.icon" :icon="value.meta.icon" />
-              <IconifyIcon v-if="value.type == 'button'" icon="carbon:security" />
+              <IconifyIcon
+                v-if="value.type == 'button'"
+                icon="carbon:security"
+              />
               {{ $t(value.meta.title) }}
             </template>
           </Tree>

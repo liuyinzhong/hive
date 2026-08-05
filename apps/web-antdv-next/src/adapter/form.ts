@@ -21,6 +21,9 @@ async function initSetupVbenForm() {
         Radio: 'checked',
         Switch: 'checked',
         Upload: 'fileList',
+        ApiCascader: 'modelValue',
+        ApiSelect: 'modelValue',
+        ApiTreeSelect: 'modelValue',
       },
     },
     rules: {
