@@ -33,7 +33,6 @@ const [Form, formApi] = useVbenForm({
 });
 
 const [Drawer, drawerApi] = useVbenDrawer({
-  zIndex: 999,
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
