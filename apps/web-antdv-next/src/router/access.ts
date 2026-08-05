@@ -7,11 +7,8 @@ import { generateAccessible } from '@vben/access';
 import { preferences } from '@vben/preferences';
 import { mapTree } from '@vben/utils';
 
-import { message } from 'antdv-next';
-
 import { getMyMenusApi } from '#/api/auth';
 import { BasicLayout, IFrameView } from '#/layouts';
-import { $t } from '#/locales';
 
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
 
@@ -26,10 +23,6 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
   return await generateAccessible(preferences.app.accessMode, {
     ...options,
     fetchMenuListAsync: async () => {
-      message.loading({
-        content: `${$t('common.loadingMenu')}...`,
-        duration: 1.5,
-      });
       let res: any = await getMyMenusApi();
       res = mapTree(res, (node: any) => {
         return {
