@@ -120,6 +120,15 @@ export function useGridFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       defaultValue: '',
+      fieldName: 'label',
+      label: '字典名称',
+      componentProps: {
+        allowClear: true,
+      },
+    },
+    {
+      component: 'Input',
+      defaultValue: '',
       fieldName: 'value',
       label: '字典值',
       componentProps: {
