@@ -159,35 +159,29 @@ export function usePatientColumns(): VxeTableGridOptions<MedicalPatientApi.Patie
       field: 'patientNo',
       sortable: true,
       title: $t('medical.patient.patientNo'),
-      width: 140,
     },
     {
       field: 'name',
       sortable: true,
       title: $t('medical.patient.name'),
-      width: 120,
     },
     {
       cellRender: { name: 'DictTag', props: { type: 'GENDER' } },
       field: 'gender',
       title: $t('medical.patient.gender'),
-      width: 100,
     },
     {
       field: 'birthDate',
       sortable: true,
       title: $t('medical.patient.birthDate'),
-      width: 130,
     },
     {
       field: 'idNumber',
       title: $t('medical.patient.idNumber'),
-      width: 180,
     },
     {
       field: 'phone',
       title: $t('medical.patient.phone'),
-      width: 140,
     },
     {
       cellRender: {
@@ -207,7 +201,6 @@ export function usePatientColumns(): VxeTableGridOptions<MedicalPatientApi.Patie
       field: 'createDate',
       sortable: true,
       title: $t('medical.patient.createDate'),
-      width: 180,
     },
     {
       align: 'center',
@@ -216,7 +209,6 @@ export function usePatientColumns(): VxeTableGridOptions<MedicalPatientApi.Patie
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('system.dept.operation'),
-      width: 260,
     },
   ];
 }

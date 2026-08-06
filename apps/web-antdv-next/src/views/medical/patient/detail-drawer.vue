@@ -27,7 +27,8 @@ const contactItems = computed(() =>
 const [Drawer, drawerApi] = useVbenDrawer({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<Pick<MedicalPatientApi.Patient, 'patientId'>>();
+    const data =
+      drawerApi.getData<Pick<MedicalPatientApi.Patient, 'patientId'>>();
     loading.value = true;
     try {
       detail.value = await getPatientDetailApi(data.patientId);
@@ -42,11 +43,6 @@ const [Drawer, drawerApi] = useVbenDrawer({
   <Drawer :footer="false" :title="$t('medical.patient.detail')">
     <Spin :spinning="loading">
       <template v-if="detail">
-        <div class="mb-6">
-          <div class="text-lg font-semibold">{{ detail.name }}</div>
-          <div class="text-muted-foreground">{{ detail.patientNo }}</div>
-        </div>
-
         <Divider>{{ $t('medical.patient.basicInformation') }}</Divider>
         <VbenDescriptions
           bordered

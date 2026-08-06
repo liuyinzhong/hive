@@ -66,28 +66,6 @@ function openEdit(row: MedicalPatientApi.Patient) {
 function openDetail(row: MedicalPatientApi.Patient) {
   detailDrawerApi.setData({ patientId: row.patientId }).open();
 }
-
-function canEdit() {
-  return hasAccessByCodes([
-    'medical:patient:detail',
-    'medical:patient:update',
-    'medical:patient:viewSensitive',
-  ]);
-}
-
-function canCreate() {
-  return hasAccessByCodes([
-    'medical:patient:create',
-    'medical:patient:viewSensitive',
-  ]);
-}
-
-function canViewSensitive() {
-  return hasAccessByCodes([
-    'medical:patient:detail',
-    'medical:patient:viewSensitive',
-  ]);
-}
 </script>
 
 <template>
@@ -96,7 +74,11 @@ function canViewSensitive() {
     <DetailDrawer />
     <Grid :table-title="$t('medical.patient.list')">
       <template #toolbar-tools>
-        <Button v-if="canCreate()" type="primary" @click="openCreate">
+        <Button
+          v-if="hasAccessByCodes(['medical:patient:create'])"
+          type="primary"
+          @click="openCreate"
+        >
           <Plus class="size-5" />
           {{ $t('medical.patient.create') }}
         </Button>
@@ -105,25 +87,17 @@ function canViewSensitive() {
         <VbenTableAction
           :actions="[
             {
-              auth: canViewSensitive()
-                ? 'medical:patient:viewSensitive'
-                : 'medical:patient:detail',
+              auth: 'medical:patient:detail',
               icon: 'lucide:eye',
               onClick: () => openDetail(row),
-              text: canViewSensitive()
-                ? $t('medical.patient.viewSensitive')
-                : $t('common.detail'),
+              text: $t('medical.patient.viewSensitive'),
             },
-            ...(canEdit()
-              ? [
-                  {
-                    auth: 'medical:patient:update',
-                    icon: 'lucide:edit',
-                    onClick: () => openEdit(row),
-                    text: $t('common.edit'),
-                  },
-                ]
-              : []),
+            {
+              auth: 'medical:patient:update',
+              icon: 'lucide:edit',
+              onClick: () => openEdit(row),
+              text: $t('common.edit'),
+            },
           ]"
           align="center"
         />
