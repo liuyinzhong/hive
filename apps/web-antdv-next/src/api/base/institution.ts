@@ -1,19 +1,8 @@
 import { requestClient } from '#/api/request';
 
 export namespace BaseInstitutionApi {
-  export type AttachmentOwnerType = 'QUALIFICATION';
-
-  export interface Attachment {
-    attachmentId: string;
-    attachmentType?: null | string;
-    expiryDate?: null | string;
-    fileName: string;
-    remark?: null | string;
-    url: string;
-  }
-
   export interface Qualification {
-    attachment: Attachment | null;
+    attachment?: null | string;
     certificateName: string;
     certificateNo: string;
     expiryDate?: null | string;
@@ -45,23 +34,6 @@ export namespace BaseInstitutionApi {
     remark?: null | string;
   }
 
-  export interface Overview {
-    diagnosisSubjects?: null | string;
-    emergencyDescription?: null | string;
-    introduction?: null | string;
-    keySpecialties?: null | string;
-    overviewId: string;
-    serviceFeatures?: null | string;
-    serviceHours?: null | string;
-  }
-
-  export interface Brand {
-    brandId: string;
-    displayName?: null | string;
-    logoUrl?: null | string;
-    slogan?: null | string;
-  }
-
   export interface BankAccount {
     accountName: string;
     accountNumber: string;
@@ -72,19 +44,15 @@ export namespace BaseInstitutionApi {
     remark?: null | string;
   }
 
-  export interface Settlement {
-    bankAccounts: BankAccount[];
-    invoiceTitle?: null | string;
-    settlementId: string;
-    taxpayerId?: null | string;
-    taxpayerType?: null | string;
-  }
-
   export interface Institution {
     addresses: Address[];
     aliases?: null | string;
-    brand: Brand | null;
+    bankAccounts: BankAccount[];
+    contacts: Contact[];
     createDate?: null | string;
+    diagnosisSubjects?: null | string;
+    displayName?: null | string;
+    emergencyDescription?: null | string;
     englishName?: null | string;
     establishmentDate?: null | string;
     hospitalCategory: string;
@@ -93,26 +61,24 @@ export namespace BaseInstitutionApi {
     institutionName: string;
     institutionNature: string;
     institutionType: string;
-    overview: Overview | null;
+    introduction?: null | string;
+    invoiceTitle?: null | string;
+    keySpecialties?: null | string;
+    logoUrl?: null | string;
     qualifications: Qualification[];
     remark?: null | string;
-    settlement: Settlement | null;
+    serviceFeatures?: null | string;
+    serviceHours?: null | string;
     shortName?: null | string;
+    slogan?: null | string;
+    taxpayerId?: null | string;
+    taxpayerType?: null | string;
     unifiedCreditCode: string;
     updateDate?: null | string;
-    contacts: Contact[];
-  }
-
-  export interface AttachmentInput {
-    attachmentType?: null | string;
-    expiryDate?: string;
-    fileName: string;
-    remark?: null | string;
-    url: string;
   }
 
   export interface QualificationInput {
-    attachment?: AttachmentInput | null;
+    attachment?: null | string;
     certificateName: string;
     certificateNo: string;
     expiryDate?: string;
@@ -153,11 +119,11 @@ export namespace BaseInstitutionApi {
   export interface SaveInstitution {
     addresses: AddressInput[];
     aliases?: null | string;
-    brand: {
-      displayName?: null | string;
-      logoUrl?: null | string;
-      slogan?: null | string;
-    };
+    bankAccounts: BankAccountInput[];
+    contacts: ContactInput[];
+    diagnosisSubjects?: null | string;
+    displayName?: null | string;
+    emergencyDescription?: null | string;
     englishName?: null | string;
     establishmentDate?: string;
     hospitalCategory: string;
@@ -165,32 +131,31 @@ export namespace BaseInstitutionApi {
     institutionName: string;
     institutionNature: string;
     institutionType: string;
-    overview: {
-      diagnosisSubjects?: null | string;
-      emergencyDescription?: null | string;
-      introduction?: null | string;
-      keySpecialties?: null | string;
-      serviceFeatures?: null | string;
-      serviceHours?: null | string;
-    };
+    introduction?: null | string;
+    invoiceTitle?: null | string;
+    keySpecialties?: null | string;
+    logoUrl?: null | string;
     qualifications: QualificationInput[];
     remark?: null | string;
-    settlement: {
-      bankAccounts: BankAccountInput[];
-      invoiceTitle?: null | string;
-      taxpayerId?: null | string;
-      taxpayerType?: null | string;
-    };
+    serviceFeatures?: null | string;
+    serviceHours?: null | string;
     shortName?: null | string;
+    slogan?: null | string;
+    taxpayerId?: null | string;
+    taxpayerType?: null | string;
     unifiedCreditCode: string;
-    contacts: ContactInput[];
   }
 }
 
 export function getInstitutionApi() {
-  return requestClient.get<BaseInstitutionApi.Institution | null>('/base/institution');
+  return requestClient.get<BaseInstitutionApi.Institution | null>(
+    '/base/institution',
+  );
 }
 
 export function saveInstitutionApi(data: BaseInstitutionApi.SaveInstitution) {
-  return requestClient.put<BaseInstitutionApi.Institution>('/base/institution', data);
+  return requestClient.put<BaseInstitutionApi.Institution>(
+    '/base/institution',
+    data,
+  );
 }

@@ -61,19 +61,6 @@ function defaultFormValues(): InstitutionFormValues {
   };
 }
 
-function attachmentToForm(
-  item: BaseInstitutionApi.Attachment,
-): InstitutionUploadFile[] {
-  return [
-    {
-      name: item.fileName,
-      status: 'done',
-      uid: item.attachmentId,
-      url: item.url,
-    },
-  ];
-}
-
 function logoToForm(url?: null | string): InstitutionUploadFile[] {
   return url ? urlStringToFiles(url) : [];
 }
@@ -96,9 +83,9 @@ function normalizeDetail(
     })),
     aliases: detail.aliases ?? '',
     brand: {
-      displayName: detail.brand?.displayName ?? '',
-      logoUrl: logoToForm(detail.brand?.logoUrl),
-      slogan: detail.brand?.slogan ?? '',
+      displayName: detail.displayName ?? '',
+      logoUrl: logoToForm(detail.logoUrl),
+      slogan: detail.slogan ?? '',
     },
     contacts: (detail.contacts ?? []).map((item) => ({
       contactName: item.contactName,
@@ -117,15 +104,15 @@ function normalizeDetail(
     institutionNature: detail.institutionNature,
     institutionType: detail.institutionType,
     overview: {
-      diagnosisSubjects: detail.overview?.diagnosisSubjects ?? '',
-      emergencyDescription: detail.overview?.emergencyDescription ?? '',
-      introduction: detail.overview?.introduction ?? '',
-      keySpecialties: detail.overview?.keySpecialties ?? '',
-      serviceFeatures: detail.overview?.serviceFeatures ?? '',
-      serviceHours: detail.overview?.serviceHours ?? '',
+      diagnosisSubjects: detail.diagnosisSubjects ?? '',
+      emergencyDescription: detail.emergencyDescription ?? '',
+      introduction: detail.introduction ?? '',
+      keySpecialties: detail.keySpecialties ?? '',
+      serviceFeatures: detail.serviceFeatures ?? '',
+      serviceHours: detail.serviceHours ?? '',
     },
     qualifications: (detail.qualifications ?? []).map((item) => ({
-      attachment: item.attachment ? attachmentToForm(item.attachment) : [],
+      attachment: item.attachment ? urlStringToFiles(item.attachment) : [],
       certificateName: item.certificateName,
       certificateNo: item.certificateNo,
       expiryDate: item.expiryDate ?? undefined,
@@ -136,7 +123,7 @@ function normalizeDetail(
     })),
     remark: detail.remark ?? '',
     settlement: {
-      bankAccounts: (detail.settlement?.bankAccounts ?? []).map((item) => ({
+      bankAccounts: (detail.bankAccounts ?? []).map((item) => ({
         accountName: item.accountName,
         accountNumber: item.accountNumber,
         accountType: item.accountType ?? '',
@@ -144,29 +131,12 @@ function normalizeDetail(
         isDefault: item.isDefault,
         remark: item.remark ?? '',
       })),
-      invoiceTitle: detail.settlement?.invoiceTitle ?? '',
-      taxpayerId: detail.settlement?.taxpayerId ?? '',
-      taxpayerType: detail.settlement?.taxpayerType ?? '',
+      invoiceTitle: detail.invoiceTitle ?? '',
+      taxpayerId: detail.taxpayerId ?? '',
+      taxpayerType: detail.taxpayerType ?? '',
     },
     shortName: detail.shortName ?? '',
     unifiedCreditCode: detail.unifiedCreditCode,
-  };
-}
-
-function attachmentToPayload(items: InstitutionUploadFile[]) {
-  const file = items?.find(
-    (current) =>
-      current.status === 'done' || current.url || current.response?.url,
-  );
-  const url = file?.response?.url || file?.url || '';
-  if (!url) return null;
-  return {
-    fileName:
-      file?.response?.originalName ||
-      file?.name ||
-      url.split('/').pop() ||
-      '附件',
-    url,
   };
 }
 
@@ -176,12 +146,11 @@ function toPayload(
   return {
     addresses: values.addresses,
     aliases: values.aliases || undefined,
-    brand: {
-      displayName: values.brand.displayName || undefined,
-      logoUrl: filesToUrlString(values.brand.logoUrl) || undefined,
-      slogan: values.brand.slogan || undefined,
-    },
+    bankAccounts: values.settlement.bankAccounts,
     contacts: values.contacts,
+    diagnosisSubjects: values.overview.diagnosisSubjects || undefined,
+    displayName: values.brand.displayName || undefined,
+    emergencyDescription: values.overview.emergencyDescription || undefined,
     englishName: values.englishName || undefined,
     establishmentDate: values.establishmentDate || undefined,
     hospitalCategory: values.hospitalCategory,
@@ -189,9 +158,12 @@ function toPayload(
     institutionName: values.institutionName,
     institutionNature: values.institutionNature,
     institutionType: values.institutionType,
-    overview: values.overview,
+    introduction: values.overview.introduction || undefined,
+    invoiceTitle: values.settlement.invoiceTitle || undefined,
+    keySpecialties: values.overview.keySpecialties || undefined,
+    logoUrl: filesToUrlString(values.brand.logoUrl) || undefined,
     qualifications: values.qualifications.map((item) => ({
-      attachment: attachmentToPayload(item.attachment),
+      attachment: filesToUrlString(item.attachment) || undefined,
       certificateName: item.certificateName,
       certificateNo: item.certificateNo,
       expiryDate: item.expiryDate || undefined,
@@ -201,13 +173,12 @@ function toPayload(
       scope: item.scope || undefined,
     })),
     remark: values.remark || undefined,
-    settlement: {
-      bankAccounts: values.settlement.bankAccounts,
-      invoiceTitle: values.settlement.invoiceTitle || undefined,
-      taxpayerId: values.settlement.taxpayerId || undefined,
-      taxpayerType: values.settlement.taxpayerType || undefined,
-    },
+    serviceFeatures: values.overview.serviceFeatures || undefined,
+    serviceHours: values.overview.serviceHours || undefined,
     shortName: values.shortName || undefined,
+    slogan: values.brand.slogan || undefined,
+    taxpayerId: values.settlement.taxpayerId || undefined,
+    taxpayerType: values.settlement.taxpayerType || undefined,
     unifiedCreditCode: values.unifiedCreditCode,
   };
 }
