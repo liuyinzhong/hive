@@ -18,7 +18,9 @@
   "scripts": {
     "build": "pnpm vite build --mode production",
     "build:analyze": "pnpm vite build --mode analyze",
+    "build:electron": "pnpm vite build --mode production --base=./ && electron-builder --win",
     "dev": "pnpm vite --mode development",
+    "dev:electron": "electron ./electron/main.mjs",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit --skipLibCheck"
   },
@@ -60,6 +62,42 @@
     "vxe-table": "catalog:"
   },
   "devDependencies": {
-    "@types/json-bigint": "catalog:"
+    "@types/json-bigint": "catalog:",
+    "electron": "catalog:",
+    "electron-builder": "catalog:"
+  },
+  "build": {
+    "appId": "com.vben.webantdvnext",
+    "beforeBuild": "./electron/before-build.mjs",
+    "productName": "Web Antdv Next",
+    "directories": {
+      "app": "electron",
+      "output": "dist-electron"
+    },
+    "electronDist": "node_modules/electron/dist",
+    "files": [
+      "main.mjs",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist",
+        "to": "dist"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   }
 }

@@ -51,6 +51,7 @@ vite.config.ts.*
 *.sw?
 .history
 /apps/web-antd/dist-electron/
+/apps/web-antdv-next/dist-electron/
 /playground/dist-electron/
 
 # AI

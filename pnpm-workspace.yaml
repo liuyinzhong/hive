@@ -125,6 +125,8 @@ catalog:
   defu: ^6.1.7
   dotenv: ^17.4.2
   echarts: ^6.1.0
+  electron: ^35.0.3
+  electron-builder: ^26.15.3
   element-plus: ^2.14.3
   es-toolkit: ^1.49.0
   eslint: ^10.7.0
@@ -222,6 +224,8 @@ allowBuilds:
   '@logicflow/core': true
   '@parcel/watcher': true
   core-js: true
+  electron: true
+  electron-winstaller: true
   esbuild: true
   lefthook: true
   vue-demi: true
