@@ -492,10 +492,12 @@ const schema: VbenFormSchema[] = [
         return ['menu'].includes(values.type);
       },
       disabled: (values) => {
-        if (!values.meta?.affixTab) {
+        return !values.meta?.affixTab;
+      },
+      trigger: (values) => {
+        if (values.meta && !values.meta.affixTab) {
           values.meta.affixTabOrder = null;
         }
-        return !values.meta?.affixTab;
       },
       triggerFields: ['type', 'meta.affixTab'],
     },
