@@ -19,6 +19,5 @@
 ## 源码入口
 
 - API：`apps/web-antdv-next/src/api/product`。
-- 页面：`apps/web-antdv-next/src/views/product/spu`。
+- 页面：`apps/web-antdv-next/src/views/product/spu`、`apps/web-antdv-next/src/views/product/sku`。
 - 国际化：`apps/web-antdv-next/src/locales/langs/zh-CN/product.json` 和 `en-US/product.json`。
-

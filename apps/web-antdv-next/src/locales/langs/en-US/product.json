@@ -66,6 +66,7 @@
     "allowSplit": "Allow Split",
     "allowSplitNo": "No",
     "allowSplitYes": "Yes",
+    "archiveList": "SKU Archive",
     "traceMode": "Trace code management",
     "traceModeNone": "Not managed",
     "traceModeRequired": "Required",
@@ -92,7 +93,8 @@
     "status": "Status",
     "title": "Add SKU",
     "udiDi": "UDI-DI",
-    "updateDate": "Updated At"
+    "updateDate": "Updated At",
+    "viewProduct": "View Product"
   },
   "skuPrice": {
     "create": "Create Price",

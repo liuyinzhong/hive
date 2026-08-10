@@ -35,6 +35,8 @@ export namespace ProductSkuApi {
     createDate?: null | string;
     /** 描述。 */
     description?: null | string;
+    /** 剂型/形态。 */
+    dosageForm?: null | string;
     /** 企业编码。 */
     enterpriseCode: string;
     /** 企业主体 ID。 */
@@ -73,18 +75,48 @@ export namespace ProductSkuApi {
     skuId: string;
     /** 规格名称。 */
     specName: string;
+    /** 产品简称。 */
+    shortName?: null | string;
     /** SPU 编码。 */
     spuCode: string;
     /** SPU ID。 */
     spuId: string;
     /** 状态：0 停用，1 启用。 */
     status: ProductSkuStatus;
+    /** 含量/规格文本。 */
+    strengthText?: null | string;
     /** 追溯码管理模式。 */
     traceMode: ProductSkuTraceMode;
     /** UDI-DI。 */
     udiDi?: null | string;
     /** 更新时间。 */
     updateDate?: null | string;
+  }
+
+  /** SKU 档案分页查询参数。 */
+  export interface ProductSkuListParams {
+    /** 批准文号，模糊匹配。 */
+    approvalNo?: string;
+    /** 生产企业名称，模糊匹配。 */
+    enterpriseName?: string;
+    /** 所属 MP ID，精确匹配。 */
+    mpId?: string;
+    /** 页码。 */
+    page: number;
+    /** 每页数量。 */
+    pageSize: number;
+    /** 通用名称，模糊匹配。 */
+    productName?: string;
+    /** 产品类型，精确匹配。 */
+    productType?: ProductSku['productType'];
+    /** 产品简称，模糊匹配。 */
+    shortName?: string;
+    /** SKU 编码，模糊匹配。 */
+    skuCode?: string;
+    /** 排序。 */
+    sorts?: string;
+    /** SKU 状态，精确匹配。 */
+    status?: ProductSkuStatus;
   }
 
   /** 保存产品品规（SKU）请求。 */
@@ -178,7 +210,8 @@ export namespace ProductSkuApi {
 
   /** 产品品规（SKU）下拉选项，聚合 SPU/RP/MP/SKU 信息。 */
   export interface ProductSkuOption
-    extends ProductSkuOptionSpu,
+    extends
+      ProductSkuOptionSpu,
       ProductSkuOptionRp,
       ProductSkuOptionMp,
       ProductSkuOptionSku {}
@@ -305,7 +338,9 @@ export namespace ProductSkuApi {
   }
 }
 
-export function getProductSkuListApi(params: Recordable<unknown>) {
+export function getProductSkuListApi(
+  params: ProductSkuApi.ProductSkuListParams,
+) {
   return requestClient.get<{
     items: ProductSkuApi.ProductSku[];
     total: number;

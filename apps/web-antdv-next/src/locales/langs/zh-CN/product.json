@@ -67,6 +67,7 @@
     "allowSplit": "允许拆零",
     "allowSplitNo": "否",
     "allowSplitYes": "是",
+    "archiveList": "SKU档案",
     "traceMode": "追溯码管理",
     "traceModeNone": "不管理",
     "traceModeRequired": "强制管理",
@@ -94,7 +95,8 @@
     "title": "SKU",
     "addTitle": "添加SKU",
     "udiDi": "UDI-DI",
-    "updateDate": "更新时间"
+    "updateDate": "更新时间",
+    "viewProduct": "查看产品"
   },
   "skuPrice": {
     "create": "新增价格",
