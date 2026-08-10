@@ -2,6 +2,8 @@
   "title": "Development Management",
   "task": {
     "title": "Task Management",
+    "export": "Export",
+    "exportCreated": "The export task has been created. View its progress in Download Center.",
     "gantt": "Gantt Chart"
   },
   "versions": {
@@ -51,6 +53,7 @@
     "taskDelete": "Delete",
     "taskDetail": "Details",
     "taskFieldUpdate": "Update Fields",
+    "taskExport": "Export",
     "taskList": "List",
     "taskUpdate": "Update",
     "versionAdvance": "Advance",

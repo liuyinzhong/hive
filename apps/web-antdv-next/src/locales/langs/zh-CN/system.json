@@ -88,6 +88,26 @@
     "create": "创建测试消息",
     "createSuccess": "测试消息创建成功"
   },
+  "downloadCenter": {
+    "title": "下载中心",
+    "taskName": "任务名称",
+    "sourceModule": "来源模块",
+    "createDate": "创建时间",
+    "status": "状态",
+    "pending": "等待中",
+    "running": "生成中",
+    "succeeded": "已完成",
+    "failed": "失败",
+    "progress": "进度",
+    "rowCount": "行数",
+    "fileSize": "文件大小",
+    "completedDate": "完成时间",
+    "expireDate": "文件过期时间",
+    "operation": "操作",
+    "download": "下载",
+    "downloading": "正在下载文件",
+    "retentionHelp": "导出文件保留 7 天，过期后不可下载；任务记录保留 30 天后自动清理。"
+  },
   "externalPage": {
     "batchDelete": "批量删除",
     "batchDeleteConfirm": "确定删除选中的 {0} 个外部页面吗？",

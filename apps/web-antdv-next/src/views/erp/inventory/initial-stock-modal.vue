@@ -23,9 +23,14 @@ function encodeInitialStockFormValues(
         batchNo: item.batchNo.trim(),
         expiryDate: item.expiryDate,
         packageUnitName: item.packageUnitName,
-        quantity: Number(item.quantity),
+        quantity:
+          item.traceMode === 'REQUIRED'
+            ? item.traceCodes?.length || 0
+            : Number(item.quantity),
         remark: remark || undefined,
         skuId: item.skuId,
+        traceCodes: item.traceCodes || [],
+        traceMode: item.traceMode,
         unitCost: String(item.unitCost).trim(),
       };
     }),
@@ -77,7 +82,9 @@ function validateInitialStockItems(
   items: InventoryInitialStockFormValues['items'],
 ) {
   const seen = new Set<string>();
-  for (const item of items || []) {
+  const seenTraceCodes = new Map<string, number>();
+  for (const [index, item] of (items || []).entries()) {
+    const lineNo = index + 1;
     if (!item.skuId) {
       message.error($t('erp.inventory.skuRequired'));
       return false;
@@ -95,9 +102,31 @@ function validateInitialStockItems(
       message.error($t('erp.inventory.unitCostInvalid'));
       return false;
     }
-    if (!Number.isInteger(Number(item.quantity)) || Number(item.quantity) < 1) {
+    const traceCodes = item.traceCodes || [];
+    if (item.traceMode === 'REQUIRED' && traceCodes.length < 1) {
+      message.error($t('erp.inventory.traceCodesRequired', [lineNo]));
+      return false;
+    }
+    if (
+      item.traceMode !== 'REQUIRED' &&
+      (!Number.isInteger(Number(item.quantity)) || Number(item.quantity) < 1)
+    ) {
       message.error($t('erp.inventory.quantityInvalid'));
       return false;
+    }
+    for (const traceCode of traceCodes) {
+      const duplicateLineNo = seenTraceCodes.get(traceCode);
+      if (duplicateLineNo) {
+        message.error(
+          $t('erp.inventory.duplicateTraceCodeAcrossLines', [
+            traceCode,
+            lineNo,
+            duplicateLineNo,
+          ]),
+        );
+        return false;
+      }
+      seenTraceCodes.set(traceCode, lineNo);
     }
 
     const key = [
@@ -127,9 +156,13 @@ async function saveInitialStocks(values: InventoryInitialStockFormValues) {
         return {
           batchNo: item.batchNo.trim(),
           expiryDate: item.expiryDate,
-          quantity: Number(item.quantity),
+          quantity:
+            item.traceMode === 'REQUIRED'
+              ? item.traceCodes?.length || 0
+              : Number(item.quantity),
           remark: remark || null,
           skuId: item.skuId,
+          traceCodes: item.traceCodes || [],
           unitCost: String(item.unitCost).trim(),
         };
       }),

@@ -1,64 +1,65 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { ErpPurchaseInboundApi } from '#/api/erp';
-import type { ProductSkuApi } from '#/api/product';
+import type { ErpPurchaseInboundApi, ErpPurchaseOrderApi } from '#/api/erp';
 import type { InputNumberProps } from 'antdv-next';
+
+import { markRaw } from 'vue';
 
 import { getEnterpriseOptionsApi } from '#/api/base';
 import { getWarehouseOptionsApi } from '#/api/erp';
-import { getProductSkuOptionsApi } from '#/api/product';
 import { $t } from '#/locales';
 
+import TraceCodeField from '../components/trace-code-field.vue';
 import { inventoryAmountLabel } from '../inventory/data';
 
-export type PurchaseInboundSkuOption = ProductSkuApi.ProductSkuOption & {
-  skuLabel: string;
-};
-
-export interface PurchaseInboundFormItem
-  extends ErpPurchaseInboundApi.PurchaseInboundItemInput {
+export interface PurchaseInboundFormItem {
+  batchNo: string;
+  expiryDate: string;
   packageUnitName?: string;
+  purchaseOrderItemId: string;
+  quantity: number;
+  remainingQuantity?: number;
+  remark?: null | string;
+  skuId?: string;
+  skuLabel?: string;
+  traceCodes?: string[];
+  traceMode?: 'NONE' | 'REQUIRED';
+  unitCost?: string;
 }
 
 export interface PurchaseInboundFormValues extends Record<string, unknown> {
   inboundDate: string;
   items: PurchaseInboundFormItem[];
+  purchaseOrderId: string;
   remark?: string;
-  supplierId: string;
-  warehouseId: string;
 }
 
-export function purchaseInboundSkuOptionLabel(
-  option: ProductSkuApi.ProductSkuOption,
+let purchaseOrderItemsCache: ErpPurchaseOrderApi.PurchaseOrderItem[] = [];
+
+export function setPurchaseInboundOrderItems(
+  items: ErpPurchaseOrderApi.PurchaseOrderItem[],
 ) {
+  purchaseOrderItemsCache = items.filter((item) => item.remainingQuantity > 0);
+}
+
+function purchaseOrderItemLabel(item: ErpPurchaseOrderApi.PurchaseOrderItem) {
   return [
-    option.skuCode,
-    option.productName,
-    option.specName,
-    option.packageSpecName,
-    option.enterpriseName,
+    item.skuCode,
+    item.productName,
+    item.specName,
+    item.packageSpecName,
+    $t('erp.purchaseOrder.remainingWithUnit', [
+      item.remainingQuantity,
+      item.packageUnitName,
+    ]),
   ]
     .filter(Boolean)
     .join(' / ');
 }
 
-let purchaseInboundSkuOptionsCache: PurchaseInboundSkuOption[] = [];
-
-function getPurchaseInboundSkuOptions(): Promise<PurchaseInboundSkuOption[]> {
-  return getProductSkuOptionsApi({ pageSize: 100 }).then(
-    (options) =>
-      (purchaseInboundSkuOptionsCache = options.map((option) => ({
-        ...option,
-        skuLabel: purchaseInboundSkuOptionLabel(option),
-      }))),
-  );
-}
-
-function getPurchaseInboundSkuPackageUnitName(skuId?: string) {
-  if (!skuId) return '';
-  return (
-    purchaseInboundSkuOptionsCache.find((option) => option.skuId === skuId)
-      ?.packageUnitName || ''
+function getPurchaseOrderItem(purchaseOrderItemId?: string) {
+  return purchaseOrderItemsCache.find(
+    (item) => item.purchaseOrderItemId === purchaseOrderItemId,
   );
 }
 
@@ -85,6 +86,12 @@ export function usePurchaseInboundSearchSchema(): VbenFormSchema[] {
       label: $t('erp.purchaseInbound.inboundNo'),
     },
     {
+      component: 'Input',
+      componentProps: { allowClear: true },
+      fieldName: 'purchaseOrderNo',
+      label: $t('erp.purchaseOrder.purchaseOrderNo'),
+    },
+    {
       component: 'ApiSelect',
       componentProps: {
         allowClear: true,
@@ -113,19 +120,13 @@ export function usePurchaseInboundSearchSchema(): VbenFormSchema[] {
     },
     {
       component: 'Input',
-      componentProps: {
-        allowClear: true,
-        placeholder: $t('erp.inventory.skuCodePlaceholder'),
-      },
+      componentProps: { allowClear: true },
       fieldName: 'skuCode',
       label: $t('erp.inventory.skuCode'),
     },
     {
       component: 'Input',
-      componentProps: {
-        allowClear: true,
-        placeholder: $t('erp.inventory.batchNoPlaceholder'),
-      },
+      componentProps: { allowClear: true },
       fieldName: 'batchNo',
       label: $t('erp.inventory.batchNo'),
     },
@@ -148,46 +149,15 @@ export function usePurchaseInboundFormSchema(): VbenFormSchema<PurchaseInboundFo
   return [
     {
       component: 'DatePicker',
-      componentProps: {
-        allowClear: false,
-        valueFormat: 'YYYY-MM-DD',
-      },
+      componentProps: { allowClear: false, valueFormat: 'YYYY-MM-DD' },
       fieldName: 'inboundDate',
       label: $t('erp.purchaseInbound.inboundDate'),
-      rules: 'selectRequired',
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        api: () =>
-          getEnterpriseOptionsApi({ pageSize: 100, roleType: 'SUPPLIER' }),
-        labelField: 'enterpriseName',
-        resultField: '',
-        showSearch: true,
-        valueField: 'enterpriseId',
-      },
-      fieldName: 'supplierId',
-      label: $t('erp.purchaseInbound.supplier'),
-      rules: 'selectRequired',
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        api: () => getWarehouseOptionsApi({ pageSize: 100 }),
-        labelField: 'warehouseName',
-        resultField: '',
-        showSearch: true,
-        valueField: 'warehouseId',
-      },
-      fieldName: 'warehouseId',
-      label: $t('erp.purchaseInbound.warehouse'),
       rules: 'selectRequired',
     },
     {
       component: 'Textarea',
       componentProps: { maxlength: 512, rows: 3, showCount: true },
       fieldName: 'remark',
-      formItemClass: 'md:col-span-2',
       label: $t('erp.purchaseInbound.remark'),
     },
     {
@@ -197,9 +167,14 @@ export function usePurchaseInboundFormSchema(): VbenFormSchema<PurchaseInboundFo
           batchNo: '',
           expiryDate: undefined,
           packageUnitName: '',
+          purchaseOrderItemId: '',
           quantity: 1,
+          remainingQuantity: 0,
           remark: '',
           skuId: '',
+          skuLabel: '',
+          traceCodes: [],
+          traceMode: 'NONE',
           unitCost: '',
         }),
         max: 100,
@@ -207,86 +182,133 @@ export function usePurchaseInboundFormSchema(): VbenFormSchema<PurchaseInboundFo
       },
       children: [
         {
-          component: 'ApiSelect',
-          componentProps: {
-            api: getPurchaseInboundSkuOptions,
-            labelField: 'skuLabel',
-            resultField: '',
+          component: 'Select',
+          componentProps: () => ({
+            options: purchaseOrderItemsCache.map((item) => ({
+              label: purchaseOrderItemLabel(item),
+              value: item.purchaseOrderItemId,
+            })),
             showSearch: true,
-            valueField: 'skuId',
-          },
-          fieldName: 'skuId',
-          label: $t('erp.inventory.sku'),
-          rules: 'selectRequired',
+          }),
           dependencies: {
             async trigger(_values, actions, _controller, ctx) {
               if (!ctx?.rowPath) return;
-              await actions.setFieldValue(
-                `${ctx.rowPath}.packageUnitName`,
-                getPurchaseInboundSkuPackageUnitName(ctx.row?.skuId as string),
-                false,
+              const item = getPurchaseOrderItem(
+                ctx.row?.purchaseOrderItemId as string,
               );
+              const values: Record<string, unknown> = {
+                packageUnitName: item?.packageUnitName || '',
+                quantity: item?.traceMode === 'REQUIRED' ? 0 : 1,
+                remainingQuantity: item?.remainingQuantity || 0,
+                skuId: item?.skuId || '',
+                skuLabel: item ? purchaseOrderItemLabel(item) : '',
+                traceCodes: [],
+                traceMode: item?.traceMode || 'NONE',
+                unitCost: item?.unitPrice || '',
+              };
+              for (const [field, value] of Object.entries(values)) {
+                await actions.setFieldValue(
+                  `${ctx.rowPath}.${field}`,
+                  value,
+                  false,
+                );
+              }
             },
-            triggerFields: ['skuId'],
+            triggerFields: ['purchaseOrderItemId'],
           },
+          fieldName: 'purchaseOrderItemId',
+          label: $t('erp.purchaseInbound.purchaseOrderItem'),
+          rules: 'selectRequired',
         },
         {
           component: 'Input',
-          componentProps: (ctx) => ({
-            maxlength: 64,
-            placeholder: `${$t('erp.inventory.batchNo')} ${(ctx.rowIndex ?? 0) + 1}`,
-          }),
+          componentProps: { disabled: true },
+          fieldName: 'unitCost',
+          label: $t('erp.inventory.unitCost'),
+        },
+        {
+          component: 'InputNumber',
+          componentProps: { disabled: true, min: 0, precision: 0 },
+          dependencies: {
+            resolve: ({ schema }) => {
+              const row = schema.row as PurchaseInboundFormItem | undefined;
+              return {
+                componentProps: {
+                  disabled: true,
+                  formatter: quantityFormatter(row?.packageUnitName),
+                  parser: quantityParser(row?.packageUnitName),
+                },
+              };
+            },
+            triggerFields: ['packageUnitName'],
+          },
+          fieldName: 'remainingQuantity',
+          label: $t('erp.purchaseOrder.remainingQuantity'),
+        },
+        {
+          component: 'Input',
+          componentProps: { maxlength: 64 },
           fieldName: 'batchNo',
           label: $t('erp.inventory.batchNo'),
           rules: 'required',
         },
         {
           component: 'DatePicker',
-          componentProps: {
-            allowClear: false,
-            valueFormat: 'YYYY-MM-DD',
-          },
+          componentProps: { allowClear: false, valueFormat: 'YYYY-MM-DD' },
           fieldName: 'expiryDate',
           label: $t('erp.inventory.expiryDate'),
           rules: 'selectRequired',
         },
         {
-          component: 'InputNumber',
-          componentProps: {
-            max: 9999.9999,
-            min: 0.0001,
-            precision: 4,
-            prefix: '¥',
-            stringMode: true,
+          changeEventFallback: true,
+          component: markRaw(TraceCodeField),
+          componentProps: (ctx) => ({
+            contextLabel: ctx.row?.skuLabel || '',
+            disabled:
+              !ctx.row?.purchaseOrderItemId ||
+              ctx.row?.traceMode !== 'REQUIRED',
+          }),
+          defaultValue: [],
+          dependencies: {
+            async trigger(_values, actions, _controller, ctx) {
+              if (!ctx?.rowPath || ctx.row?.traceMode !== 'REQUIRED') return;
+              await actions.setFieldValue(
+                `${ctx.rowPath}.quantity`,
+                Array.isArray(ctx.row?.traceCodes)
+                  ? ctx.row.traceCodes.length
+                  : 0,
+                false,
+              );
+            },
+            triggerFields: ['traceCodes'],
           },
-          fieldName: 'unitCost',
-          label: $t('erp.inventory.unitCost'),
-          rules: 'required',
+          fieldName: 'traceCodes',
+          label: $t('erp.inventory.traceCodes'),
         },
         {
           component: 'InputNumber',
-          componentProps: {
-            max: 9999,
-            min: 1,
-            precision: 0,
-            changeOnWheel: true,
+          componentProps: { max: 999999999, min: 1, precision: 0 },
+          dependencies: {
+            resolve: ({ schema }) => {
+              const row = schema.row as PurchaseInboundFormItem | undefined;
+              return {
+                componentProps: {
+                  disabled: row?.traceMode === 'REQUIRED',
+                  formatter: quantityFormatter(row?.packageUnitName),
+                  max: row?.remainingQuantity || 999999999,
+                  parser: quantityParser(row?.packageUnitName),
+                },
+              };
+            },
+            triggerFields: [
+              'packageUnitName',
+              'remainingQuantity',
+              'traceMode',
+            ],
           },
           fieldName: 'quantity',
           label: $t('erp.inventory.quantity'),
           rules: 'required',
-          dependencies: {
-            triggerFields: ['packageUnitName'],
-            resolve: ({ schema }) => {
-              const row = schema.row as PurchaseInboundFormItem | undefined;
-              const unitName = row?.packageUnitName || '';
-              return {
-                componentProps: {
-                  formatter: quantityFormatter(unitName),
-                  parser: quantityParser(unitName),
-                },
-              };
-            },
-          },
         },
         {
           component: 'Input',
@@ -300,9 +322,14 @@ export function usePurchaseInboundFormSchema(): VbenFormSchema<PurchaseInboundFo
           batchNo: '',
           expiryDate: undefined,
           packageUnitName: '',
+          purchaseOrderItemId: '',
           quantity: 1,
+          remainingQuantity: 0,
           remark: '',
           skuId: '',
+          skuLabel: '',
+          traceCodes: [],
+          traceMode: 'NONE',
           unitCost: '',
         },
       ],
@@ -320,9 +347,14 @@ export function usePurchaseInboundColumns(): VxeTableGridOptions<ErpPurchaseInbo
     {
       field: 'inboundNo',
       fixed: 'left',
-      minWidth: 170,
+      minWidth: 160,
       sortable: true,
       title: $t('erp.purchaseInbound.inboundNo'),
+    },
+    {
+      field: 'purchaseOrderNo',
+      minWidth: 150,
+      title: $t('erp.purchaseOrder.purchaseOrderNo'),
     },
     {
       field: 'inboundDate',
@@ -372,7 +404,6 @@ export function usePurchaseInboundColumns(): VxeTableGridOptions<ErpPurchaseInbo
       align: 'center',
       field: 'operation',
       fixed: 'right',
-      showOverflow: false,
       slots: { default: 'action' },
       title: $t('erp.purchaseInbound.operation'),
       width: 150,
@@ -382,11 +413,7 @@ export function usePurchaseInboundColumns(): VxeTableGridOptions<ErpPurchaseInbo
 
 export function usePurchaseInboundDetailColumns(): VxeTableGridOptions<ErpPurchaseInboundApi.PurchaseInboundItem>['columns'] {
   return [
-    {
-      field: 'lineNo',
-      minWidth: 70,
-      title: $t('erp.purchaseInbound.lineNo'),
-    },
+    { field: 'lineNo', minWidth: 70, title: $t('erp.purchaseInbound.lineNo') },
     {
       field: 'skuCode',
       minWidth: 130,
@@ -401,19 +428,11 @@ export function usePurchaseInboundDetailColumns(): VxeTableGridOptions<ErpPurcha
     {
       field: 'specName',
       minWidth: 120,
-      showOverflow: 'tooltip',
       title: $t('erp.inventory.specName'),
-    },
-    {
-      field: 'enterpriseName',
-      minWidth: 160,
-      showOverflow: 'tooltip',
-      title: $t('erp.inventory.enterpriseName'),
     },
     {
       field: 'packageSpecName',
       minWidth: 120,
-      showOverflow: 'tooltip',
       title: $t('erp.inventory.packageSpecName'),
     },
     {

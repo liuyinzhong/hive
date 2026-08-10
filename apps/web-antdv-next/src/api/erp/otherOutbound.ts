@@ -33,6 +33,8 @@ export namespace ErpOtherOutboundApi {
     quantity: number;
     /** 明细备注。 */
     remark?: null | string;
+    /** 小包装追溯码。 */
+    traceCodes?: string[];
   }
 
   /** 新增其它出库单请求。 */

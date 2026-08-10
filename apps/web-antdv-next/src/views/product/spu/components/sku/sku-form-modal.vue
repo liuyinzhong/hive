@@ -208,6 +208,7 @@ const [Modal, modalApi] = useVbenModal({
       decodeSkuFormValues({
         allowSplit: 0,
         status: 1,
+        traceMode: 'NONE',
         ...detail,
       }),
     );

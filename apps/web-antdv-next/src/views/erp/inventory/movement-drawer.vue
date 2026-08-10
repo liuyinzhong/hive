@@ -11,6 +11,7 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   getInventoryMovementsApi,
   getInventorySourceMovementsApi,
+  getInventoryTraceCodeMovementsApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
@@ -23,9 +24,15 @@ interface InventorySourceMovementData {
   sourceBillType: ErpInventoryApi.InventorySourceBillType;
 }
 
+interface InventoryTraceCodeMovementData {
+  traceCode: string;
+  traceId: string;
+}
+
 type InventoryMovementDrawerData =
   | ErpInventoryApi.InventoryBalance
-  | InventorySourceMovementData;
+  | InventorySourceMovementData
+  | InventoryTraceCodeMovementData;
 
 const currentData = ref<InventoryMovementDrawerData>();
 
@@ -36,6 +43,9 @@ const title = computed(() => {
   }
   if ('sourceBillId' in data) {
     return `${$t('erp.inventory.movementManageTitle')}：${data.sourceBillNo}`;
+  }
+  if ('traceId' in data) {
+    return `${$t('erp.traceCode.movements')}：${data.traceCode}`;
   }
   const skuCode = data.skuCode || '-';
   const productName = data.productName || '-';
@@ -67,6 +77,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
               data.sourceBillId,
               params,
             );
+          }
+          if ('traceId' in data) {
+            return getInventoryTraceCodeMovementsApi(data.traceId, params);
           }
           return getInventoryMovementsApi(data.balanceId, params);
         },

@@ -4,10 +4,14 @@ import type { ErpInventoryApi } from '#/api/erp';
 import type { ProductSkuApi } from '#/api/product';
 import type { InputNumberProps } from 'antdv-next';
 
+import { markRaw } from 'vue';
+
 import { z } from '#/adapter/form';
 import { getWarehouseOptionsApi } from '#/api/erp';
 import { getProductSkuOptionsApi } from '#/api/product';
 import { $t } from '#/locales';
+
+import TraceCodeField from '../components/trace-code-field.vue';
 
 type InventorySkuOption = ProductSkuApi.ProductSkuOption & {
   skuLabel: string;
@@ -16,6 +20,7 @@ type InventorySkuOption = ProductSkuApi.ProductSkuOption & {
 export interface InventoryInitialStockFormItem
   extends ErpInventoryApi.InitialStockItem {
   packageUnitName?: string;
+  traceMode?: ProductSkuApi.ProductSkuTraceMode;
 }
 
 export interface InventoryInitialStockFormValues extends Record<
@@ -109,6 +114,22 @@ function getInventorySkuPackageUnitName(skuId?: string) {
   );
 }
 
+function getInventorySkuTraceMode(skuId?: string) {
+  if (!skuId) return 'NONE';
+  return (
+    inventorySkuOptionsCache.find((option) => option.skuId === skuId)
+      ?.traceMode || 'NONE'
+  );
+}
+
+function getInventorySkuLabel(skuId?: string) {
+  if (!skuId) return '';
+  return (
+    inventorySkuOptionsCache.find((option) => option.skuId === skuId)
+      ?.skuLabel || ''
+  );
+}
+
 const quantityFormatter =
   (unitName?: string): InputNumberProps['formatter'] =>
   (value) => {
@@ -186,6 +207,8 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryIn
           quantity: 1,
           remark: '',
           skuId: '',
+          traceCodes: [],
+          traceMode: 'NONE',
           unitCost: '',
         }),
         max: 100,
@@ -209,6 +232,24 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryIn
               await actions.setFieldValue(
                 `${ctx.rowPath}.packageUnitName`,
                 getInventorySkuPackageUnitName(ctx.row?.skuId as string),
+                false,
+              );
+              const traceMode = getInventorySkuTraceMode(
+                ctx.row?.skuId as string,
+              );
+              await actions.setFieldValue(
+                `${ctx.rowPath}.traceMode`,
+                traceMode,
+                false,
+              );
+              await actions.setFieldValue(
+                `${ctx.rowPath}.traceCodes`,
+                [],
+                false,
+              );
+              await actions.setFieldValue(
+                `${ctx.rowPath}.quantity`,
+                traceMode === 'REQUIRED' ? 0 : 1,
                 false,
               );
             },
@@ -238,6 +279,31 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryIn
           rules: 'selectRequired',
         },
         {
+          changeEventFallback: true,
+          component: markRaw(TraceCodeField),
+          componentProps: (ctx) => ({
+            contextLabel: getInventorySkuLabel(ctx.row?.skuId as string),
+            disabled:
+              !ctx.row?.skuId || ctx.row?.traceMode !== 'REQUIRED',
+          }),
+          defaultValue: [],
+          dependencies: {
+            async trigger(_values, actions, _controller, ctx) {
+              if (!ctx?.rowPath || ctx.row?.traceMode !== 'REQUIRED') return;
+              await actions.setFieldValue(
+                `${ctx.rowPath}.quantity`,
+                Array.isArray(ctx.row?.traceCodes)
+                  ? ctx.row.traceCodes.length
+                  : 0,
+                false,
+              );
+            },
+            triggerFields: ['traceCodes'],
+          },
+          fieldName: 'traceCodes',
+          label: $t('erp.inventory.traceCodes'),
+        },
+        {
           component: 'InputNumber',
           componentProps: {
             max: 9999.9999,
@@ -262,7 +328,7 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryIn
           label: $t('erp.inventory.quantity'),
           rules: 'required',
           dependencies: {
-            triggerFields: ['packageUnitName'],
+            triggerFields: ['packageUnitName', 'traceMode'],
             resolve: ({ schema }) => {
               const row = schema.row as
                 | InventoryInitialStockFormItem
@@ -270,6 +336,7 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryIn
               const unitName = row?.packageUnitName || '';
               return {
                 componentProps: {
+                  disabled: row?.traceMode === 'REQUIRED',
                   formatter: quantityFormatter(unitName),
                   parser: quantityParser(unitName),
                 },
@@ -292,6 +359,8 @@ export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryIn
           quantity: 1,
           remark: '',
           skuId: '',
+          traceCodes: [],
+          traceMode: 'NONE',
           unitCost: '',
         },
       ],

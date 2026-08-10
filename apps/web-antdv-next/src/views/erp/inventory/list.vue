@@ -5,12 +5,15 @@ import type { ErpInventoryApi } from '#/api/erp';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
-import { Plus } from '@vben/icons';
+import { Download, Plus } from '@vben/icons';
 
-import { Button } from 'antdv-next';
+import { Button, message } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getInventoryBalanceListApi } from '#/api/erp';
+import {
+  createInventoryBalanceExportApi,
+  getInventoryBalanceListApi,
+} from '#/api/erp';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
@@ -22,6 +25,7 @@ import InitialStockModalComponent from './initial-stock-modal.vue';
 import MovementDrawerComponent from './movement-drawer.vue';
 
 const { hasAccessByCodes } = useAccess();
+let currentSorts = '';
 
 const [InitialStockModal, initialStockModalApi] = useVbenModal({
   connectedComponent: InitialStockModalComponent,
@@ -46,11 +50,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues: Recordable<unknown>) => {
+          currentSorts = formatSorts(sorts);
           return getInventoryBalanceListApi({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: currentSorts,
           });
         },
       },
@@ -68,6 +73,15 @@ function openInitialStock() {
 function openMovements(row: ErpInventoryApi.InventoryBalance) {
   movementDrawerApi.setData(row).open();
 }
+
+async function createExport() {
+  const formValues = (await gridApi.formApi.getValues()) as ErpInventoryApi.InventoryBalanceExportRequest;
+  await createInventoryBalanceExportApi({
+    ...formValues,
+    sorts: currentSorts,
+  });
+  message.success($t('erp.inventory.exportCreated'));
+}
 </script>
 
 <template>
@@ -76,6 +90,13 @@ function openMovements(row: ErpInventoryApi.InventoryBalance) {
     <MovementDrawer />
     <Grid :table-title="$t('erp.inventory.balanceList')">
       <template #toolbar-tools>
+        <Button
+          v-if="hasAccessByCodes(['erp:inventoryBalance:export'])"
+          @click="createExport"
+        >
+          <Download class="size-5" />
+          {{ $t('erp.inventory.export') }}
+        </Button>
         <Button
           v-if="hasAccessByCodes(['erp:inventoryInitial:create'])"
           type="primary"

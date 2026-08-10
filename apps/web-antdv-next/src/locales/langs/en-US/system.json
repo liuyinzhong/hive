@@ -88,6 +88,26 @@
     "create": "Create Test Message",
     "createSuccess": "Test message created successfully"
   },
+  "downloadCenter": {
+    "title": "Download Center",
+    "taskName": "Task Name",
+    "sourceModule": "Source Module",
+    "createDate": "Created At",
+    "status": "Status",
+    "pending": "Pending",
+    "running": "Generating",
+    "succeeded": "Completed",
+    "failed": "Failed",
+    "progress": "Progress",
+    "rowCount": "Rows",
+    "fileSize": "File Size",
+    "completedDate": "Completed At",
+    "expireDate": "File Expires At",
+    "operation": "Operation",
+    "download": "Download",
+    "downloading": "Downloading file",
+    "retentionHelp": "Export files are retained for 7 days and cannot be downloaded after expiry. Task records are automatically removed after 30 days."
+  },
   "externalPage": {
     "batchDelete": "Batch Delete",
     "batchDeleteConfirm": "Delete the selected {0} external pages?",

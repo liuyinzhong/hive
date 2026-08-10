@@ -2,6 +2,8 @@
   "title": "开发管理",
   "task": {
     "title": "任务管理",
+    "export": "导出",
+    "exportCreated": "导出任务已创建，可前往下载中心查看进度",
     "gantt": "甘特图"
   },
   "versions": {
@@ -51,6 +53,7 @@
     "taskDelete": "删除",
     "taskDetail": "详情",
     "taskFieldUpdate": "字段修改",
+    "taskExport": "导出",
     "taskList": "列表",
     "taskUpdate": "修改",
     "versionAdvance": "推进",

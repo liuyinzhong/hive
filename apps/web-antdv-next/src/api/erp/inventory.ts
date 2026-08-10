@@ -3,6 +3,8 @@ import type { Recordable } from '@vben/types';
 import { requestClient } from '#/api/request';
 
 export namespace ErpInventoryApi {
+  export type InventoryTraceMode = 'NONE' | 'REQUIRED';
+  export type InventoryTraceCodeStatus = 'IN_STOCK' | 'OUTBOUND';
   /** 库存来源单据类型。 */
   export type InventorySourceBillType =
     | 'INITIAL_STOCK'
@@ -62,6 +64,8 @@ export namespace ErpInventoryApi {
     approvalNo: string;
     /** 包装单位成本价。 */
     unitCost: string;
+    /** 追溯码管理模式。 */
+    traceMode: InventoryTraceMode;
     /** 更新时间。 */
     updateDate?: null | string;
     /** 仓库编码。 */
@@ -154,6 +158,30 @@ export namespace ErpInventoryApi {
     skuId: string;
     /** 包装单位成本价。 */
     unitCost: string;
+    /** 小包装追溯码。 */
+    traceCodes?: string[];
+  }
+
+  export interface InventoryTraceCode {
+    batchId: string;
+    batchNo: string;
+    createDate?: null | string;
+    currentBalanceId?: null | string;
+    expiryDate: string;
+    packageLevel: 'SMALL';
+    packageSpecName: string;
+    parentTraceId?: null | string;
+    productName: string;
+    rowVersion: number;
+    skuCode: string;
+    skuId: string;
+    specName: string;
+    status: InventoryTraceCodeStatus;
+    traceCode: string;
+    traceId: string;
+    updateDate?: null | string;
+    warehouseId?: null | string;
+    warehouseName?: null | string;
   }
 
   /** 创建初始库存请求。 */
@@ -171,6 +199,14 @@ export namespace ErpInventoryApi {
     /** 来源批次号。 */
     sourceBillNo: string;
   }
+
+  export interface InventoryBalanceExportRequest {
+    batchNo?: string;
+    onlyPositive?: boolean;
+    skuCode?: string;
+    sorts?: string;
+    warehouseId?: string;
+  }
 }
 
 export function getInventoryBalanceListApi(params: Recordable<unknown>) {
@@ -178,6 +214,15 @@ export function getInventoryBalanceListApi(params: Recordable<unknown>) {
     items: ErpInventoryApi.InventoryBalance[];
     total: number;
   }>('/erp/inventory/balances', { params });
+}
+
+export function createInventoryBalanceExportApi(
+  data: ErpInventoryApi.InventoryBalanceExportRequest,
+) {
+  return requestClient.post<{ id: string }>(
+    '/erp/inventory/balances/exports',
+    data,
+  );
 }
 
 export function getInventoryMovementsApi(
@@ -211,4 +256,21 @@ export function createInventoryInitialStocksApi(
     '/erp/inventory/initialStocks',
     data,
   );
+}
+
+export function getInventoryTraceCodeListApi(params: Recordable<unknown>) {
+  return requestClient.get<{
+    items: ErpInventoryApi.InventoryTraceCode[];
+    total: number;
+  }>('/erp/inventory/traceCodes', { params });
+}
+
+export function getInventoryTraceCodeMovementsApi(
+  traceId: string,
+  params: Recordable<unknown> = {},
+) {
+  return requestClient.get<{
+    items: ErpInventoryApi.InventoryMovement[];
+    total: number;
+  }>(`/erp/inventory/traceCodes/${traceId}/movements`, { params });
 }

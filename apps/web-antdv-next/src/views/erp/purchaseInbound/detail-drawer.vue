@@ -33,6 +33,10 @@ const basicItems = computed<DescriptionsItemType[]>(() => [
     label: $t('erp.purchaseInbound.inboundDate'),
   },
   {
+    content: detail.value?.purchaseOrderNo || '-',
+    label: $t('erp.purchaseOrder.purchaseOrderNo'),
+  },
+  {
     content: detail.value?.supplierName || '-',
     label: $t('erp.purchaseInbound.supplier'),
   },

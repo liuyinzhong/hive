@@ -4,7 +4,7 @@ import type { ErpInventoryApi, ErpOtherOutboundApi } from '#/api/erp';
 import type { InputNumberProps } from 'antdv-next';
 
 import { Modal } from 'antdv-next';
-import { ref } from 'vue';
+import { markRaw, ref } from 'vue';
 
 import { z } from '#/adapter/form';
 import { getInventoryBalanceListApi, getWarehouseOptionsApi } from '#/api/erp';
@@ -14,6 +14,7 @@ import {
   inventoryAmountLabel,
   inventoryUnitCountLabel,
 } from '../inventory/data';
+import TraceCodeField from '../components/trace-code-field.vue';
 
 export interface OtherOutboundFormItem
   extends ErpOtherOutboundApi.OtherOutboundItemInput {
@@ -26,6 +27,7 @@ export interface OtherOutboundFormItem
   productName?: string;
   skuCode?: string;
   specName?: string;
+  traceMode?: ErpInventoryApi.InventoryTraceMode;
   unitCost?: string;
 }
 
@@ -59,6 +61,8 @@ export function createOtherOutboundFormItem(): OtherOutboundFormItem {
     remark: '',
     skuCode: '',
     specName: '',
+    traceCodes: [],
+    traceMode: 'NONE',
     unitCost: '',
   };
 }
@@ -359,6 +363,21 @@ export function useOtherOutboundFormSchema(): VbenFormSchema<OtherOutboundFormVa
                 false,
               );
               await actions.setFieldValue(
+                `${ctx.rowPath}.traceCodes`,
+                [],
+                false,
+              );
+              await actions.setFieldValue(
+                `${ctx.rowPath}.traceMode`,
+                balance?.traceMode || 'NONE',
+                false,
+              );
+              await actions.setFieldValue(
+                `${ctx.rowPath}.quantity`,
+                balance?.traceMode === 'REQUIRED' ? 0 : 1,
+                false,
+              );
+              await actions.setFieldValue(
                 `${ctx.rowPath}.unitCost`,
                 balance?.unitCost || '',
                 false,
@@ -413,6 +432,37 @@ export function useOtherOutboundFormSchema(): VbenFormSchema<OtherOutboundFormVa
           label: $t('erp.otherOutbound.currentStock'),
         },
         {
+          changeEventFallback: true,
+          component: markRaw(TraceCodeField),
+          componentProps: (ctx) => ({
+            contextLabel: [
+              ctx.row?.skuCode,
+              ctx.row?.productName,
+              ctx.row?.batchNo,
+            ]
+              .filter(Boolean)
+              .join(' / '),
+            disabled:
+              !ctx.row?.balanceId || ctx.row?.traceMode !== 'REQUIRED',
+          }),
+          defaultValue: [],
+          dependencies: {
+            async trigger(_values, actions, _controller, ctx) {
+              if (!ctx?.rowPath || ctx.row?.traceMode !== 'REQUIRED') return;
+              await actions.setFieldValue(
+                `${ctx.rowPath}.quantity`,
+                Array.isArray(ctx.row?.traceCodes)
+                  ? ctx.row.traceCodes.length
+                  : 0,
+                false,
+              );
+            },
+            triggerFields: ['traceCodes'],
+          },
+          fieldName: 'traceCodes',
+          label: $t('erp.inventory.traceCodes'),
+        },
+        {
           component: 'InputNumber',
           componentProps: {
             max: 999_999_999,
@@ -421,12 +471,13 @@ export function useOtherOutboundFormSchema(): VbenFormSchema<OtherOutboundFormVa
             changeOnWheel: true,
           },
           dependencies: {
-            triggerFields: ['packageUnitName'],
+            triggerFields: ['packageUnitName', 'traceMode'],
             resolve: ({ schema }) => {
               const row = schema.row as OtherOutboundFormItem | undefined;
               const unitName = row?.packageUnitName || '';
               return {
                 componentProps: {
+                  disabled: row?.traceMode === 'REQUIRED',
                   formatter: quantityFormatter(unitName),
                   parser: quantityParser(unitName),
                 },

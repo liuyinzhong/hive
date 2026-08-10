@@ -15,6 +15,10 @@ export namespace ErpPurchaseInboundApi {
     inboundId: string;
     /** 入库单号。 */
     inboundNo: string;
+    /** 来源采购单 ID。 */
+    purchaseOrderId: string;
+    /** 来源采购单号。 */
+    purchaseOrderNo: string;
     /** 明细行数。 */
     lineCount: number;
     /** 单据备注。 */
@@ -41,10 +45,10 @@ export namespace ErpPurchaseInboundApi {
     remark?: null | string;
     /** 包装单位入库数量。 */
     quantity: number;
-    /** SKU ID。 */
-    skuId: string;
-    /** 包装单位成本价。 */
-    unitCost: string;
+    /** 来源采购明细 ID。 */
+    purchaseOrderItemId: string;
+    /** 小包装追溯码。 */
+    traceCodes?: string[];
   }
 
   /** 新增采购入库单请求。 */
@@ -55,10 +59,8 @@ export namespace ErpPurchaseInboundApi {
     items: PurchaseInboundItemInput[];
     /** 单据备注。 */
     remark?: null | string;
-    /** 供应商企业主体 ID。 */
-    supplierId: string;
-    /** 入库仓库 ID。 */
-    warehouseId: string;
+    /** 来源采购单 ID。 */
+    purchaseOrderId: string;
   }
 
   /** 采购入库单明细。 */
@@ -69,6 +71,8 @@ export namespace ErpPurchaseInboundApi {
     enterpriseName: string;
     /** 采购入库明细 ID。 */
     inboundItemId: string;
+    /** 来源采购明细 ID。 */
+    purchaseOrderItemId: string;
     /** 明细行号。 */
     lineNo: number;
     /** 最小单位名称。 */
@@ -83,6 +87,10 @@ export namespace ErpPurchaseInboundApi {
     specName: string;
     /** SKU 编码。 */
     skuCode: string;
+    /** SKU ID。 */
+    skuId: string;
+    /** 包装单位成本价。 */
+    unitCost: string;
   }
 
   /** 采购入库单详情。 */

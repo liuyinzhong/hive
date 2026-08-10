@@ -39,8 +39,12 @@ function encodeFormValues(
   return {
     items: (values.items || []).map((item) => ({
       balanceId: item.balanceId,
-      quantity: Number(item.quantity),
+      quantity:
+        item.traceMode === 'REQUIRED'
+          ? item.traceCodes?.length || 0
+          : Number(item.quantity),
       remark: item.remark?.trim() || null,
+      traceCodes: item.traceCodes || [],
     })),
     outboundDate: values.outboundDate,
     remark: values.remark?.trim() || null,
@@ -50,15 +54,38 @@ function encodeFormValues(
 
 function validateItems(items: OtherOutboundFormValues['items']) {
   const seen = new Map<string, number>();
+  const seenTraceCodes = new Map<string, number>();
   for (const [index, item] of (items || []).entries()) {
     const lineNo = index + 1;
     if (!item.balanceId) {
       message.error($t('erp.otherOutbound.inventoryBalanceRequired', [lineNo]));
       return false;
     }
-    if (!Number.isInteger(Number(item.quantity)) || Number(item.quantity) < 1) {
+    const traceCodes = item.traceCodes || [];
+    if (item.traceMode === 'REQUIRED' && traceCodes.length < 1) {
+      message.error($t('erp.inventory.traceCodesRequired', [lineNo]));
+      return false;
+    }
+    if (
+      item.traceMode !== 'REQUIRED' &&
+      (!Number.isInteger(Number(item.quantity)) || Number(item.quantity) < 1)
+    ) {
       message.error($t('erp.otherOutbound.quantityInvalid', [lineNo]));
       return false;
+    }
+    for (const traceCode of traceCodes) {
+      const duplicateLineNo = seenTraceCodes.get(traceCode);
+      if (duplicateLineNo) {
+        message.error(
+          $t('erp.inventory.duplicateTraceCodeAcrossLines', [
+            traceCode,
+            lineNo,
+            duplicateLineNo,
+          ]),
+        );
+        return false;
+      }
+      seenTraceCodes.set(traceCode, lineNo);
     }
     const duplicateLineNo = seen.get(item.balanceId);
     if (duplicateLineNo) {

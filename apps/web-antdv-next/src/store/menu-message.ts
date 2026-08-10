@@ -17,6 +17,7 @@ const reconnectDelay = 2000;
 export const useMenuMessageStore = defineStore('menu-message', () => {
   const accessStore = useAccessStore();
   const summaries = ref<SystemMenuMessageApi.UnreadSummary[]>([]);
+  const downloadTaskRevision = ref(0);
   const running = ref(false);
   const readingPaths = new Set<string>();
   const originalBadges = new WeakMap<
@@ -63,6 +64,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
     abortController = null;
     streamBuffer = '';
     summaries.value = [];
+    downloadTaskRevision.value = 0;
     readingPaths.clear();
     syncMenuBadges();
   }
@@ -149,10 +151,6 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
         .find((line) => line.startsWith('event:'))
         ?.slice('event:'.length)
         .trim();
-      if (eventName !== 'unreadSummary') {
-        continue;
-      }
-
       const data = block
         .split(/\r?\n/)
         .filter((line) => line.startsWith('data:'))
@@ -163,8 +161,12 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
       }
 
       try {
-        summaries.value = JSON.parse(data);
-        syncMenuBadges();
+        if (eventName === 'unreadSummary') {
+          summaries.value = JSON.parse(data);
+          syncMenuBadges();
+        } else if (eventName === 'downloadTaskChanged') {
+          downloadTaskRevision.value += 1;
+        }
       } catch {
         // 不应用格式错误的推送，下一次完整汇总会自动校准。
       }
@@ -214,6 +216,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
 
   return {
     $reset,
+    downloadTaskRevision,
     markMenuRead,
     start,
     stop,

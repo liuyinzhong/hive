@@ -12,6 +12,8 @@ export namespace ProductSkuApi {
   export type ProductSkuStatus = 0 | 1;
   /** 是否允许拆零：0 否，1 是。 */
   export type ProductSkuAllowSplit = 0 | 1;
+  /** 追溯码管理模式。 */
+  export type ProductSkuTraceMode = 'NONE' | 'REQUIRED';
 
   /** 产品品规（SKU）基础信息。 */
   export interface ProductSku {
@@ -77,6 +79,8 @@ export namespace ProductSkuApi {
     spuId: string;
     /** 状态：0 停用，1 启用。 */
     status: ProductSkuStatus;
+    /** 追溯码管理模式。 */
+    traceMode: ProductSkuTraceMode;
     /** UDI-DI。 */
     udiDi?: null | string;
     /** 更新时间。 */
@@ -103,6 +107,8 @@ export namespace ProductSkuApi {
     packageUnitName: string;
     /** 状态：0 停用，1 启用。 */
     status: ProductSkuStatus;
+    /** 追溯码管理模式。 */
+    traceMode: ProductSkuTraceMode;
   };
 
   /** 更新产品品规（SKU）状态请求。 */
@@ -132,6 +138,7 @@ export namespace ProductSkuApi {
     | 'rowVersion'
     | 'skuCode'
     | 'skuId'
+    | 'traceMode'
     | 'udiDi'
     | 'updateDate'
   >;

@@ -102,6 +102,18 @@ export function useProductSkuFormSchema(
       component: 'RadioGroup',
       componentProps: {
         options: [
+          { label: $t('product.sku.traceModeNone'), value: 'NONE' },
+          { label: $t('product.sku.traceModeRequired'), value: 'REQUIRED' },
+        ],
+      },
+      defaultValue: 'NONE',
+      fieldName: 'traceMode',
+      label: $t('product.sku.traceMode'),
+    },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
           { label: $t('common.enabled'), value: 1 },
           { label: $t('common.disabled'), value: 0 },
         ],

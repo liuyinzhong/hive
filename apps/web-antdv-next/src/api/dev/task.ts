@@ -4,6 +4,14 @@ import { objectOmit } from '@vueuse/core';
 
 import { requestClient } from '#/api/request';
 export namespace DevTaskApi {
+  export interface DevTaskExportRequest {
+    projectId?: string;
+    sorts?: string;
+    taskStatus?: number[];
+    taskTitle?: string;
+    versionId?: string;
+  }
+
   export interface DevTaskFace {
     [key: string]: any;
     taskId?: string;
@@ -35,6 +43,10 @@ export namespace DevTaskApi {
     avatar?: string;
   }
 }
+
+export const createTaskExportApi = async (
+  data: DevTaskApi.DevTaskExportRequest,
+) => requestClient.post<{ id: string }>('/dev/tasks/exports', data);
 
 /**
  * 获取任务列表

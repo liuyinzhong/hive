@@ -3,11 +3,7 @@ import type { Recordable } from '@vben/types';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ErpPurchaseInboundApi } from '#/api/erp';
 
-import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
-import { Plus } from '@vben/icons';
-
-import { Button } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getPurchaseInboundListApi } from '#/api/erp';
@@ -19,15 +15,7 @@ import {
   usePurchaseInboundSearchSchema,
 } from './data';
 import DetailDrawerComponent from './detail-drawer.vue';
-import FormDrawerComponent from './form-drawer.vue';
 import MovementDrawerComponent from '../inventory/movement-drawer.vue';
-
-const { hasAccessByCodes } = useAccess();
-
-const [FormDrawer, formDrawerApi] = useVbenDrawer({
-  connectedComponent: FormDrawerComponent,
-  destroyOnClose: true,
-});
 
 const [DetailDrawer, detailDrawerApi] = useVbenDrawer({
   connectedComponent: DetailDrawerComponent,
@@ -39,7 +27,7 @@ const [MovementDrawer, movementDrawerApi] = useVbenDrawer({
   destroyOnClose: true,
 });
 
-const [Grid, gridApi] = useVbenVxeGrid({
+const [Grid] = useVbenVxeGrid({
   formOptions: {
     schema: usePurchaseInboundSearchSchema(),
     showCollapseButton: false,
@@ -67,10 +55,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<ErpPurchaseInboundApi.PurchaseInboundListItem>,
 });
 
-function openCreate() {
-  formDrawerApi.setData({}).open();
-}
-
 function openDetail(row: ErpPurchaseInboundApi.PurchaseInboundListItem) {
   detailDrawerApi.setData({ inboundId: row.inboundId }).open();
 }
@@ -88,20 +72,9 @@ function openMovements(row: ErpPurchaseInboundApi.PurchaseInboundListItem) {
 
 <template>
   <Page auto-content-height>
-    <FormDrawer @success="gridApi.query()" />
     <DetailDrawer />
     <MovementDrawer />
     <Grid :table-title="$t('erp.purchaseInbound.list')">
-      <template #toolbar-tools>
-        <Button
-          v-if="hasAccessByCodes(['erp:purchaseInbound:create'])"
-          type="primary"
-          @click="openCreate"
-        >
-          <Plus class="size-5" />
-          {{ $t('erp.purchaseInbound.create') }}
-        </Button>
-      </template>
       <template #action="{ row }">
         <VbenTableAction
           :actions="[
