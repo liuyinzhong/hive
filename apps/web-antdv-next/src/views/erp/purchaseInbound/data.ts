@@ -262,32 +262,35 @@ export function usePurchaseInboundFormSchema(): VbenFormSchema<PurchaseInboundFo
         {
           changeEventFallback: true,
           component: markRaw(TraceCodeField),
-          componentProps: (ctx) => ({
-            contextLabel: ctx.row?.skuLabel || '',
-            disabled:
-              !ctx.row?.purchaseOrderItemId ||
-              ctx.row?.traceMode !== 'REQUIRED',
-          }),
           defaultValue: [],
           dependencies: {
-            async trigger(_values, actions, _controller, ctx) {
-              if (!ctx?.rowPath || ctx.row?.traceMode !== 'REQUIRED') return;
-              await actions.setFieldValue(
-                `${ctx.rowPath}.quantity`,
-                Array.isArray(ctx.row?.traceCodes)
-                  ? ctx.row.traceCodes.length
-                  : 0,
-                false,
-              );
+            resolve: ({ actions, schema }) => {
+              const row = schema.row as PurchaseInboundFormItem | undefined;
+              return {
+                componentProps: {
+                  contextLabel: row?.skuLabel || '',
+                  disabled:
+                    !row?.purchaseOrderItemId || row.traceMode !== 'REQUIRED',
+                  async onChange(codes: string[]) {
+                    if (!schema.rowPath || row?.traceMode !== 'REQUIRED')
+                      return;
+                    await actions.setFieldValue(
+                      `${schema.rowPath}.quantity`,
+                      codes.length,
+                      false,
+                    );
+                  },
+                },
+              };
             },
-            triggerFields: ['traceCodes'],
+            triggerFields: ['purchaseOrderItemId', 'skuLabel', 'traceMode'],
           },
           fieldName: 'traceCodes',
           label: $t('erp.inventory.traceCodes'),
         },
         {
           component: 'InputNumber',
-          componentProps: { max: 999999999, min: 1, precision: 0 },
+          componentProps: { max: 999_999_999, min: 1, precision: 0 },
           dependencies: {
             resolve: ({ schema }) => {
               const row = schema.row as PurchaseInboundFormItem | undefined;
@@ -295,7 +298,7 @@ export function usePurchaseInboundFormSchema(): VbenFormSchema<PurchaseInboundFo
                 componentProps: {
                   disabled: row?.traceMode === 'REQUIRED',
                   formatter: quantityFormatter(row?.packageUnitName),
-                  max: row?.remainingQuantity || 999999999,
+                  max: row?.remainingQuantity || 999_999_999,
                   parser: quantityParser(row?.packageUnitName),
                 },
               };

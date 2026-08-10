@@ -43,10 +43,31 @@ const [Grid, gridApi] = useVbenVxeGrid({
       zoom: true,
       custom: true,
       refresh: true,
+      export: true,
+      import: true,
+      print: true,
     },
     editConfig: {
       trigger: 'click',
       mode: 'cell',
+    },
+    printConfig: {},
+    importConfig: {},
+    exportConfig: {
+      remote: false,
+      type: 'xlsx',
+      types: ['xlsx'],
+      mode: 'all',
+      modes: ['all'],
+      /* slots: {
+        parameter: (params) => {
+          return '暂不支持';
+        },
+      },
+
+      exportMethod: async (e1) => {
+        await createExport();
+      }, */
     },
     columns: useColumns(onActionClick),
     sortConfig: {
@@ -56,10 +77,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async (
-          { page, sorts }: any,
-          formValues: Recordable<any>,
-        ) => {
+        query: async ({ page, sorts }: any, formValues: Recordable<any>) => {
           currentSorts = formatSorts(sorts);
           return await getTaskListApi({
             page: page.currentPage,
