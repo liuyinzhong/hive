@@ -72,15 +72,18 @@ function openDetail(row: MedicalRegistrationApi.Registration) {
   detailDrawerApi.setData({ registrationId: row.registrationId }).open();
 }
 
-function runAction(
+function runAction<T extends MedicalRegistrationApi.Registration>(
   title: string,
-  action: () => Promise<MedicalRegistrationApi.Registration>,
+  action: () => Promise<T>,
+  successMessage?: (result: T) => string,
 ) {
   Modal.confirm({
     content: title,
     async onOk() {
-      await action();
-      message.success($t('medical.registration.actionSuccess'));
+      const result = await action();
+      message.success(
+        successMessage?.(result) ?? $t('medical.registration.actionSuccess'),
+      );
       await gridApi.query();
     },
     title: $t('common.confirm'),
@@ -161,8 +164,13 @@ function actions(row: MedicalRegistrationApi.Registration) {
         auth: 'medical:registration:checkIn',
         icon: 'lucide:log-in',
         onClick: () =>
-          runAction($t('medical.registration.checkInConfirm'), () =>
-            checkInRegistrationApi(row.registrationId),
+          runAction(
+            $t('medical.registration.checkInConfirm'),
+            () => checkInRegistrationApi(row.registrationId),
+            (result) =>
+              $t('medical.registration.checkInSuccess', [
+                result.queueInfo.queueSequence,
+              ]),
           ),
         text: $t('medical.registration.checkIn'),
       },

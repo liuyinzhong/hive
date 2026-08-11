@@ -16,6 +16,9 @@ export namespace MedicalRegistrationApi {
    */
   export type RegistrationStatus = 0 | 10 | 30 | 50 | 60 | 70 | 80 | 90 | 100;
 
+  /** 候诊状态：0-候诊中，30-已完成。 */
+  export type VisitQueueStatus = 0 | 30;
+
   /** 挂号单日志。 */
   export interface LifecycleRecord {
     /** 变更前状态；创建挂号单时为空。 */
@@ -34,6 +37,22 @@ export namespace MedicalRegistrationApi {
     refundAmount?: null | string;
     /** 变更后状态。 */
     toStatus: RegistrationStatus;
+  }
+
+  /** 挂号单签到后生成的候诊信息。 */
+  export interface VisitQueue {
+    /** 累计叫号次数；当前阶段固定从0开始。 */
+    callCount: number;
+    /** 候诊记录创建时间，即签到排号时间。 */
+    createDate: string;
+    /** 创建人系统用户ID。 */
+    creatorId?: null | string;
+    /** 候诊记录ID。 */
+    queueId: string;
+    /** 同一实际排班内的签到序号。 */
+    queueSequence: number;
+    /** 当前候诊状态。 */
+    queueStatus: VisitQueueStatus;
   }
 
   /** 挂号单详情。 */
@@ -78,6 +97,8 @@ export namespace MedicalRegistrationApi {
     patientPhone: string;
     /** 挂号单ID。 */
     registrationId: string;
+    /** 未签到时为空，签到后返回候诊信息。 */
+    queueInfo?: null | VisitQueue;
     /** 挂号方式。 */
     registrationMethod: RegistrationMethod;
     /** 挂号单编号。 */
@@ -100,6 +121,11 @@ export namespace MedicalRegistrationApi {
     status: RegistrationStatus;
     /** 最后更新时间，格式为 YYYY-MM-DD HH:mm:ss。 */
     updateDate?: string;
+  }
+
+  /** 签到成功后的挂号单详情，候诊信息必定存在。 */
+  export interface CheckInRegistrationResponse extends Registration {
+    queueInfo: VisitQueue;
   }
 
   /** 创建挂号单请求。 */
@@ -165,8 +191,11 @@ export function createRegistrationApi(
  * @param action 后端动作路径片段。
  * @returns 更新后的挂号单详情。
  */
-function registrationAction(registrationId: string, action: string) {
-  return requestClient.post<MedicalRegistrationApi.Registration>(
+function registrationAction<
+  T extends MedicalRegistrationApi.Registration =
+    MedicalRegistrationApi.Registration,
+>(registrationId: string, action: string) {
+  return requestClient.post<T>(
     `/medical/registrations/${registrationId}/${action}`,
   );
 }
@@ -216,7 +245,10 @@ export const cancelRegistrationApi = (id: string, reason: string) =>
  * @returns 更新后的挂号单详情。
  */
 export const checkInRegistrationApi = (id: string) =>
-  registrationAction(id, 'checkIn');
+  registrationAction<MedicalRegistrationApi.CheckInRegistrationResponse>(
+    id,
+    'checkIn',
+  );
 
 /**
  * 将已签到挂号单推进为已完成。

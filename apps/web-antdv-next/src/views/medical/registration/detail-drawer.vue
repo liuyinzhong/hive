@@ -90,6 +90,28 @@ const items = computed(() => {
         : '-',
       label: $t('medical.registration.visitTime'),
     },
+    ...(value?.queueInfo
+      ? [
+          {
+            content: String(value.queueInfo.queueSequence),
+            label: $t('medical.registration.queueSequence'),
+          },
+          {
+            content: $t(
+              `medical.registration.queueStatus${value.queueInfo.queueStatus}`,
+            ),
+            label: $t('medical.registration.queueStatus'),
+          },
+          {
+            content: String(value.queueInfo.callCount),
+            label: $t('medical.registration.callCount'),
+          },
+          {
+            content: value.queueInfo.createDate,
+            label: $t('medical.registration.checkInTime'),
+          },
+        ]
+      : []),
     {
       content: value ? `¥${value.feeAmount}` : '-',
       label: $t('medical.registration.feeAmount'),

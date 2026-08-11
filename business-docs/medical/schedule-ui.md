@@ -16,15 +16,30 @@
 ## 日历动作
 
 | 排班状态 | 页面动作 | 权限 |
-|---|---|---|
+| --- | --- | --- |
 | 草稿 `0` | 编辑 | `medical:schedule:update` |
 | 草稿 `0` | 单个或批量发布 | `medical:schedule:publish` |
 | 草稿 `0` | 删除 | `medical:schedule:delete` |
 | 已发布 `1` | 停诊 | `medical:schedule:stop` |
+| 已发布 `1`、已停诊 `2`、已结束 `3` | 查看队列（总人数） | `medical:visitQueue:list` |
 | 任意 | 新建排班 | `medical:schedule:create` |
 | 任意 | 按模板生成 | `medical:schedule:generate` |
 
 只有草稿行显示复选框，批量发布按钮仅在选中至少一个草稿且拥有发布权限时显示。筛选或刷新后，已经不在结果中或不再是草稿的 ID 会从选中集合移除。
+
+## 排班详情抽屉
+
+- 拥有 `medical:schedule:detail` 权限时，点击周视图排班卡片或月视图选中日期弹窗中的排班卡片，打开只读详情抽屉。
+- 抽屉通过 `GET /medical/schedules/{scheduleId}` 获取最新详情，不复用日历列表中的排班快照。
+- 详情展示医生、科室、日期时段、挂号类型、状态、挂号费用、号源汇总、候诊总人数、状态时间、停诊原因、备注和半小时号源明细。
+- 卡片中的队列、编辑、发布、删除和停诊按钮独立处理点击，不触发详情抽屉。
+
+## 候诊队列抽屉
+
+- 周视图排班卡片和月视图选中日期的排班卡片，都在非草稿状态显示“队列（总人数）”；总人数直接取排班列表响应的 `queueCount`，不为每张卡片单独发请求。
+- 点击入口后通过 `GET /medical/schedules/{scheduleId}/visitQueues` 一次性加载完整队列，不分页，按候诊序号升序展示。
+- 抽屉只读，展示候诊序号、患者编号、脱敏姓名、脱敏手机号、挂号单号、号源时段、候诊状态、叫号次数和签到时间，不提供操作列或详情跳转。
+- 姓名和手机号是否脱敏完全以后端响应为准；页面不使用 `medical:patient:viewSensitive` 放开队列隐私信息。
 
 ## 手工生成
 
@@ -36,4 +51,3 @@
 ## 已知前后端差异
 
 后端存在 `PUT /medical/schedules/:scheduleId/finish` 和 `medical:schedule:finish` 权限，可在排班结束时间后把已发布排班标记为已结束；当前前端 `schedule.ts` 未封装该 API，日历也没有“结束”按钮。任何补入口的需求都必须同时同步 API 类型、按钮权限、国际化和本说明。
-

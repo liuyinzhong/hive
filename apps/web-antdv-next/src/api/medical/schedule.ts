@@ -4,6 +4,7 @@ export namespace MedicalScheduleApi {
   export type ScheduleStatus = 0 | 1 | 2 | 3;
   export type TaskStatus = 0 | 1 | 2 | 3;
   export type TaskType = 'generate' | 'publish';
+  export type VisitQueueStatus = 0 | 30;
 
   export interface SlotQuota {
     quota: number;
@@ -77,6 +78,7 @@ export namespace MedicalScheduleApi {
     finishedAt?: null | string;
     generationBatchId?: null | string;
     publishedAt?: null | string;
+    queueCount: number;
     registrationType: string;
     remainingQuota: number;
     remark?: null | string;
@@ -90,6 +92,20 @@ export namespace MedicalScheduleApi {
     templateId?: null | string;
     totalQuota: number;
     updateDate?: string;
+  }
+
+  export interface VisitQueueItem {
+    callCount: number;
+    checkInTime: string;
+    endTime: string;
+    patientName: string;
+    patientNo: string;
+    patientPhone: string;
+    queueId: string;
+    queueSequence: number;
+    queueStatus: VisitQueueStatus;
+    registrationNo: string;
+    startTime: string;
   }
 
   export interface SaveSchedule {
@@ -176,6 +192,33 @@ export function getScheduleListApi(params: Record<string, unknown>) {
     items: MedicalScheduleApi.Schedule[];
     total: number;
   }>('/medical/schedules', { params });
+}
+
+/**
+ * 获取指定实际排班的完整详情。
+ *
+ * @param scheduleId 实际排班ID。
+ * @returns 排班详情及半小时号源档位。
+ */
+export function getScheduleDetailApi(scheduleId: string) {
+  return requestClient.get<MedicalScheduleApi.Schedule>(
+    `/medical/schedules/${scheduleId}`,
+  );
+}
+
+/**
+ * 获取指定实际排班的完整候诊队列。
+ *
+ * 接口直接返回按候诊序号升序排列的数组，不分页；患者姓名和手机号
+ * 已由服务端无条件脱敏。
+ *
+ * @param scheduleId 实际排班ID。
+ * @returns 只读候诊队列。
+ */
+export function getVisitQueueListApi(scheduleId: string) {
+  return requestClient.get<MedicalScheduleApi.VisitQueueItem[]>(
+    `/medical/schedules/${scheduleId}/visitQueues`,
+  );
 }
 
 export function createScheduleApi(data: MedicalScheduleApi.SaveSchedule) {

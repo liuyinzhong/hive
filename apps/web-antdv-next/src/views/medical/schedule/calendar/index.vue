@@ -39,9 +39,11 @@ import {
 import { $t } from '#/locales';
 
 import { statusOptions as getScheduleStatusOptions } from '../shared';
+import DetailDrawerComponent from './detail-drawer.vue';
 import FormDrawerComponent from './form-drawer.vue';
 import GenerateDrawerComponent from './generate-drawer.vue';
 import StopModalComponent from './stop-modal.vue';
+import VisitQueueDrawerComponent from './visit-queue-drawer.vue';
 
 type ViewMode = 'month' | 'week';
 
@@ -62,8 +64,16 @@ const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: FormDrawerComponent,
   destroyOnClose: true,
 });
+const [DetailDrawer, detailDrawerApi] = useVbenDrawer({
+  connectedComponent: DetailDrawerComponent,
+  destroyOnClose: true,
+});
 const [GenerateDrawer, generateDrawerApi] = useVbenDrawer({
   connectedComponent: GenerateDrawerComponent,
+  destroyOnClose: true,
+});
+const [VisitQueueDrawer, visitQueueDrawerApi] = useVbenDrawer({
+  connectedComponent: VisitQueueDrawerComponent,
   destroyOnClose: true,
 });
 const [StopModal, stopModalApi] = useVbenModal({
@@ -200,6 +210,12 @@ function openEdit(schedule: MedicalScheduleApi.Schedule) {
   formDrawerApi.setData(schedule).open();
 }
 
+function openDetail(schedule: MedicalScheduleApi.Schedule) {
+  if (!hasAccessByCodes(['medical:schedule:detail'])) return;
+  selectedDate.value = undefined;
+  detailDrawerApi.setData({ scheduleId: schedule.scheduleId }).open();
+}
+
 function openGenerate() {
   generateDrawerApi
     .setData({ anchorDate: anchorDate.value.format('YYYY-MM-DD') })
@@ -208,6 +224,11 @@ function openGenerate() {
 
 function openStop(schedule: MedicalScheduleApi.Schedule) {
   stopModalApi.setData(schedule).open();
+}
+
+function openVisitQueue(schedule: MedicalScheduleApi.Schedule) {
+  selectedDate.value = undefined;
+  visitQueueDrawerApi.setData(schedule).open();
 }
 
 function openDay(date: string) {
@@ -246,8 +267,10 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
 <template>
   <Page auto-content-height>
     <FormDrawer @success="fetchSchedules" />
+    <DetailDrawer />
     <GenerateDrawer @success="fetchSchedules" />
     <StopModal @success="fetchSchedules" />
+    <VisitQueueDrawer />
 
     <div class="flex h-full flex-col gap-3">
       <Card size="small">
@@ -313,14 +336,14 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
             >
               {{ $t('medical.schedule.generate') }}
             </Button>
-            <Button
+            <!-- <Button
               v-if="hasAccessByCodes(['medical:schedule:create'])"
               type="primary"
               @click="openCreate()"
             >
               <Plus class="size-5" />
               {{ $t('medical.schedule.createSchedule') }}
-            </Button>
+            </Button> -->
           </div>
         </div>
       </Card>
@@ -385,12 +408,19 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                 <Card
                   v-for="schedule in getDaySchedules(day)"
                   :key="schedule.scheduleId"
+                  :class="{
+                    'cursor-pointer': hasAccessByCodes([
+                      'medical:schedule:detail',
+                    ]),
+                  }"
                   size="small"
+                  @click="openDetail(schedule)"
                 >
                   <div class="mb-1 flex items-start gap-1">
                     <Checkbox
                       v-if="schedule.status === 0"
                       :checked="selectedDraftIds.includes(schedule.scheduleId)"
+                      @click.stop
                       @change="
                         toggleDraft(schedule.scheduleId, $event.target.checked)
                       "
@@ -440,12 +470,27 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                   <div class="mt-1 flex flex-wrap justify-end gap-1">
                     <Button
                       v-if="
+                        schedule.status !== 0 &&
+                        hasAccessByCodes(['medical:visitQueue:list'])
+                      "
+                      size="small"
+                      type="link"
+                      @click.stop="openVisitQueue(schedule)"
+                    >
+                      {{
+                        $t('medical.schedule.visitQueueWithCount', [
+                          schedule.queueCount,
+                        ])
+                      }}
+                    </Button>
+                    <Button
+                      v-if="
                         schedule.status === 0 &&
                         hasAccessByCodes(['medical:schedule:update'])
                       "
                       size="small"
                       type="link"
-                      @click="openEdit(schedule)"
+                      @click.stop="openEdit(schedule)"
                     >
                       {{ $t('common.edit') }}
                     </Button>
@@ -456,7 +501,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                       "
                       size="small"
                       type="link"
-                      @click="publish([schedule.scheduleId])"
+                      @click.stop="publish([schedule.scheduleId])"
                     >
                       {{ $t('medical.schedule.publish') }}
                     </Button>
@@ -468,7 +513,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                       danger
                       size="small"
                       type="link"
-                      @click="removeDraft(schedule)"
+                      @click.stop="removeDraft(schedule)"
                     >
                       {{ $t('common.delete') }}
                     </Button>
@@ -480,7 +525,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                       danger
                       size="small"
                       type="link"
-                      @click="openStop(schedule)"
+                      @click.stop="openStop(schedule)"
                     >
                       {{ $t('medical.schedule.stop') }}
                     </Button>
@@ -542,7 +587,11 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
         <Card
           v-for="schedule in selectedDaySchedules"
           :key="schedule.scheduleId"
+          :class="{
+            'cursor-pointer': hasAccessByCodes(['medical:schedule:detail']),
+          }"
           size="small"
+          @click="openDetail(schedule)"
         >
           <div class="flex flex-wrap items-center gap-2">
             <strong>{{ schedule.doctorName }}</strong>
@@ -552,10 +601,7 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                 schedule.endTime.slice(0, 5)
               }}</span
             >
-            <DictTag
-              dict-type="MED_SCHEDULE_STATUS"
-              :value="schedule.status"
-            />
+            <DictTag dict-type="MED_SCHEDULE_STATUS" :value="schedule.status" />
             <span class="ml-auto">
               {{
                 $t('medical.schedule.quotaSummary', [
@@ -564,6 +610,21 @@ function removeDraft(schedule: MedicalScheduleApi.Schedule) {
                 ])
               }}
             </span>
+            <Button
+              v-if="
+                schedule.status !== 0 &&
+                hasAccessByCodes(['medical:visitQueue:list'])
+              "
+              size="small"
+              type="link"
+              @click.stop="openVisitQueue(schedule)"
+            >
+              {{
+                $t('medical.schedule.visitQueueWithCount', [
+                  schedule.queueCount,
+                ])
+              }}
+            </Button>
           </div>
         </Card>
         <Empty v-if="selectedDaySchedules.length === 0" />
