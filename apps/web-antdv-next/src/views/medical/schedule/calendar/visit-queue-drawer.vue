@@ -106,6 +106,18 @@ const [Drawer, drawerApi] = useVbenDrawer({
     await gridApi.query();
   },
 });
+
+function queueStatusColor(status: MedicalScheduleApi.VisitQueueStatus) {
+  return (
+    {
+      0: 'default',
+      10: 'processing',
+      15: 'warning',
+      20: 'blue',
+      30: 'success',
+    } as const
+  )[status];
+}
 </script>
 
 <template>
@@ -115,7 +127,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
         {{ row.startTime }}–{{ row.endTime }}
       </template>
       <template #queueStatus="{ row }">
-        <Tag :color="row.queueStatus === 30 ? 'success' : 'processing'">
+        <Tag :color="queueStatusColor(row.queueStatus)">
           {{ $t(`medical.registration.queueStatus${row.queueStatus}`) }}
         </Tag>
       </template>

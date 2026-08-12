@@ -1,12 +1,12 @@
 # 医疗前端业务手册
 
-本目录记录医生管理、医生排班和挂号候诊的页面入口、按钮展示、表单联动和交互约束。业务规则正文位于后端仓库 `hive-admin-go/business-docs/medical`。
+本目录记录医生管理、医生排班、挂号候诊、医生工作台、疾病诊断和处方审核的页面入口、按钮展示、表单联动和交互约束。业务规则正文位于后端仓库 `hive-admin-go/business-docs/medical`。
 
 ## 阅读顺序
 
 1. 阅读后端 [医疗领域词汇](../../../hive-admin-go/business-docs/medical/CONTEXT.md)。
 2. 阅读后端 [医疗业务手册](../../../hive-admin-go/business-docs/medical/README.md) 和当前模块规则。
-3. 阅读 [医生管理 UI](./doctor-ui.md)、[医生排班 UI](./schedule-ui.md) 或 [挂号候诊 UI](./registration-ui.md)。
+3. 阅读 [医生管理 UI](./doctor-ui.md)、[医生排班 UI](./schedule-ui.md)、[挂号候诊 UI](./registration-ui.md) 或 [医生工作台与处方审核 UI](./outpatient-workbench-ui.md)。
 4. 核对 `src/api/medical`、当前页面和后端对应接口。
 
 ## 模块
@@ -16,6 +16,7 @@
 | 医生管理 | [doctor-ui.md](./doctor-ui.md) | [doctor.md](../../../hive-admin-go/business-docs/medical/doctor.md) |
 | 医生排班 | [schedule-ui.md](./schedule-ui.md) | [schedule.md](../../../hive-admin-go/business-docs/medical/schedule.md) |
 | 挂号候诊 | [registration-ui.md](./registration-ui.md) | [visit-queue.md](../../../hive-admin-go/business-docs/medical/visit-queue.md) |
+| 医生工作台、诊断与处方审核 | [outpatient-workbench-ui.md](./outpatient-workbench-ui.md) | [outpatient-workbench-draft.md](../../../hive-admin-go/business-docs/medical/outpatient-workbench-draft.md) |
 
 ## 维护边界
 

@@ -15,7 +15,6 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   cancelRegistrationApi,
   checkInRegistrationApi,
-  completeRegistrationApi,
   completeRegistrationRefundApi,
   confirmRegistrationPaymentApi,
   getRegistrationListApi,
@@ -196,17 +195,6 @@ function actions(row: MedicalRegistrationApi.Registration) {
         text: $t('medical.registration.refundStart'),
       },
     );
-  }
-  if (row.status === 30) {
-    result.push({
-      auth: 'medical:registration:complete',
-      icon: 'lucide:circle-check-big',
-      onClick: () =>
-        runAction($t('medical.registration.completeConfirm'), () =>
-          completeRegistrationApi(row.registrationId),
-        ),
-      text: $t('medical.registration.complete'),
-    });
   }
   if (row.status === 80) {
     result.push({

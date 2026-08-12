@@ -100,7 +100,7 @@ _避免_：删除患者、物理删除
 
 **挂号查看权限**：挂号列表和挂号详情分别使用独立权限码；详情权限同时控制挂号详情和生命周期记录查看，状态操作另行使用各自权限码。
 
-**挂号权限码**：使用 `medical:registration:list`、`medical:registration:detail`、`medical:registration:create`、`medical:registration:confirmPayment`、`medical:registration:cancel`、`medical:registration:checkIn`、`medical:registration:complete`、`medical:registration:noShow`、`medical:registration:refundStart`、`medical:registration:refundProcess` 和 `medical:registration:refundComplete`，权限仅按权限码判断。
+**挂号权限码**：使用 `medical:registration:list`、`medical:registration:detail`、`medical:registration:create`、`medical:registration:confirmPayment`、`medical:registration:cancel`、`medical:registration:checkIn`、`medical:registration:noShow`、`medical:registration:refundStart`、`medical:registration:refundProcess` 和 `medical:registration:refundComplete`，权限仅按权限码判断；完成接诊由医生工作台正式接口处理。
 
 **挂号方式**：挂号单的来源方式，首期通过字典区分 `0（现场挂号）` 和 `10（预约挂号）`；两种方式共用同一挂号单模型，不创建独立预约单。
 

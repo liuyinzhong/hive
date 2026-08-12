@@ -17,7 +17,7 @@ export namespace MedicalRegistrationApi {
   export type RegistrationStatus = 0 | 10 | 30 | 50 | 60 | 70 | 80 | 90 | 100;
 
   /** 候诊状态：0-候诊中，30-已完成。 */
-  export type VisitQueueStatus = 0 | 30;
+  export type VisitQueueStatus = 0 | 10 | 15 | 20 | 30;
 
   /** 挂号单日志。 */
   export interface LifecycleRecord {
@@ -249,15 +249,6 @@ export const checkInRegistrationApi = (id: string) =>
     id,
     'checkIn',
   );
-
-/**
- * 将已签到挂号单推进为已完成。
- *
- * @param id 挂号单ID。
- * @returns 更新后的挂号单详情。
- */
-export const completeRegistrationApi = (id: string) =>
-  registrationAction(id, 'complete');
 
 /**
  * 将号源已结束且未签到的已支付挂号单标记为爽约。

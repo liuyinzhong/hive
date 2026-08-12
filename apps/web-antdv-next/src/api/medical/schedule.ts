@@ -4,7 +4,7 @@ export namespace MedicalScheduleApi {
   export type ScheduleStatus = 0 | 1 | 2 | 3;
   export type TaskStatus = 0 | 1 | 2 | 3;
   export type TaskType = 'generate' | 'publish';
-  export type VisitQueueStatus = 0 | 30;
+  export type VisitQueueStatus = 0 | 10 | 15 | 20 | 30;
 
   export interface SlotQuota {
     quota: number;
