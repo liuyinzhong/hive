@@ -20,9 +20,11 @@ apps/web-antdv-next
 
 ## 开发前
 
+进入任何已有业务模块时，必须先阅读前后端 `business-docs` 中对应的领域词汇、业务规则和 UI 说明，用文档先建立对业务目标、状态、边界和运行逻辑的整体理解，再阅读页面、API 和后端代码核实现状。不得一开始通过逐文件钻研代码来反推业务规则；代码用于验证文档、发现差异和完成实现，不代替文档提供业务上下文。
+
 按以下顺序获取上下文：
 
-1. 业务模块先阅读 `business-docs` 中对应手册；`docs` 只用于 Vben 上游框架和通用技术文档。
+1. 先从 `business-docs/README.md` 定位领域，再阅读对应前后端手册；`docs` 只用于 Vben 上游框架和通用技术文档。
 2. 阅读当前业务模块和相似页面。
 3. 查找已有公共组件、Hook、工具函数、Schema 和类型。
 4. 必要时对比只读的 Vben5 官方上游实现。
@@ -38,6 +40,7 @@ apps/web-antdv-next
 
 - 后端仓库 `../hive-admin-go/business-docs/<领域>` 是术语、业务规则、状态流转、前置条件、副作用和权限的唯一正文。
 - 本仓库 `business-docs/<领域>` 只维护页面入口、按钮展示、表单联动、刷新和交互规则，并链接后端正文。
+- `business-docs/README.md` 是页面和 API 到业务领域的总索引；新增顶层业务页面、API、Store 或菜单时必须登记。
 - 前端 `docs` 只用于 Vben 上游框架和通用技术文档，不混入 Hive 业务文档。
 - 后端 `CONTEXT.md` 只定义领域词汇，具体规则写入模块文档；新领域或跨领域关系还要同步后端 `CONTEXT-MAP.md`。
 - API 类型和页面代码不能代替业务文档，按钮隐藏也不能代替后端权限和状态校验。
@@ -87,15 +90,15 @@ apps/web-antdv-next
 
 处理 `src/views/product` 或 `src/api/product` 前，依次阅读 `business-docs/product/README.md`、后端 `../hive-admin-go/business-docs/product` 的领域词汇及当前规则、对应 UI 文档和当前代码。
 
-处理医生管理或医生排班前，依次阅读 `business-docs/medical/README.md`、后端 `../hive-admin-go/business-docs/medical` 的领域词汇及当前规则、`doctor-ui.md` 或 `schedule-ui.md` 和当前代码。
+处理任一医疗模块前，依次阅读 `business-docs/medical/README.md`、后端 `../hive-admin-go/business-docs/medical/CONTEXT.md`、后端当前模块规则、对应 `*-ui.md`，最后再读当前 API、页面与后端实现。
 
-后端业务手册是产品和医疗业务规则正文，前端文档只维护页面交互。产品档案、医生管理或医生排班的规则、接口、权限或 UI 行为变化时，在同一次修改中同步对应文档；患者、挂号、挂号费等尚未迁入新手册的模块仍需核对后端根 `CONTEXT.md`。
+后端业务手册是产品和医疗业务规则正文，前端文档只维护页面交互。产品档案、科室、医生、患者、诊断、挂号费、排班、挂号候诊、接诊或处方审核的规则、接口、权限或 UI 行为变化时，在同一次修改中同步对应文档。
 
-### 系统消息与下载中心业务文档
+### 系统管理业务文档
 
-处理 `src/store/menu-message.ts`、`src/api/system/message.ts`、`download.ts`、`src/views/system/message`、`downloadCenter`、`src/layouts/basic.vue` 中的消息接入，或任一来源模块异步导出入口前，依次阅读 `business-docs/system/README.md`、后端 `../hive-admin-go/business-docs/system` 的领域词汇及当前规则、对应 UI 文档和当前代码。
+处理 `src/api/auth`、`src/api/system`、`src/views/system`、登录与个人资料页、外部页面、消息 Store、下载中心或任一来源模块异步导出入口前，依次阅读 `business-docs/system/README.md`、后端 `../hive-admin-go/business-docs/system` 的领域词汇及当前规则、对应 UI 文档，最后再读当前代码。
 
-菜单消息角标、右上角框架通知和下载进度事件是不同概念，不得共享一套未确认的状态语义。修改 SSE 生命周期、事件名、菜单角标、已读时机、下载状态、列表刷新、文件条件、来源筛选或导出权限时，在同一次修改中同步对应文档。
+登录授权、动态菜单、字典参数、文件、审计、外部页面、支付渠道、菜单消息和下载中心分别有独立规则，不能互相套用。修改权限、敏感配置、SSE 生命周期、事件名、菜单角标、下载状态、文件条件、来源筛选或导出权限时，在同一次修改中同步对应文档。
 
 ## 技能自动调用
 

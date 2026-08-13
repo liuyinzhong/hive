@@ -1,26 +1,24 @@
 # 医疗前端业务手册
 
-本目录记录医生管理、医生排班、挂号候诊、医生工作台、疾病诊断和处方审核的页面入口、按钮展示、表单联动和交互约束。业务规则正文位于后端仓库 `hive-admin-go/business-docs/medical`。
+本目录记录医疗页面入口、按钮、表单联动和刷新规则。业务状态、前置条件、事务和副作用的正文位于后端 [医疗业务手册](../../../hive-admin-go/business-docs/medical/README.md)。
 
 ## 阅读顺序
 
 1. 阅读后端 [医疗领域词汇](../../../hive-admin-go/business-docs/medical/CONTEXT.md)。
-2. 阅读后端 [医疗业务手册](../../../hive-admin-go/business-docs/medical/README.md) 和当前模块规则。
-3. 阅读 [医生管理 UI](./doctor-ui.md)、[医生排班 UI](./schedule-ui.md)、[挂号候诊 UI](./registration-ui.md) 或 [医生工作台与处方审核 UI](./outpatient-workbench-ui.md)。
-4. 核对 `src/api/medical`、当前页面和后端对应接口。
+2. 阅读后端当前模块规则和下表对应 UI 文档。
+3. 最后核对 src/api/medical、src/views/medical 和后端实现。
 
 ## 模块
 
 | 前端模块 | UI 文档 | 后端规则 |
 |---|---|---|
+| 临床科室 | [department-ui.md](./department-ui.md) | [department.md](../../../hive-admin-go/business-docs/medical/department.md) |
 | 医生管理 | [doctor-ui.md](./doctor-ui.md) | [doctor.md](../../../hive-admin-go/business-docs/medical/doctor.md) |
+| 患者档案 | [patient-ui.md](./patient-ui.md) | [patient.md](../../../hive-admin-go/business-docs/medical/patient.md) |
+| 疾病诊断档案 | [diagnosis-ui.md](./diagnosis-ui.md) | [diagnosis.md](../../../hive-admin-go/business-docs/medical/diagnosis.md) |
+| 挂号费 | [registration-fee-ui.md](./registration-fee-ui.md) | [registration-fee.md](../../../hive-admin-go/business-docs/medical/registration-fee.md) |
 | 医生排班 | [schedule-ui.md](./schedule-ui.md) | [schedule.md](../../../hive-admin-go/business-docs/medical/schedule.md) |
-| 挂号候诊 | [registration-ui.md](./registration-ui.md) | [visit-queue.md](../../../hive-admin-go/business-docs/medical/visit-queue.md) |
-| 医生工作台、诊断与处方审核 | [outpatient-workbench-ui.md](./outpatient-workbench-ui.md) | [outpatient-workbench-draft.md](../../../hive-admin-go/business-docs/medical/outpatient-workbench-draft.md) |
+| 挂号与候诊 | [registration-ui.md](./registration-ui.md) | [挂号](../../../hive-admin-go/business-docs/medical/registration.md)、[候诊](../../../hive-admin-go/business-docs/medical/visit-queue.md) |
+| 医生工作台、病历与处方审核 | [outpatient-workbench-ui.md](./outpatient-workbench-ui.md) | [outpatient-workbench-draft.md](../../../hive-admin-go/business-docs/medical/outpatient-workbench-draft.md) |
 
-## 维护边界
-
-- 后端文档定义状态、前置条件、事务和副作用。
-- 前端文档定义页面呈现、按钮条件和表单联动。
-- 页面状态判断和按钮隐藏不能代替后端校验。
-- 患者、挂号主流程和挂号费尚未完整迁入本目录，相关任务继续核对后端根 `CONTEXT.md` 和当前代码。
+药房词汇目前是规划边界，前端没有对应页面或 API。新增药房页面前必须先建立后端模块规则和本目录 UI 文档。

@@ -1,11 +1,10 @@
 # 医疗页面上下文
 
-修改本目录页面前先阅读前端 `business-docs/medical/README.md`，再按模块阅读对应 UI 文档和后端规则正文。
+修改本目录任一页面前，必须先阅读前端 business-docs/medical/README.md，再阅读后端 business-docs/medical/CONTEXT.md、README.md 和对应模块规则，随后阅读对应 UI 文档，最后查看页面与 API 代码。不得从页面实现开始反推医疗业务。
 
-- `doctor-workbench`、`diagnosis`、`prescription-review`：阅读前端 `outpatient-workbench-ui.md` 和后端 `outpatient-workbench-draft.md`。
-- `registration`：阅读前端 `registration-ui.md`、后端 `visit-queue.md` 和根 `CONTEXT.md`。
-- `doctor`、`schedule`：继续遵循各自目录内更具体的 `AGENTS.md`。
+- department、patient、diagnosis、registration-fee：读取同名后端规则和 *-ui.md。
+- registration：同时读取 registration.md、visit-queue.md 和 registration-ui.md。
+- doctor-workbench、prescription-review：读取 outpatient-workbench-draft.md 和 outpatient-workbench-ui.md；诊断管理再读 diagnosis.md。
+- doctor、schedule：继续遵循各自目录内更具体的 AGENTS.md。
 
-医生工作台全部操作共用 `medical:doctorWorkbench:access`，处方审核共用 `medical:prescriptionReview:access`；页面按钮状态不能代替后端医生归属、候诊状态和审核人校验。候诊队列始终脱敏，开始接诊后的当前患者和历史病历不脱敏。
-
-门诊病历的文档式录入只改变交互表现，API 仍按独立结构化字段保存，禁止把整段 HTML 或富文本作为病历正文提交。
+页面按钮状态不能代替后端权限、医生归属、号源、候诊、患者隐私和处方审核校验。医疗状态或接口变化必须同步所有受影响模块文档。
