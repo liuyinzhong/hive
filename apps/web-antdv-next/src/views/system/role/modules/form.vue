@@ -33,24 +33,61 @@ const [Form, formApi] = useVbenForm({
 const permissions = ref<DataNode[]>([]);
 const loadingPermissions = ref(false);
 
+const dataScopes: SystemRoleApi.DataScope[] = [
+  'all',
+  'customDepartment',
+  'department',
+  'departmentAndChildren',
+  'self',
+  'none',
+];
+
+function isDataScope(value: unknown): value is SystemRoleApi.DataScope {
+  return dataScopes.includes(value as SystemRoleApi.DataScope);
+}
+
+function toStringArray(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : [];
+}
+
+function toSaveRoleRequest(
+  values: Recordable<unknown>,
+): SystemRoleApi.SaveRoleRequest {
+  const dataScope = isDataScope(values.dataScope) ? values.dataScope : 'self';
+  return {
+    dataScope,
+    dataScopeDeptIds:
+      dataScope === 'customDepartment'
+        ? toStringArray(values.dataScopeDeptIds)
+        : [],
+    permissions: toStringArray(values.permissions),
+    remark: typeof values.remark === 'string' ? values.remark : undefined,
+    roleTitle: typeof values.roleTitle === 'string' ? values.roleTitle : '',
+    status: values.status === 0 ? 0 : 1,
+  };
+}
+
 const [Drawer, drawerApi] = useVbenDrawer({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
     const values = await formApi.getValues();
+    const roleId = typeof values.roleId === 'string' ? values.roleId : '';
+    const payload = toSaveRoleRequest(values);
     drawerApi.lock();
-    (values.roleId
-      ? updateRoleApi(values.roleId, values)
-      : createRoleApi(values)
-    )
-      .then(() => {
-        emits('success');
-        drawerApi.close();
-      })
-      .catch(() => {})
-      .finally(() => {
-        drawerApi.unlock();
-      });
+    try {
+      if (roleId) {
+        await updateRoleApi(roleId, payload);
+      } else {
+        await createRoleApi(payload);
+      }
+      emits('success');
+      drawerApi.close();
+    } finally {
+      drawerApi.unlock();
+    }
   },
   async onOpenChange(isOpen) {
     if (isOpen) {

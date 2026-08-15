@@ -13,6 +13,7 @@
 | 前端模块 | UI 文档 | 后端规则 |
 |---|---|---|
 | 登录、资料、用户、角色、部门和菜单 | [access-control-ui.md](./access-control-ui.md) | [access-control.md](../../../hive-admin-go/business-docs/system/access-control.md) |
+| 角色数据范围和受限结果交互 | [data-permission-ui.md](./data-permission-ui.md) | [data-permission.md](../../../hive-admin-go/business-docs/system/data-permission.md) |
 | 字典和参数 | [dictionary-parameter-ui.md](./dictionary-parameter-ui.md) | [dictionary-parameter.md](../../../hive-admin-go/business-docs/system/dictionary-parameter.md) |
 | 上传文件和文件列表 | [file-management-ui.md](./file-management-ui.md) | [file-management.md](../../../hive-admin-go/business-docs/system/file-management.md) |
 | 操作日志、登录日志和外部页面 | [audit-external-page-ui.md](./audit-external-page-ui.md) | [审计](../../../hive-admin-go/business-docs/system/audit-log.md)、[外部页面](../../../hive-admin-go/business-docs/system/external-page.md) |
@@ -23,6 +24,6 @@
 ## 维护边界
 
 - 动态菜单和按钮只控制前端入口，后端认证、原子权限和业务归属仍是最终边界。
+- 数据范围由后端按当前用户解析；前端筛选、缓存、隐藏按钮或提交部门 ID 都不能扩大结果。
 - SSE 事件只提示刷新，不能代替持久化查询。
 - 系统模块中的敏感配置不得写入前端日志、错误提示或文档示例。
-

@@ -146,7 +146,15 @@
     "createDate": "Create Time",
     "operation": "Operation",
     "permissions": "Permissions",
-    "setPermissions": "Authorize"
+    "setPermissions": "Authorize",
+    "dataScope": "Data Scope",
+    "customDepartments": "Custom Departments",
+    "dataScopeAll": "All Data",
+    "dataScopeCustomDepartment": "Custom Department Data",
+    "dataScopeDepartment": "Current Department Data",
+    "dataScopeDepartmentAndChildren": "Current and Child Department Data",
+    "dataScopeSelf": "Own Data Only",
+    "dataScopeNone": "No Data"
   },
   "dict": {
     "title": "Dict Management",

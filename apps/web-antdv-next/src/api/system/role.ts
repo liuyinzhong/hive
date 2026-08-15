@@ -1,37 +1,59 @@
-import type { Recordable } from '@vben/types';
-import { objectOmit } from '@vueuse/core';
 import { requestClient } from '#/api/request';
 
 export namespace SystemRoleApi {
+  export type DataScope =
+    | 'all'
+    | 'customDepartment'
+    | 'department'
+    | 'departmentAndChildren'
+    | 'none'
+    | 'self';
+
   export interface SystemRoleFace {
-    [key: string]: any;
+    createDate?: string;
+    dataScope: DataScope;
+    dataScopeDeptIds?: string[];
+    permissions?: string[];
+    remark?: string;
     roleId: string;
     roleTitle: string;
-    permissions: string[];
-    remark?: string;
     status: 0 | 1;
   }
+
+  export interface RoleListParams {
+    endDate?: string;
+    page?: number;
+    pageSize?: number;
+    remark?: string;
+    roleTitle?: string;
+    sorts?: string;
+    startDate?: string;
+    status?: 0 | 1;
+  }
+
+  export interface RoleListResult {
+    items: SystemRoleFace[];
+    total: number;
+  }
+
+  export type SaveRoleRequest = Omit<SystemRoleFace, 'createDate' | 'roleId'>;
 }
 
 /**
  * 获取角色列表数据
  */
-export const getRoleListApi = async (params: Recordable<any>) => {
-  return requestClient.get<Array<SystemRoleApi.SystemRoleFace>>(
-    '/system/roles',
-    { params },
-  );
+export const getRoleListApi = async (params: SystemRoleApi.RoleListParams) => {
+  return requestClient.get<SystemRoleApi.RoleListResult>('/system/roles', {
+    params,
+  });
 };
 
 /**
  * 创建角色
  * @param data 角色数据
  */
-export const createRoleApi = async (
-  data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
-) => {
-  const newData = objectOmit(data, ['roleId']);
-  return requestClient.post('/system/roles', newData);
+export const createRoleApi = async (data: SystemRoleApi.SaveRoleRequest) => {
+  return requestClient.post('/system/roles', data);
 };
 
 /**
@@ -41,10 +63,9 @@ export const createRoleApi = async (
  */
 export const updateRoleApi = async (
   roleId: string,
-  data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
+  data: SystemRoleApi.SaveRoleRequest,
 ) => {
-  const newData = objectOmit(data, ['roleId']);
-  return requestClient.put(`/system/roles/${roleId}`, newData);
+  return requestClient.put(`/system/roles/${roleId}`, data);
 };
 
 /**
@@ -61,7 +82,7 @@ export const deleteRoleApi = async (roleIds: string[]) => {
  */
 export const updateRoleStatusApi = async (
   roleId: string,
-  data: Omit<SystemRoleApi.SystemRoleFace, 'roleId'>,
+  data: Pick<SystemRoleApi.SystemRoleFace, 'status'>,
 ) => {
   return requestClient.put(`/system/roles/${roleId}/status`, data);
 };

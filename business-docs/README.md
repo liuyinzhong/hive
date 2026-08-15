@@ -23,7 +23,7 @@
 | 开发管理 | 项目、版本、需求、任务、缺陷、统计和仪表盘 | [dev](./dev/README.md) |
 | 表单 | Schema 列表、设计器和预览 | [form](./form/README.md) |
 | 工作流 | 定义设计、发起、实例、待办和抄送 | [workflow](./workflow/README.md) |
-| 系统管理 | 登录资料、权限、字典参数、文件日志、外部页面、支付渠道、消息和下载 | [system](./system/README.md) |
+| 系统管理 | 登录资料、角色数据范围、权限、字典参数、文件日志、外部页面、支付渠道、消息和下载 | [system](./system/README.md) |
 
 ## 前端源码覆盖表
 
