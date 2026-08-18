@@ -24,6 +24,7 @@ async function initSetupVbenForm() {
         ApiCascader: 'modelValue',
         ApiSelect: 'modelValue',
         ApiTreeSelect: 'modelValue',
+        IconPicker: 'modelValue',
       },
     },
     rules: {
