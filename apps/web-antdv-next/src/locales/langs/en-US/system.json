@@ -106,6 +106,8 @@
     "operation": "Operation",
     "download": "Download",
     "downloading": "Downloading file",
+    "preview": "Preview",
+    "preparingPreview": "Preparing preview...",
     "retentionHelp": "Export files are retained for 7 days and cannot be downloaded after expiry. Task records are automatically removed after 30 days."
   },
   "externalPage": {

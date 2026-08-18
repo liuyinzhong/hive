@@ -33,6 +33,16 @@
 - 请求结束无论成功失败都关闭加载提示。
 - 当前没有取消、重试、删除任务或延长文件有效期入口。
 
+## 文件预览
+
+- 操作列在"下载"按钮前展示"预览"按钮，可用条件与"下载"按钮一致：状态为 `succeeded`、存在文件名、过期时间晚于当前。
+- 点击预览先显示加载提示，调用后端 `GET /api/system/downloads/:id/preview-url` 获取 5 分钟有效的签名 URL（相对路径）。
+- 前端用 `window.location.origin` 拼接为完整 URL（dev 走 vite proxy 到后端，生产走 nginx 反代）；URL 上附加 `?fullfilename=<encodeURIComponent(fileName)>` 让 kkFileView 识别文件类型（公开接口路径 `/preview/:token` 不含扩展名，kkFileView 无法从 URL 推断，必须显式传文件名）。
+- 拼好的完整 URL Base64 编码后构造 `${VITE_KKFILEVIEW_URL}/onlinePreview?url=<encodeURIComponent(base64(absoluteUrl))>`，在新窗口打开。
+- `VITE_KKFILEVIEW_URL` 通过环境变量配置，未配置时给出错误提示。
+- kkFileView 通过公开接口 `GET /api/public/downloads/preview/:token` 取文件，无需登录态；token 复用项目 JWT 密钥签发，5 分钟内有效，过期或文件失效时由后端返回对应错误。kkFileView 服务端需配置 `trust.host` 白名单加入前端访问域名（dev 为 `localhost,127.0.0.1`，生产为前端域名），否则被 SSRF 防护拦截。
+- 请求结束无论成功失败都关闭加载提示。预览业务规则与权限边界见后端 `business-docs/system/download-center.md` 的 `SYS-DL-013`。
+
 ## 来源页面
 
 - 库存余额页按当前仓库、SKU 编码、批号、仅正库存和排序创建导出任务，按钮权限为 `erp:inventoryBalance:export`。

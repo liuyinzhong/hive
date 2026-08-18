@@ -48,6 +48,11 @@ export function useColumns(): VxeTableGridOptions<SystemDownloadApi.DownloadTask
       title: $t('system.downloadCenter.taskName'),
     },
     {
+      field: 'fileName',
+      minWidth: 180,
+      title: $t('system.downloadCenter.fileName'),
+    },
+    {
       field: 'sourceModule',
       title: $t('system.downloadCenter.sourceModule'),
       width: 130,
@@ -97,7 +102,7 @@ export function useColumns(): VxeTableGridOptions<SystemDownloadApi.DownloadTask
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('system.downloadCenter.operation'),
-      width: 110,
+      width: 160,
     },
   ];
 }

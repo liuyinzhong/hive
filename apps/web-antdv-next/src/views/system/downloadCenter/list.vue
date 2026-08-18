@@ -12,20 +12,23 @@ import dayjs from 'dayjs';
 import { storeToRefs } from 'pinia';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { downloadTaskFileApi, getDownloadTaskListApi } from '#/api/system';
+import {
+  downloadTaskFileApi,
+  getDownloadTaskListApi,
+  getDownloadTaskPreviewUrlApi,
+} from '#/api/system';
 import { $t } from '#/locales';
 import { useMenuMessageStore } from '#/store/menu-message';
 
 import { useColumns, useSearchSchema } from './data';
+import { previewWithKkFileView } from '#/utils/preview';
 
 const menuMessageStore = useMenuMessageStore();
 const { downloadTaskRevision } = storeToRefs(menuMessageStore);
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    fieldMappingTime: [
-      ['createDate', ['createDateStart', 'createDateEnd']],
-    ],
+    fieldMappingTime: [['createDate', ['createDateStart', 'createDateEnd']]],
     schema: useSearchSchema(),
     showCollapseButton: false,
     wrapperClass: 'sm:grid-cols-2 lg:grid-cols-3',
@@ -99,6 +102,32 @@ async function downloadFile(row: SystemDownloadApi.DownloadTask) {
     hideLoading();
   }
 }
+
+/**
+ * 通过 kkFileView 预览文件。
+ * 先调用后端获取临时签名 URL（5 分钟内有效），用 window.location.origin 拼接为完整 URL（dev 走 vite proxy、生产走 nginx 反代），
+ * 再通过公共方法 previewWithKkFileView 在新窗口打开预览，公共方法负责附加 fullfilename、base64 编码和 openWindow。
+ * @param row 当前行数据
+ */
+async function previewFile(row: SystemDownloadApi.DownloadTask) {
+  const hideLoading = message.loading({
+    content: $t('system.downloadCenter.preparingPreview'),
+    duration: 0,
+  });
+  try {
+    const { previewUrl } = await getDownloadTaskPreviewUrlApi(row.id);
+    debugger;
+    // 用当前 origin 拼接（dev 走 vite proxy 到后端，生产走 nginx 反代）
+    const absoluteUrl = `${window.location.origin}${previewUrl}`;
+    // 下载中心文件均为 xlsx，fileName 缺失时用任务名兜底
+    const fileName = row.fileName || `${row.taskName}.xlsx`;
+    previewWithKkFileView(absoluteUrl, fileName);
+  } catch (error: any) {
+    message.error(error.message || '预览失败');
+  } finally {
+    hideLoading();
+  }
+}
 </script>
 
 <template>
@@ -135,6 +164,14 @@ async function downloadFile(row: SystemDownloadApi.DownloadTask) {
         {{ formatFileSize(row.fileSize) }}
       </template>
       <template #action="{ row }">
+        <Button
+          :disabled="!canDownload(row)"
+          size="small"
+          type="link"
+          @click="previewFile(row)"
+        >
+          {{ $t('system.downloadCenter.preview') }}
+        </Button>
         <Button
           :disabled="!canDownload(row)"
           size="small"

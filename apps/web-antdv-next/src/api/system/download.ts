@@ -41,3 +41,14 @@ export function getDownloadTaskListApi(params: Recordable<unknown>) {
 export function downloadTaskFileApi(id: string) {
   return requestClient.download<Blob>(`/system/downloads/${id}/file`);
 }
+
+/**
+ * 获取下载任务的预览链接。
+ * 后端校验任务属于当前登录用户、状态为成功且文件未过期后，签发 5 分钟有效的 JWT token，
+ * 返回相对路径（如 `/api/public/downloads/preview/<token>`），由前端拼接完整 URL 后传给 kkFileView。
+ */
+export function getDownloadTaskPreviewUrlApi(id: string) {
+  return requestClient.get<{ previewUrl: string }>(
+    `/system/downloads/${id}/preview-url`,
+  );
+}

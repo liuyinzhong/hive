@@ -224,6 +224,40 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 - 优先复用项目 `utils`、`@vueuse/core` 和现有 Hooks。
 - 不重复实现时间格式化、防抖、节流、上传、下载或请求封装。
 
+## kkFileView 文件预览
+
+凡是通过 kkFileView 预览文件的场景，统一调用公共方法 `previewWithKkFileView(fileUrl, fileName?)`（位于 `apps/web-antdv-next/src/utils/preview.ts`，通过 `#/utils/preview` 引入）。不要在业务页面内自己拼接 base64、`fullfilename` 参数、`openWindow` 或直接复制 kkFileView URL 拼接逻辑。
+
+### 公共方法职责
+
+公共方法负责：kkFileView `/onlinePreview` URL 拼接 + `fullfilename` 附加 + Base64 编码 + `openWindow`。调用方负责：调用后端 API 拿到可访问的文件 URL、提供文件名、处理 loading 和异常。
+
+### 调用约束
+
+- `fileUrl` 必须是 kkFileView 服务端能直接 fetch 到的**绝对 URL**：
+  - 后端返回相对路径时，前端用 `window.location.origin` 拼接（dev 走 vite proxy，生产走 nginx 反代），保持与登录态同源
+  - 公开文件（如 CDN 资源）可直接用绝对 URL
+- `fileName` 含扩展名（如 `库存余额.xlsx`）；当 URL 路径不含文件扩展名时必须提供，让 kkFileView 识别文件类型
+- 公共方法在 `VITE_KKFILEVIEW_URL` 未配置时抛 `Error`，调用方必须 `try/catch` 并以 `message.error` 提示用户
+
+### 配置要求
+
+- `apps/web-antdv-next/.env.development` 和 `.env.production` 必须配置 `VITE_KKFILEVIEW_URL`，指向对应环境的 kkFileView 地址（dev 通常 `http://127.0.0.1:8012`，生产独立部署）
+- kkFileView 服务端 `application.properties` 的 `trust.host` 必须把后端访问域名加入白名单（dev 配 `localhost,127.0.0.1`，生产配后端真实域名，**不要用 `*`**）
+- 改 `.env.*` 必须重启 vite dev server 才能生效；改 `trust.host` 必须重启 kkFileView
+
+### 安全约束
+
+- **私有文件预览必须走短时 token**：需登录态才能访问的文件（如下载中心任务结果、用户私有文件），必须先调用后端短时 token 接口换取临时签名 URL，再传给 kkFileView；**不要**把用户 Token 直接附加到 URL 上传给 kkFileView，也不要把长期可访问的私有文件 URL 暴露给前端
+- 后端短时 token 规范见 `../hive-admin-go/AGENTS.md` "短时 token 与临时凭证" 章节
+- 公开文件（如已公开的 CDN 资源、机构 logo）可直接传 URL，无需 token
+
+### 现有调用方
+
+- 下载中心 `apps/web-antdv-next/src/views/system/downloadCenter/list.vue` 的 `previewFile`：先调 `getDownloadTaskPreviewUrlApi(id)` 拿短时 token URL，再用 `window.location.origin` 拼接，最后调 `previewWithKkFileView`。详见 `business-docs/system/download-center-ui.md`。
+
+新增预览入口必须复用本公共方法；并在交付说明中列出文件来源、是否需要短时 token、`fullfilename` 来源和 kkFileView 配置变更。
+
 ## 权限
 
 - 按钮和操作权限使用项目已有权限方案，权限码来自后端。
