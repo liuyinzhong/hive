@@ -1,4 +1,4 @@
-import type { SystemMenuMessageApi } from '#/api/system';
+import { SystemMenuMessageApi } from '#/api/system';
 
 import { computed, ref, watch } from 'vue';
 
@@ -161,10 +161,12 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
       }
 
       try {
-        if (eventName === 'unreadSummary') {
+        if (eventName === SystemMenuMessageApi.EventName.UnreadSummary) {
           summaries.value = JSON.parse(data);
           syncMenuBadges();
-        } else if (eventName === 'downloadTaskChanged') {
+        } else if (
+          eventName === SystemMenuMessageApi.EventName.DownloadTaskChanged
+        ) {
           downloadTaskRevision.value += 1;
         }
       } catch {

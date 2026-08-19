@@ -15,9 +15,15 @@
 
 ## 事件消费
 
-- `unreadSummary`：以服务端完整数组覆盖本地汇总并重新计算全部菜单角标。
-- `downloadTaskChanged`：只递增下载任务修订号，由下载中心监听后重新查询列表。
+事件名作为后端业务规则正文，登记在后端 `business-docs/system/message-push.md` 的 “SSE 事件名” 章节；前端代码不得使用裸字符串字面量，统一通过 `SystemMenuMessageApi.EventName` 常量引用（见 `apps/web-antdv-next/src/api/system/message.ts`）。
+
+| 事件名 | 常量 | 推送时机 | 前端处理 |
+|---|---|---|---|
+| `unreadSummary` | `EventName.UnreadSummary` | 建立连接后立即推送一次；之后未读汇总发生变化时推送 | 以服务端完整数组覆盖本地汇总并重新计算全部菜单角标 |
+| `downloadTaskChanged` | `EventName.DownloadTaskChanged` | 下载任务终态生成或状态变化时推送 | 仅递增下载任务修订号，由下载中心监听后重新查询列表 |
+
 - 格式错误的事件不写入状态，等待后续完整汇总校准。
+- 服务端每 30 秒发送一次心跳，心跳事件不携带业务数据，前端不写入状态。
 
 ## 已读交互
 
