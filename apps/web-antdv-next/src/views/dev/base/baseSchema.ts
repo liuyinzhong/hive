@@ -7,10 +7,8 @@ import {
   getStoryListApi,
 } from '#/api/dev';
 import type {
-  DevProjectApi,
   DevVersionApi,
   DevStoryApi,
-  DevModuleApi,
 } from '#/api/dev';
 import type { SystemUserApi } from '#/api/system';
 import { getUserListAllApi } from '#/api/system';
@@ -34,14 +32,12 @@ export const projectSchema = (config?: any): VbenFormSchema => {
   return {
     ...base,
     ...config,
-    componentProps: (_value: DevProjectApi.DevProjectFace, _formApi: any) => {
-      return {
-        api: () => getProjectsListApi(),
-        labelField: 'projectTitle',
-        valueField: 'projectId',
-        autoSelect: 'first',
-        ...config?.componentProps,
-      };
+    componentProps: {
+      api: () => getProjectsListApi(),
+      labelField: 'projectTitle',
+      valueField: 'projectId',
+      autoSelect: 'first',
+      ...config?.componentProps,
     },
     dependencies: {
       triggerFields: ['projectId'],
@@ -76,39 +72,39 @@ export const versionSchema = (config?: any): VbenFormSchema => {
         );
       },
     }),
-    componentProps: (value: DevVersionApi.DevVersionFace, _formApi: any) => {
-      if (!value.projectId) {
-        return {};
-      }
-      return {
-        key: `versionId_${value.projectId}`,
-        api: () =>
-          getVersionsListApi({
-            projectId: value.projectId,
-            includeId: value.versionId || undefined,
-          }),
-        labelField: 'version',
-        valueField: 'versionId',
-        resultField: 'items',
-        afterFetch: (res: any) => {
-          if (!res.items) {
-            _formApi.setFieldValue('versionId', undefined);
-          }
-          if (res.items && res.items.length > 0) {
-            const obj = res.items.find(
-              (item: any) => item.versionId === value.versionId,
-            );
-            if (!obj) {
-              _formApi.setFieldValue('versionId', undefined);
-            }
-          }
-        },
-        // autoSelect: false,
-        autoSelect: 'first',
-        ...config?.componentProps,
-      };
-    },
     dependencies: {
+      componentProps: (values, formApi) => {
+        if (!values.projectId) {
+          return { ...config?.componentProps };
+        }
+        return {
+          key: `versionId_${values.projectId}`,
+          api: () =>
+            getVersionsListApi({
+              projectId: values.projectId,
+              includeId: values.versionId || undefined,
+            }),
+          labelField: 'version',
+          valueField: 'versionId',
+          resultField: 'items',
+          afterFetch: (res: any) => {
+            if (!res.items) {
+              formApi.setFieldValue('versionId', undefined);
+            }
+            if (res.items && res.items.length > 0) {
+              const obj = res.items.find(
+                (item: any) => item.versionId === values.versionId,
+              );
+              if (!obj) {
+                formApi.setFieldValue('versionId', undefined);
+              }
+            }
+          },
+          // autoSelect: false,
+          autoSelect: 'first',
+          ...config?.componentProps,
+        };
+      },
       triggerFields: ['projectId'],
       ...config?.dependencies,
     },
@@ -126,34 +122,34 @@ export const moduleSchema = (config?: any): VbenFormSchema => {
   return {
     ...base,
     ...config,
-    componentProps: (value: DevModuleApi.DevModuleFace, _formApi: any) => {
-      if (!value.projectId) {
-        return {};
-      }
-      return {
-        key: `moduleId_${value.projectId}`,
-        api: () => getModulesListApi({ projectId: value.projectId }),
-        labelField: 'moduleTitle',
-        valueField: 'moduleId',
-        resultField: '',
-        afterFetch: (res: any) => {
-          if (!res) {
-            _formApi.setFieldValue('moduleId', undefined);
-          }
-          if (res && res.length > 0) {
-            const obj = res.find(
-              (item: any) => item.moduleId === value.moduleId,
-            );
-            if (!obj) {
-              _formApi.setFieldValue('moduleId', undefined);
-            }
-          }
-        },
-        autoSelect: 'first',
-        ...config?.componentProps,
-      };
-    },
     dependencies: {
+      componentProps: (values, formApi) => {
+        if (!values.projectId) {
+          return { ...config?.componentProps };
+        }
+        return {
+          key: `moduleId_${values.projectId}`,
+          api: () => getModulesListApi({ projectId: values.projectId }),
+          labelField: 'moduleTitle',
+          valueField: 'moduleId',
+          resultField: '',
+          afterFetch: (res: any) => {
+            if (!res) {
+              formApi.setFieldValue('moduleId', undefined);
+            }
+            if (res && res.length > 0) {
+              const obj = res.find(
+                (item: any) => item.moduleId === values.moduleId,
+              );
+              if (!obj) {
+                formApi.setFieldValue('moduleId', undefined);
+              }
+            }
+          },
+          autoSelect: 'first',
+          ...config?.componentProps,
+        };
+      },
       triggerFields: ['projectId', 'storyId'],
       ...config?.dependencies,
     },
@@ -187,56 +183,61 @@ export const storySchema = (config?: any): VbenFormSchema => {
       },
       ...config?.renderComponentContent,
     }),
-    componentProps: (value: DevStoryApi.DevStoryFace, formApi: any) => {
-      if (!value.versionId) {
-        return {};
-      }
+    componentProps: () => ({
+      /* 当params 中有值变化时，会重新触发api属性 */
+      params: {
+        keyword: keyword.value || undefined,
+      },
+    }),
+    dependencies: {
+      componentProps: (values, formApi) => {
+        if (!values.versionId) {
+          return { ...config?.componentProps };
+        }
 
-      return {
-        key: `storyId_${value.versionId}`,
-        api: (_params: any) => getStoryListApi({ ..._params }),
-        /* 当params 中有值变化时，会重新触发api属性 */
-        params: {
-          keyword: keyword.value || undefined,
-          versionId: value.versionId || undefined,
-          projectId: value.projectId || undefined,
-          includeId: value.storyId,
-        },
-        placeholder: '请输入需求标题、需求编号',
-        allowClear: true,
-        showSearch: true,
-        filterOption: false,
-        labelField: 'storyTitle',
-        valueField: 'storyId',
-        resultField: 'items',
-        autoSelect: false,
-        onSelect: (value: any, option: any) => {
-          keyword.value = '';
-          nextTick(() => {
-            formApi.setFieldValue('moduleId', option.moduleId || undefined);
-          });
-        },
-        onSearch: useDebounceFn((value: string) => {
-          keyword.value = value;
-        }, 700),
-        afterFetch: (res: any) => {
-          if (!res.items) {
-            formApi.setFieldValue('storyId', undefined);
-          }
-          if (res.items && res.items.length > 0) {
-            const obj = res.items.find(
-              (item: any) => item.storyId === value.storyId,
-            );
-            if (!obj) {
+        return {
+          key: `storyId_${values.versionId}`,
+          api: (params: any) =>
+            getStoryListApi({
+              ...params,
+              versionId: values.versionId || undefined,
+              projectId: values.projectId || undefined,
+              includeId: values.storyId,
+            }),
+          placeholder: '请输入需求标题、需求编号',
+          allowClear: true,
+          showSearch: true,
+          filterOption: false,
+          labelField: 'storyTitle',
+          valueField: 'storyId',
+          resultField: 'items',
+          autoSelect: false,
+          onSelect: (_value: any, option: any) => {
+            keyword.value = '';
+            nextTick(() => {
+              formApi.setFieldValue('moduleId', option.moduleId || undefined);
+            });
+          },
+          onSearch: useDebounceFn((value: string) => {
+            keyword.value = value;
+          }, 700),
+          afterFetch: (res: any) => {
+            if (!res.items) {
               formApi.setFieldValue('storyId', undefined);
             }
-          }
-        },
-        ...config?.componentProps,
-      };
-    },
-    dependencies: {
-      triggerFields: ['versionId'],
+            if (res.items && res.items.length > 0) {
+              const obj = res.items.find(
+                (item: any) => item.storyId === values.storyId,
+              );
+              if (!obj) {
+                formApi.setFieldValue('storyId', undefined);
+              }
+            }
+          },
+          ...config?.componentProps,
+        };
+      },
+      triggerFields: ['versionId', 'projectId'],
       ...config?.dependencies,
     },
   } as VbenFormSchema;

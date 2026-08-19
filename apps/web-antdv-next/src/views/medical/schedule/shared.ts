@@ -99,20 +99,22 @@ export function useScheduleDimensionSchemas(): VbenFormSchema[] {
     },
     {
       component: 'ApiSelect',
-      componentProps: (values) => ({
-        api: async () => {
-          if (!values.doctorId) return [];
-          const doctor = await getDoctorDetailApi(values.doctorId as string);
-          return doctor.departments.filter(
-            (item) => item.status === 1 && item.appointmentEnabled === 1,
-          );
-        },
-        key: `schedule-department-${values.doctorId ?? 'empty'}`,
+      componentProps: {
         labelField: 'departmentName',
         resultField: '',
         valueField: 'departmentId',
-      }),
+      },
       dependencies: {
+        componentProps: (values) => ({
+          api: async () => {
+            if (!values.doctorId) return [];
+            const doctor = await getDoctorDetailApi(values.doctorId as string);
+            return doctor.departments.filter(
+              (item) => item.status === 1 && item.appointmentEnabled === 1,
+            );
+          },
+          key: `schedule-department-${values.doctorId ?? 'empty'}`,
+        }),
         disabled: (values) => !values.doctorId,
         triggerFields: ['doctorId'],
       },
