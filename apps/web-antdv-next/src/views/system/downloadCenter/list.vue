@@ -121,7 +121,6 @@ async function previewFile(row: SystemDownloadApi.DownloadTask) {
   });
   try {
     const { previewUrl } = await getDownloadTaskPreviewUrlApi(row.id);
-    debugger;
     // 用当前 origin 拼接（dev 走 vite proxy 到后端，生产走 nginx 反代）
     const absoluteUrl = `${window.location.origin}${previewUrl}`;
     // 下载中心文件均为 xlsx，fileName 缺失时用任务名兜底
