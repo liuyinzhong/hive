@@ -42,7 +42,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       zoom: true,
       custom: true,
       refresh: true,
-      export: true,
+      export: hasAccessByCodes(['dev:task:export']),
       import: true,
       print: true,
     },
