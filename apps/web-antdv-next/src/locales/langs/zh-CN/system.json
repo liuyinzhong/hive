@@ -298,6 +298,8 @@
     "eventType": "事件类型",
     "login": "登录",
     "logout": "退出",
+    "export": "导出",
+    "exportCreated": "导出任务已创建，请前往下载中心查看进度",
     "operation": "操作",
     "truncatedTip": "请求体或响应体超过 64 KB，当前内容已截断。"
   },
@@ -342,6 +344,7 @@
     "operationLogDetail": "详情",
     "loginLogList": "列表",
     "loginLogDetail": "详情",
+    "loginLogExport": "导出",
     "paramList": "列表",
     "paramCreate": "新增",
     "paramDetail": "详情",

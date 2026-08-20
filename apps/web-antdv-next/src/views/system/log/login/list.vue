@@ -2,12 +2,14 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemLogApi } from '#/api/system';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
+import { Download } from '@vben/icons';
 
-import { Tag } from 'antdv-next';
+import { Button, message, Tag } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getLoginLogsApi } from '#/api/system';
+import { createLoginLogExportApi, getLoginLogsApi } from '#/api/system';
 import { $t } from '#/locales';
 import { formatSorts } from '#/utils';
 
@@ -19,7 +21,10 @@ const [DetailDrawer, detailDrawerApi] = useVbenDrawer({
   destroyOnClose: true,
 });
 
-const [Grid] = useVbenVxeGrid({
+const { hasAccessByCodes } = useAccess();
+let currentSorts = '';
+
+const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
     fieldMappingTime: [['createDate', ['startDate', 'endDate']]],
     schema: useSearchSchema(),
@@ -31,13 +36,15 @@ const [Grid] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async ({ page, sorts }, formValues) =>
-          getLoginLogsApi({
+        query: async ({ page, sorts }, formValues) => {
+          currentSorts = formatSorts(sorts);
+          return getLoginLogsApi({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
-          }),
+            sorts: currentSorts,
+          });
+        },
       },
     },
     rowConfig: { keyField: 'logId' },
@@ -49,12 +56,32 @@ const [Grid] = useVbenVxeGrid({
 function openDetail(row: SystemLogApi.LoginLog) {
   detailDrawerApi.setData({ logId: row.logId }).open();
 }
+
+async function createExport() {
+  const formValues = (await gridApi.formApi.getValues()) as
+    SystemLogApi.LoginLogExportRequest;
+  await createLoginLogExportApi({
+    ...formValues,
+    sorts: currentSorts,
+  });
+  message.success($t('system.log.exportCreated'));
+}
 </script>
 
 <template>
   <Page auto-content-height>
     <DetailDrawer />
     <Grid :table-title="$t('system.log.loginTitle')">
+      <template #toolbar-actions>
+        <Button
+          v-if="hasAccessByCodes(['system:loginLog:export'])"
+          class="mr-2"
+          @click="createExport"
+        >
+          <Download class="size-5" />
+          {{ $t('system.log.export') }}
+        </Button>
+      </template>
       <template #eventType="{ row }">
         <Tag :color="row.eventType === 'login' ? 'blue' : 'default'">
           {{

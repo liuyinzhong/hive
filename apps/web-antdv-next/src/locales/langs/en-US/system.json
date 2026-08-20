@@ -297,6 +297,8 @@
     "eventType": "Event Type",
     "login": "Login",
     "logout": "Logout",
+    "export": "Export",
+    "exportCreated": "Export task created. View progress in Download Center.",
     "operation": "Operation",
     "truncatedTip": "The request or response exceeded 64 KB and has been truncated."
   },
@@ -341,6 +343,7 @@
     "operationLogDetail": "Details",
     "loginLogList": "List",
     "loginLogDetail": "Details",
+    "loginLogExport": "Export",
     "paramList": "List",
     "paramCreate": "Create",
     "paramDetail": "Details",

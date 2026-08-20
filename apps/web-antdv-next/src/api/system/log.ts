@@ -26,6 +26,16 @@ export namespace SystemLogApi {
     ip?: string;
   }
 
+  export interface LoginLogExportRequest {
+    endDate?: string;
+    eventType?: 'login' | 'logout';
+    ip?: string;
+    sorts?: string;
+    startDate?: string;
+    status?: 0 | 1;
+    username?: string;
+  }
+
   export interface OperationLog {
     createDate: string;
     durationMs: number;
@@ -89,6 +99,12 @@ export function getLoginLogsApi(params: SystemLogApi.LoginLogQuery) {
     '/system/loginLogs',
     { params },
   );
+}
+
+export function createLoginLogExportApi(
+  data: SystemLogApi.LoginLogExportRequest,
+) {
+  return requestClient.post<{ id: string }>('/system/loginLogs/exports', data);
 }
 
 export function getLoginLogDetailApi(logId: string) {
