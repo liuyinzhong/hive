@@ -1,6 +1,7 @@
 import type { Recordable } from '@vben/types';
 
 import { requestClient } from '#/api/request';
+import type { ExportRequest } from '#/utils';
 
 export namespace ErpInventoryApi {
   export type InventoryTraceMode = 'NONE' | 'REQUIRED';
@@ -200,7 +201,7 @@ export namespace ErpInventoryApi {
     sourceBillNo: string;
   }
 
-  export interface InventoryBalanceExportRequest {
+  export interface InventoryBalanceExportRequest extends ExportRequest {
     batchNo?: string;
     onlyPositive?: boolean;
     skuCode?: string;

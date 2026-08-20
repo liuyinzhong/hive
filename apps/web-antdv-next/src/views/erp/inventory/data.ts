@@ -6,10 +6,16 @@ import type { InputNumberProps } from 'antdv-next';
 
 import { markRaw } from 'vue';
 
+import { message } from 'antdv-next';
+
 import { z } from '#/adapter/form';
-import { getWarehouseOptionsApi } from '#/api/erp';
+import {
+  createInventoryBalanceExportApi,
+  getWarehouseOptionsApi,
+} from '#/api/erp';
 import { getProductSkuOptionsApi } from '#/api/product';
 import { $t } from '#/locales';
+import { formatVxeTableExportOptions } from '#/utils';
 
 import TraceCodeField from '../components/trace-code-field.vue';
 
@@ -180,6 +186,17 @@ export function useInventoryBalanceSearchSchema(): VbenFormSchema[] {
       label: $t('erp.inventory.batchNo'),
     },
   ];
+}
+
+export async function createExport(formValues: any, exportOptions: any) {
+  await createInventoryBalanceExportApi({
+    ...formatVxeTableExportOptions(exportOptions),
+    batchNo: formValues.batchNo as string | undefined,
+    onlyPositive: formValues.onlyPositive as boolean | undefined,
+    skuCode: formValues.skuCode as string | undefined,
+    warehouseId: formValues.warehouseId as string | undefined,
+  });
+  message.success($t('erp.inventory.exportCreated'));
 }
 
 export function useInventoryInitialStockFormSchema(): VbenFormSchema<InventoryInitialStockFormValues>[] {

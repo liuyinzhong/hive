@@ -5,19 +5,17 @@ import type { ErpInventoryApi } from '#/api/erp';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
-import { Download, Plus } from '@vben/icons';
+import { Plus } from '@vben/icons';
 
-import { Button, message } from 'antdv-next';
+import { Button } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import {
-  createInventoryBalanceExportApi,
-  getInventoryBalanceListApi,
-} from '#/api/erp';
+import { getInventoryBalanceListApi } from '#/api/erp';
 import { $t } from '#/locales';
 import { formatVxeTableSorts } from '#/utils';
 
 import {
+  createExport,
   useInventoryBalanceColumns,
   useInventoryBalanceSearchSchema,
 } from './data';
@@ -25,7 +23,6 @@ import InitialStockModalComponent from './initial-stock-modal.vue';
 import MovementDrawerComponent from './movement-drawer.vue';
 
 const { hasAccessByCodes } = useAccess();
-let currentSorts = '';
 
 const [InitialStockModal, initialStockModalApi] = useVbenModal({
   connectedComponent: InitialStockModalComponent,
@@ -50,19 +47,29 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues: Recordable<unknown>) => {
-          currentSorts = formatVxeTableSorts(sorts);
           return getInventoryBalanceListApi({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: currentSorts,
+            sorts: formatVxeTableSorts(sorts),
           });
         },
       },
     },
     rowConfig: { keyField: 'balanceId' },
     sortConfig: { multiple: true, remote: true },
-    toolbarConfig: { custom: true, refresh: true, zoom: true },
+    toolbarConfig: {
+      custom: true,
+      export: hasAccessByCodes(['erp:inventoryBalance:export']),
+      refresh: true,
+      zoom: true,
+    },
+    exportConfig: {
+      exportMethod: async (exportOptions: any) => {
+        const formValues = await gridApi.formApi.getValues();
+        await createExport(formValues, exportOptions);
+      },
+    },
   } as VxeTableGridOptions<ErpInventoryApi.InventoryBalance>,
 });
 
@@ -73,16 +80,6 @@ function openInitialStock() {
 function openMovements(row: ErpInventoryApi.InventoryBalance) {
   movementDrawerApi.setData(row).open();
 }
-
-async function createExport() {
-  const formValues =
-    (await gridApi.formApi.getValues()) as ErpInventoryApi.InventoryBalanceExportRequest;
-  await createInventoryBalanceExportApi({
-    ...formValues,
-    sorts: currentSorts,
-  });
-  message.success($t('erp.inventory.exportCreated'));
-}
 </script>
 
 <template>
@@ -91,13 +88,6 @@ async function createExport() {
     <MovementDrawer />
     <Grid :table-title="$t('erp.inventory.balanceList')">
       <template #toolbar-tools>
-        <Button
-          v-if="hasAccessByCodes(['erp:inventoryBalance:export'])"
-          @click="createExport"
-        >
-          <Download class="size-5" />
-          {{ $t('erp.inventory.export') }}
-        </Button>
         <Button
           v-if="hasAccessByCodes(['erp:inventoryInitial:create'])"
           type="primary"
