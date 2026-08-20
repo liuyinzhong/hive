@@ -19,7 +19,7 @@ import {
   updateWorkflowDefinitionStatusApi,
 } from '#/api/workflow';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 import { getWorkflowStatusText, useColumns, useGridFormSchema } from './data';
 import FormModal from './form-modal.vue';

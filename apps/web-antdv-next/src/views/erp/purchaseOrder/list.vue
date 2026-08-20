@@ -19,7 +19,7 @@ import {
   getPurchaseOrderListApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 import PurchaseInboundDrawerComponent from '../purchaseInbound/form-drawer.vue';
 import {

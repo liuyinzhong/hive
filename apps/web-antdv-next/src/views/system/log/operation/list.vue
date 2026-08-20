@@ -9,7 +9,7 @@ import { Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getOperationLogsApi } from '#/api/system';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 import { useColumns, useSearchSchema } from './data';
 import Detail from './detail.vue';

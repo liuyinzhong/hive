@@ -21,7 +21,7 @@ import { $t } from '#/locales';
 import { useMenuMessageStore } from '#/store/menu-message';
 
 import { useColumns, useSearchSchema } from './data';
-import { previewWithKkFileView } from '#/utils/preview';
+import { previewWithKkFileView } from '#/utils';
 
 const menuMessageStore = useMenuMessageStore();
 const { downloadTaskRevision } = storeToRefs(menuMessageStore);

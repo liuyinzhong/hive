@@ -13,7 +13,7 @@ import { Button, Image, message, Upload } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getFileListApi, uploadFileApi } from '#/api/system';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 import { useClipboard } from '@vueuse/core';
 import { useColumns, useGridFormSchema } from './data';
 const { copy } = useClipboard({ legacy: true });

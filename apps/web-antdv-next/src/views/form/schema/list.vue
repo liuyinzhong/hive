@@ -11,7 +11,7 @@ import { Button, message } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteFormSchemasApi, getFormSchemaListApi } from '#/api/form';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 import { useFormSchemaColumns, useFormSchemaGridForm } from './data';
 import FormModal from './form-modal.vue';

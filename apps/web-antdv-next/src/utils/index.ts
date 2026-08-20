@@ -3,6 +3,7 @@ export * from './preview';
 export * from './enumUtils';
 export * from './versionUtils';
 export * from './vxe-table';
+export * from './form-schema/index';
 
 /**
  * @description 等待指定毫秒数

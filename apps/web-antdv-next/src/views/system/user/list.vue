@@ -20,7 +20,7 @@ import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
 import Detail from './detail.vue';
 
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 onMounted(() => {
   loadDeptList();

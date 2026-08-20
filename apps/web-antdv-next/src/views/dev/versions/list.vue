@@ -17,7 +17,7 @@ import { $t } from '#/locales';
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import nextFormModal from './next-modal.vue';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 const router = useRouter();
 
 // 表格分页

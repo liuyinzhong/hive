@@ -7,7 +7,7 @@ import { z } from '#/adapter/form';
 import { getLastVersionApi, getProjectsListApi } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
-import { changeVersionType } from '#/utils/versionUtils';
+import { changeVersionType } from '#/utils';
 
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {

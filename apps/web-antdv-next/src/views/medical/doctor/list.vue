@@ -17,7 +17,7 @@ import {
   getDoctorListApi,
 } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 import { useDoctorColumns, useDoctorSearchSchema } from './data';
 import DetailDrawerComponent from './detail-drawer.vue';

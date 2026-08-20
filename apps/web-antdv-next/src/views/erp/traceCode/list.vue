@@ -8,7 +8,7 @@ import { Page, useVbenDrawer } from '@vben/common-ui';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getInventoryTraceCodeListApi } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 import MovementDrawerComponent from '../inventory/movement-drawer.vue';
 import {

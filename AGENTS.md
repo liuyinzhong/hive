@@ -226,7 +226,7 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 
 ## kkFileView 文件预览
 
-凡是通过 kkFileView 预览文件的场景，统一调用公共方法 `previewWithKkFileView(fileUrl, fileName?)`（位于 `apps/web-antdv-next/src/utils/preview.ts`，通过 `#/utils/preview` 引入）。不要在业务页面内自己拼接 base64、`fullfilename` 参数、`openWindow` 或直接复制 kkFileView URL 拼接逻辑。
+凡是通过 kkFileView 预览文件的场景，统一调用公共方法 `previewWithKkFileView(fileUrl, fileName?)`（位于 `apps/web-antdv-next/src/utils/preview.ts`，通过 `#/utils` 引入）。不要在业务页面内自己拼接 base64、`fullfilename` 参数、`openWindow` 或直接复制 kkFileView URL 拼接逻辑。
 
 ### 公共方法职责
 

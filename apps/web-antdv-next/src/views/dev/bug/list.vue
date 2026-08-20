@@ -13,7 +13,7 @@ import { Button, message } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getBugListApi, deleteBugApi, updateBugFieldApi } from '#/api/dev/bug';
-import { formatSorts } from '#/utils/vxe-table';
+import { formatSorts } from '#/utils';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
