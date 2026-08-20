@@ -4,7 +4,11 @@ import type { SystemLogApi } from '#/api/system';
 
 import dayjs from 'dayjs';
 
+import { message } from 'antdv-next';
+
+import { createLoginLogExportApi } from '#/api/system';
 import { $t } from '#/locales';
+import { formatVxeTableExportOptions } from '#/utils';
 
 const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -55,6 +59,19 @@ export function useSearchSchema(): VbenFormSchema[] {
       label: $t('system.log.createDate'),
     },
   ];
+}
+
+export async function createExport(formValues: any, exportOptions: any) {
+  await createLoginLogExportApi({
+    ...formatVxeTableExportOptions(exportOptions),
+    endDate: formValues.endDate as string | undefined,
+    eventType: formValues.eventType as 'login' | 'logout' | undefined,
+    ip: formValues.ip as string | undefined,
+    startDate: formValues.startDate as string | undefined,
+    status: formValues.status as 0 | 1 | undefined,
+    username: formValues.username as string | undefined,
+  });
+  message.success($t('system.log.exportCreated'));
 }
 
 export function useColumns(): VxeTableGridOptions<SystemLogApi.LoginLog>['columns'] {

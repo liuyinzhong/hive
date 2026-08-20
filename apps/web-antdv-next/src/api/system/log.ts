@@ -1,5 +1,7 @@
 import { requestClient } from '#/api/request';
 
+import type { ExportRequest } from '#/utils';
+
 export namespace SystemLogApi {
   export interface PageResult<T> {
     items: T[];
@@ -26,7 +28,7 @@ export namespace SystemLogApi {
     ip?: string;
   }
 
-  export interface LoginLogExportRequest {
+  export interface LoginLogExportRequest extends ExportRequest {
     endDate?: string;
     eventType?: 'login' | 'logout';
     ip?: string;
