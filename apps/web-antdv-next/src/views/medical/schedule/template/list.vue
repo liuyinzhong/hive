@@ -14,7 +14,7 @@ import {
   getScheduleTemplateListApi,
 } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import { useTemplateColumns, useTemplateSearchSchema } from './data';
 import FormDrawerComponent from './form-drawer.vue';

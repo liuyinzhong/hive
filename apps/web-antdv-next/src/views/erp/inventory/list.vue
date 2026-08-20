@@ -15,7 +15,7 @@ import {
   getInventoryBalanceListApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import {
   useInventoryBalanceColumns,
@@ -75,7 +75,8 @@ function openMovements(row: ErpInventoryApi.InventoryBalance) {
 }
 
 async function createExport() {
-  const formValues = (await gridApi.formApi.getValues()) as ErpInventoryApi.InventoryBalanceExportRequest;
+  const formValues =
+    (await gridApi.formApi.getValues()) as ErpInventoryApi.InventoryBalanceExportRequest;
   await createInventoryBalanceExportApi({
     ...formValues,
     sorts: currentSorts,

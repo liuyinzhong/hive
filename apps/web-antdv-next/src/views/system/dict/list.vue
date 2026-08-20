@@ -15,7 +15,7 @@ import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
-import { formatSorts } from '#/utils/index.js';
+import { formatSorts } from '#/utils/vxe-table';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: addFormModal,

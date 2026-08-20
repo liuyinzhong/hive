@@ -15,7 +15,7 @@ import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: addFormModal,
@@ -24,8 +24,7 @@ const [FormModal, formModalApi] = useVbenModal({
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass:
-      'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     showCollapseButton: false,
     schema: useGridFormSchema(),
   },
@@ -40,10 +39,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async (
-          { page, sorts }: any,
-          formValues: Recordable<any>,
-        ) => {
+        query: async ({ page, sorts }: any, formValues: Recordable<any>) => {
           return await getParamListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -118,9 +114,7 @@ function refreshGrid() {
       <template #isPublic="{ row }">
         <Tag :color="row.isPublic === 1 ? 'green' : 'default'">
           {{
-            row.isPublic === 1
-              ? $t('system.param.yes')
-              : $t('system.param.no')
+            row.isPublic === 1 ? $t('system.param.yes') : $t('system.param.no')
           }}
         </Tag>
       </template>
@@ -139,9 +133,7 @@ function refreshGrid() {
               icon: 'lucide:trash-2',
               danger: true,
               popConfirm: {
-                title: $t('ui.actionMessage.deleteConfirm', [
-                  row.paramKey,
-                ]),
+                title: $t('ui.actionMessage.deleteConfirm', [row.paramKey]),
                 confirm: () => onDelete(row),
               },
             },

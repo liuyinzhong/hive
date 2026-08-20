@@ -16,7 +16,7 @@ import {
   getWarehouseLocationListApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import {
   useWarehouseLocationColumns,
@@ -29,10 +29,7 @@ interface DrawerData {
     ErpWarehouseApi.Warehouse,
     'warehouseCode' | 'warehouseId' | 'warehouseName'
   >;
-  zone: Pick<
-    ErpWarehouseApi.WarehouseZone,
-    'zoneCode' | 'zoneId' | 'zoneName'
-  >;
+  zone: Pick<ErpWarehouseApi.WarehouseZone, 'zoneCode' | 'zoneId' | 'zoneName'>;
 }
 
 const emit = defineEmits<{ success: [] }>();
@@ -65,7 +62,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues: Recordable<unknown>) => {
-          if (!currentWarehouse.value?.warehouseId || !currentZone.value?.zoneId) {
+          if (
+            !currentWarehouse.value?.warehouseId ||
+            !currentZone.value?.zoneId
+          ) {
             return { items: [], total: 0 };
           }
           return getWarehouseLocationListApi(
@@ -98,7 +98,8 @@ const [Drawer, drawerApi] = useVbenDrawer({
 });
 
 function openCreate() {
-  if (!currentWarehouse.value?.warehouseId || !currentZone.value?.zoneId) return;
+  if (!currentWarehouse.value?.warehouseId || !currentZone.value?.zoneId)
+    return;
   locationFormModalApi
     .setData({
       warehouseId: currentWarehouse.value.warehouseId,
@@ -108,7 +109,8 @@ function openCreate() {
 }
 
 function openEdit(row: ErpWarehouseApi.WarehouseLocation) {
-  if (!currentWarehouse.value?.warehouseId || !currentZone.value?.zoneId) return;
+  if (!currentWarehouse.value?.warehouseId || !currentZone.value?.zoneId)
+    return;
   locationFormModalApi
     .setData({
       location: row,
@@ -124,7 +126,8 @@ async function handleSaved() {
 }
 
 async function deleteLocation(row: ErpWarehouseApi.WarehouseLocation) {
-  if (!currentWarehouse.value?.warehouseId || !currentZone.value?.zoneId) return;
+  if (!currentWarehouse.value?.warehouseId || !currentZone.value?.zoneId)
+    return;
   await deleteWarehouseLocationApi(
     currentWarehouse.value.warehouseId,
     currentZone.value.zoneId,

@@ -12,7 +12,7 @@ import { Button, Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getEnterpriseListApi } from '#/api/base';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import {
   enterpriseRoleLabel,
@@ -65,10 +65,12 @@ function openCreate() {
 }
 
 function openEdit(row: BaseEnterpriseApi.Enterprise) {
-  formDrawerApi.setData({
-    enterpriseId: row.enterpriseId,
-    rowVersion: row.rowVersion,
-  }).open();
+  formDrawerApi
+    .setData({
+      enterpriseId: row.enterpriseId,
+      rowVersion: row.rowVersion,
+    })
+    .open();
 }
 </script>
 

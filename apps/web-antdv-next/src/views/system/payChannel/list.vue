@@ -20,7 +20,7 @@ import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: addFormModal,
@@ -29,8 +29,7 @@ const [FormModal, formModalApi] = useVbenModal({
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass:
-      'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     showCollapseButton: false,
     schema: useGridFormSchema(),
   },
@@ -45,10 +44,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async (
-          { page, sorts }: any,
-          formValues: Recordable<any>,
-        ) => {
+        query: async ({ page, sorts }: any, formValues: Recordable<any>) => {
           return await getPayChannelListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -213,8 +209,7 @@ function envModeLabel(envMode: string): string {
                 row.status === 1
                   ? $t('system.payChannel.disable')
                   : $t('system.payChannel.enable'),
-              icon:
-                row.status === 1 ? 'lucide:pause' : 'lucide:play',
+              icon: row.status === 1 ? 'lucide:pause' : 'lucide:play',
               onClick: () => onToggleStatus(row),
             },
             {
@@ -228,9 +223,7 @@ function envModeLabel(envMode: string): string {
               icon: 'lucide:trash-2',
               danger: true,
               popConfirm: {
-                title: $t('ui.actionMessage.deleteConfirm', [
-                  row.channelName,
-                ]),
+                title: $t('ui.actionMessage.deleteConfirm', [row.channelName]),
                 confirm: () => onDelete(row),
               },
             },
@@ -247,4 +240,3 @@ function envModeLabel(envMode: string): string {
     </Grid>
   </Page>
 </template>
-

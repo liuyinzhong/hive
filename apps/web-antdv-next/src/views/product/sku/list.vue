@@ -10,7 +10,7 @@ import { useRouter } from 'vue-router';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getProductSkuListApi } from '#/api/product';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import SkuFormModalComponent from '../spu/components/sku/sku-form-modal.vue';
 import {

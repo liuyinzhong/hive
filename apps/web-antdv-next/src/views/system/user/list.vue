@@ -1,22 +1,26 @@
 <script lang="ts" setup>
-import type { VxeTableGridOptions } from "#/adapter/vxe-table";
-import type { SystemUserApi, SystemDeptApi } from "#/api/system";
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { SystemUserApi, SystemDeptApi } from '#/api/system';
 
-import { nextTick, onMounted, ref, watch } from "vue";
+import { nextTick, onMounted, ref, watch } from 'vue';
 
-import { Page, Tree, useVbenDrawer } from "@vben/common-ui";
-import { Plus } from "@vben/icons";
+import { Page, Tree, useVbenDrawer } from '@vben/common-ui';
+import { Plus } from '@vben/icons';
 
-import { Button, message, Card } from "antdv-next";
+import { Button, message, Card } from 'antdv-next';
 
-import { useVbenVxeGrid, VbenTableAction } from "#/adapter/vxe-table";
-import { getUsersListApi, deleteUserApi, getAllDeptListApi } from "#/api/system";
-import { $t } from "#/locales";
-import { useColumns, useGridFormSchema } from "./data";
-import ExtraDrawer from "./drawer.vue";
-import Detail from "./detail.vue";
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
+import {
+  getUsersListApi,
+  deleteUserApi,
+  getAllDeptListApi,
+} from '#/api/system';
+import { $t } from '#/locales';
+import { useColumns, useGridFormSchema } from './data';
+import ExtraDrawer from './drawer.vue';
+import Detail from './detail.vue';
 
-import { formatSorts } from "#/utils";
+import { formatSorts } from '#/utils/vxe-table';
 
 onMounted(() => {
   loadDeptList();
@@ -40,7 +44,7 @@ async function selectDept(e: any) {
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass: "sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4",
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),
@@ -101,15 +105,15 @@ function onCreate() {
 
 async function onDelete(row: SystemUserApi.SystemUserFace) {
   const hideLoading = message.loading({
-    content: $t("ui.actionMessage.deleting", [row.realName]),
+    content: $t('ui.actionMessage.deleting', [row.realName]),
     duration: 0,
-    key: "action_process_msg",
+    key: 'action_process_msg',
   });
   deleteUserApi([row.userId])
     .then(() => {
       message.success({
-        content: $t("ui.actionMessage.deleteSuccess", [row.realName]),
-        key: "action_process_msg",
+        content: $t('ui.actionMessage.deleteSuccess', [row.realName]),
+        key: 'action_process_msg',
       });
       onRefresh();
     })
@@ -146,7 +150,7 @@ function onRefresh() {
           <template #toolbar-tools>
             <Button type="primary" @click="onCreate">
               <Plus class="size-5" />
-              {{ $t("ui.actionTitle.create") }}
+              {{ $t('ui.actionTitle.create') }}
             </Button>
           </template>
           <template #action="{ row }">

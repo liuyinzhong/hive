@@ -23,7 +23,7 @@ import {
   startRegistrationRefundApi,
 } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import CreateDrawerComponent from './create-drawer.vue';
 import { useRegistrationColumns, useRegistrationSearchSchema } from './data';
@@ -110,7 +110,7 @@ function runReasonAction(
       const value = reason.trim();
       if (!value) {
         message.warning(placeholder);
-        return Promise.reject(new Error('reason required'));
+        throw new Error('reason required');
       }
       await action(value);
       message.success($t('medical.registration.actionSuccess'));

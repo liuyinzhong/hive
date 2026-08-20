@@ -19,17 +19,14 @@ import {
   getPurchaseOrderListApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import PurchaseInboundDrawerComponent from '../purchaseInbound/form-drawer.vue';
 import {
   purchaseOrderStatusColor,
   purchaseOrderStatusLabel,
 } from './constants';
-import {
-  usePurchaseOrderColumns,
-  usePurchaseOrderSearchSchema,
-} from './data';
+import { usePurchaseOrderColumns, usePurchaseOrderSearchSchema } from './data';
 import DetailDrawerComponent from './detail-drawer.vue';
 import FormDrawerComponent from './form-drawer.vue';
 
@@ -125,7 +122,7 @@ function runReasonAction(
       const value = reason.trim();
       if (!value) {
         message.warning($t('erp.purchaseOrder.reasonRequired'));
-        return Promise.reject(new Error('reason required'));
+        throw new Error('reason required');
       }
       await action(value);
       message.success($t('erp.purchaseOrder.actionSuccess'));

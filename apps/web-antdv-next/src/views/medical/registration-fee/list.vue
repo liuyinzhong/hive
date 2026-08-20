@@ -11,7 +11,7 @@ import { Button, Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getRegistrationFeeRuleListApi } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import {
   useRegistrationFeeColumns,

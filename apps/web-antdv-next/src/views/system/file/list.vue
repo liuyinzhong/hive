@@ -1,32 +1,32 @@
 <script lang="ts" setup>
-import type { Recordable } from "@vben/types";
+import type { Recordable } from '@vben/types';
 
-import type { SystemFileApi } from "#/api";
+import type { SystemFileApi } from '#/api';
 
-import { nextTick } from "vue";
+import { nextTick } from 'vue';
 
-import { Page } from "@vben/common-ui";
-import { Plus } from "@vben/icons";
+import { Page } from '@vben/common-ui';
+import { Plus } from '@vben/icons';
 
-import { Button, Image, message, Upload } from "antdv-next";
+import { Button, Image, message, Upload } from 'antdv-next';
 
-import { useVbenVxeGrid, VbenTableAction } from "#/adapter/vxe-table";
-import { getFileListApi, uploadFileApi } from "#/api/system";
-import { $t } from "#/locales";
-import { formatSorts } from "#/utils";
-import { useClipboard } from "@vueuse/core";
-import { useColumns, useGridFormSchema } from "./data";
+import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
+import { getFileListApi, uploadFileApi } from '#/api/system';
+import { $t } from '#/locales';
+import { formatSorts } from '#/utils/vxe-table';
+import { useClipboard } from '@vueuse/core';
+import { useColumns, useGridFormSchema } from './data';
 const { copy } = useClipboard({ legacy: true });
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass: "sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3",
+    wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3',
     schema: useGridFormSchema(),
     submitOnEnter: true,
   },
   gridOptions: {
     columns: useColumns(),
-    height: "auto",
+    height: 'auto',
     keepSource: true,
     sortConfig: {
       remote: true,
@@ -46,7 +46,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
     rowConfig: {
-      keyField: "fileId",
+      keyField: 'fileId',
     },
     toolbarConfig: {
       zoom: true,
@@ -71,10 +71,10 @@ async function handleUpload(options: any) {
   try {
     await uploadFileApi({ file: options.file });
     options.onSuccess();
-    message.success($t("system.file.uploadSuccess"));
+    message.success($t('system.file.uploadSuccess'));
     onRefresh();
   } catch {
-    options.onError(new Error("上传失败"));
+    options.onError(new Error('上传失败'));
   }
 }
 
@@ -83,7 +83,7 @@ async function handleUpload(options: any) {
  * @param row 行数据
  */
 function onPreview(row: SystemFileApi.SystemFileFace) {
-  window.open(row.url, "_blank");
+  window.open(row.url, '_blank');
 }
 
 /**
@@ -92,7 +92,7 @@ function onPreview(row: SystemFileApi.SystemFileFace) {
  */
 function onCopyUrl(row: SystemFileApi.SystemFileFace) {
   copy(row.url);
-  message.success($t("system.file.copyLinkSuccess"));
+  message.success($t('system.file.copyLinkSuccess'));
 }
 
 /**
@@ -101,7 +101,7 @@ function onCopyUrl(row: SystemFileApi.SystemFileFace) {
  * @returns 是否为图片
  */
 function isImageType(type: string): boolean {
-  return type?.startsWith("image/");
+  return type?.startsWith('image/');
 }
 </script>
 <template>
@@ -127,10 +127,14 @@ function isImageType(type: string): boolean {
         />
       </template>
       <template #toolbar-tools>
-        <Upload :custom-request="handleUpload" :show-upload-list="false" accept="*">
+        <Upload
+          :custom-request="handleUpload"
+          :show-upload-list="false"
+          accept="*"
+        >
           <Button type="primary">
             <Plus class="size-5" />
-            {{ $t("system.file.upload") }}
+            {{ $t('system.file.upload') }}
           </Button>
         </Upload>
       </template>

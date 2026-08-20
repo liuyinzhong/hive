@@ -12,7 +12,7 @@ import { Button, message } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteWarehouseApi, getWarehouseListApi } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import { useWarehouseColumns, useWarehouseSearchSchema } from './data';
 import FormModalComponent from './form-modal.vue';

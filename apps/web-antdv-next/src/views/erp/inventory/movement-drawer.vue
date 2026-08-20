@@ -14,7 +14,7 @@ import {
   getInventoryTraceCodeMovementsApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import { useInventoryMovementColumns } from './data';
 

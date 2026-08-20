@@ -11,7 +11,7 @@ import { Button, message, Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { createLoginLogExportApi, getLoginLogsApi } from '#/api/system';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import { useColumns, useSearchSchema } from './data';
 import Detail from './detail.vue';
@@ -58,8 +58,8 @@ function openDetail(row: SystemLogApi.LoginLog) {
 }
 
 async function createExport() {
-  const formValues = (await gridApi.formApi.getValues()) as
-    SystemLogApi.LoginLogExportRequest;
+  const formValues =
+    (await gridApi.formApi.getValues()) as SystemLogApi.LoginLogExportRequest;
   await createLoginLogExportApi({
     ...formValues,
     sorts: currentSorts,

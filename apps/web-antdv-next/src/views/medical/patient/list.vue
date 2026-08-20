@@ -11,7 +11,7 @@ import { Button } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getPatientListApi } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import { usePatientColumns, usePatientSearchSchema } from './data';
 import DetailDrawerComponent from './detail-drawer.vue';

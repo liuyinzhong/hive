@@ -13,12 +13,9 @@ import { Button, message } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteWarehouseZoneApi, getWarehouseZoneListApi } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
-import {
-  useWarehouseZoneColumns,
-  useWarehouseZoneSearchSchema,
-} from './data';
+import { useWarehouseZoneColumns, useWarehouseZoneSearchSchema } from './data';
 import LocationDrawerComponent from './location-drawer.vue';
 import ZoneFormModalComponent from './zone-form-modal.vue';
 

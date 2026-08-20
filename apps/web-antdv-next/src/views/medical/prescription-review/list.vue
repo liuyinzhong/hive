@@ -9,7 +9,7 @@ import { Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getPrescriptionReviewListApi } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import {
   usePrescriptionReviewColumns,
@@ -49,7 +49,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
 });
 
 function statusColor(status: MedicalOutpatientApi.PrescriptionStatus) {
-  return ({ 10: 'processing', 20: 'success', 30: 'error' } as Record<number, string>)[status] ?? 'default';
+  return (
+    (
+      { 10: 'processing', 20: 'success', 30: 'error' } as Record<number, string>
+    )[status] ?? 'default'
+  );
 }
 </script>
 

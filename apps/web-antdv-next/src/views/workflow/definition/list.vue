@@ -19,7 +19,7 @@ import {
   updateWorkflowDefinitionStatusApi,
 } from '#/api/workflow';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatSorts } from '#/utils/vxe-table';
 
 import { getWorkflowStatusText, useColumns, useGridFormSchema } from './data';
 import FormModal from './form-modal.vue';
@@ -42,10 +42,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async (
-          { page, sorts }: any,
-          formValues: Recordable<any>,
-        ) => {
+        query: async ({ page, sorts }: any, formValues: Recordable<any>) => {
           return await getWorkflowDefinitionListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
