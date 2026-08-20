@@ -9,7 +9,7 @@ import { Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getOperationLogsApi } from '#/api/system';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { useColumns, useSearchSchema } from './data';
 import Detail from './detail.vue';
@@ -35,7 +35,7 @@ const [Grid] = useVbenVxeGrid({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           }),
       },
     },

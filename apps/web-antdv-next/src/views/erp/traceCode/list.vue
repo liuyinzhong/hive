@@ -8,7 +8,7 @@ import { Page, useVbenDrawer } from '@vben/common-ui';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getInventoryTraceCodeListApi } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import MovementDrawerComponent from '../inventory/movement-drawer.vue';
 import {
@@ -38,7 +38,7 @@ const [Grid] = useVbenVxeGrid({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           });
         },
       },

@@ -12,7 +12,7 @@ import { Button, message } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteWarehouseApi, getWarehouseListApi } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { useWarehouseColumns, useWarehouseSearchSchema } from './data';
 import FormModalComponent from './form-modal.vue';
@@ -47,7 +47,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           });
         },
       },

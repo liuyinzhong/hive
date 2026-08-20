@@ -9,7 +9,7 @@ import { Empty, Popover, Tag } from 'antdv-next';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getScheduleAutoTaskListApi } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { useTaskColumns, useTaskSearchSchema } from './data';
 
@@ -29,7 +29,7 @@ const [Grid] = useVbenVxeGrid({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           }),
       },
     },

@@ -13,7 +13,7 @@ import { useRouter } from 'vue-router';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getProductSpuListApi } from '#/api/product';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { useProductSpuColumns, useProductSpuSearchSchema } from './data';
 
@@ -37,7 +37,7 @@ const [Grid] = useVbenVxeGrid({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           });
         },
       },

@@ -12,7 +12,7 @@ import { Button, Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getEnterpriseListApi } from '#/api/base';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import {
   enterpriseRoleLabel,
@@ -49,7 +49,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             page: page.currentPage,
             pageSize: page.pageSize,
             roleTypes,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           });
         },
       },

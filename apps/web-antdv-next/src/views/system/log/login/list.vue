@@ -11,7 +11,7 @@ import { Button, message, Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { createLoginLogExportApi, getLoginLogsApi } from '#/api/system';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { useColumns, useSearchSchema } from './data';
 import Detail from './detail.vue';
@@ -37,7 +37,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues) => {
-          currentSorts = formatSorts(sorts);
+          currentSorts = formatVxeTableSorts(sorts);
           return getLoginLogsApi({
             ...formValues,
             page: page.currentPage,

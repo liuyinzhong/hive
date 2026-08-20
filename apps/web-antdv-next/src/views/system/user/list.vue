@@ -20,7 +20,7 @@ import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
 import Detail from './detail.vue';
 
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 onMounted(() => {
   loadDeptList();
@@ -67,7 +67,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           return await getUsersListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
             ...formValues,
             deptId: selectedDeptId.value,
           });

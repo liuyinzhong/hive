@@ -16,7 +16,7 @@ import {
   getWarehouseLocationListApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import {
   useWarehouseLocationColumns,
@@ -75,7 +75,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
               ...formValues,
               page: page.currentPage,
               pageSize: page.pageSize,
-              sorts: formatSorts(sorts),
+              sorts: formatVxeTableSorts(sorts),
             },
           );
         },

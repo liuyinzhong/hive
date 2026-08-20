@@ -11,7 +11,7 @@ import { Button, message, Modal } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteDiagnosisApi, getDiagnosisListApi } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { useDiagnosisColumns, useDiagnosisSearchSchema } from './data';
 import FormDrawerComponent from './form-drawer.vue';
@@ -38,7 +38,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ...values,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           }),
       },
     },

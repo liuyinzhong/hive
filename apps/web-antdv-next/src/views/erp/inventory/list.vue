@@ -15,7 +15,7 @@ import {
   getInventoryBalanceListApi,
 } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import {
   useInventoryBalanceColumns,
@@ -50,7 +50,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }, formValues: Recordable<unknown>) => {
-          currentSorts = formatSorts(sorts);
+          currentSorts = formatVxeTableSorts(sorts);
           return getInventoryBalanceListApi({
             ...formValues,
             page: page.currentPage,

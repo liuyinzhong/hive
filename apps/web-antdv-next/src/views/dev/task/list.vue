@@ -26,7 +26,7 @@ import batchFormModal from './batch-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
-import { formatSorts } from '#/utils/index.js';
+import { formatVxeTableSorts, formatVxeTableColumns } from '#/utils';
 
 const { hasAccessByCodes } = useAccess();
 let currentSorts = '';
@@ -54,12 +54,13 @@ const [Grid, gridApi] = useVbenVxeGrid({
     printConfig: {},
     importConfig: {},
     exportConfig: {
-      remote: false,
+      excludeFields: ['operation'],
+      remote: true,
       type: 'xlsx',
       types: ['xlsx'],
       mode: 'all',
       modes: ['all'],
-      /* slots: {
+      slots: {
         parameter: (params) => {
           return '暂不支持';
         },
@@ -67,7 +68,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
       exportMethod: async (e1) => {
         await createExport();
-      }, */
+      },
     },
     columns: useColumns(onActionClick),
     sortConfig: {
@@ -78,7 +79,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }: any, formValues: Recordable<any>) => {
-          currentSorts = formatSorts(sorts);
+          currentSorts = formatVxeTableSorts(sorts);
           return await getTaskListApi({
             page: page.currentPage,
             pageSize: page.pageSize,

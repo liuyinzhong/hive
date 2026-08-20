@@ -13,7 +13,7 @@ import { Button, message } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { deleteWarehouseZoneApi, getWarehouseZoneListApi } from '#/api/erp';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { useWarehouseZoneColumns, useWarehouseZoneSearchSchema } from './data';
 import LocationDrawerComponent from './location-drawer.vue';
@@ -66,7 +66,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           });
         },
       },

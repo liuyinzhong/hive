@@ -17,7 +17,7 @@ import {
   getPrintTemplateListApi,
 } from '#/api/print';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import { createDefaultPrintLayout } from './default-layout';
 
@@ -73,7 +73,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           getPrintTemplateListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           }),
       },
     },

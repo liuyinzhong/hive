@@ -20,7 +20,7 @@ import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: addFormModal,
@@ -48,7 +48,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           return await getPayChannelListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
             ...formValues,
           });
         },

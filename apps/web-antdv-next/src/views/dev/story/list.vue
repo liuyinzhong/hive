@@ -28,7 +28,7 @@ import batchFormModal from './batch-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 // 跳转路由
 // eslint-disable-next-line unused-imports/no-unused-vars
 const router = useRouter();
@@ -68,7 +68,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           return await getStoryListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
             ...formValues,
           });
         },

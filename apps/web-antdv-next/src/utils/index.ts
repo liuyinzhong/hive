@@ -1,3 +1,7 @@
+/** 全局工具函数 */
+/** 全局工具函数 */
+/** 全局工具函数 */
+
 export * from './file';
 export * from './preview';
 export * from './enumUtils';

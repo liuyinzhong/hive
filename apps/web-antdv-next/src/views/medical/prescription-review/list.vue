@@ -9,7 +9,7 @@ import { Tag } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getPrescriptionReviewListApi } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import {
   usePrescriptionReviewColumns,
@@ -38,7 +38,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ...values,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           }),
       },
     },

@@ -23,7 +23,7 @@ import {
   startRegistrationRefundApi,
 } from '#/api/medical';
 import { $t } from '#/locales';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import CreateDrawerComponent from './create-drawer.vue';
 import { useRegistrationColumns, useRegistrationSearchSchema } from './data';
@@ -57,7 +57,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ...formValues,
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
           }),
       },
     },

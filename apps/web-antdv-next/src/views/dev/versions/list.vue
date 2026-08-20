@@ -17,7 +17,7 @@ import { $t } from '#/locales';
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import nextFormModal from './next-modal.vue';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 const router = useRouter();
 
 // 表格分页
@@ -55,7 +55,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           return await getVersionsListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
             ...formValues,
           });
         },

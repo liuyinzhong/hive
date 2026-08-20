@@ -13,7 +13,7 @@ import { Button, message } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getBugListApi, deleteBugApi, updateBugFieldApi } from '#/api/dev/bug';
-import { formatSorts } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 import addFormModal from './add-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
@@ -55,7 +55,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           return await getBugListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: formatSorts(sorts),
+            sorts: formatVxeTableSorts(sorts),
             ...formValues,
           });
         },
