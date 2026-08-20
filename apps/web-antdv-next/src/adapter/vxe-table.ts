@@ -44,6 +44,14 @@ setupVbenVxeTable({
           // 全局禁用vxe-table的表单配置，使用formOptions
           enabled: false,
         },
+        exportConfig: {
+          excludeFields: ['operation'],
+          remote: true,
+          type: 'xlsx',
+          types: ['xlsx'],
+          mode: 'all',
+          modes: ['all'],
+        },
         proxyConfig: {
           autoLoad: true,
           response: {

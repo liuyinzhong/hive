@@ -2,6 +2,8 @@
 /** VxeTable 相关工具函数 */
 /** VxeTable 相关工具函数 */
 
+import type { ExportColumn } from '#/api';
+
 /**
  * @description 格式化排序参数
  * @param sorts 排序数组
@@ -16,7 +18,7 @@ export function formatVxeTableSorts(sorts: any[]) {
  * @param columns 列数组
  * @returns 格式化后的选中列参数数组
  */
-export function formatVxeTableColumns(columns: any[]) {
+export function formatVxeTableColumns(columns: any[]): ExportColumn[] {
   return columns
     .filter((a: any) => a.checked)
     .map((a: any) => ({

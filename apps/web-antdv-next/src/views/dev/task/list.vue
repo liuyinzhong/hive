@@ -23,13 +23,12 @@ import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
-import { useColumns, useGridFormSchema } from './data';
+import { useColumns, useGridFormSchema, createExport } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
-import { formatVxeTableSorts, formatVxeTableColumns } from '#/utils';
+import { formatVxeTableSorts } from '#/utils';
 
 const { hasAccessByCodes } = useAccess();
-let currentSorts = '';
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
@@ -54,20 +53,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
     printConfig: {},
     importConfig: {},
     exportConfig: {
-      excludeFields: ['operation'],
-      remote: true,
-      type: 'xlsx',
-      types: ['xlsx'],
-      mode: 'all',
-      modes: ['all'],
-      slots: {
-        parameter: (params) => {
-          return '暂不支持';
-        },
-      },
-
-      exportMethod: async (e1) => {
-        await createExport();
+      exportMethod: async (exportOptions: any) => {
+        let formValues = await gridApi.formApi.getValues();
+        await createExport(formValues, exportOptions);
       },
     },
     columns: useColumns(onActionClick),
@@ -79,11 +67,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({ page, sorts }: any, formValues: Recordable<any>) => {
-          currentSorts = formatVxeTableSorts(sorts);
           return await getTaskListApi({
             page: page.currentPage,
             pageSize: page.pageSize,
-            sorts: currentSorts,
+            sorts: formatVxeTableSorts(sorts),
             ...formValues,
           });
         },
@@ -118,21 +105,6 @@ function onActionClick({
 
 function onCreate() {
   AddFormModalApi.setData(null).open();
-}
-
-async function createExport() {
-  const formValues = (await gridApi.formApi.getValues()) as Recordable<unknown>;
-  const taskStatus = Array.isArray(formValues.taskStatus)
-    ? formValues.taskStatus.map(Number)
-    : undefined;
-  await createTaskExportApi({
-    projectId: formValues.projectId as string | undefined,
-    sorts: currentSorts,
-    taskStatus,
-    taskTitle: formValues.taskTitle as string | undefined,
-    versionId: formValues.versionId as string | undefined,
-  });
-  message.success($t('dev.task.exportCreated'));
 }
 
 function onEdit(row: DevTaskApi.DevTaskFace) {
@@ -198,14 +170,6 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
   <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
-        <Button
-          v-if="hasAccessByCodes(['dev:task:export'])"
-          class="mr-2"
-          @click="createExport"
-        >
-          <Download class="size-5" />
-          {{ $t('dev.task.export') }}
-        </Button>
         <Button class="mr-2" type="primary" @click="onCreate()">
           <Plus class="size-5" />新建任务
         </Button>

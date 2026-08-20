@@ -1,5 +1,4 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
-
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevTaskApi } from '#/api/dev';
@@ -14,6 +13,10 @@ import {
   userIdSchema,
 } from '#/views/dev/base/baseSchema';
 
+import { createTaskExportApi } from '#/api/dev/task';
+import { message } from 'antdv-next';
+import { $t } from '#/locales';
+import { formatVxeTableColumns, formatVxeTableSorts } from '#/utils';
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
   return [
@@ -383,4 +386,22 @@ export function useNextFormSchema(): VbenFormSchema[] {
       label: '',
     },
   ];
+}
+
+/** 导出任务 */
+export async function createExport(formValues: any, exportOptions: any) {
+  await createTaskExportApi({
+    columns: formatVxeTableColumns(exportOptions.options.columns),
+    sorts: formatVxeTableSorts(exportOptions.$grid.getSortColumns()),
+    filename: exportOptions.options.filename,
+    sheetName: exportOptions.options.sheetName,
+    isHeader: exportOptions.options.isHeader,
+    isTitle: exportOptions.options.isTitle,
+    original: exportOptions.options.original,
+    projectId: formValues.projectId as string | undefined,
+    taskStatus: formValues.taskStatus as number[] | undefined,
+    taskTitle: formValues.taskTitle as string | undefined,
+    versionId: formValues.versionId as string | undefined,
+  });
+  message.success($t('dev.task.exportCreated'));
 }

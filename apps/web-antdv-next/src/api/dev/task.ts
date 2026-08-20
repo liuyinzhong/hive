@@ -3,10 +3,10 @@ import type { Recordable } from '@vben/types';
 import { objectOmit } from '@vueuse/core';
 
 import { requestClient } from '#/api/request';
+import type { ExportRequest } from '#/api/index';
 export namespace DevTaskApi {
-  export interface DevTaskExportRequest {
+  export interface DevTaskExportRequest extends ExportRequest {
     projectId?: string;
-    sorts?: string;
     taskStatus?: number[];
     taskTitle?: string;
     versionId?: string;
