@@ -5,7 +5,7 @@ import type { SystemDownloadApi } from '#/api/system';
 import { onBeforeUnmount, watch } from 'vue';
 
 import { Page } from '@vben/common-ui';
-import { downloadFileFromBlob } from '@vben/utils';
+import { downloadFileFromBlob, debounce } from '@vben/utils';
 
 import { Alert, Button, message, Progress, Tag } from 'antdv-next';
 import dayjs from 'dayjs';
@@ -51,12 +51,17 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<SystemDownloadApi.DownloadTask>,
 });
 
-let refreshTimer: number | undefined;
+/**
+ * 防抖刷新下载任务列表
+ *
+ * SSE 在短时间内可能推送多次 downloadTaskChanged 事件，
+ * 使用 debounce 合并为 300ms 内的最后一次触发，避免重复请求。
+ */
+const refreshListDebounced = debounce(() => gridApi.query(), 300);
 watch(downloadTaskRevision, () => {
-  window.clearTimeout(refreshTimer);
-  refreshTimer = window.setTimeout(() => gridApi.query(), 300);
+  refreshListDebounced();
 });
-onBeforeUnmount(() => window.clearTimeout(refreshTimer));
+onBeforeUnmount(() => refreshListDebounced.cancel());
 
 function statusColor(status: SystemDownloadApi.TaskStatus) {
   return {
