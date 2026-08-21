@@ -57,3 +57,16 @@ export function getFileNameFromUrl(url: string): string {
   // 提取最后一个/后的部分作为文件名
   return pureUrl.split('/').pop() || '';
 }
+
+/**
+ * 将字节数格式化为可读的文件大小字符串
+ * @param bytes 字节数
+ * @returns 格式化后的字符串（如 1.5 MB）
+ */
+export function formatFileSize(bytes: number): string {
+  if (!bytes || bytes === 0) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const k = 1024;
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${units[i]}`;
+}

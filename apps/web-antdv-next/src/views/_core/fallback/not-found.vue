@@ -5,5 +5,5 @@ defineOptions({ name: 'Fallback404Demo' });
 </script>
 
 <template>
-  <Fallback status="404" />
+  <Fallback status="404" :showBack="false" homePath="" />
 </template>

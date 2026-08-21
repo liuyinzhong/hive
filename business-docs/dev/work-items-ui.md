@@ -25,3 +25,12 @@
 ## 变更时间线
 
 新增、字段修改、状态推进和删除由后端追加变更记录。前端时间线只读展示，不能把缺失时间线等同于操作未发生。
+
+## 附件预览
+
+- 需求详情页在「富文本预览」下方渲染附件表格，展示详情接口返回的 `fileList` 字段；`fileList` 为空时不渲染该区块。
+- 附件表格使用 `useVbenVxeGrid` 静态数据模式：通过 `:table-data="fileList"` 传入数据，禁用分页（`pagerConfig.enabled: false`）、工具栏（`toolbarConfig.enabled: false`）与远程加载（`proxyConfig.autoLoad: false`）。
+- 列包含文件名、类型（扩展名）、大小（前端格式化为 B/KB/MB）、上传人、上传时间和操作列；操作列使用 `VbenTableAction` 渲染「预览」按钮。
+- 预览交互与下载中心一致：点击「预览」按钮弹出 loading 提示，调用公共方法 `previewWithKkFileView`（位于 `#/utils/preview`）在新窗口通过 kkFileView 打开；按钮 `loading` 状态绑定到当前正在准备的文件 id。
+- 后端返回的相对路径（如 `/uploads/...`）由前端用 `window.location.origin` 拼接为同源绝对 URL 后再传入 `previewWithKkFileView`；`/uploads/**` 为公开静态 URL，无需短时 token，私有文件预览规则见 [下载中心 UI](../system/download-center-ui.md)。
+- `VITE_KKFILEVIEW_URL` 未配置时公共方法抛错，前端 `try/catch` 并以 `message.error` 提示，并关闭 loading。

@@ -4,7 +4,13 @@ import type { DevStoryApi } from '#/api/dev';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { confirm, prompt, useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
+import {
+  confirm,
+  prompt,
+  useVbenModal,
+  VbenButton,
+  VbenButtonGroup,
+} from '@vben/common-ui';
 import { useTabs, useRefresh } from '@vben/hooks';
 import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
@@ -28,6 +34,7 @@ import addTaskModal from '#/views/dev/task/add-modal.vue';
 import BaseInfo from './base-info.vue';
 import BugList from './bug-list.vue';
 import ChangeLog from './change-log.vue';
+import FileList from './file-list.vue';
 import TaskList from './task-list.vue';
 
 /**
@@ -206,6 +213,12 @@ defineExpose({
 
           <!-- 富文本预览 -->
           <VbenTiptapPreview :content="detail.storyRichText" />
+
+          <!-- 附件预览 -->
+          <FileList
+            v-if="detail.fileList?.length"
+            :file-list="detail.fileList"
+          />
         </Col>
         <Col :xs="24" :sm="24" :md="24" :lg="24" :xl="8" :xxl="8">
           <Tabs v-model:active-key="activeKey">
@@ -235,14 +248,19 @@ defineExpose({
           <VbenButton
             @click="onBtnClick('添加任务')"
             class="cursor-pointer"
-            :disabled="!detail.versionId || ['0', '99'].includes(detail.storyStatus ?? '')"
+            :disabled="
+              !detail.versionId ||
+              ['0', '99'].includes(detail.storyStatus ?? '')
+            "
           >
             <span class="icon-[lucide--badge-plus]"></span>
           </VbenButton>
           <VbenButton
             @click="onBtnClick('添加缺陷')"
             class="cursor-pointer"
-            :disabled="!detail.versionId || ['0'].includes(detail.storyStatus ?? '')"
+            :disabled="
+              !detail.versionId || ['0'].includes(detail.storyStatus ?? '')
+            "
           >
             <span class="icon-[lucide--bug]"></span>
           </VbenButton>

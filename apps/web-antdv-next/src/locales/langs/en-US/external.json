@@ -8,6 +8,22 @@
     "goToLogin": "Go to sign in"
   },
   "story": {
-    "title": "Collect Work Order"
+    "title": "Collect Work Order",
+    "badge": "Anonymous Feedback",
+    "formTitle": "Submit Feedback",
+    "formDesc": "Please fill in the information below to describe your request or issue. We will handle it as soon as possible. Keep the ticket number for future reference.",
+    "fieldType": "Type",
+    "typeStory": "Story",
+    "typeBug": "Bug",
+    "fieldTitle": "Title",
+    "fieldTitlePlaceholder": "Briefly describe the title",
+    "fieldRichText": "Description",
+    "fieldFiles": "Attachments",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "submitSuccess": "Submitted successfully",
+    "successTitle": "Feedback Submitted",
+    "successDesc": "Thank you for your feedback. Please keep the following ticket number for future reference.",
+    "submitAnother": "Submit Another"
   }
 }

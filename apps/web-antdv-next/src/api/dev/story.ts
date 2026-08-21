@@ -11,6 +11,26 @@ interface userListFace {
 }
 
 export namespace DevStoryApi {
+  /**
+   * 需求附件文件
+   */
+  export interface DevStoryFileFace {
+    fileId: string;
+    url: string;
+    name: string;
+    type: string;
+    size: number;
+    fileExt: string;
+    originalName: string;
+    path: string;
+    fullPath: string;
+    thumbnailPath?: string;
+    thumbnailUrl?: string;
+    creatorId?: string;
+    creatorName?: string;
+    createDate?: string;
+  }
+
   export interface DevStoryFace {
     [key: string]: any;
     storyId: string;
@@ -21,7 +41,7 @@ export namespace DevStoryApi {
     creatorId?: string;
     storyRichText?: string;
     fileIds?: string[];
-    fileList?: string[];
+    fileList?: DevStoryFileFace[];
     storyType?: string;
     storyStatus?: string;
     storyLevel?: string;

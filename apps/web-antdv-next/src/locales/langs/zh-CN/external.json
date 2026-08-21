@@ -8,6 +8,22 @@
     "goToLogin": "前往登录页"
   },
   "story": {
-    "title": "收集工单"
+    "title": "收集工单",
+    "badge": "匿名反馈",
+    "formTitle": "提交反馈",
+    "formDesc": "请填写以下信息描述你的需求或问题，我们会尽快处理。提交后请保存工单编号以便后续查询。",
+    "fieldType": "类型",
+    "typeStory": "需求",
+    "typeBug": "缺陷",
+    "fieldTitle": "标题",
+    "fieldTitlePlaceholder": "请简要描述标题",
+    "fieldRichText": "详细描述",
+    "fieldFiles": "附件",
+    "submit": "提交",
+    "submitting": "提交中...",
+    "submitSuccess": "提交成功",
+    "successTitle": "反馈已提交",
+    "successDesc": "感谢你的反馈，请保存以下工单编号以便后续查询处理进度。",
+    "submitAnother": "继续提交"
   }
 }
