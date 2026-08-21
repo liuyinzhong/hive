@@ -27,10 +27,10 @@
 
 ## 消息提示音
 
-收到 `unreadSummary` 事件即播放提示音，不判断未读总数是否增加。提示音能力受用户偏好开关 `enableNewUnreadSummary` 控制，开关位于偏好设置面板“消息提醒”分组。
+收到 `unreadSummary` 事件即播放提示音，不判断未读总数是否增加；但每次 SSE 连接的首个 `unreadSummary` 视为初始化全量推送，不触发提示音。提示音能力受用户偏好开关 `enableNewUnreadSummary` 控制，开关位于偏好设置面板“消息提醒”分组。
 
 - 提示音文件：`apps/web-antdv-next/public/sounds/sound.mp3`，通过 `/sounds/sound.mp3` 静态访问，时长约 2 秒。
-- 触发条件：每次收到 `unreadSummary` 事件即触发，包括建立连接后的首次全量推送与 SSE 重连后的校准推送。
+- 触发条件：每次建立 SSE 连接（包括应用启动首次与重连）后收到的首个 `unreadSummary` 不触发；之后收到的 `unreadSummary` 事件即触发，不判断未读总数是否增加。
 - 并发处理：使用单例 `HTMLAudioElement`，新事件到来时重置 `currentTime` 为 0 从头播放，打断前一次未播完的音频。
 - 偏好关闭：偏好开关 `enableNewUnreadSummary` 为 `false` 时不播放。
 - 自动播放限制：浏览器自动播放策略阻止（用户未与页面交互过）时 `play()` 被 reject，静默处理不报错。

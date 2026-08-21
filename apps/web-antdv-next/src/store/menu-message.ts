@@ -34,11 +34,19 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
   let lifecycleId = 0;
   /** 新消息提示音单例，避免每次事件重复创建 Audio 对象 */
   let audioInstance: HTMLAudioElement | null = null;
+  /**
+   * 是否为当前 SSE 连接的首个 unreadSummary 事件
+   *
+   * 每次建立 SSE 连接时重置为 true，首个 unreadSummary 是服务端的初始化全量推送，
+   * 不是真正的新消息事件，不触发提示音；之后收到的事件才播放。
+   */
+  let isFirstUnreadSummary = true;
 
   /**
    * 播放新消息提示音
    *
-   * 触发条件：收到 unreadSummary 事件即触发，不判断未读总数是否增加。
+   * 触发条件：每次 SSE 连接的首个 unreadSummary 不触发（视为初始化推送），
+   * 之后收到的 unreadSummary 事件即触发，不判断未读总数是否增加。
    * 并发处理：新事件打断前一次播放，从头播放（currentTime 重置为 0）。
    * 受偏好开关 enableNewUnreadSummary 控制；浏览器自动播放策略阻止时静默处理。
    */
@@ -151,6 +159,8 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
       const controller = new AbortController();
       abortController = controller;
       streamBuffer = '';
+      // 每次建立 SSE 连接都重置，首个 unreadSummary 视为初始化推送，不触发提示音
+      isFirstUnreadSummary = true;
 
       try {
         await openMenuMessageStreamApi(controller.signal, (chunk) =>
@@ -196,8 +206,13 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
         if (eventName === SystemMenuMessageApi.EventName.UnreadSummary) {
           summaries.value = JSON.parse(data);
           syncMenuBadges();
-          // 收到未读汇总事件即播放提示音，受偏好开关控制
-          playMessageSound();
+          // 首个 unreadSummary 是服务端的初始化全量推送，不触发提示音；
+          // 之后收到的事件才视为新消息事件并播放
+          if (isFirstUnreadSummary) {
+            isFirstUnreadSummary = false;
+          } else {
+            playMessageSound();
+          }
         } else if (
           eventName === SystemMenuMessageApi.EventName.DownloadTaskChanged
         ) {
