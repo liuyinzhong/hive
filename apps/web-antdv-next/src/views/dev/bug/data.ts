@@ -58,11 +58,11 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'bugRichText',
       label: '',
       labelWidth: 0,
+      defaultValue: bugRichTemplateText,
       formItemClass: 'col-span-2 row-span-12',
       componentProps: {
         editable: true,
         minHeight: 410,
-        modelValue: bugRichTemplateText,
       },
     },
     versionSchema({

@@ -82,11 +82,11 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'taskRichText',
       label: '',
       labelWidth: 0,
+      defaultValue: taskRichTemplateText,
       formItemClass: 'col-span-2 row-span-8',
       componentProps: {
         editable: true,
         minHeight: 410,
-        modelValue: taskRichTemplateText,
       },
     },
     versionSchema({

@@ -51,11 +51,11 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: "storyRichText",
       label: "",
       labelWidth: 0,
+      defaultValue: storyRichTemplateText,
       formItemClass: "col-span-3 row-span-10 items-baseline",
       componentProps: {
         editable: true,
         minHeight: 410,
-        modelValue: storyRichTemplateText,
       },
     },
 
