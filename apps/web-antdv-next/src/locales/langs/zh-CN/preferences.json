@@ -1,0 +1,12 @@
+{
+  "message": {
+    "tabLabel": "声音",
+    "title": "消息提醒",
+    "fields": {
+      "enableNewUnreadSummary": {
+        "label": "新消息提醒音",
+        "tip": "是否启用新消息提醒音功能"
+      }
+    }
+  }
+}

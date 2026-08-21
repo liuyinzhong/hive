@@ -137,7 +137,7 @@ async function handleSubmit() {
       userIds: values.userIds,
     });
     message.success($t('system.message.createSuccess'));
-    formApi.reset();
+    // formApi.reset();
   } finally {
     formLoading.value = false;
   }

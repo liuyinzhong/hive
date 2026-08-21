@@ -3,12 +3,11 @@ import {
   defineOverridesPreferences,
   definePreferencesExtension,
 } from '@vben/preferences';
+import { $t } from '#/locales';
 
 interface WebAntdPreferencesExtension {
-  defaultTableSize: number;
-  enableFormFullscreen: boolean;
-  reportTitle: string;
-  tenantMode: 'multi' | 'single';
+  /** 是否启用新消息提醒音 */
+  enableNewUnreadSummary: boolean;
 }
 
 /**
@@ -43,49 +42,15 @@ export const overridesPreferences = defineOverridesPreferences({
 
 export const preferencesExtension =
   definePreferencesExtension<WebAntdPreferencesExtension>({
-    tabLabel: 'preferences.antd.tabLabel',
-    title: 'preferences.antd.title',
+    tabLabel: $t('preferences.message.tabLabel'),
+    title: $t('preferences.message.title'),
     fields: [
       {
         component: 'switch',
         defaultValue: true,
-        key: 'enableFormFullscreen',
-        label: 'preferences.antd.fields.enableFormFullscreen.label',
-        tip: 'preferences.antd.fields.enableFormFullscreen.tip',
-      },
-      {
-        component: 'select',
-        defaultValue: 'single',
-        key: 'tenantMode',
-        label: 'preferences.antd.fields.tenantMode.label',
-        options: [
-          {
-            label: 'preferences.antd.fields.tenantMode.options.single.label',
-            value: 'single',
-          },
-          {
-            label: 'preferences.antd.fields.tenantMode.options.multi.label',
-            value: 'multi',
-          },
-        ],
-      },
-      {
-        component: 'number',
-        componentProps: {
-          max: 200,
-          min: 10,
-          step: 10,
-        },
-        defaultValue: 20,
-        key: 'defaultTableSize',
-        label: 'preferences.antd.fields.defaultTableSize.label',
-      },
-      {
-        component: 'input',
-        defaultValue: '',
-        key: 'reportTitle',
-        label: 'preferences.antd.fields.reportTitle.label',
-        placeholder: 'preferences.antd.fields.reportTitle.placeholder',
+        key: 'enableNewUnreadSummary',
+        label: $t('preferences.message.fields.enableNewUnreadSummary.label'),
+        tip: $t('preferences.message.fields.enableNewUnreadSummary.tip'),
       },
     ],
   });

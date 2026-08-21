@@ -25,6 +25,20 @@
 - 格式错误的事件不写入状态，等待后续完整汇总校准。
 - 服务端每 30 秒发送一次心跳，心跳事件不携带业务数据，前端不写入状态。
 
+## 消息提示音
+
+收到 `unreadSummary` 事件即播放提示音，不判断未读总数是否增加。提示音能力受用户偏好开关 `enableNewUnreadSummary` 控制，开关位于偏好设置面板“消息提醒”分组。
+
+- 提示音文件：`apps/web-antdv-next/public/sounds/sound.mp3`，通过 `/sounds/sound.mp3` 静态访问，时长约 2 秒。
+- 触发条件：每次收到 `unreadSummary` 事件即触发，包括建立连接后的首次全量推送与 SSE 重连后的校准推送。
+- 并发处理：使用单例 `HTMLAudioElement`，新事件到来时重置 `currentTime` 为 0 从头播放，打断前一次未播完的音频。
+- 偏好关闭：偏好开关 `enableNewUnreadSummary` 为 `false` 时不播放。
+- 自动播放限制：浏览器自动播放策略阻止（用户未与页面交互过）时 `play()` 被 reject，静默处理不报错。
+- `downloadTaskChanged` 事件不触发提示音。
+- Store 停止时暂停并重置正在播放的音频，避免登出或重置后继续响铃。
+
+实现见 `apps/web-antdv-next/src/store/menu-message.ts` 的 `playMessageSound`。
+
 ## 已读交互
 
 - 用户选择菜单时，布局把路径交给消息 Store。

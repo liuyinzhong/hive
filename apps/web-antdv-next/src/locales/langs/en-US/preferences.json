@@ -1,0 +1,12 @@
+{
+  "message": {
+    "tabLabel": "Message",
+    "title": "Message",
+    "fields": {
+      "enableNewUnreadSummary": {
+        "label": "New message sound",
+        "tip": "Whether to enable the new message alert sound"
+      }
+    }
+  }
+}

@@ -1,21 +1,25 @@
-import { SystemMenuMessageApi } from '#/api/system';
-
-import { computed, ref, watch } from 'vue';
-
-import { useAccessStore } from '@vben/stores';
-
-import { defineStore } from 'pinia';
-
 import {
+  SystemMenuMessageApi,
   getMenuMessageUnreadSummaryApi,
   markMenuMessageReadApi,
   openMenuMessageStreamApi,
 } from '#/api/system';
 
+import { computed, ref, watch } from 'vue';
+
+import { useAccessStore } from '@vben/stores';
+import { usePreferences } from '@vben/preferences';
+
+import { defineStore } from 'pinia';
+
 const reconnectDelay = 2000;
+
+/** 新消息提示音静态资源路径，位于 public/sounds/ 下 */
+const MESSAGE_SOUND_URL = '/sounds/sound.mp3';
 
 export const useMenuMessageStore = defineStore('menu-message', () => {
   const accessStore = useAccessStore();
+  const { customPreferences } = usePreferences();
   const summaries = ref<SystemMenuMessageApi.UnreadSummary[]>([]);
   const downloadTaskRevision = ref(0);
   const running = ref(false);
@@ -28,6 +32,29 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
   let abortController: AbortController | null = null;
   let streamBuffer = '';
   let lifecycleId = 0;
+  /** 新消息提示音单例，避免每次事件重复创建 Audio 对象 */
+  let audioInstance: HTMLAudioElement | null = null;
+
+  /**
+   * 播放新消息提示音
+   *
+   * 触发条件：收到 unreadSummary 事件即触发，不判断未读总数是否增加。
+   * 并发处理：新事件打断前一次播放，从头播放（currentTime 重置为 0）。
+   * 受偏好开关 enableNewUnreadSummary 控制；浏览器自动播放策略阻止时静默处理。
+   */
+  function playMessageSound() {
+    if (!customPreferences.enableNewUnreadSummary) {
+      return;
+    }
+    if (!audioInstance) {
+      audioInstance = new Audio(MESSAGE_SOUND_URL);
+    }
+    // 重置到开头播放，符合"来一次响一次"语义，新事件打断前一次
+    audioInstance.currentTime = 0;
+    audioInstance.play().catch(() => {
+      // 浏览器自动播放策略可能拒绝（用户未与页面交互过），静默处理
+    });
+  }
 
   const unreadCountByPath = computed(() => {
     const result = new Map<string, number>();
@@ -66,6 +93,11 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
     summaries.value = [];
     downloadTaskRevision.value = 0;
     readingPaths.clear();
+    // 暂停正在播放的提示音，避免登出或重置后继续响铃
+    if (audioInstance) {
+      audioInstance.pause();
+      audioInstance.currentTime = 0;
+    }
     syncMenuBadges();
   }
 
@@ -164,6 +196,8 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
         if (eventName === SystemMenuMessageApi.EventName.UnreadSummary) {
           summaries.value = JSON.parse(data);
           syncMenuBadges();
+          // 收到未读汇总事件即播放提示音，受偏好开关控制
+          playMessageSound();
         } else if (
           eventName === SystemMenuMessageApi.EventName.DownloadTaskChanged
         ) {
@@ -199,7 +233,8 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
       total += childrenTotal;
 
       if (childrenTotal > 0) {
-        menu.badge = childrenTotal > 99 ? '99+' : String(childrenTotal);
+        // menu.badge = childrenTotal > 99 ? '99+' : String(childrenTotal);
+        menu.badge = String(childrenTotal);
         menu.badgeType = 'normal';
         menu.badgeVariants = 'destructive';
       } else {
