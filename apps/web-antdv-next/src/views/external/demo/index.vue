@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
-import { LOGIN_PATH } from '@vben/constants';
-import { LanguageToggle } from '@vben/layouts';
+import { LOGIN_PATH } from "@vben/constants";
+import { LanguageToggle } from "@vben/layouts";
 
-import { $t } from '#/locales';
+import { $t } from "#/locales";
 
 const router = useRouter();
 </script>
@@ -25,22 +25,22 @@ const router = useRouter();
       <div
         class="mb-6 inline-flex items-center rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-sm text-emerald-200"
       >
-        {{ $t('page.externalDemo.badge') }}
+        {{ $t("external.demo.badge") }}
       </div>
 
       <h1 class="text-3xl font-semibold tracking-tight md:text-5xl">
-        {{ $t('page.externalDemo.title') }}
+        {{ $t("external.demo.title") }}
       </h1>
       <p class="mt-5 max-w-xl text-base leading-7 text-slate-300 md:text-lg">
-        {{ $t('page.externalDemo.description') }}
+        {{ $t("external.demo.description") }}
       </p>
 
       <div class="mt-8 grid gap-3 text-sm text-slate-200 sm:grid-cols-2">
         <div class="rounded-2xl border border-white/10 bg-black/10 p-4">
-          {{ $t('page.externalDemo.noLayout') }}
+          {{ $t("external.demo.noLayout") }}
         </div>
         <div class="rounded-2xl border border-white/10 bg-black/10 p-4">
-          {{ $t('page.externalDemo.noLogin') }}
+          {{ $t("external.demo.noLogin") }}
         </div>
       </div>
 
@@ -49,7 +49,7 @@ const router = useRouter();
         type="button"
         @click="router.push(LOGIN_PATH)"
       >
-        {{ $t('page.externalDemo.goToLogin') }}
+        {{ $t("external.demo.goToLogin") }}
       </button>
     </section>
   </main>

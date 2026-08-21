@@ -11,13 +11,5 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
-  },
-  "externalDemo": {
-    "badge": "Anonymous external route",
-    "title": "This page does not use the application layout",
-    "description": "This top-level route renders directly without the sidebar, header, or tabs, and it is available without signing in.",
-    "noLayout": "BasicLayout is not mounted",
-    "noLogin": "ignoreAccess is enabled",
-    "goToLogin": "Go to sign in"
   }
 }

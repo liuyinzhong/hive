@@ -82,7 +82,7 @@ function removeSelected() {
 </script>
 
 <template>
-  <div>
+  <div class="h-[calc(100%_-_30px)]">
     <FormDrawer @success="gridApi.query()" />
     <Grid :table-title="$t('system.externalPage.list')">
       <template #toolbar-tools>

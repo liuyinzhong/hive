@@ -1,0 +1,13 @@
+{
+  "demo": {
+    "badge": "匿名外部路由",
+    "title": "这是一个不使用 Layout 的页面",
+    "description": "该页面作为顶级路由直接渲染，不会显示系统侧边栏、顶部导航和标签页，并且未登录也可以访问。",
+    "noLayout": "未挂载 BasicLayout",
+    "noLogin": "ignoreAccess 已开启",
+    "goToLogin": "前往登录页"
+  },
+  "story": {
+    "title": "收集工单"
+  }
+}
