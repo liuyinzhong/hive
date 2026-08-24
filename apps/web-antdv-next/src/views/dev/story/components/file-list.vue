@@ -2,12 +2,8 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
 
-import { ref } from 'vue';
-
-import { message } from 'antdv-next';
-
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { formatFileSize, previewWithKkFileView } from '#/utils';
+import { formatFileSize, onPreview } from '#/utils';
 
 /**
  * 附件列表组件
@@ -19,42 +15,6 @@ const props = defineProps({
     default: () => [],
   },
 });
-
-// 当前正在准备预览的文件 id，用于控制操作按钮 loading 状态
-const previewingId = ref<string | null>(null);
-
-/**
- * 将后端相对 URL 拼接为同源绝对 URL
- * @param url 后端返回的相对路径或绝对 URL
- * @returns kkFileView 服务端可 fetch 的绝对 URL
- */
-function resolveUrl(url: string): string {
-  if (!url) return '';
-  if (/^(https?:)?\/\//i.test(url)) return url;
-  return `${window.location.origin}${url}`;
-}
-
-/**
- * 预览附件，参考下载中心：先 loading 提示，再用 kkFileView 在新窗口打开。
- * 后端返回的相对路径用 window.location.origin 拼接为同源绝对 URL，
- * /uploads/** 为公开静态 URL，无需短时 token。
- * @param file 文件对象
- */
-function onPreview(file: DevStoryApi.DevStoryFileFace) {
-  const hideLoading = message.loading({
-    content: '正在准备预览...',
-    duration: 0,
-  });
-  previewingId.value = file.fileId;
-  try {
-    previewWithKkFileView(resolveUrl(file.url), file.originalName || file.name);
-  } catch (error) {
-    message.error((error as Error).message || '预览失败');
-  } finally {
-    hideLoading();
-    previewingId.value = null;
-  }
-}
 
 // 表格配置：附件数据由父组件 props 传入，禁用分页、工具栏与远程加载
 const [Grid] = useVbenVxeGrid({
@@ -123,8 +83,7 @@ const [Grid] = useVbenVxeGrid({
             {
               text: '预览',
               icon: 'lucide:eye',
-              loading: previewingId === row.fileId,
-              onClick: () => onPreview(row),
+              onClick: () => onPreview(row.url),
             },
           ]"
           align="center"

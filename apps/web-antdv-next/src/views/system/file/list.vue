@@ -13,7 +13,7 @@ import { Button, Image, message, Upload } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getFileListApi, uploadFileApi } from '#/api/system';
 import { $t } from '#/locales';
-import { formatVxeTableSorts } from '#/utils';
+import { formatVxeTableSorts, onPreview } from '#/utils';
 import { useClipboard } from '@vueuse/core';
 import { useColumns, useGridFormSchema } from './data';
 const { copy } = useClipboard({ legacy: true });
@@ -79,14 +79,6 @@ async function handleUpload(options: any) {
 }
 
 /**
- * 预览文件（新窗口打开）
- * @param row 行数据
- */
-function onPreview(row: SystemFileApi.SystemFileFace) {
-  window.open(row.url, '_blank');
-}
-
-/**
  * 复制文件链接
  * @param row 行数据
  */
@@ -113,7 +105,7 @@ function isImageType(type: string): boolean {
             {
               text: $t('system.file.preview'),
               icon: 'lucide:eye',
-              onClick: () => onPreview(row),
+              onClick: () => onPreview(row.url),
             },
           ]"
           :dropdown-actions="[

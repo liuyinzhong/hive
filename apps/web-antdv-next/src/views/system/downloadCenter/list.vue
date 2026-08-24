@@ -109,9 +109,10 @@ async function downloadFile(row: SystemDownloadApi.DownloadTask) {
 }
 
 /**
- * 通过 kkFileView 预览文件。
- * 先调用后端获取临时签名 URL（5 分钟内有效），用 window.location.origin 拼接为完整 URL（dev 走 vite proxy、生产走 nginx 反代），
- * 再通过公共方法 previewWithKkFileView 在新窗口打开预览，公共方法负责附加 fullfilename、base64 编码和 openWindow。
+ * 通过 kkFileView 预览下载文件。
+ * 下载中心文件需登录态，先调用后端获取临时签名 URL（5 分钟内有效），
+ * 用 window.location.origin 拼接为完整 URL（dev 走 vite proxy、生产走 nginx 反代），
+ * 再通过公共方法 previewWithKkFileView 在新窗口打开预览。
  * @param row 当前行数据
  */
 async function previewFile(row: SystemDownloadApi.DownloadTask) {

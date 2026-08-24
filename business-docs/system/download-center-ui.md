@@ -42,6 +42,7 @@
 - `VITE_KKFILEVIEW_URL` 通过环境变量配置，未配置时给出错误提示。
 - kkFileView 通过公开接口 `GET /api/public/downloads/preview/:token` 取文件，无需登录态；token 复用项目 JWT 密钥签发，5 分钟内有效，过期或文件失效时由后端返回对应错误。kkFileView 服务端需配置 `trust.host` 白名单加入前端访问域名（dev 为 `localhost,127.0.0.1`，生产为前端域名），否则被 SSRF 防护拦截。
 - 请求结束无论成功失败都关闭加载提示。预览业务规则与权限边界见后端 `business-docs/system/download-center.md` 的 `SYS-DL-013`。
+- 下载中心 `previewFile` 拿到签名 URL 后直接调用 `previewWithKkFileView`（位于 `#/utils/preview`），不走 `onPreview` 统一入口，因为下载中心文件均为 xlsx，需明确传入 `fileName` 用于 kkFileView 识别类型与本地保存。其他业务（需求附件、文件管理）使用 `onPreview(url)` 由扩展名自动分流。
 
 ## 来源页面
 
