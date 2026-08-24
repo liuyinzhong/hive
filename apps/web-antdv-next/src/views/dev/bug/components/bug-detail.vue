@@ -4,7 +4,7 @@ import type { DevBugApi } from '#/api/dev';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { confirm, prompt, useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
-import { useTabs } from '@vben/hooks';
+import { useTabs, useRefresh } from '@vben/hooks';
 import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
 import {
@@ -18,7 +18,7 @@ import {
   TypographyParagraph,
 } from 'antdv-next';
 
-import { getBugDetailApi } from '#/api/dev';
+import { addChangeApi, getBugDetailApi } from '#/api/dev';
 import addFormModal from '#/views/dev/bug/add-modal.vue';
 import nextModal from '#/views/dev/bug/next-modal.vue';
 import ChangeLog from '#/views/dev/story/components/change-log.vue';
@@ -40,6 +40,8 @@ const props = defineProps({
 });
 
 const { closeCurrentTab } = useTabs();
+
+const { refresh } = useRefresh();
 
 // 跳转路由
 const router = useRouter();
@@ -107,12 +109,13 @@ const onBtnClick = (btnType: string) => {
       }).then((val) => {
         const _params = {
           businessId: detail.value.bugId,
-          businessType: 20,
-          changeBehavior: 20,
+          businessType: '20',
+          changeBehavior: '30',
           changeRichText: val,
         };
-
-        loadBugDetail();
+        addChangeApi(_params).then(() => {
+          refresh();
+        });
       });
       break;
     }

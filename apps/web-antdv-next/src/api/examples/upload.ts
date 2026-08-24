@@ -1,5 +1,4 @@
-import { requestClient } from '#/api/request';
-
+import { uploadFileApi } from '#/api/system';
 interface UploadFileParams {
   file: File;
   onError?: (error: Error) => void;
@@ -14,7 +13,7 @@ export async function upload_file({
 }: UploadFileParams) {
   try {
     onProgress?.({ percent: 0 });
-    const data = await requestClient.upload('/system/upload', { file });
+    const data = await uploadFileApi({ file });
 
     onProgress?.({ percent: 100 });
     onSuccess?.(data, file);

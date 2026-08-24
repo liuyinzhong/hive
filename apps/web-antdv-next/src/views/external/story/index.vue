@@ -4,7 +4,10 @@ import { ref } from 'vue';
 import { LanguageToggle } from '@vben/layouts';
 
 import { useVbenForm } from '#/adapter/form';
-import { createFeedbackApi, upload_file_external } from '#/api/external/feedback';
+import {
+  createFeedbackApi,
+  upload_file_external,
+} from '#/api/external/feedback';
 import type { ExternalFeedbackApi } from '#/api/external/feedback';
 import { filesToUrlString } from '#/utils';
 import { $t } from '#/locales';
@@ -49,8 +52,28 @@ function useFormSchema(): VbenFormSchema[] {
         editable: true,
         minHeight: 260,
         maxHeight: 460,
-        // 不配置 imageUpload：外部页面无登录态，富文本内嵌图片上传会调用需鉴权的 /system/upload；
-        // 图片/附件统一通过下方 Upload 走公开上传 /public/upload
+        // 外部页面无登录态，富文本内嵌图片改走公开上传 /public/upload
+        imageUpload: {
+          accept: 'image/*',
+          maxSize: 5 * 1024 * 1024, // 5MB
+          upload: (file: File, onProgress: (percent: number) => void) => {
+            return new Promise<string>((resolve, reject) => {
+              upload_file_external({
+                file,
+                onProgress({ percent }) {
+                  onProgress?.(percent);
+                },
+                onSuccess(data) {
+                  // 公开上传返回 FeedbackFileFace，取 url 供编辑器嵌入
+                  resolve(data?.url ?? '');
+                },
+                onError() {
+                  reject(new Error($t('ui.tiptap.upload.uploadFailed')));
+                },
+              });
+            });
+          },
+        },
       },
     },
     {
@@ -87,7 +110,11 @@ const submittedType = ref<ExternalFeedbackApi.FeedbackType | null>(null);
 async function onSubmit(values: Record<string, any>) {
   submitting.value = true;
   try {
-    const fileIds = filesToUrlString(values.fileIds, 'fileId', 'array') as string[];
+    const fileIds = filesToUrlString(
+      values.fileIds,
+      'fileId',
+      'array',
+    ) as string[];
     const resp = await createFeedbackApi({
       type: values.type,
       title: values.title,
@@ -138,10 +165,16 @@ function resetForm() {
       <p class="mt-4 text-base leading-7 text-slate-300">
         {{ $t('external.story.successDesc') }}
       </p>
-      <div class="mt-6 inline-flex items-center rounded-full border border-white/10 bg-black/10 px-5 py-2 text-lg font-medium">
+      <div
+        class="mt-6 inline-flex items-center rounded-full border border-white/10 bg-black/10 px-5 py-2 text-lg font-medium"
+      >
         #{{ submittedNum }}
         <span class="ml-2 text-sm text-slate-400">
-          ({{ submittedType === 'bug' ? $t('external.story.typeBug') : $t('external.story.typeStory') }})
+          ({{
+            submittedType === 'bug'
+              ? $t('external.story.typeBug')
+              : $t('external.story.typeStory')
+          }})
         </span>
       </div>
       <div class="mt-8">
@@ -172,7 +205,9 @@ function resetForm() {
         {{ $t('external.story.formDesc') }}
       </p>
 
-      <div class="mt-8 rounded-2xl border border-white/10 bg-black/20 p-5 md:p-6">
+      <div
+        class="mt-8 rounded-2xl border border-white/10 bg-black/20 p-5 md:p-6"
+      >
         <Form />
         <div class="mt-6 flex justify-end">
           <button
@@ -181,7 +216,11 @@ function resetForm() {
             type="button"
             @click="formApi.validateAndSubmitForm()"
           >
-            {{ submitting ? $t('external.story.submitting') : $t('external.story.submit') }}
+            {{
+              submitting
+                ? $t('external.story.submitting')
+                : $t('external.story.submit')
+            }}
           </button>
         </div>
       </div>
