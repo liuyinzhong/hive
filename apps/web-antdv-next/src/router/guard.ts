@@ -75,7 +75,7 @@ function setupAccessGuard(router: Router) {
       return true;
     }
 
-    if (to.name === "FallbackNotFound" && to.path.startsWith("/external/")) {
+    if (to.name === "FallbackNotFound" && to.path.startsWith("/public/")) {
       return true;
     }
 

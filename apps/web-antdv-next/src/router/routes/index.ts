@@ -15,7 +15,7 @@ const dynamicRoutes: RouteRecordRaw[] = mergeRouteModules(dynamicRouteFiles);
  * 外部页面路由文件。它们会在应用启动时直接注册，不参与登录后的 generateAccess；
  * 是否允许匿名访问仍由全局路由守卫和 meta.ignoreAccess 决定。
  */
-const externalRouteFiles = import.meta.glob("./external/**/*.ts", {
+const externalRouteFiles = import.meta.glob("./public/**/*.ts", {
   eager: true,
 });
 const externalRoutes: RouteRecordRaw[] = mergeRouteModules(externalRouteFiles);
@@ -32,7 +32,7 @@ const externalRouteCandidates = (() => {
     if (
       route.meta?.externalPage === true &&
       typeof route.name === "string" &&
-      route.path.startsWith("/external/") &&
+      route.path.startsWith("/public/") &&
       !route.path.includes(":")
     ) {
       candidates.push({

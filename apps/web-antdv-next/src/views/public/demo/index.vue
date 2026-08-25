@@ -25,22 +25,22 @@ const router = useRouter();
       <div
         class="mb-6 inline-flex items-center rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-sm text-emerald-200"
       >
-        {{ $t("external.demo.badge") }}
+        {{ $t("public.demo.badge") }}
       </div>
 
       <h1 class="text-3xl font-semibold tracking-tight md:text-5xl">
-        {{ $t("external.demo.title") }}
+        {{ $t("public.demo.title") }}
       </h1>
       <p class="mt-5 max-w-xl text-base leading-7 text-slate-300 md:text-lg">
-        {{ $t("external.demo.description") }}
+        {{ $t("public.demo.description") }}
       </p>
 
       <div class="mt-8 grid gap-3 text-sm text-slate-200 sm:grid-cols-2">
         <div class="rounded-2xl border border-white/10 bg-black/10 p-4">
-          {{ $t("external.demo.noLayout") }}
+          {{ $t("public.demo.noLayout") }}
         </div>
         <div class="rounded-2xl border border-white/10 bg-black/10 p-4">
-          {{ $t("external.demo.noLogin") }}
+          {{ $t("public.demo.noLogin") }}
         </div>
       </div>
 
@@ -49,7 +49,7 @@ const router = useRouter();
         type="button"
         @click="router.push(LOGIN_PATH)"
       >
-        {{ $t("external.demo.goToLogin") }}
+        {{ $t("public.demo.goToLogin") }}
       </button>
     </section>
   </main>

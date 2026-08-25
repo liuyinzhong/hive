@@ -24,33 +24,33 @@ function useFormSchema(): VbenFormSchema[] {
     {
       component: 'RadioGroup',
       fieldName: 'type',
-      label: $t('external.feedback.fieldType'),
+      label: $t('public.feedback.fieldType'),
       defaultValue: 'story',
       rules: 'required',
       componentProps: {
         optionType: 'button',
         buttonStyle: 'solid',
         options: [
-          { label: $t('external.feedback.typeStory'), value: 'story' },
-          { label: $t('external.feedback.typeBug'), value: 'bug' },
+          { label: $t('public.feedback.typeStory'), value: 'story' },
+          { label: $t('public.feedback.typeBug'), value: 'bug' },
         ],
       },
     },
     {
       component: 'Input',
       fieldName: 'title',
-      label: $t('external.feedback.fieldTitle'),
+      label: $t('public.feedback.fieldTitle'),
       rules: 'required',
       componentProps: {
         maxlength: 128,
         showCount: true,
-        placeholder: $t('external.feedback.fieldTitlePlaceholder'),
+        placeholder: $t('public.feedback.fieldTitlePlaceholder'),
       },
     },
     {
       component: 'RichEditor',
       fieldName: 'richText',
-      label: $t('external.feedback.fieldRichText'),
+      label: $t('public.feedback.fieldRichText'),
       rules: 'required',
       defaultValue: storyRichTemplateText,
       dependencies: {
@@ -94,7 +94,7 @@ function useFormSchema(): VbenFormSchema[] {
     {
       component: 'Upload',
       fieldName: 'fileIds',
-      label: $t('external.feedback.fieldFiles'),
+      label: $t('public.feedback.fieldFiles'),
       componentProps: {
         customRequest: upload_file_external,
         maxCount: 10,
@@ -139,7 +139,7 @@ async function onSubmit(values: Record<string, any>) {
     });
     submittedNum.value = resp.num;
     submittedType.value = resp.type;
-    message.success($t('external.feedback.submitSuccess'));
+    message.success($t('public.feedback.submitSuccess'));
   } catch {
     formApi.setState({
       submitButtonOptions: { loading: false },
@@ -177,10 +177,10 @@ function resetForm() {
           icon="lucide:circle-check-big"
         />
         <h2 class="text-xl font-semibold">
-          {{ $t('external.feedback.successTitle') }}
+          {{ $t('public.feedback.successTitle') }}
         </h2>
         <p class="text-muted-foreground mt-2 text-sm">
-          {{ $t('external.feedback.successDesc') }}
+          {{ $t('public.feedback.successDesc') }}
         </p>
         <div class="mt-4 text-2xl font-semibold">
           #{{ submittedNum }}
@@ -189,13 +189,13 @@ function resetForm() {
           >
             ({{
               submittedType === 'bug'
-                ? $t('external.feedback.typeBug')
-                : $t('external.feedback.typeStory')
+                ? $t('public.feedback.typeBug')
+                : $t('public.feedback.typeStory')
             }})
           </span>
         </div>
         <Button class="mt-6" type="primary" @click="resetForm">
-          {{ $t('external.feedback.submitAnother') }}
+          {{ $t('public.feedback.submitAnother') }}
         </Button>
       </div>
     </Card>
@@ -203,11 +203,11 @@ function resetForm() {
     <!-- 反馈表单 -->
     <Card
       v-else
-      :title="$t('external.feedback.formTitle')"
+      :title="$t('public.feedback.formTitle')"
       class="mx-auto w-full max-w-2xl"
     >
       <p class="text-muted-foreground mb-6 text-sm">
-        {{ $t('external.feedback.formDesc') }}
+        {{ $t('public.feedback.formDesc') }}
       </p>
       <Form />
     </Card>

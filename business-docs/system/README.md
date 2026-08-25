@@ -16,7 +16,7 @@
 | 角色数据范围和受限结果交互 | [data-permission-ui.md](./data-permission-ui.md) | [data-permission.md](../../../hive-admin-go/business-docs/system/data-permission.md) |
 | 字典和参数 | [dictionary-parameter-ui.md](./dictionary-parameter-ui.md) | [dictionary-parameter.md](../../../hive-admin-go/business-docs/system/dictionary-parameter.md) |
 | 上传文件和文件列表 | [file-management-ui.md](./file-management-ui.md) | [file-management.md](../../../hive-admin-go/business-docs/system/file-management.md) |
-| 操作日志、登录日志和外部页面 | [audit-external-page-ui.md](./audit-external-page-ui.md) | [审计](../../../hive-admin-go/business-docs/system/audit-log.md)、[外部页面](../../../hive-admin-go/business-docs/system/external-page.md) |
+| 操作日志、登录日志和外部页面 | [audit-public-page-ui.md](./audit-public-page-ui.md) | [审计](../../../hive-admin-go/business-docs/system/audit-log.md)、[外部页面](../../../hive-admin-go/business-docs/system/public-page.md) |
 | 支付渠道 | [payment-channel-ui.md](./payment-channel-ui.md) | [payment-channel.md](../../../hive-admin-go/business-docs/system/payment-channel.md) |
 | 菜单消息推送 | [message-push-ui.md](./message-push-ui.md) | [message-push.md](../../../hive-admin-go/business-docs/system/message-push.md) |
 | 下载中心 | [download-center-ui.md](./download-center-ui.md) | [download-center.md](../../../hive-admin-go/business-docs/system/download-center.md) |

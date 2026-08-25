@@ -12,22 +12,22 @@ const META = {
 
 const routes: RouteRecordRaw[] = [
   {
-    component: () => import('#/views/external/demo/index.vue'),
+    component: () => import('#/views/public/demo/index.vue'),
     meta: {
       ...META,
-      title: $t('external.demo.title'),
+      title: $t('public.demo.title'),
     },
-    name: 'externalDemo',
-    path: '/external/demo',
+    name: 'publicDemo',
+    path: '/public/demo',
   },
   {
-    component: () => import('#/views/external/feedback/index.vue'),
+    component: () => import('#/views/public/feedback/index.vue'),
     meta: {
       ...META,
-      title: $t('external.feedback.title'),
+      title: $t('public.feedback.title'),
     },
-    name: 'externalFeedback',
-    path: '/external/feedback',
+    name: 'publicFeedback',
+    path: '/public/feedback',
   },
 ];
 
