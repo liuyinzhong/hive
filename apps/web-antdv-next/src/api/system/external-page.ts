@@ -1,4 +1,4 @@
-import { externalAccessRequestClient, requestClient } from '#/api/request';
+import { requestClient } from '#/api/request';
 
 export namespace ExternalPageApi {
   export interface ExternalPage {
@@ -74,8 +74,9 @@ export function deleteExternalPagesApi(ids: string[]) {
   return requestClient.delete('/system/externalPages', { data: { ids } });
 }
 
+/** 获取外部页面详情 */
 export function getPublicExternalPageApi(name: string) {
-  return externalAccessRequestClient.get<ExternalPageApi.PublicExternalPage>(
+  return requestClient.get<ExternalPageApi.PublicExternalPage>(
     `/public/externalPages/${encodeURIComponent(name)}`,
   );
 }

@@ -1,4 +1,4 @@
-import { externalAccessRequestClient } from '#/api/request';
+import { requestClient } from '#/api/request';
 
 /**
  * 外部反馈工单公开接口。
@@ -54,7 +54,7 @@ export namespace ExternalFeedbackApi {
 export async function createFeedbackApi(
   data: ExternalFeedbackApi.CreateFeedbackRequest,
 ) {
-  return externalAccessRequestClient.post<ExternalFeedbackApi.CreateFeedbackResponse>(
+  return requestClient.post<ExternalFeedbackApi.CreateFeedbackResponse>(
     '/public/feedback',
     data,
   );
@@ -77,10 +77,11 @@ export async function upload_file_external({
 }) {
   try {
     onProgress?.({ percent: 0 });
-    const data = await externalAccessRequestClient.upload<ExternalFeedbackApi.FeedbackFileFace>(
-      '/public/upload',
-      { file },
-    );
+    const data =
+      await requestClient.upload<ExternalFeedbackApi.FeedbackFileFace>(
+        '/public/upload',
+        { file },
+      );
     onProgress?.({ percent: 100 });
     onSuccess?.(data, file);
   } catch (error) {

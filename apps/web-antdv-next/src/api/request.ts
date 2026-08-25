@@ -132,13 +132,6 @@ export const requestClient = createRequestClient(apiURL, {
   responseReturn: 'data',
 });
 
-/** 外部页面访问校验：404 由路由守卫静默转到全局 404，其余错误沿用统一提示。 */
-export const externalAccessRequestClient = createRequestClient(
-  apiURL,
-  { responseReturn: 'data' },
-  (error) => error?.response?.status !== 404,
-);
-
 /* 直接使用 vben的基本请求，无认证逻辑、错误处理、响应数据处理等。 */
 // export const baseRequestClient = new RequestClient({ baseURL: apiURL });
 
