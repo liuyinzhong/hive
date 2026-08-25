@@ -50,6 +50,7 @@ function useFormSchema(): VbenFormSchema[] {
       component: 'RichEditor',
       fieldName: 'richText',
       label: $t('external.feedback.fieldRichText'),
+      rules: 'required',
       componentProps: {
         editable: true,
         minHeight: 260,
