@@ -5,6 +5,16 @@ import { $t } from '#/locales';
 import { formatFileSize } from '#/utils';
 
 /**
+ * 文件状态选项（0=正式，1=临时未绑定），供查询条件和表格列共用
+ */
+function useStatusOptions() {
+  return [
+    { label: $t('system.file.statusFormal'), value: 0, color: 'success' },
+    { label: $t('system.file.statusTemp'), value: 1, color: 'warning' },
+  ];
+}
+
+/**
  * 搜索表单配置
  */
 export function useGridFormSchema(): VbenFormSchema[] {
@@ -33,6 +43,15 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: $t('system.file.fileExt'),
       componentProps: {
         placeholder: $t('system.file.searchFileExt'),
+        allowClear: true,
+      },
+    },
+    {
+      component: 'Select',
+      fieldName: 'status',
+      label: $t('system.file.status'),
+      componentProps: {
+        options: useStatusOptions(),
         allowClear: true,
       },
     },
@@ -91,6 +110,13 @@ export function useColumns(): VxeTableGridOptions['columns'] {
       width: 120,
       sortable: true,
       sortBy: 'creatorName',
+    },
+    {
+      field: 'status',
+      title: $t('system.file.status'),
+      width: 100,
+      align: 'center',
+      cellRender: { name: 'CellTag', options: useStatusOptions() },
     },
     {
       field: 'createDate',

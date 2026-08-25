@@ -30,6 +30,8 @@ export namespace SystemFileApi {
     creatorId: string;
     /** 创建人姓名 */
     creatorName: string;
+    /** 文件状态；0=正式，1=临时未绑定 */
+    status: number;
     /** 创建日期 */
     createDate: string;
   }
@@ -37,7 +39,7 @@ export namespace SystemFileApi {
 
 /**
  * 获取文件列表（分页）
- * @param params 查询参数（page, pageSize, originalName, type, fileExt, sorts）
+ * @param params 查询参数（page, pageSize, originalName, type, fileExt, status, sorts）
  */
 export async function getFileListApi(params: Recordable<any>) {
   return requestClient.get<{

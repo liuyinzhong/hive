@@ -254,7 +254,10 @@
     "searchMimeType": "e.g. image/jpeg (exact match)",
     "searchFileExt": "e.g. .jpg (exact match)",
     "imagePreview": "Image Preview",
-    "fullPath": "Full Path"
+    "fullPath": "Full Path",
+    "status": "File Status",
+    "statusFormal": "Formal",
+    "statusTemp": "Temporary Unbound"
   },
   "user": {
     "title": "User Management",
