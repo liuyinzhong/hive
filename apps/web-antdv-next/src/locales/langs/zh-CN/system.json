@@ -256,9 +256,9 @@
     "searchFileExt": "如 .jpg（精确匹配）",
     "imagePreview": "图片预览",
     "fullPath": "完整路径",
-    "status": "文件状态",
-    "statusFormal": "正式",
-    "statusTemp": "临时未绑定"
+    "usageStatus": "使用状态",
+    "used": "已使用",
+    "unused": "未使用"
   },
   "user": {
     "title": "用户管理",

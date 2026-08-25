@@ -255,9 +255,9 @@
     "searchFileExt": "e.g. .jpg (exact match)",
     "imagePreview": "Image Preview",
     "fullPath": "Full Path",
-    "status": "File Status",
-    "statusFormal": "Formal",
-    "statusTemp": "Temporary Unbound"
+    "usageStatus": "Usage Status",
+    "used": "Used",
+    "unused": "Unused"
   },
   "user": {
     "title": "User Management",

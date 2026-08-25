@@ -30,7 +30,7 @@ export namespace SystemFileApi {
     creatorId: string;
     /** 创建人姓名 */
     creatorName: string;
-    /** 文件状态；0=正式，1=临时未绑定 */
+    /** 使用状态；0=已使用，1=未使用 */
     status: number;
     /** 创建日期 */
     createDate: string;

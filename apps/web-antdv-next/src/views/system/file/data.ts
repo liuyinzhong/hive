@@ -5,12 +5,13 @@ import { $t } from '#/locales';
 import { formatFileSize } from '#/utils';
 
 /**
- * 文件状态选项（0=正式，1=临时未绑定），供查询条件和表格列共用
+ * 文件使用状态选项（0=已使用，1=未使用），供查询条件和表格列共用；
+ * 对应后端 sys_file.status 字段
  */
 function useStatusOptions() {
   return [
-    { label: $t('system.file.statusFormal'), value: 0, color: 'success' },
-    { label: $t('system.file.statusTemp'), value: 1, color: 'warning' },
+    { label: $t('system.file.used'), value: 0, color: 'success' },
+    { label: $t('system.file.unused'), value: 1, color: 'warning' },
   ];
 }
 
@@ -49,7 +50,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     {
       component: 'Select',
       fieldName: 'status',
-      label: $t('system.file.status'),
+      label: $t('system.file.usageStatus'),
       componentProps: {
         options: useStatusOptions(),
         allowClear: true,
@@ -113,7 +114,7 @@ export function useColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'status',
-      title: $t('system.file.status'),
+      title: $t('system.file.usageStatus'),
       width: 100,
       align: 'center',
       cellRender: { name: 'CellTag', options: useStatusOptions() },
