@@ -127,7 +127,7 @@ function createRequestClient(
   return client;
 }
 
-/* 使用 vben基本请求又一次封装适配业务的方法 */
+/* 使用 vben基本请求又一次封装适配业务的方法，包含认证逻辑、错误处理、响应数据处理等 */
 export const requestClient = createRequestClient(apiURL, {
   responseReturn: 'data',
 });
@@ -139,7 +139,7 @@ export const externalAccessRequestClient = createRequestClient(
   (error) => error?.response?.status !== 404,
 );
 
-/* 直接使用 vben的基本请求 */
+/* 直接使用 vben的基本请求，无认证逻辑、错误处理、响应数据处理等。 */
 // export const baseRequestClient = new RequestClient({ baseURL: apiURL });
 
 export interface PageFetchParams {
