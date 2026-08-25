@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-
+import {
+  storyRichTemplateText,
+  bugRichTemplateText,
+} from '#/template/richText';
 import { IconifyIcon } from '@vben/icons';
 import { LanguageToggle, ThemeToggle } from '@vben/layouts';
 import { Page } from '@vben/common-ui';
@@ -49,6 +52,17 @@ function useFormSchema(): VbenFormSchema[] {
       fieldName: 'richText',
       label: $t('external.feedback.fieldRichText'),
       rules: 'required',
+      defaultValue: storyRichTemplateText,
+      dependencies: {
+        triggerFields: ['type'],
+        // 切换反馈类型时同步切换富文本模板：story 走需求模板，bug 走 bug 模板，直接覆盖当前内容
+        componentProps: (values: Record<string, any>, formApi: any) => {
+          const tpl =
+            values.type === 'bug' ? bugRichTemplateText : storyRichTemplateText;
+          formApi.setFieldValue('richText', tpl);
+          return {};
+        },
+      },
       componentProps: {
         editable: true,
         minHeight: 260,
