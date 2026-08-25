@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import { LanguageToggle } from '@vben/layouts';
-
+import type { VbenFormSchema } from '#/adapter/form';
 import { useVbenForm } from '#/adapter/form';
 import {
   createFeedbackApi,
