@@ -9,10 +9,8 @@ import { Button, Card, message } from 'antdv-next';
 
 import type { VbenFormSchema } from '#/adapter/form';
 import { useVbenForm } from '#/adapter/form';
-import {
-  createFeedbackApi,
-  upload_file_external,
-} from '#/api/external/feedback';
+import { createFeedbackApi } from '#/api/external/feedback';
+import { upload_file_external } from '#/api/examples/upload';
 import type { ExternalFeedbackApi } from '#/api/external/feedback';
 import { $t } from '#/locales';
 import { filesToUrlString } from '#/utils';
