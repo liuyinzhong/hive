@@ -1,6 +1,6 @@
-import type { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from 'vue-router';
 
-import { $t } from "#/locales";
+import { $t } from '#/locales';
 
 const META = {
   hideInBreadcrumb: true,
@@ -12,22 +12,22 @@ const META = {
 
 const routes: RouteRecordRaw[] = [
   {
-    component: () => import("#/views/external/demo/index.vue"),
+    component: () => import('#/views/external/demo/index.vue'),
     meta: {
       ...META,
-      title: $t("external.demo.title"),
+      title: $t('external.demo.title'),
     },
-    name: "externalDemo",
-    path: "/external/demo",
+    name: 'externalDemo',
+    path: '/external/demo',
   },
   {
-    component: () => import("#/views/external/story/index.vue"),
+    component: () => import('#/views/external/feedback/index.vue'),
     meta: {
       ...META,
-      title: $t("external.story.title"),
+      title: $t('external.feedback.title'),
     },
-    name: "externalStory",
-    path: "/external/story",
+    name: 'externalFeedback',
+    path: '/external/feedback',
   },
 ];
 

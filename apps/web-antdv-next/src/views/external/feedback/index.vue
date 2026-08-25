@@ -19,33 +19,33 @@ function useFormSchema(): VbenFormSchema[] {
     {
       component: 'RadioGroup',
       fieldName: 'type',
-      label: $t('external.story.fieldType'),
+      label: $t('external.feedback.fieldType'),
       defaultValue: 'story',
       rules: 'required',
       formItemClass: 'col-span-2',
       componentProps: {
         options: [
-          { label: $t('external.story.typeStory'), value: 'story' },
-          { label: $t('external.story.typeBug'), value: 'bug' },
+          { label: $t('external.feedback.typeStory'), value: 'story' },
+          { label: $t('external.feedback.typeBug'), value: 'bug' },
         ],
       },
     },
     {
       component: 'Input',
       fieldName: 'title',
-      label: $t('external.story.fieldTitle'),
+      label: $t('external.feedback.fieldTitle'),
       rules: 'required',
       formItemClass: 'col-span-2',
       componentProps: {
         maxlength: 128,
         showCount: true,
-        placeholder: $t('external.story.fieldTitlePlaceholder'),
+        placeholder: $t('external.feedback.fieldTitlePlaceholder'),
       },
     },
     {
       component: 'RichEditor',
       fieldName: 'richText',
-      label: $t('external.story.fieldRichText'),
+      label: $t('external.feedback.fieldRichText'),
       labelWidth: 0,
       formItemClass: 'col-span-2',
       componentProps: {
@@ -79,7 +79,7 @@ function useFormSchema(): VbenFormSchema[] {
     {
       component: 'Upload',
       fieldName: 'fileIds',
-      label: $t('external.story.fieldFiles'),
+      label: $t('external.feedback.fieldFiles'),
       formItemClass: 'col-span-2',
       componentProps: {
         customRequest: upload_file_external,
@@ -123,7 +123,7 @@ async function onSubmit(values: Record<string, any>) {
     });
     submittedNum.value = resp.num;
     submittedType.value = resp.type;
-    message.success($t('external.story.submitSuccess'));
+    message.success($t('external.feedback.submitSuccess'));
   } catch {
     // 错误提示由统一响应拦截器处理
   } finally {
@@ -160,10 +160,10 @@ function resetForm() {
         ✓
       </div>
       <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">
-        {{ $t('external.story.successTitle') }}
+        {{ $t('external.feedback.successTitle') }}
       </h2>
       <p class="mt-4 text-base leading-7 text-slate-300">
-        {{ $t('external.story.successDesc') }}
+        {{ $t('external.feedback.successDesc') }}
       </p>
       <div
         class="mt-6 inline-flex items-center rounded-full border border-white/10 bg-black/10 px-5 py-2 text-lg font-medium"
@@ -172,8 +172,8 @@ function resetForm() {
         <span class="ml-2 text-sm text-slate-400">
           ({{
             submittedType === 'bug'
-              ? $t('external.story.typeBug')
-              : $t('external.story.typeStory')
+              ? $t('external.feedback.typeBug')
+              : $t('external.feedback.typeStory')
           }})
         </span>
       </div>
@@ -183,7 +183,7 @@ function resetForm() {
           type="button"
           @click="resetForm"
         >
-          {{ $t('external.story.submitAnother') }}
+          {{ $t('external.feedback.submitAnother') }}
         </button>
       </div>
     </section>
@@ -196,13 +196,13 @@ function resetForm() {
       <div
         class="mb-6 inline-flex items-center rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-sm text-emerald-200"
       >
-        {{ $t('external.story.badge') }}
+        {{ $t('external.feedback.badge') }}
       </div>
       <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
-        {{ $t('external.story.formTitle') }}
+        {{ $t('external.feedback.formTitle') }}
       </h1>
       <p class="mt-3 text-sm leading-6 text-slate-300">
-        {{ $t('external.story.formDesc') }}
+        {{ $t('external.feedback.formDesc') }}
       </p>
 
       <div
@@ -218,8 +218,8 @@ function resetForm() {
           >
             {{
               submitting
-                ? $t('external.story.submitting')
-                : $t('external.story.submit')
+                ? $t('external.feedback.submitting')
+                : $t('external.feedback.submit')
             }}
           </button>
         </div>

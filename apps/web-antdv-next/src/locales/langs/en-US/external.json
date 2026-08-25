@@ -7,7 +7,7 @@
     "noLogin": "ignoreAccess is enabled",
     "goToLogin": "Go to sign in"
   },
-  "story": {
+  "feedback": {
     "title": "Collect Work Order",
     "badge": "Anonymous Feedback",
     "formTitle": "Submit Feedback",

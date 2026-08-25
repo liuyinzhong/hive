@@ -7,7 +7,7 @@
     "noLogin": "ignoreAccess 已开启",
     "goToLogin": "前往登录页"
   },
-  "story": {
+  "feedback": {
     "title": "收集工单",
     "badge": "匿名反馈",
     "formTitle": "提交反馈",
