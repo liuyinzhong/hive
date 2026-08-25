@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { LanguageToggle } from '@vben/layouts';
+import { IconifyIcon } from '@vben/icons';
+import { LanguageToggle, ThemeToggle } from '@vben/layouts';
+import { Page } from '@vben/common-ui';
+
+import { Button, Card, message } from 'antdv-next';
+
 import type { VbenFormSchema } from '#/adapter/form';
 import { useVbenForm } from '#/adapter/form';
 import {
@@ -9,9 +14,8 @@ import {
   upload_file_external,
 } from '#/api/external/feedback';
 import type { ExternalFeedbackApi } from '#/api/external/feedback';
-import { filesToUrlString } from '#/utils';
 import { $t } from '#/locales';
-import { message } from 'antdv-next';
+import { filesToUrlString } from '#/utils';
 
 /** 反馈表单 Schema，字段对齐后端 CreateStoryFeedbackRequest */
 function useFormSchema(): VbenFormSchema[] {
@@ -22,8 +26,9 @@ function useFormSchema(): VbenFormSchema[] {
       label: $t('external.feedback.fieldType'),
       defaultValue: 'story',
       rules: 'required',
-      formItemClass: 'col-span-2',
       componentProps: {
+        optionType: 'button',
+        buttonStyle: 'solid',
         options: [
           { label: $t('external.feedback.typeStory'), value: 'story' },
           { label: $t('external.feedback.typeBug'), value: 'bug' },
@@ -35,7 +40,6 @@ function useFormSchema(): VbenFormSchema[] {
       fieldName: 'title',
       label: $t('external.feedback.fieldTitle'),
       rules: 'required',
-      formItemClass: 'col-span-2',
       componentProps: {
         maxlength: 128,
         showCount: true,
@@ -46,8 +50,6 @@ function useFormSchema(): VbenFormSchema[] {
       component: 'RichEditor',
       fieldName: 'richText',
       label: $t('external.feedback.fieldRichText'),
-      labelWidth: 0,
-      formItemClass: 'col-span-2',
       componentProps: {
         editable: true,
         minHeight: 260,
@@ -80,7 +82,6 @@ function useFormSchema(): VbenFormSchema[] {
       component: 'Upload',
       fieldName: 'fileIds',
       label: $t('external.feedback.fieldFiles'),
-      formItemClass: 'col-span-2',
       componentProps: {
         customRequest: upload_file_external,
         maxCount: 10,
@@ -95,135 +96,90 @@ function useFormSchema(): VbenFormSchema[] {
 /** 表单实例，提交时调用 createFeedbackApi */
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
-  wrapperClass: 'grid-cols-2',
+  layout: 'vertical',
   schema: useFormSchema(),
-  showDefaultActions: false,
 });
 
-/** 提交中标记，控制按钮 loading */
-const submitting = ref(false);
 /** 提交成功后回显的工单编号与类型 */
 const submittedNum = ref<number | null>(null);
 const submittedType = ref<ExternalFeedbackApi.FeedbackType | null>(null);
 
 /** 提交外部反馈工单：fileIds 由上传文件列表转为字符串数组后调用公开接口 */
 async function onSubmit(values: Record<string, any>) {
-  submitting.value = true;
-  try {
-    const fileIds = filesToUrlString(
-      values.fileIds,
-      'fileId',
-      'array',
-    ) as string[];
-    const resp = await createFeedbackApi({
-      type: values.type,
-      title: values.title,
-      richText: values.richText,
-      fileIds,
-    });
-    submittedNum.value = resp.num;
-    submittedType.value = resp.type;
-    message.success($t('external.feedback.submitSuccess'));
-  } catch {
-    // 错误提示由统一响应拦截器处理
-  } finally {
-    submitting.value = false;
-  }
+  const fileIds = filesToUrlString(
+    values.fileIds,
+    'fileId',
+    'array',
+  ) as string[];
+  const resp = await createFeedbackApi({
+    type: values.type,
+    title: values.title,
+    richText: values.richText,
+    fileIds,
+  });
+  submittedNum.value = resp.num;
+  submittedType.value = resp.type;
+  message.success($t('external.feedback.submitSuccess'));
 }
 
 /** 重新提交：清空表单与成功状态 */
 function resetForm() {
   submittedNum.value = null;
   submittedType.value = null;
-  formApi.resetForm();
+  formApi.reset();
 }
 </script>
 
 <template>
-  <main
-    class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-6 text-white"
-  >
+  <Page>
     <div
-      class="dark fixed right-6 top-6 z-10 rounded-xl border border-white/10 bg-white/10 p-1 shadow-lg backdrop-blur"
+      class="border-border bg-card fixed right-4 top-4 z-10 flex items-center rounded-lg border p-1 shadow-sm"
     >
       <LanguageToggle />
+      <ThemeToggle />
     </div>
 
     <!-- 提交成功回执 -->
-    <section
-      v-if="submittedNum !== null"
-      class="w-full max-w-2xl rounded-3xl border border-white/10 bg-white/10 p-8 text-center shadow-2xl backdrop-blur md:p-12"
-    >
-      <div
-        class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/30 bg-emerald-400/10 text-3xl text-emerald-200"
-      >
-        ✓
-      </div>
-      <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">
-        {{ $t('external.feedback.successTitle') }}
-      </h2>
-      <p class="mt-4 text-base leading-7 text-slate-300">
-        {{ $t('external.feedback.successDesc') }}
-      </p>
-      <div
-        class="mt-6 inline-flex items-center rounded-full border border-white/10 bg-black/10 px-5 py-2 text-lg font-medium"
-      >
-        #{{ submittedNum }}
-        <span class="ml-2 text-sm text-slate-400">
-          ({{
-            submittedType === 'bug'
-              ? $t('external.feedback.typeBug')
-              : $t('external.feedback.typeStory')
-          }})
-        </span>
-      </div>
-      <div class="mt-8">
-        <button
-          class="rounded-xl bg-white px-5 py-3 font-medium text-slate-900 transition hover:bg-slate-200"
-          type="button"
-          @click="resetForm"
-        >
+    <Card v-if="submittedNum !== null" class="mx-auto w-full max-w-2xl">
+      <div class="flex flex-col items-center py-8 text-center">
+        <IconifyIcon
+          class="text-primary mb-4 size-14"
+          icon="lucide:circle-check-big"
+        />
+        <h2 class="text-xl font-semibold">
+          {{ $t('external.feedback.successTitle') }}
+        </h2>
+        <p class="text-muted-foreground mt-2 text-sm">
+          {{ $t('external.feedback.successDesc') }}
+        </p>
+        <div class="mt-4 text-2xl font-semibold">
+          #{{ submittedNum }}
+          <span
+            class="text-muted-foreground ml-1 align-middle text-sm font-normal"
+          >
+            ({{
+              submittedType === 'bug'
+                ? $t('external.feedback.typeBug')
+                : $t('external.feedback.typeStory')
+            }})
+          </span>
+        </div>
+        <Button class="mt-6" type="primary" @click="resetForm">
           {{ $t('external.feedback.submitAnother') }}
-        </button>
+        </Button>
       </div>
-    </section>
+    </Card>
 
     <!-- 反馈表单 -->
-    <section
+    <Card
       v-else
-      class="w-full max-w-2xl rounded-3xl border border-white/10 bg-white/10 p-8 shadow-2xl backdrop-blur md:p-10"
+      :title="$t('external.feedback.formTitle')"
+      class="mx-auto w-full max-w-2xl"
     >
-      <div
-        class="mb-6 inline-flex items-center rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-sm text-emerald-200"
-      >
-        {{ $t('external.feedback.badge') }}
-      </div>
-      <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
-        {{ $t('external.feedback.formTitle') }}
-      </h1>
-      <p class="mt-3 text-sm leading-6 text-slate-300">
+      <p class="text-muted-foreground mb-6 text-sm">
         {{ $t('external.feedback.formDesc') }}
       </p>
-
-      <div
-        class="mt-8 rounded-2xl border border-white/10 bg-black/20 p-5 md:p-6"
-      >
-        <Form />
-        <div class="mt-6 flex justify-end">
-          <button
-            class="rounded-xl bg-white px-6 py-3 font-medium text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
-            :disabled="submitting"
-            type="button"
-            @click="formApi.validateAndSubmitForm()"
-          >
-            {{
-              submitting
-                ? $t('external.feedback.submitting')
-                : $t('external.feedback.submit')
-            }}
-          </button>
-        </div>
-      </div>
-    </section>
-  </main>
+      <Form />
+    </Card>
+  </Page>
 </template>
