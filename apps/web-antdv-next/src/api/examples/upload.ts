@@ -1,5 +1,6 @@
 import { uploadFileApi } from '#/api/system';
 import { requestClient } from '#/api/request';
+import type { SystemFileApi } from '#/api/system';
 interface UploadFileParams {
   file: File;
   onError?: (error: Error) => void;
@@ -40,7 +41,10 @@ export async function upload_file_external({
 }) {
   try {
     onProgress?.({ percent: 0 });
-    const data = await requestClient.upload('/public/upload', { file });
+    const data = await requestClient.upload<SystemFileApi.SystemFileFace>(
+      '/public/upload',
+      { file },
+    );
     onProgress?.({ percent: 100 });
     onSuccess?.(data, file);
   } catch (error) {
