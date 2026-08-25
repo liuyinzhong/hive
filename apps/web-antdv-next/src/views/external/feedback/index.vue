@@ -107,20 +107,33 @@ const submittedType = ref<ExternalFeedbackApi.FeedbackType | null>(null);
 
 /** 提交外部反馈工单：fileIds 由上传文件列表转为字符串数组后调用公开接口 */
 async function onSubmit(values: Record<string, any>) {
-  const fileIds = filesToUrlString(
-    values.fileIds,
-    'fileId',
-    'array',
-  ) as string[];
-  const resp = await createFeedbackApi({
-    type: values.type,
-    title: values.title,
-    richText: values.richText,
-    fileIds,
-  });
-  submittedNum.value = resp.num;
-  submittedType.value = resp.type;
-  message.success($t('external.feedback.submitSuccess'));
+  try {
+    const fileIds = filesToUrlString(
+      values.fileIds,
+      'fileId',
+      'array',
+    ) as string[];
+
+    formApi.setState({
+      submitButtonOptions: { loading: true },
+      resetButtonOptions: { disabled: true },
+    });
+
+    const resp = await createFeedbackApi({
+      type: values.type,
+      title: values.title,
+      richText: values.richText,
+      fileIds,
+    });
+    submittedNum.value = resp.num;
+    submittedType.value = resp.type;
+    message.success($t('external.feedback.submitSuccess'));
+  } catch {
+    formApi.setState({
+      submitButtonOptions: { loading: false },
+      resetButtonOptions: { disabled: false },
+    });
+  }
 }
 
 /** 重新提交：清空表单与成功状态 */
@@ -128,6 +141,10 @@ function resetForm() {
   submittedNum.value = null;
   submittedType.value = null;
   formApi.reset();
+  formApi.setState({
+    submitButtonOptions: { loading: false },
+    resetButtonOptions: { disabled: false },
+  });
 }
 </script>
 
