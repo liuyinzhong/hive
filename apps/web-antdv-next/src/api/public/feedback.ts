@@ -4,7 +4,7 @@ import { requestClient } from '#/api/request';
  * 外部反馈工单公开接口。
  * 不携带登录态，调用 /public/feedback 与 /public/upload 两个匿名端点。
  */
-export namespace ExternalFeedbackApi {
+export namespace PublicFeedbackApi {
   /** 工单类型：story=需求，bug=缺陷 */
   export type FeedbackType = 'bug' | 'story';
 
@@ -34,9 +34,9 @@ export namespace ExternalFeedbackApi {
  * 调用公开端点 /public/feedback，根据 type 写入 dev_story 或 dev_bug，source 固定为 10。
  */
 export async function createFeedbackApi(
-  data: ExternalFeedbackApi.CreateFeedbackRequest,
+  data: PublicFeedbackApi.CreateFeedbackRequest,
 ) {
-  return requestClient.post<ExternalFeedbackApi.CreateFeedbackResponse>(
+  return requestClient.post<PublicFeedbackApi.CreateFeedbackResponse>(
     '/public/feedback',
     data,
   );

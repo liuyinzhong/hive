@@ -12,9 +12,9 @@ import { Button, Card, message } from 'antdv-next';
 
 import type { VbenFormSchema } from '#/adapter/form';
 import { useVbenForm } from '#/adapter/form';
-import { createFeedbackApi } from '#/api/external/feedback';
+import { createFeedbackApi } from '#/api/public/feedback';
 import { upload_file_public } from '#/api/examples/upload';
-import type { ExternalFeedbackApi } from '#/api/external/feedback';
+import type { PublicFeedbackApi } from '#/api/public/feedback';
 import { $t } from '#/locales';
 import { filesToUrlString } from '#/utils';
 
@@ -115,7 +115,7 @@ const [Form, formApi] = useVbenForm({
 
 /** 提交成功后回显的工单编号与类型 */
 const submittedNum = ref<number | null>(null);
-const submittedType = ref<ExternalFeedbackApi.FeedbackType | null>(null);
+const submittedType = ref<PublicFeedbackApi.FeedbackType | null>(null);
 
 /** 提交外部反馈工单：fileIds 由上传文件列表转为字符串数组后调用公开接口 */
 async function onSubmit(values: Record<string, any>) {
