@@ -10,7 +10,7 @@ import ExternalPageList from './externalMenu/index.vue';
 
 import RootMenuList from './rootMenu/index.vue';
 
-const activeTab = ref<'系统菜单' | '外部页面' | '公开页面'>('系统菜单');
+const activeTab = ref<'系统菜单' | '外部页面'>('系统菜单');
 const tabOptions = ref([
   {
     value: '系统菜单',
@@ -19,11 +19,7 @@ const tabOptions = ref([
   {
     value: '外部页面',
     tooltip:
-      '外部页面,用于向别人系统对接时提供一个可直接打开的链接，全屏无布局',
-  },
-  {
-    value: '公开页面',
-    tooltip: '公开页面,面向公共用户,无需登录即可访问,比如：收集反馈',
+      '外部页面,用于向别人系统对接时提供一个可直接打开的链接，或者是业务反馈页面。全屏无布局',
   },
 ]);
 </script>
@@ -45,8 +41,6 @@ const tabOptions = ref([
         v-access:code="['system:externalPage:list']"
         v-if="activeTab == '外部页面'"
       />
-
-      <div v-if="activeTab == '公开页面'">没有实现</div>
     </div>
   </Page>
 </template>

@@ -28,7 +28,7 @@ export async function upload_file({
  * 公开上传外部反馈附件 customRequest。
  * 调用公开端点 /public/upload，文件元数据 creator_id 写入固定占位标记 external-feedback。
  */
-export async function upload_file_external({
+export async function upload_file_public({
   file,
   onError,
   onProgress,

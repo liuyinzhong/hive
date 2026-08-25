@@ -13,7 +13,7 @@ import { Button, Card, message } from 'antdv-next';
 import type { VbenFormSchema } from '#/adapter/form';
 import { useVbenForm } from '#/adapter/form';
 import { createFeedbackApi } from '#/api/external/feedback';
-import { upload_file_external } from '#/api/examples/upload';
+import { upload_file_public } from '#/api/examples/upload';
 import type { ExternalFeedbackApi } from '#/api/external/feedback';
 import { $t } from '#/locales';
 import { filesToUrlString } from '#/utils';
@@ -73,7 +73,7 @@ function useFormSchema(): VbenFormSchema[] {
           maxSize: 5 * 1024 * 1024, // 5MB
           upload: (file: File, onProgress: (percent: number) => void) => {
             return new Promise<string>((resolve, reject) => {
-              upload_file_external({
+              upload_file_public({
                 file,
                 onProgress({ percent }) {
                   onProgress?.(percent);
@@ -96,7 +96,7 @@ function useFormSchema(): VbenFormSchema[] {
       fieldName: 'fileIds',
       label: $t('public.feedback.fieldFiles'),
       componentProps: {
-        customRequest: upload_file_external,
+        customRequest: upload_file_public,
         maxCount: 10,
         multiple: true,
         showUploadList: true,
