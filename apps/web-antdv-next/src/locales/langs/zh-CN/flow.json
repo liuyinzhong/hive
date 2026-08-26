@@ -1,18 +1,6 @@
 {
   "title": "流程管理",
-  "definition": {
-    "category": {
-      "general": "通用",
-      "finance": "财务",
-      "hr": "人事",
-      "administration": "行政",
-      "procurement": "采购",
-      "development": "开发",
-      "system": "系统",
-      "other": "其他",
-      "selectPlaceholder": "请选择流程分类"
-    }
-  },
+  "definition": {},
   "designer": {
     "title": "流程设计器",
     "flowTab": "流程设计",

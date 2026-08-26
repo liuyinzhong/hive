@@ -3,9 +3,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { WorkflowDefinitionApi } from '#/api/workflow';
 
-import { $t } from '#/locales';
-
-import { getWorkflowCategoryOptions } from './category';
+import { getLocalDictList } from '#/dicts';
 
 const statusOptions = [
   { label: '草稿', value: '0' },
@@ -60,11 +58,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'category',
       label: '流程分类',
       componentProps: {
-        allowClear: true,
-        options: getWorkflowCategoryOptions(),
-        optionFilterProp: 'label',
-        placeholder: $t('flow.definition.category.selectPlaceholder'),
-        showSearch: true,
+        options: getLocalDictList('WORKFLOW_CATEGORY'),
       },
     },
     {
@@ -103,11 +97,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'category',
       label: '流程分类',
       componentProps: {
-        allowClear: true,
-        options: getWorkflowCategoryOptions(),
-        optionFilterProp: 'label',
-        placeholder: $t('flow.definition.category.selectPlaceholder'),
-        showSearch: true,
+        options: getLocalDictList('WORKFLOW_CATEGORY'),
       },
     },
     {
@@ -143,8 +133,10 @@ export function useColumns(): VxeTableGridOptions<WorkflowDefinitionApi.Workflow
       width: 110,
       sortable: true,
       cellRender: {
-        name: 'CellTag',
-        options: getWorkflowCategoryOptions(),
+        name: 'DictTag',
+        props: {
+          type: 'WORKFLOW_CATEGORY',
+        },
       },
     },
     {

@@ -19,8 +19,6 @@ import {
   loadVbenFormSchema,
 } from '#/utils/form-schema';
 
-import { getWorkflowCategoryText } from '../definition/category';
-
 interface StartableDefinition {
   definition: WorkflowDefinitionApi.WorkflowDefinition;
 }
@@ -151,7 +149,7 @@ function backToApplications() {
               }}</span>
             </span>
             <Tag v-if="item.definition.category">
-              {{ getWorkflowCategoryText(item.definition.category) }}
+              {{ item.definition.category }}
             </Tag>
             <IconifyIcon class="size-4" icon="lucide:chevron-right" />
           </button>

@@ -1,18 +1,6 @@
 {
   "title": "Flow Management",
-  "definition": {
-    "category": {
-      "general": "General",
-      "finance": "Finance",
-      "hr": "Human Resources",
-      "administration": "Administration",
-      "procurement": "Procurement",
-      "development": "Development",
-      "system": "System",
-      "other": "Other",
-      "selectPlaceholder": "Select a workflow category"
-    }
-  },
+  "definition": {},
   "designer": {
     "title": "Workflow Designer",
     "flowTab": "Flow Design",

@@ -33,14 +33,14 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   fullscreenButton: false,
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   async onOpenChange(isOpen: boolean) {
     if (!isOpen) {
       return;
     }
     formApi.reset();
-    const data = modalApi.getData() || {};
+    const data: any = modalApi.getData() || {};
     modalApi.setState({
       title: data.definitionId ? '编辑流程定义' : '新建流程定义',
     });
