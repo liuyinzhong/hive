@@ -51,6 +51,16 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      component: 'Select',
+      fieldName: 'businessType',
+      label: '业务类型',
+      componentProps: {
+        allowClear: true,
+        options: [],
+        placeholder: '请选择业务类型,空表示纯流程不绑定业务',
+      },
+    },
+    {
       component: 'Textarea',
       fieldName: 'remark',
       label: '备注',

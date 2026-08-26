@@ -53,7 +53,7 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: z
         .string()
         .min(1, { message: '请输入登录名' })
-        .regex(/^[A-Za-z]+$/, { message: '登录名只能输入英文字母' })
+        .regex(/^[A-Za-z0-9]+$/, { message: '登录名只能输入英文字母和数字' })
         .refine((value) => value.toLowerCase() !== 'superadmin', {
           message: '登录名不能为 superAdmin',
         }),

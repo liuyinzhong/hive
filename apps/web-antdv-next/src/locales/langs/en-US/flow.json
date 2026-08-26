@@ -47,7 +47,10 @@
       "selectAssigneeRole": "Select approval roles",
       "selectCopyUser": "Select CC users",
       "selectCopyRole": "Select CC roles",
-      "leaderHint": "The initiator's direct superior will be resolved at runtime."
+      "leaderHint": "The initiator's direct superior will be resolved at runtime.",
+      "nodeBusinessKey": "Node Business Key",
+      "nodeBusinessKeyPlaceholder": "review/develop/test etc., empty means no state sync",
+      "nodeBusinessKeyHint": "After the node is approved, the engine calls the business state hook by this key to sync the business object state. Must match the business type declared by the definition."
     },
     "branch": {
       "strategy": "Branch Strategy",

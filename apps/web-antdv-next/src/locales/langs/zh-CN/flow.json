@@ -47,7 +47,10 @@
       "selectAssigneeRole": "请选择审批角色",
       "selectCopyUser": "请选择抄送用户",
       "selectCopyRole": "请选择抄送角色",
-      "leaderHint": "运行时将根据流程发起人自动查找其直属上级。"
+      "leaderHint": "运行时将根据流程发起人自动查找其直属上级。",
+      "nodeBusinessKey": "节点业务键",
+      "nodeBusinessKeyPlaceholder": "review/develop/test 等,空表示不触发状态同步",
+      "nodeBusinessKeyHint": "节点审批通过后,流程引擎按此键调用业务状态钩子同步业务对象状态。需与流程定义声明的业务类型对应。"
     },
     "branch": {
       "strategy": "分支策略",

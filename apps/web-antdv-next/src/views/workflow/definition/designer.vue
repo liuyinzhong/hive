@@ -15,12 +15,16 @@ import { Button, message, Select, Space } from 'antdv-next';
 import type { FormSchemaApi } from '#/api/form';
 import { getAllFormSchemasApi } from '#/api/form';
 import {
+  getBusinessHooksApi,
   getWorkflowDefinitionDetailApi,
   publishWorkflowDefinitionApi,
   saveWorkflowDefinitionCanvasApi,
   saveWorkflowDefinitionFormApi,
 } from '#/api/workflow';
-import type { WorkflowDefinitionApi } from '#/api/workflow';
+import type {
+  BusinessHookRegistryItem,
+  WorkflowDefinitionApi,
+} from '#/api/workflow';
 import { $t } from '#/locales';
 
 import NodePanel from './components/node-panel.vue';
@@ -52,6 +56,7 @@ const definition = ref<WorkflowDefinitionApi.WorkflowDefinition>();
 const loading = ref(false);
 const zoomPercent = ref('100%');
 const formSchemas = ref<FormSchemaApi.FormSchemaRecord[]>([]);
+const businessHookRegistry = ref<BusinessHookRegistryItem[]>([]);
 const selectedFormSchemaId = ref<string>();
 const selectedFormSchema = computed(() =>
   formSchemas.value.find(
@@ -97,12 +102,14 @@ onBeforeUnmount(() => {
 async function initDesigner() {
   loading.value = true;
   try {
-    const [definitionRecord, schemaRecords] = await Promise.all([
+    const [definitionRecord, schemaRecords, hookRegistry] = await Promise.all([
       getWorkflowDefinitionDetailApi(definitionId),
       getAllFormSchemasApi({ status: '1' }),
+      getBusinessHooksApi(),
     ]);
     definition.value = definitionRecord;
     formSchemas.value = schemaRecords;
+    businessHookRegistry.value = hookRegistry.items;
     selectedFormSchemaId.value = definitionRecord.formSchemaId ?? undefined;
     await nextTick();
     initLogicFlow();
@@ -564,6 +571,8 @@ function onFitView() {
       <PropertyDrawer class="w-[440px]">
         <PropertyPanel
           ref="propertyPanelRef"
+          :business-hook-registry="businessHookRegistry"
+          :business-type="definition?.businessType"
           :condition-edge="isConditionEdge"
           :element="selectedElement"
           :form-fields="formFields"

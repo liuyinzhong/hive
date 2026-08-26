@@ -122,7 +122,8 @@ export namespace WorkflowRuntimeApi {
   }
 
   export interface StartWorkflowInstanceRequest {
-    businessKey?: string;
+    // 业务对象主键(如需求 storyId),由业务发起方传入;空表示纯流程实例不绑定业务。
+    businessId?: string;
     definitionId: string;
     variables: Record<string, unknown>;
   }

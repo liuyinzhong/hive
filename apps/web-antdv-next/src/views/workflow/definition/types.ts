@@ -32,6 +32,8 @@ export interface WorkflowElementProperties {
     import('#/api/workflow').WorkflowDefinitionApi.WorkflowFormFieldPermission
   >;
   isDefaultBranch?: boolean;
+  // 节点业务键:业务模块在节点属性中配置的稳定语义标识(如 review),流程引擎在节点完成时按此键调用业务状态钩子。
+  nodeBusinessKey?: string;
   nodeType?: WorkflowNodeType;
   priority?: number;
 }

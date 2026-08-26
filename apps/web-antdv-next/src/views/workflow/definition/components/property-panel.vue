@@ -14,7 +14,10 @@ import {
 } from 'antdv-next';
 
 import { getAllRoleListApi, getUserListAllApi } from '#/api/system';
-import type { WorkflowDefinitionApi } from '#/api/workflow';
+import type {
+  BusinessHookRegistryItem,
+  WorkflowDefinitionApi,
+} from '#/api/workflow';
 import { $t } from '#/locales';
 import type { PersistentFormSchema } from '#/utils/form-schema';
 import { getFormComponentMeta } from '#/utils/form-schema';
@@ -31,6 +34,7 @@ import type {
 
 interface SelectOption {
   label: string;
+  title?: string;
   value: string;
 }
 
@@ -50,11 +54,17 @@ interface PropertyFormState {
     WorkflowDefinitionApi.WorkflowFormFieldPermission
   >;
   isDefaultBranch: boolean;
+  // 节点业务键:流程节点上配置的稳定语义标识,空表示不触发状态同步
+  nodeBusinessKey: string;
   priority: number;
   text: string;
 }
 
 const props = defineProps<{
+  // 当前流程定义声明的业务类型,用于联动过滤节点业务键选项
+  businessType?: string;
+  // 业务状态钩子注册表,供节点业务键下拉加载选项
+  businessHookRegistry?: BusinessHookRegistryItem[];
   conditionEdge?: boolean;
   element?: WorkflowElement;
   formFields?: PersistentFormSchema[];
@@ -83,8 +93,27 @@ const formState = reactive<PropertyFormState>({
   copyType: 'user',
   fieldPermissions: {},
   isDefaultBranch: false,
+  nodeBusinessKey: '',
   priority: 1,
   text: '',
+});
+
+/** 节点业务键下拉选项:按当前流程定义声明的 businessType 联动过滤。
+ *  businessType 为空(新建中或纯流程)时显示全部节点键并带业务类型分组标签,避免无选项可选。 */
+const nodeKeyOptions = computed<SelectOption[]>(() => {
+  const registry = props.businessHookRegistry ?? [];
+  const matched = props.businessType
+    ? registry.filter((item) => item.businessType === props.businessType)
+    : registry;
+  return matched.flatMap((item) =>
+    item.nodeKeys.map((node) => ({
+      label: props.businessType
+        ? `${node.label} (${node.nodeKey})`
+        : `${node.label} (${node.nodeKey}) - ${item.label}`,
+      title: node.description,
+      value: node.nodeKey,
+    })),
+  );
 });
 
 const assigneeTypeOptions = [
@@ -168,6 +197,7 @@ watch(
       formState.assigneeNames,
     );
     formState.copyType = properties.copyType ?? 'user';
+    formState.nodeBusinessKey = properties.nodeBusinessKey ?? '';
     formState.fieldPermissions = normalizeFieldPermissions(
       properties.fieldPermissions,
     );
@@ -561,6 +591,22 @@ defineExpose({ submit });
 
         <div class="field-hint">
           {{ $t('flow.designer.actor.approvalModeHint') }}
+        </div>
+
+        <label class="field">
+          <span>{{ $t('flow.designer.actor.nodeBusinessKey') }}</span>
+          <Select
+            v-model:value="formState.nodeBusinessKey"
+            allow-clear
+            :options="nodeKeyOptions"
+            :placeholder="$t('flow.designer.actor.nodeBusinessKeyPlaceholder')"
+            option-filter-prop="label"
+            show-search
+          />
+        </label>
+
+        <div class="field-hint">
+          {{ $t('flow.designer.actor.nodeBusinessKeyHint') }}
         </div>
 
         <label class="field">
