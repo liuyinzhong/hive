@@ -46,7 +46,6 @@ async function onSubmit(values: Record<string, unknown>) {
       ) as FormSchemaApi.FormSchemaPayload['layout'],
       remark: String(values.remark ?? '') || undefined,
       schema: existing?.schema ?? [],
-      schemaKey: String(values.schemaKey ?? ''),
       schemaName: String(values.schemaName ?? ''),
       status: String(values.status ?? '1'),
     };

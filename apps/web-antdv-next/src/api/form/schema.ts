@@ -28,7 +28,6 @@ export namespace FormSchemaApi {
     layout: FormSchemaLayout;
     remark?: null | string;
     schema: PersistentFormSchema[];
-    schemaKey: string;
     schemaName: string;
     status?: string;
   }

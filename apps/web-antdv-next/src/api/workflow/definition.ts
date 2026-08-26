@@ -10,7 +10,8 @@ export namespace WorkflowDefinitionApi {
   export interface WorkflowDefinition {
     [key: string]: any;
     definitionId?: string;
-    definitionKey: string;
+    // 流程标识由后端通过公共编码流水自动生成，创建/更新时不传入，列表/详情回显时由后端返回。
+    definitionKey?: string;
     definitionName: string;
     category?: string;
     status?: string;

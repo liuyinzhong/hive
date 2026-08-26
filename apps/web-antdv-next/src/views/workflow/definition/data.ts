@@ -43,17 +43,6 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'Input',
-      fieldName: 'definitionKey',
-      label: '流程标识',
-      rules: 'required',
-      componentProps: {
-        allowClear: true,
-        maxlength: 128,
-        placeholder: '如 story_approval',
-      },
-    },
-    {
       component: 'Select',
       fieldName: 'category',
       label: '流程分类',

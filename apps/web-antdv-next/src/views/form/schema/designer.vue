@@ -72,7 +72,6 @@ async function saveSchema() {
     layout: formLayout.value,
     remark: record.value.remark,
     schema: schema.value,
-    schemaKey: record.value.schemaKey,
     schemaName: record.value.schemaName,
     status: record.value.status,
   });

@@ -27,17 +27,6 @@ export function useFormSchemaBaseForm(): VbenFormSchema[] {
     },
     {
       component: 'Input',
-      componentProps: {
-        allowClear: true,
-        maxlength: 128,
-        placeholder: 'expense_apply',
-      },
-      fieldName: 'schemaKey',
-      label: $t('form.fields.schemaKey'),
-      rules: 'required',
-    },
-    {
-      component: 'Input',
       componentProps: { allowClear: true, maxlength: 64 },
       fieldName: 'category',
       label: $t('form.fields.category'),
