@@ -291,6 +291,71 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 - 避免模板中的重复重计算、循环请求和可消除的 N+1 请求。
 - 上传下载统一复用已有组件和文件接口。
 
+## 字典与枚举
+
+- 表单字段使用字典时参考：
+
+```ts
+import { getLocalDictList } from '#/dicts'
+{
+  component: 'Select',
+  fieldName: 'category',
+  label: '流程分类',
+  componentProps: {
+    options: getLocalDictList('WORKFLOW_CATEGORY'),
+  },
+},
+```
+
+- 表格列使用字典时参考：
+
+```ts
+{
+  field: 'category',
+  title: '分类',
+  cellRender: {
+    name: 'DictTag',
+    props: {
+      type: 'WORKFLOW_CATEGORY',
+    },
+  },
+},
+```
+
+- 回显字典值的文本时参考：
+
+```ts
+import { getLocalDictText } from '#/dicts';
+getLocalDictText('WORKFLOW_CATEGORY', value);
+```
+
+- 字典其它可用方法：
+
+```ts
+import {
+  getLocalDictList,
+  getLocalDictText,
+  getLocalDictColor,
+  getLocalDictRow,
+} from '#/dicts';
+
+// 获取本地字典列表
+getLocalDictList('WORKFLOW_CATEGORY');
+// 获取本地字典名称
+getLocalDictText('WORKFLOW_CATEGORY', value);
+// 获取本地字典标签颜色
+getLocalDictColor('WORKFLOW_CATEGORY', value);
+// 获取本地字典行数据
+getLocalDictRow('WORKFLOW_CATEGORY', value);
+```
+
+使用枚举时，如果有枚举转选项数组函数，建议使用该函数获取选项数组，而不是直接使用枚举值。
+
+```ts
+import { enumToOptions } from '#/utils/enumUtils';
+const options = enumToOptions(TaskStatusEnum);
+```
+
 ## 数据库备份限制
 
 - 禁止自动在数据库中创建备份库、备份表、影子表或复制表，包括但不限于 `*_backup_*`、`*_bak_*`、`CREATE DATABASE`、`CREATE TABLE ... AS SELECT`、`CREATE TABLE ... LIKE` 后复制数据等形式。
