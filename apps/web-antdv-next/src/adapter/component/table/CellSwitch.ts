@@ -2,7 +2,8 @@ import { h } from 'vue';
 
 import { useAccess } from '@vben/access';
 
-import { message, Modal, Switch } from 'antdv-next';
+import { message, Switch } from 'antdv-next';
+import { confirm } from '@vben/common-ui';
 
 import { $t } from '#/locales';
 
@@ -51,11 +52,16 @@ export default {
       const statusText =
         newStatus === 1 ? $t('common.enabled') : $t('common.disabled');
       return new Promise<boolean>((resolve) => {
-        Modal.confirm({
+        confirm({
           content: $t('ui.actionMessage.statusChangeConfirm', [statusText]),
-          onCancel: () => resolve(false),
-          onOk: () => resolve(true),
-        });
+          icon: 'question',
+        })
+          .then(() => {
+            resolve(true);
+          })
+          .catch(() => {
+            resolve(false);
+          });
       });
     }
 

@@ -37,7 +37,7 @@ function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'Input',
+      component: 'Textarea',
       fieldName: 'title',
       label: $t('public.feedback.fieldTitle'),
       rules: 'required',
@@ -70,7 +70,7 @@ function useFormSchema(): VbenFormSchema[] {
         // 外部页面无登录态，富文本内嵌图片改走公开上传 /public/upload
         imageUpload: {
           accept: 'image/*',
-          maxSize: 5 * 1024 * 1024, // 5MB
+          maxSize: 100 * 1024 * 1024, // 100MB
           upload: (file: File, onProgress: (percent: number) => void) => {
             return new Promise<string>((resolve, reject) => {
               upload_file_public({
