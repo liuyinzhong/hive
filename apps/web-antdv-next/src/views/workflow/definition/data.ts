@@ -3,7 +3,10 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { WorkflowDefinitionApi } from '#/api/workflow';
 
+import { getBusinessHooksApi } from '#/api/workflow';
 import { getLocalDictList } from '#/dicts';
+import { Flex } from 'antdv-next';
+import { h } from 'vue';
 
 const statusOptions = [
   { label: '草稿', value: '0' },
@@ -51,12 +54,20 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'Select',
+      component: 'ApiSelect',
       fieldName: 'businessType',
       label: '业务类型',
+      renderComponentContent: () => ({
+        optionRender: ({ option }: any) => {
+          return h('div', {}, `${option.label}-${option.value}`);
+        },
+      }),
       componentProps: {
         allowClear: true,
-        options: [],
+        api: getBusinessHooksApi,
+        labelField: 'label',
+        valueField: 'businessType',
+        resultField: 'items',
         placeholder: '请选择业务类型,空表示纯流程不绑定业务',
       },
     },
@@ -117,19 +128,21 @@ export function useColumns(): VxeTableGridOptions<WorkflowDefinitionApi.Workflow
     {
       field: 'definitionName',
       title: '流程名称',
-      minWidth: 180,
       sortable: true,
     },
     {
       field: 'definitionKey',
       title: '流程标识',
-      minWidth: 180,
       sortable: true,
+    },
+
+    {
+      field: 'businessType',
+      title: '业务类型',
     },
     {
       field: 'category',
       title: '分类',
-      width: 110,
       sortable: true,
       cellRender: {
         name: 'DictTag',
@@ -141,32 +154,27 @@ export function useColumns(): VxeTableGridOptions<WorkflowDefinitionApi.Workflow
     {
       field: 'status',
       title: '状态',
-      width: 100,
       sortable: true,
       formatter: ({ row }) => getWorkflowStatusText(row.status),
     },
     {
       field: 'version',
       title: '版本',
-      width: 90,
       sortable: true,
       formatter: ({ row }) => `v${row.version ?? 0}`,
     },
     {
       field: 'creatorName',
       title: '创建人',
-      width: 110,
     },
     {
       field: 'updateDate',
       title: '更新时间',
-      width: 170,
       sortable: true,
     },
     {
       field: 'remark',
       title: '备注',
-      minWidth: 180,
       showOverflow: true,
     },
     {

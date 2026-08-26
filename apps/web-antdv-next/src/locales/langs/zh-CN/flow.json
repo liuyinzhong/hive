@@ -96,7 +96,7 @@
       "selectCopy": "请选择抄送用户或角色",
       "conditionRequired": "请至少填写一条完整的条件规则",
       "propertyApplied": "属性已应用",
-      "formSchemaRequired": "请选择包含业务字段的启用表单 Schema",
+      "formSchemaRequired": "所选表单 Schema 没有可用字段,请重新选择",
       "saveSuccess": "保存成功",
       "publishSuccess": "发布成功",
       "canvasParseFailed": "流程画布数据解析失败，已载入默认画布",
@@ -141,7 +141,7 @@
     "instance": {
       "mine": "我发起的",
       "start": "发起流程",
-      "businessKey": "业务标识",
+      "business": "关联业务",
       "variables": "流程变量",
       "variablesPlaceholder": "请输入 JSON 对象，例如 amount 字段值为 100",
       "variablesHint": "条件分支将按此 JSON 中的字段进行判断。",

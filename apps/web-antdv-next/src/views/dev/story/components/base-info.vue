@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import type { DevStoryApi } from '#/api/dev';
-
+import { getTaskStatusOptions } from '#/views/workflow/runtime/data';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { Descriptions, DescriptionsItem, Tag } from 'antdv-next';
 import DictTag from '#/components/DictTag/index.vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
@@ -16,12 +17,37 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
+
 const userList = computed(() => props.storyInfo.userList || []);
+
+/**
+ * 跳转流程实例详情页
+ */
+const goWorkflowDetail = () => {
+  const instanceId = props.storyInfo.workflowInstanceId;
+  if (instanceId) {
+    router.push(`/workflow/instance/detail/${instanceId}`);
+  }
+};
 </script>
 <template>
   <Descriptions :column="1" bordered size="small">
     <DescriptionsItem label="需求编号">
       <Tag>#{{ storyInfo.storyNum || '-' }}</Tag>
+    </DescriptionsItem>
+    <DescriptionsItem label="关联流程">
+      <template v-if="storyInfo.workflowInstanceNo">
+        <a class="workflow-link" @click="goWorkflowDetail">
+          {{ storyInfo.workflowInstanceNo }}
+        </a>
+        {{
+          getTaskStatusOptions().find(
+            (item) => item.value === storyInfo.workflowStatus,
+          )?.label || '-'
+        }}
+      </template>
+      <template v-else>-</template>
     </DescriptionsItem>
     <DescriptionsItem label="关联版本">
       <Tag>{{ storyInfo.version || '-' }}</Tag>

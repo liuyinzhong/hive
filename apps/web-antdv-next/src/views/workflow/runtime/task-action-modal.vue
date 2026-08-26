@@ -50,11 +50,14 @@ const [Modal, modalApi] = useVbenModal({
         comment: comment.value.trim() || undefined,
       };
       if (data.action === 'approve') {
-        const { valid } = await applicationFormApi.validate();
-        if (!valid) return;
-        const values = await applicationFormApi.getValues();
-        const variables = pickEditableVariables(values, fieldPermissions.value);
-        if (Object.keys(variables).length > 0) request.variables = variables;
+        // 空表单(无字段权限或未绑定表单)跳过表单校验/取值,直接提交审批,避免空 schema 导致 validate 挂起
+        if (hasApplicationFields.value) {
+          const { valid } = await applicationFormApi.validate();
+          if (!valid) return;
+          const values = await applicationFormApi.getValues();
+          const variables = pickEditableVariables(values, fieldPermissions.value);
+          if (Object.keys(variables).length > 0) request.variables = variables;
+        }
         await approveWorkflowTaskApi(data.task.taskId, request);
         message.success($t('flow.runtime.task.approveSuccess'));
       } else {
@@ -103,13 +106,15 @@ async function loadApplication() {
       data.action,
     );
     hasApplicationFields.value = runtimeSchema.length > 0;
+    // 空表单(未绑定表单 Schema 或字段权限全隐藏)跳过 setState/setValues,避免空 schema 触发表单组件异常导致 await 挂起
+    if (runtimeSchema.length === 0) return;
     await nextTick();
     applicationFormApi.setState({
       schema: runtimeSchema,
       wrapperClass: getFormSchemaWrapperClass(detail.instance.formLayout),
     });
     await nextTick();
-    await applicationFormApi.setValues(detail.instance.variables);
+    await applicationFormApi.setValues(detail.instance.variables ?? {});
   } catch {
     message.error($t('flow.runtime.message.loadFailed'));
   } finally {

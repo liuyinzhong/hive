@@ -510,6 +510,7 @@ function submit() {
     }
     values.assigneeType = formState.assigneeType;
     values.approvalMode = formState.approvalMode;
+    values.nodeBusinessKey = formState.nodeBusinessKey;
     const assigneeIds =
       formState.assigneeType === 'leader' ? [] : [...formState.assigneeIds];
     values.assigneeIds = assigneeIds;

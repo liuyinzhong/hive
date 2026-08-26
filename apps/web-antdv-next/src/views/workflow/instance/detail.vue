@@ -59,6 +59,14 @@ const loading = ref(false);
 const userAvatarMap = ref(new Map<string, string>());
 const hasApplicationFields = ref(false);
 
+/** 关联业务摘要文案:业务类型中文名 + 业务标题;标题缺失时(业务已删等降级场景)回退业务ID。 */
+const businessSummaryText = computed(() => {
+  const business = detail.value?.business;
+  if (!business) return '';
+  const title = business.businessTitle || business.businessId;
+  return business.businessLabel ? `${business.businessLabel} · ${title}` : title;
+});
+
 const [ApplicationForm, applicationFormApi] = useVbenForm({
   schema: [],
   showDefaultActions: false,
@@ -148,13 +156,15 @@ async function renderApplicationForm(
       }) as VbenFormSchema,
   );
   hasApplicationFields.value = schema.length > 0;
+  // 空表单(未绑定表单 Schema 的流程实例)跳过 setState/setValues,避免空 schema 触发表单组件异常导致 await 挂起
+  if (schema.length === 0) return;
   await nextTick();
   applicationFormApi.setState({
     schema,
     wrapperClass: getFormSchemaWrapperClass(workflowDetail.instance.formLayout),
   });
   await nextTick();
-  await applicationFormApi.setValues(workflowDetail.instance.variables);
+  await applicationFormApi.setValues(workflowDetail.instance.variables ?? {});
 }
 
 async function loadUserAvatars() {
@@ -369,9 +379,21 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
                 {{ detail.instance.endDate || '-' }}
               </DescriptionsItem>
               <DescriptionsItem
-                :label="$t('flow.runtime.instance.businessKey')"
+                :label="$t('flow.runtime.instance.business')"
               >
-                {{ detail.instance.businessKey || '-' }}
+                <Button
+                  v-if="detail.business?.detailPath"
+                  type="link"
+                  size="small"
+                  class="business-link"
+                  @click="router.push(detail.business.detailPath)"
+                >
+                  {{ businessSummaryText }}
+                </Button>
+                <span v-else-if="detail.business">
+                  {{ businessSummaryText }}
+                </span>
+                <template v-else>-</template>
               </DescriptionsItem>
             </Descriptions>
           </Card>
@@ -563,6 +585,11 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
 <style scoped>
 .detail-page {
   min-height: 100%;
+}
+
+/* 修正 link 按钮在 Descriptions 单元格内的默认内边距 */
+.business-link {
+  padding: 0;
 }
 
 .page-heading {

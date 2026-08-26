@@ -324,9 +324,14 @@ async function saveFlowData() {
   message.success($t('flow.designer.message.saveSuccess'));
 }
 
-/** 保存流程定义与独立表单 Schema 的绑定关系。 */
+/** 保存流程定义与独立表单 Schema 的绑定关系。
+ *  表单 Schema 为可选绑定:未选时跳过绑定不阻塞画布保存,让流程画布与外部业务表单解耦;
+ *  选了 Schema 但 Schema 无字段时仍报错,防止绑定空表单。 */
 async function saveFormSchemaBinding() {
-  if (!selectedFormSchemaId.value || formFields.value.length === 0) {
+  if (!selectedFormSchemaId.value) {
+    return true;
+  }
+  if (formFields.value.length === 0) {
     message.error($t('flow.designer.message.formSchemaRequired'));
     return false;
   }
@@ -662,10 +667,10 @@ function onFitView() {
 
 .form-schema-binding {
   display: flex;
-  align-items: center;
   gap: 8px;
-  color: hsl(var(--muted-foreground));
+  align-items: center;
   font-size: 13px;
+  color: hsl(var(--muted-foreground));
 }
 
 .form-schema-select {

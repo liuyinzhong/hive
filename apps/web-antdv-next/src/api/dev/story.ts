@@ -62,6 +62,12 @@ export namespace DevStoryApi {
     updateDate?: string;
     userList?: userListFace[] | string[];
     userIds?: string[];
+    /** 关联流程实例编号,未绑定流程时为 undefined */
+    workflowInstanceNo?: string;
+    /** 关联流程实例ID,未绑定流程时为 undefined */
+    workflowInstanceId?: string;
+    /** 关联流程实例状态:0运行中 1已完成 2已拒绝 3已取消,未绑定为 undefined */
+    workflowStatus?: string;
   }
 }
 
@@ -104,6 +110,13 @@ export const updateStoryApi = async (
  */
 export const getStoryDetailApi = async (storyNum: number) => {
   return requestClient.get<DevStoryApi.DevStoryFace>(`/dev/storys/${storyNum}`);
+};
+
+/**
+ * 查询需求当前绑定的流程实例摘要,未绑定时返回 null
+ */
+export const getStoryWorkflowBindingApi = async (storyNum: number) => {
+  return requestClient.get(`/dev/storys/${storyNum}/workflow`);
 };
 
 /**

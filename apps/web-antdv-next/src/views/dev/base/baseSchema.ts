@@ -6,10 +6,7 @@ import {
   getModulesListApi,
   getStoryListApi,
 } from '#/api/dev';
-import type {
-  DevVersionApi,
-  DevStoryApi,
-} from '#/api/dev';
+import type { DevVersionApi, DevStoryApi } from '#/api/dev';
 import type { SystemUserApi } from '#/api/system';
 import { getUserListAllApi } from '#/api/system';
 import { getLocalDictText } from '#/dicts';
@@ -57,10 +54,10 @@ export const versionSchema = (config?: any): VbenFormSchema => {
     ...base,
     ...config,
     renderComponentContent: () => ({
-      option: (optionItem: DevVersionApi.DevVersionFace) => {
+      optionRender: ({ option }: any) => {
         const _title =
-          (optionItem.remark || '') +
-          getLocalDictText('RELEASE_STATUS', optionItem.releaseStatus);
+          (option.data.remark || '') +
+          getLocalDictText('RELEASE_STATUS', option.data.releaseStatus);
 
         return h(
           Flex,
@@ -68,7 +65,7 @@ export const versionSchema = (config?: any): VbenFormSchema => {
             gap: 10,
             align: 'center',
           },
-          [h('div', {}, optionItem.label), h('div', { title: _title }, _title)],
+          [h('div', {}, option.label), h('div', { title: _title }, _title)],
         );
       },
     }),
@@ -168,16 +165,16 @@ export const storySchema = (config?: any): VbenFormSchema => {
     ...base,
     ...config,
     renderComponentContent: () => ({
-      option: (optionItem: DevStoryApi.DevStoryFace) => {
+      optionRender: ({ option }: any) => {
         return h(Flex, { gap: 10, align: 'center' }, [
           h(
             Tag,
             { style: { height: 'fit-content' } },
-            `#${optionItem.storyNum || ''}`,
+            `#${option.data.storyNum || ''}`,
           ),
-          h(TypographyText, { ellipsis: true }, optionItem.label || ''),
+          h(TypographyText, { ellipsis: true }, option.label || ''),
           h(UserAvatarGroup, {
-            userList: optionItem.userList || [],
+            userList: option.data.userList || [],
           }),
         ]);
       },
@@ -256,10 +253,10 @@ export const userIdSchema = (config?: any): VbenFormSchema => {
     ...config,
     renderComponentContent: () => {
       return {
-        option: (optionItem: SystemUserApi.SystemUserFace) => {
+        optionRender: ({ option }: any) => {
           return h(UserAvatar, {
-            avatar: optionItem.avatar || '',
-            name: optionItem.label || '',
+            avatar: option.data.avatar || '',
+            name: option.data.label || '',
           });
         },
         ...config?.renderComponentContent,

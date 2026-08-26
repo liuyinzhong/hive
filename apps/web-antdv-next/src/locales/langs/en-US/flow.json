@@ -96,7 +96,7 @@
       "selectCopy": "Select at least one CC user or role",
       "conditionRequired": "Complete at least one condition rule",
       "propertyApplied": "Properties applied",
-      "formSchemaRequired": "Select an enabled form schema with business fields",
+      "formSchemaRequired": "The selected form schema has no fields, please choose another",
       "saveSuccess": "Saved successfully",
       "publishSuccess": "Published successfully",
       "canvasParseFailed": "Failed to parse canvas data; the default canvas was loaded",
@@ -141,7 +141,7 @@
     "instance": {
       "mine": "My Requests",
       "start": "Start Flow",
-      "businessKey": "Business Key",
+      "business": "Related Business",
       "variables": "Flow Variables",
       "variablesPlaceholder": "Enter a JSON object, for example with amount set to 100",
       "variablesHint": "Condition branches are evaluated against fields in this JSON.",

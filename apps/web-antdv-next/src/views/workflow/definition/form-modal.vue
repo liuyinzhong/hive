@@ -6,7 +6,6 @@ import { message } from 'antdv-next';
 import { useVbenForm } from '#/adapter/form';
 import {
   createWorkflowDefinitionApi,
-  getBusinessHooksApi,
   updateWorkflowDefinitionApi,
 } from '#/api/workflow';
 
@@ -41,23 +40,6 @@ const [Modal, modalApi] = useVbenModal({
       return;
     }
     formApi.reset();
-    // 加载业务类型下拉选项(从后端已注册的钩子元数据获取,让用户知情可选值)
-    try {
-      const hooks = await getBusinessHooksApi();
-      formApi.updateSchema([
-        {
-          fieldName: 'businessType',
-          componentProps: {
-            options: hooks.items.map((item) => ({
-              label: `${item.label} (${item.businessType})`,
-              value: item.businessType,
-            })),
-          },
-        },
-      ]);
-    } catch {
-      // 选项加载失败不阻塞表单打开,用户可清空或后续重试
-    }
     const data: any = modalApi.getData() || {};
     modalApi.setState({
       title: data.definitionId ? '编辑流程定义' : '新建流程定义',

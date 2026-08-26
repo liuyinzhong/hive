@@ -30,7 +30,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
   onOpenChange: (isOpen: boolean) => {
     if (isOpen) {
-      const data = drawerApi.getData();
+      const data: any = drawerApi.getData() || {};
       formApi.setValues(data);
       if (data.userId) {
         drawerApi.setState({ title: '修改用户' });

@@ -108,10 +108,10 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '角色',
       rules: 'required',
       renderComponentContent: () => ({
-        option: (optionItem: any) => {
+        optionRender: ({ option }: any) => {
           return h(Flex, { gap: 10, align: 'center' }, [
-            h('div', {}, optionItem.label),
-            h('div', { title: optionItem.remark }, optionItem.remark),
+            h('div', {}, option.label),
+            h('div', { title: option.data.remark }, option.data.remark),
           ]);
         },
       }),

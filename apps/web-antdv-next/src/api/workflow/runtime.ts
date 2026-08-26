@@ -22,7 +22,6 @@ export namespace WorkflowRuntimeApi {
   }
 
   export interface WorkflowInstance {
-    businessKey?: null | string;
     createDate?: null | string;
     definitionId: string;
     definitionKey: string;
@@ -116,7 +115,17 @@ export namespace WorkflowRuntimeApi {
     tasks: WorkflowTask[];
   }
 
+  /** 流程实例关联业务摘要:纯流程实例为 null。 */
+  export interface WorkflowBusinessSummary {
+    businessId: string;
+    businessLabel: string;
+    businessTitle?: string;
+    businessType: string;
+    detailPath?: string;
+  }
+
   export interface WorkflowInstanceDetail {
+    business?: null | WorkflowBusinessSummary;
     instance: WorkflowInstance;
     nodes: WorkflowNodeInstance[];
   }
