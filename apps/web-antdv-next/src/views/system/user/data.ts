@@ -160,6 +160,20 @@ export function useGridFormSchema(): VbenFormSchema[] {
         ],
       },
     },
+    {
+      component: 'ApiSelect',
+      fieldName: 'roleId',
+      label: '角色',
+      componentProps: {
+        allowClear: true,
+        api: getAllRoleListApi,
+        optionFilterProp: 'label',
+        labelField: 'roleTitle',
+        valueField: 'roleId',
+        resultField: '',
+        showSearch: true,
+      },
+    },
   ];
 }
 
