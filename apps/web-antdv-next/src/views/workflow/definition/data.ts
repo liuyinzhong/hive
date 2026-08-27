@@ -69,6 +69,8 @@ export function useFormSchema(): VbenFormSchema[] {
         valueField: 'businessType',
         resultField: 'items',
         placeholder: '请选择业务类型,空表示纯流程不绑定业务',
+        // 业务绑定暂未投入业务使用,禁用选择;关联表/钩子等基础设施保留,启用时移除 disabled 即可
+        disabled: true,
       },
     },
     {
