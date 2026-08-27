@@ -687,6 +687,7 @@ export interface ComponentPropsMap {
   TimePicker: TimePickerProps;
   TreeSelect: TreeSelectProps;
   Upload: AdapterUploadProps;
+  ColorSelect: any;
 }
 
 async function initComponentAdapter() {

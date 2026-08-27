@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
-import { Select, SelectOption, Tag } from 'antdv-next';
+import { h, ref, watch } from 'vue';
+import { Select, Tag } from 'antdv-next';
 
 // 组件属性定义
 interface Props {
@@ -31,8 +31,8 @@ watch(
   },
 );
 
-// 完整的颜色选项配置
-const colorOptions = [
+// 基础颜色选项配置
+const baseColorOptions = [
   { value: 'processing', label: '主题色' },
   { value: 'default', label: '默认' },
   { value: 'success', label: '成功' },
@@ -50,6 +50,13 @@ const colorOptions = [
   { value: 'geekblue', label: '极客蓝' },
   { value: 'purple', label: '紫色' },
 ];
+
+// antdv-next 的 Select 不支持 SelectOption 子组件写法，需通过 options 传入；
+// label 类型为 VueNode，用 Tag 渲染颜色示例
+const colorOptions = baseColorOptions.map((option) => ({
+  value: option.value,
+  label: h(Tag, { color: option.value }, () => `${option.label} ${option.value}`),
+}));
 /**
  * 处理颜色选择变化
  * @param value 选中的颜色值
@@ -62,15 +69,12 @@ const handleChange = (value: string) => {
 </script>
 
 <template>
-  <Select v-model:value="selectedValue" @change="handleChange" class="w-full">
-    <SelectOption
-      v-for="option in colorOptions"
-      :key="option.value"
-      :value="option.value"
-    >
-      <Tag :color="option.value">{{ option.label }} {{ option.value }}</Tag>
-    </SelectOption>
-  </Select>
+  <Select
+    v-model:value="selectedValue"
+    :options="colorOptions"
+    @change="handleChange"
+    class="w-full"
+  />
 </template>
 
 <style scoped></style>
