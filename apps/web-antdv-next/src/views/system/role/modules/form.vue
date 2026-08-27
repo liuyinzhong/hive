@@ -33,17 +33,17 @@ const [Form, formApi] = useVbenForm({
 const permissions = ref<DataNode[]>([]);
 const loadingPermissions = ref(false);
 
-const dataScopes: SystemRoleApi.DataScope[] = [
+const dataScopes: Set<SystemRoleApi.DataScope> = new Set([
   'all',
   'customDepartment',
   'department',
   'departmentAndChildren',
   'self',
   'none',
-];
+]);
 
 function isDataScope(value: unknown): value is SystemRoleApi.DataScope {
-  return dataScopes.includes(value as SystemRoleApi.DataScope);
+  return dataScopes.has(value as SystemRoleApi.DataScope);
 }
 
 function toStringArray(value: unknown) {
@@ -78,6 +78,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     const payload = toSaveRoleRequest(values);
     drawerApi.lock();
     try {
+      // oxlint-disable-next-line unicorn/prefer-ternary
       if (roleId) {
         await updateRoleApi(roleId, payload);
       } else {
@@ -91,7 +92,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
   async onOpenChange(isOpen) {
     if (isOpen) {
-      let data = drawerApi.getData<SystemRoleApi.SystemRoleFace>() || {};
+      let data: any = drawerApi.getData() || {};
       if (data.roleId) {
         data = await getRoleDetailApi(data.roleId);
         formApi.setValues(data);
