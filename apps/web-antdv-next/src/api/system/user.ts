@@ -7,9 +7,10 @@ export namespace SystemUserApi {
   export interface SystemUserFace {
     [key: string]: any;
     userId: string;
-    avatar: string;
+    avatar?: null | string;
     username: string;
     realName: string;
+    email?: null | string;
     leaderUserId?: null | string;
     leaderUserName?: null | string;
     desc: string;

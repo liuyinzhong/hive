@@ -17,6 +17,14 @@ export namespace AuthApi {
     data: string;
     status: number;
   }
+
+  /** 更新用户资料接口参数 */
+  export interface UpdateProfileParams {
+    /** 头像URL；null 表示不修改，空字符串表示清空 */
+    avatar?: null | string;
+    /** 邮箱；null 表示不修改，空字符串表示清空 */
+    email?: null | string;
+  }
 }
 
 /**
@@ -58,6 +66,16 @@ export async function getAccessCodesApi() {
  */
 export async function getProfileApi() {
   return requestClient.get<SystemUserApi.SystemUserFace>('/auth/profile');
+}
+
+/**
+ * 更新当前用户资料（头像、邮箱），返回更新后的用户信息
+ */
+export async function updateProfileApi(data: AuthApi.UpdateProfileParams) {
+  return requestClient.put<SystemUserApi.SystemUserFace>(
+    '/auth/profile',
+    data,
+  );
 }
 
 /**
