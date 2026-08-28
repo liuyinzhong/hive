@@ -334,7 +334,13 @@ export function useColumns(
       width: 100,
       field: 'source',
       title: '需求来源',
-      editRender: {
+      cellRender: {
+        name: 'DictTag',
+        props: {
+          type: 'STORY_SOURCE',
+        },
+      },
+      /* editRender: {
         name: 'DictSelect',
         props: {
           type: 'STORY_SOURCE',
@@ -348,7 +354,7 @@ export function useColumns(
               });
           },
         },
-      },
+      }, */
     },
     {
       align: 'center',
