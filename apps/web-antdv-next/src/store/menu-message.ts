@@ -17,6 +17,13 @@ const reconnectDelay = 2000;
 /** 新消息提示音静态资源路径，位于 public/sounds/ 下 */
 const MESSAGE_SOUND_URL = '/sounds/sound.mp3';
 
+/** 汇总未读总数，用于对比推送前后未读数是否增加 */
+function sumUnreadCount(
+  summaries: SystemMenuMessageApi.UnreadSummary[],
+): number {
+  return summaries.reduce((total, summary) => total + summary.unreadCount, 0);
+}
+
 export const useMenuMessageStore = defineStore('menu-message', () => {
   const accessStore = useAccessStore();
   const { customPreferences } = usePreferences();
@@ -38,15 +45,16 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
    * 是否为当前 SSE 连接的首个 unreadSummary 事件
    *
    * 每次建立 SSE 连接时重置为 true，首个 unreadSummary 是服务端的初始化全量推送，
-   * 不是真正的新消息事件，不触发提示音；之后收到的事件才播放。
+   * 不是真正的新消息事件，不参与提示音判断。
    */
   let isFirstUnreadSummary = true;
 
   /**
    * 播放新消息提示音
    *
-   * 触发条件：每次 SSE 连接的首个 unreadSummary 不触发（视为初始化推送），
-   * 之后收到的 unreadSummary 事件即触发，不判断未读总数是否增加。
+   * 触发条件：未读总数相对本地当前汇总增加的 unreadSummary 事件；已读、
+   * 校准、总数不变或减少的推送不触发。与本地汇总对比而不是与上一次服务端
+   * 推送对比，是因为已读成功后本地汇总先行减少，服务端推送只做最终校准。
    * 并发处理：新事件打断前一次播放，从头播放（currentTime 重置为 0）。
    * 受偏好开关 enableNewUnreadSummary 控制；浏览器自动播放策略阻止时静默处理。
    */
@@ -204,13 +212,19 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
 
       try {
         if (eventName === SystemMenuMessageApi.EventName.UnreadSummary) {
-          summaries.value = JSON.parse(data);
+          const nextSummaries = JSON.parse(
+            data,
+          ) as SystemMenuMessageApi.UnreadSummary[];
+          const previousTotal = sumUnreadCount(summaries.value);
+          const nextTotal = sumUnreadCount(nextSummaries);
+          summaries.value = nextSummaries;
           syncMenuBadges();
-          // 首个 unreadSummary 是服务端的初始化全量推送，不触发提示音；
-          // 之后收到的事件才视为新消息事件并播放
+          // 首个 unreadSummary 是服务端的初始化全量推送，不参与提示音判断；
+          // 之后未读总数增加才视为新消息事件并播放，用户已读触发的
+          // 校准推送总数不变或减少，不再响铃
           if (isFirstUnreadSummary) {
             isFirstUnreadSummary = false;
-          } else {
+          } else if (nextTotal > previousTotal) {
             playMessageSound();
           }
         } else if (
@@ -241,6 +255,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
           badgeVariants: menu.badgeVariants,
         });
       }
+      const original = originalBadges.get(menu);
 
       const childrenTotal = menu.children?.length
         ? applyMenuBadges(menu.children, counts)
@@ -251,9 +266,9 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
         // menu.badge = childrenTotal > 99 ? '99+' : String(childrenTotal);
         menu.badge = String(childrenTotal);
         menu.badgeType = 'normal';
-        menu.badgeVariants = 'destructive';
+        // 未读角标颜色优先继承菜单管理配置的徽标颜色，未配置时默认红色
+        menu.badgeVariants = original?.badgeVariants || 'destructive';
       } else {
-        const original = originalBadges.get(menu);
         menu.badge = original?.badge;
         menu.badgeType = original?.badgeType;
         menu.badgeVariants = original?.badgeVariants;
