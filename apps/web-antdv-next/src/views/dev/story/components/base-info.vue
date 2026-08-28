@@ -20,6 +20,7 @@ const props = defineProps({
 const router = useRouter();
 
 const userList = computed(() => props.storyInfo.userList || []);
+const thisUserList = computed(() => props.storyInfo.thisUserList || []);
 
 /**
  * 跳转流程实例详情页
@@ -68,7 +69,7 @@ const goWorkflowDetail = () => {
       <DictTag dict-type="STORY_SOURCE" :value="storyInfo.source" />
     </DescriptionsItem>
     <DescriptionsItem label="当前负责人">
-      {{ storyInfo.statusOwnerNames || '-' }}
+      <UserAvatarGroup :user-list="thisUserList" />
     </DescriptionsItem>
     <DescriptionsItem label="参与人">
       <UserAvatarGroup :user-list="userList" />

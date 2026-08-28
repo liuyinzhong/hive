@@ -251,10 +251,13 @@ export function useColumns(
       },
     },
     {
-      field: 'statusOwnerNames',
+      field: 'thisUserList',
       title: '当前负责人',
       width: 110,
       showOverflow: true,
+      cellRender: {
+        name: 'UserAvatarGroup',
+      },
     },
     {
       field: 'storyTitle',

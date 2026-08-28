@@ -52,8 +52,8 @@ export namespace DevStoryApi {
     fileList?: DevStoryFileFace[];
     storyType?: string;
     storyStatus?: string;
-    /** 当前状态负责人姓名,多个用顿号分隔,无负责人时为空 */
-    statusOwnerNames?: string;
+    /** 当前状态负责人列表(参与人中story_status等于需求当前状态的用户) */
+    thisUserList?: userListFace[];
     storyLevel?: string;
     /** 关联版本id */
     versionId?: string;
