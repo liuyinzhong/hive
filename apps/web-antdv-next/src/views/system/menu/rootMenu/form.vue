@@ -319,6 +319,11 @@ const schema: VbenFormSchema[] = [
       componentProps: (values) => ({
         disabled: values.meta?.badgeType !== 'normal',
       }),
+      trigger: (values, actions) => {
+        if (values.meta && values.meta.badgeType !== 'normal') {
+          actions.setFieldValue('meta.badge', null);
+        }
+      },
       show: (values) => {
         return values.type !== 'button';
       },
@@ -494,9 +499,9 @@ const schema: VbenFormSchema[] = [
       disabled: (values) => {
         return !values.meta?.affixTab;
       },
-      trigger: (values) => {
+      trigger: (values, actions) => {
         if (values.meta && !values.meta.affixTab) {
-          values.meta.affixTabOrder = null;
+          actions.setFieldValue('meta.affixTabOrder', null);
         }
       },
       triggerFields: ['type', 'meta.affixTab'],
@@ -518,10 +523,12 @@ const schema: VbenFormSchema[] = [
     component: 'Checkbox',
     dependencies: {
       show: (values) => {
-        if (values.meta?.menuVisibleWithForbidden) {
-          values.meta.hideInMenu = null;
-        }
         return !['button'].includes(values.type);
+      },
+      trigger: (values, actions) => {
+        if (values.meta?.menuVisibleWithForbidden) {
+          actions.setFieldValue('meta.hideInMenu', null);
+        }
       },
       triggerFields: ['type', 'meta.menuVisibleWithForbidden'],
     },
@@ -625,10 +632,12 @@ const schema: VbenFormSchema[] = [
     component: 'Checkbox',
     dependencies: {
       show: (values) => {
-        if (values.meta?.hideInMenu) {
-          values.meta.menuVisibleWithForbidden = null;
-        }
         return ['menu'].includes(values.type);
+      },
+      trigger: (values, actions) => {
+        if (values.meta?.hideInMenu) {
+          actions.setFieldValue('meta.menuVisibleWithForbidden', null);
+        }
       },
       triggerFields: ['type', 'pid', 'meta.hideInMenu'],
     },
