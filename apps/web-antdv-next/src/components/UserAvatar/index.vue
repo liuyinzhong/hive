@@ -19,9 +19,7 @@ const userStore = useUserStore();
 <template>
   <Space :size="5">
     <Avatar
-      :src="
-        avatar || userStore.userInfo?.avatar || preferences.app.defaultAvatar
-      "
+      :src="avatar || preferences.app.defaultAvatar"
       :size="30"
       style="max-width: 30px; max-height: 30px"
     />

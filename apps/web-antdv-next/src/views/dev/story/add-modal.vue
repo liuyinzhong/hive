@@ -29,7 +29,8 @@ const [Form, formApi] = useVbenForm({
       class: 'w-full',
     },
   },
-  wrapperClass: 'grid-cols-4',
+  // layout: 'vertical',
+  wrapperClass: 'grid-cols-5',
   schema: useFormSchema(),
   showDefaultActions: false,
 });
@@ -49,6 +50,11 @@ const [Modal, modalApi] = useVbenModal({
           name: item.originalName,
           uid: item.fileId,
           status: 'done',
+        }));
+        // 将参与人回显数据映射为数组字段值,供 storyUsers 字段回显
+        storyRow.storyUsers = (storyRow.userList || []).map((item: any) => ({
+          userId: item.userId,
+          storyStatus: item.storyStatus ?? undefined,
         }));
         modalApi.setState({ title: '编辑需求' });
       }

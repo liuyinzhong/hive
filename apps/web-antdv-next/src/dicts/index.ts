@@ -1,13 +1,14 @@
 import type { SystemDictApi } from '#/api/system';
 
-import { getDictListApi } from '#/api/system';
+import { getDictValuesApi } from '#/api/system';
 
 import { sortTree } from '@vben/utils';
 
 const dictionaryData: Record<string, SystemDictApi.SystemDictFace[]> = {};
 
 // 初始化字典数据，使用 void 操作符标记 Promise 为有意忽略
-void getDictListApi({ status: 1 })
+// 走公共字典接口（仅需登录），避免未配置字典管理权限的角色登录后加载失败
+void getDictValuesApi()
   .then((res) => {
     res = sortTree(res, (a, b) => Number(a.value) - Number(b.value));
     res.forEach((item: SystemDictApi.SystemDictFace) => {

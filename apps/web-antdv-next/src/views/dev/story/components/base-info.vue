@@ -67,6 +67,9 @@ const goWorkflowDetail = () => {
     <DescriptionsItem label="需求来源">
       <DictTag dict-type="STORY_SOURCE" :value="storyInfo.source" />
     </DescriptionsItem>
+    <DescriptionsItem label="当前负责人">
+      {{ storyInfo.statusOwnerNames || '-' }}
+    </DescriptionsItem>
     <DescriptionsItem label="参与人">
       <UserAvatarGroup :user-list="userList" />
     </DescriptionsItem>

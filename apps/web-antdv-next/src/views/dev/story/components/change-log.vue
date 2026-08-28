@@ -4,9 +4,8 @@ import type { DevChangeApi } from '#/api/dev';
 import { ref, watch } from 'vue';
 
 import { getChangeListApi } from '#/api/dev';
-import DictTag from '#/components/DictTag/index.vue';
 import { getLocalDictText } from '#/dicts';
-import { Timeline, TimelineItem, Empty } from 'antdv-next';
+import { Timeline, TimelineItem, Empty, Tag } from 'antdv-next';
 /**
  * 变更记录组件
  * @property {String} businessId - 关联id
@@ -43,11 +42,11 @@ watch(
           <div>
             {{ item.createDate }}
           </div>
-          <div>
+          <Tag>
             {{ item.creatorName }}
             {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeBehavior)
             }}{{ getLocalDictText('BUSINESS_TYPE', item.businessType) }}
-          </div>
+          </Tag>
         </div>
         <div v-html="item.changeRichText"></div>
       </TimelineItem>

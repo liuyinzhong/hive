@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { h, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 
@@ -28,6 +28,26 @@ const changeCurrent = (index: number) => {
   formApi.setFieldValue('storyStatus', stepsItems[index].value);
 };
 
+/**
+ * 按负责状态分组参与人,并把负责人姓名写入步骤条描述
+ * @param userList 需求参与人列表,storyStatus 为负责状态(null=普通参与人)
+ */
+function applyStatusOwners(userList: any[]) {
+  const ownersByStatus = new Map<string, string[]>();
+  for (const user of userList || []) {
+    if (user.storyStatus == null || !user.realName) continue;
+    const names = ownersByStatus.get(String(user.storyStatus)) ?? [];
+    names.push(user.realName);
+    ownersByStatus.set(String(user.storyStatus), names);
+  }
+  stepsItems.forEach((item: any) => {
+    const owners = ownersByStatus.get(String(item.value));
+    item.description = h('div', [
+      ...(owners?.length ? [h('div', `负责人：${owners.join('、')}`)] : []),
+    ]);
+  });
+}
+
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
   schema: useNextFormSchema(),
@@ -44,6 +64,9 @@ const [Modal, modalApi] = useVbenModal({
       const data = modalApi.getData();
 
       formApi.setValues(data);
+
+      /* 在步骤条上展示各状态负责人 */
+      applyStatusOwners((data as any)?.userList);
 
       /* 设置当前步骤 */
       current.value = stepsItems.findIndex(
@@ -69,7 +92,7 @@ async function onSubmit(values: Record<string, any>) {
     message.success('流转成功');
     modalApi.close();
     emit('success');
-  } catch (error) {
+  } catch {
   } finally {
     hideLoading();
     modalApi.unlock();

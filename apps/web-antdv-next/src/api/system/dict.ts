@@ -41,6 +41,16 @@ export const getDictListApi = async (params: Recordable<any>) => {
 };
 
 /**
+ * 公共字典树查询（仅需登录，无接口权限）
+ * @description 返回全部启用状态的字典树（status=1），供全系统本地字典消费
+ */
+export const getDictValuesApi = async () => {
+  return requestClient.post<Array<SystemDictApi.SystemDictFace>>(
+    '/system/dicts/values',
+  );
+};
+
+/**
  * 创建字典
  */
 export const createDictApi = async (
