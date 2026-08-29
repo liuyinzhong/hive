@@ -30,7 +30,7 @@ const [Form, formApi] = useVbenForm({
     },
   },
   // layout: 'vertical',
-  wrapperClass: 'grid-cols-7',
+  wrapperClass: 'grid-cols-10',
   schema: useFormSchema(),
   showDefaultActions: false,
 });

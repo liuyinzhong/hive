@@ -33,10 +33,11 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyTitle',
       label: '需求标题',
       rules: 'required',
-      formItemClass: 'col-span-7 items-baseline',
+      formItemClass: 'col-span-10 items-baseline',
     },
 
     projectSchema({
+      formItemClass: 'col-span-2',
       dependencies: {
         componentProps: (values: any, formApi: any) => {
           /* 新建需求时,选择项目后自动填充默认参与人及负责状态 */
@@ -63,7 +64,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '',
       labelWidth: 0,
       defaultValue: storyRichTemplateText,
-      formItemClass: 'col-span-4 row-span-10 items-baseline',
+      formItemClass: 'col-span-5 row-span-10 items-baseline',
 
       componentProps: {
         editable: true,
@@ -112,20 +113,20 @@ export function useFormSchema(): VbenFormSchema[] {
       ],
       fieldName: 'userList',
       label: $t('dev.story.storyUsers'),
-      formItemClass: 'col-span-2 row-span-10 items-baseline ',
+      formItemClass: 'col-span-3 row-span-10 items-baseline ',
       type: 'array',
       hideLabel: true,
     },
 
-    versionSchema(),
-    moduleSchema(),
+    versionSchema({ formItemClass: 'col-span-2' }),
+    moduleSchema({ formItemClass: 'col-span-2' }),
 
     {
       component: 'ApiSelect',
       fieldName: 'storyStatus',
       label: '需求状态',
       defaultValue: '0',
-      formItemClass: 'col-span-1',
+      formItemClass: 'col-span-2',
       componentProps: {
         api: () => getLocalDictList('STORY_STATUS'),
       },
@@ -142,7 +143,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '需求类型',
       rules: 'required',
       defaultValue: '0',
-      formItemClass: 'col-span-1',
+      formItemClass: 'col-span-2',
       componentProps: {
         api: () => getLocalDictList('STORY_TYPE'),
       },
@@ -152,7 +153,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyLevel',
       label: '优先级',
-      formItemClass: 'col-span-1',
+      formItemClass: 'col-span-2',
       defaultValue: '0',
       componentProps: {
         api: () => getLocalDictList('STORY_LEVEL'),
@@ -163,7 +164,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'source',
       label: '需求来源',
       defaultValue: '0',
-      formItemClass: 'col-span-1',
+      formItemClass: 'col-span-2',
       componentProps: {
         api: () => getLocalDictList('STORY_SOURCE'),
       },
@@ -172,7 +173,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Upload',
       fieldName: 'fileIds',
       label: '附件',
-      formItemClass: 'col-span-1',
+      formItemClass: 'col-span-2',
       componentProps: {
         // 更多属性见：https://ant.design/components/upload-cn
         // 自动携带认证信息
