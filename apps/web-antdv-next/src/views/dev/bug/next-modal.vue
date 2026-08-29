@@ -39,7 +39,7 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   title: '流转缺陷',
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {

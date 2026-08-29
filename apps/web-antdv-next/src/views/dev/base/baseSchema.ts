@@ -5,10 +5,8 @@ import {
   getVersionsListApi,
   getModulesListApi,
   getStoryListApi,
+  getProjectUsersApi,
 } from '#/api/dev';
-import type { DevVersionApi, DevStoryApi } from '#/api/dev';
-import type { SystemUserApi } from '#/api/system';
-import { getUserListAllApi } from '#/api/system';
 import { getLocalDictText } from '#/dicts';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 import UserAvatar from '#/components/UserAvatar/index.vue';
@@ -262,16 +260,25 @@ export const userIdSchema = (config?: any): VbenFormSchema => {
         ...config?.renderComponentContent,
       };
     },
-    componentProps: {
-      api: () => getUserListAllApi(),
-      labelField: 'realName',
-      valueField: 'userId',
-      resultField: 'items',
-      showSearch: true,
-      allowClear: true,
-      filterOption: true,
-      optionFilterProp: 'label',
-      ...config?.componentProps,
+    dependencies: {
+      componentProps: (values: any) => {
+        if (!values.projectId) {
+          return { ...config?.componentProps };
+        }
+        return {
+          key: `userId_${values.projectId}`,
+          api: () => getProjectUsersApi(values.projectId),
+          labelField: 'realName',
+          valueField: 'userId',
+          showSearch: true,
+          allowClear: true,
+          filterOption: true,
+          optionFilterProp: 'label',
+          ...config?.componentProps,
+        };
+      },
+      triggerFields: ['projectId'],
+      ...config?.dependencies,
     },
   } as VbenFormSchema;
 };

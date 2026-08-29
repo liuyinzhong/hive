@@ -3,10 +3,10 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
-// import { z } from '#/adapter/form';
 import { upload_file } from '#/api/examples/upload';
-import { getUserListAllApi } from '#/api/system';
+import { getProjectUsersApi } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
+import { $t } from '#/locales';
 import { storyRichTemplateText } from '#/template/richText';
 import {
   projectSchema,
@@ -33,17 +33,38 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'storyTitle',
       label: '需求标题',
       rules: 'required',
-      formItemClass: 'col-span-5 items-baseline',
+      formItemClass: 'col-span-7 items-baseline',
     },
 
-    projectSchema(),
+    projectSchema({
+      dependencies: {
+        componentProps: (values: any, formApi: any) => {
+          /* 新建需求时,选择项目后自动填充默认参与人及负责状态 */
+          if (values.projectId && !values.storyId) {
+            getProjectUsersApi(values.projectId).then((users) => {
+              const userList: { userId: string; storyStatus: string }[] = [];
+              for (const u of users) {
+                if (!u.storyStatus) continue;
+                const statuses = u.storyStatus.split(',');
+                for (const s of statuses) {
+                  userList.push({ userId: u.userId, storyStatus: s });
+                }
+              }
+              formApi.setFieldValue('userList', userList);
+            });
+          }
+          return {};
+        },
+      },
+    }),
     {
       component: 'RichEditor',
       fieldName: 'storyRichText',
       label: '',
       labelWidth: 0,
       defaultValue: storyRichTemplateText,
-      formItemClass: 'col-span-2 row-span-10 items-baseline',
+      formItemClass: 'col-span-4 row-span-10 items-baseline',
+
       componentProps: {
         editable: true,
         minHeight: 410,
@@ -51,7 +72,7 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       arrayProps: {
-        addButtonText: '添加参与人',
+        addButtonText: $t('dev.story.addStoryUser'),
         showIndex: false,
         createRow: () => ({
           userId: '',
@@ -63,16 +84,21 @@ export function useFormSchema(): VbenFormSchema[] {
       children: [
         {
           component: 'ApiSelect',
-          componentProps: {
-            allowClear: true,
-            api: () => getUserListAllApi(),
-            labelField: 'realName',
-            valueField: 'userId',
-            resultField: 'items',
-            showSearch: true,
+          dependencies: {
+            componentProps: (values: any) => ({
+              allowClear: true,
+              key: `storyUser_${values.projectId}`,
+              api: () => getProjectUsersApi(values.projectId),
+              labelField: 'realName',
+              valueField: 'userId',
+              showSearch: true,
+              filterOption: true,
+              optionFilterProp: 'label',
+            }),
+            triggerFields: ['projectId'],
           },
           fieldName: 'userId',
-          label: '参与人',
+          label: $t('dev.story.storyUser'),
         },
         {
           component: 'ApiSelect',
@@ -81,12 +107,12 @@ export function useFormSchema(): VbenFormSchema[] {
             api: () => getLocalDictList('STORY_STATUS'),
           },
           fieldName: 'storyStatus',
-          label: '负责状态',
+          label: $t('dev.story.storyStatusOwner'),
         },
       ],
-      fieldName: 'storyUsers',
-      label: '参与人员',
-      formItemClass: 'col-span-2 row-span-10 items-baseline',
+      fieldName: 'userList',
+      label: $t('dev.story.storyUsers'),
+      formItemClass: 'col-span-2 row-span-10 items-baseline ',
       type: 'array',
       hideLabel: true,
     },
@@ -252,7 +278,7 @@ export function useColumns(
     },
     {
       field: 'thisUserList',
-      title: '当前负责人',
+      title: $t('dev.story.currentOwner'),
       width: 110,
       showOverflow: true,
       cellRender: {
@@ -277,7 +303,7 @@ export function useColumns(
       width: 165,
       field: 'userList',
       showOverflow: true,
-      title: '参与人员',
+      title: $t('dev.story.storyUsers'),
       cellRender: {
         name: 'UserAvatarGroup',
       },

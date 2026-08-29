@@ -24,9 +24,11 @@ import {
   getProjectsListApi,
   deleteModuleApi,
 } from '#/api/dev';
+import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
 import addModuleModal from './add-moduleModal.vue';
+import userModal from './user-modal.vue';
 import { useColumns } from './data';
 
 // #region 表格分页
@@ -112,6 +114,12 @@ const [AddModuleModal, AddModuleModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
+const [UserModal, UserModalApi] = useVbenModal({
+  title: '项目用户管理',
+  connectedComponent: userModal,
+  destroyOnClose: true,
+});
+
 async function deleteModule(id: string) {
   await deleteModuleApi([id]);
   gridApi.query();
@@ -119,6 +127,10 @@ async function deleteModule(id: string) {
 
 function openAddModuleModal(row: any) {
   AddModuleModalApi.setData(row).open();
+}
+
+function openUserModal(row: any) {
+  UserModalApi.setData(row).open();
 }
 // #endregion
 </script>
@@ -165,6 +177,13 @@ function openAddModuleModal(row: any) {
                 <span @click.stop="">
                   <Space warp>
                     <Button type="dashed" size="small"> 统计 </Button>
+                    <Button
+                      type="dashed"
+                      size="small"
+                      @click="openUserModal(item)"
+                    >
+                      {{ $t('dev.project.user') }}
+                    </Button>
                     <Button
                       type="dashed"
                       size="small"
@@ -221,5 +240,6 @@ function openAddModuleModal(row: any) {
     </Row>
     <AddProjectModal @success="init" />
     <AddModuleModal @success="gridApi.query" />
+    <UserModal />
   </Page>
 </template>

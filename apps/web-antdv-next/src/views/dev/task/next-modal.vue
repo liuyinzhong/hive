@@ -39,7 +39,7 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   title: '流转任务',
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
@@ -67,7 +67,7 @@ async function onSubmit(values: Record<string, any>) {
     message.success('流转成功');
     modalApi.close();
     emit('success');
-  } catch (error) {
+  } catch {
   } finally {
     hideLoading();
     modalApi.unlock();

@@ -25,11 +25,11 @@ const [Modal, modalApi] = useVbenModal({
   title: '添加项目',
   fullscreenButton: false,
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = modalApi.getData();
+      const data: any = modalApi.getData();
       data.projectLogo = urlStringToFiles(data.projectLogo);
       formApi.setValues(data);
       modalApi.setState({ title: data.projectId ? '编辑项目' : '添加项目' });

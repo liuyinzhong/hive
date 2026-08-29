@@ -40,11 +40,11 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   title: '添加缺陷',
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let data = modalApi.getData() || {};
+      let data: any = modalApi.getData() || {};
       if (data.bugNum) {
         data = await getBugDetailApi(data.bugNum);
         modalApi.setState({ title: '编辑缺陷' });

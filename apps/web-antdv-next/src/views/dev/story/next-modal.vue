@@ -35,7 +35,7 @@ const changeCurrent = (index: number) => {
 function applyStatusOwners(userList: any[]) {
   const ownersByStatus = new Map<string, string[]>();
   for (const user of userList || []) {
-    if (user.storyStatus == null || !user.realName) continue;
+    if (user.storyStatus === null || !user.realName) continue;
     const names = ownersByStatus.get(String(user.storyStatus)) ?? [];
     names.push(user.realName);
     ownersByStatus.set(String(user.storyStatus), names);
@@ -57,11 +57,11 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   title: '流转需求',
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = modalApi.getData();
+      const data: any = modalApi.getData();
 
       formApi.setValues(data);
 
@@ -92,7 +92,6 @@ async function onSubmit(values: Record<string, any>) {
     message.success('流转成功');
     modalApi.close();
     emit('success');
-  } catch {
   } finally {
     hideLoading();
     modalApi.unlock();

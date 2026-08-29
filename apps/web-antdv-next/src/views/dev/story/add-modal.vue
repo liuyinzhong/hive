@@ -30,7 +30,7 @@ const [Form, formApi] = useVbenForm({
     },
   },
   // layout: 'vertical',
-  wrapperClass: 'grid-cols-5',
+  wrapperClass: 'grid-cols-7',
   schema: useFormSchema(),
   showDefaultActions: false,
 });
@@ -38,11 +38,12 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   title: '添加需求',
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      let storyRow: DevStoryApi.DevStoryFace = modalApi.getData();
+      let storyRow: DevStoryApi.DevStoryFace =
+        modalApi.getData() as DevStoryApi.DevStoryFace;
       if (storyRow.storyNum) {
         storyRow = await getStoryDetailApi(storyRow.storyNum);
         storyRow.fileIds = storyRow.fileList?.map((item: any) => ({
@@ -51,14 +52,18 @@ const [Modal, modalApi] = useVbenModal({
           uid: item.fileId,
           status: 'done',
         }));
-        // 将参与人回显数据映射为数组字段值,供 storyUsers 字段回显
-        storyRow.storyUsers = (storyRow.userList || []).map((item: any) => ({
-          userId: item.userId,
-          storyStatus: item.storyStatus ?? undefined,
-        }));
         modalApi.setState({ title: '编辑需求' });
+        // 先设置除 userList 外的值,避免 projectId 联动触发 dependencies
+        // 导致 ApiSelect 数据未加载完时清空已回显的 userList
+        const userList = storyRow.userList;
+        delete storyRow.userList;
+        formApi.setValues(storyRow, true, true);
+        // 等待 dependencies 触发的 api 请求完成后再设置 userList
+        await sleep(300);
+        formApi.setFieldValue('userList', userList);
+      } else {
+        formApi.setValues(storyRow, true, true);
       }
-      formApi.setValues(storyRow, true, true);
     }
   },
 });
@@ -82,7 +87,7 @@ async function onSubmit(values: Record<string, any>) {
 }
 </script>
 <template>
-  <Modal class="w-[1200px]">
+  <Modal class="w-[80%]">
     <Form />
   </Modal>
 </template>

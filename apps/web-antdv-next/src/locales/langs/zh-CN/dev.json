@@ -10,10 +10,20 @@
     "title": "版本管理"
   },
   "story": {
-    "title": "需求管理"
+    "title": "需求管理",
+    "addStoryUser": "添加参与人",
+    "storyUser": "参与人",
+    "storyStatusOwner": "负责状态",
+    "storyUsers": "参与人员",
+    "currentOwner": "当前负责人"
   },
   "project": {
-    "title": "项目管理"
+    "title": "项目管理",
+    "user": "用户",
+    "userManagement": "项目用户管理",
+    "addUser": "添加用户",
+    "userDuplicate": "用户不能重复",
+    "saveSuccess": "保存成功"
   },
   "bug": {
     "title": "缺陷管理"
@@ -39,6 +49,7 @@
     "projectDetail": "项目详情",
     "projectList": "项目列表",
     "projectUpdate": "修改项目",
+    "projectUser": "项目用户管理",
     "storyAdvance": "推进",
     "storyBatchCreate": "批量新增",
     "storyCreate": "新增",

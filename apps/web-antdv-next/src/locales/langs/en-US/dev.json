@@ -10,10 +10,20 @@
     "title": "Version Management"
   },
   "story": {
-    "title": "Story Management"
+    "title": "Story Management",
+    "addStoryUser": "Add Participant",
+    "storyUser": "Participant",
+    "storyStatusOwner": "Responsible Status",
+    "storyUsers": "Participants",
+    "currentOwner": "Current Owner"
   },
   "project": {
-    "title": "Project Management"
+    "title": "Project Management",
+    "user": "Users",
+    "userManagement": "Project User Management",
+    "addUser": "Add User",
+    "userDuplicate": "Duplicate user",
+    "saveSuccess": "Saved successfully"
   },
   "bug": {
     "title": "Bug Management"
@@ -39,6 +49,7 @@
     "projectDetail": "Project Details",
     "projectList": "Project List",
     "projectUpdate": "Update Project",
+    "projectUser": "Project User Management",
     "storyAdvance": "Advance",
     "storyBatchCreate": "Batch Create",
     "storyCreate": "Create",

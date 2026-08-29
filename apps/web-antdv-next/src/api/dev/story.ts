@@ -6,15 +6,9 @@ import { requestClient } from '#/api/request';
 
 interface userListFace {
   userId: string;
-  realName: string;
+  realName?: string;
   avatar?: string;
   /** 负责的需求状态,字典STORY_STATUS值,null=普通参与人 */
-  storyStatus?: string;
-}
-
-/** 需求参与人提交项,storyStatus 为负责状态,空表示普通参与人 */
-export interface storyUserFace {
-  userId: string;
   storyStatus?: string;
 }
 
@@ -70,9 +64,7 @@ export namespace DevStoryApi {
     source?: string;
     createDate?: string;
     updateDate?: string;
-    userList?: userListFace[] | string[];
-    /** 参与人员及负责状态,创建/更新时提交 */
-    storyUsers?: storyUserFace[];
+    userList?: userListFace[];
     /** 关联流程实例编号,未绑定流程时为 undefined */
     workflowInstanceNo?: string;
     /** 关联流程实例ID,未绑定流程时为 undefined */

@@ -20,7 +20,7 @@ const [Form, formApi] = useVbenForm({
 });
 
 const [Modal, modalApi] = useVbenModal({
-  onConfirm: () => formApi.validateAndSubmitForm(),
+  onConfirm: () => formApi.validateAndSubmit(),
   async onOpenChange(open) {
     if (!open) return;
     await formApi.reset();

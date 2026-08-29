@@ -28,11 +28,11 @@ const [Form, formApi] = useVbenForm({
 const [Modal, modalApi] = useVbenModal({
   fullscreenButton: false,
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = modalApi.getData();
+      const data: any = modalApi.getData();
       formApi.setValues(data);
       modalApi.setState({ title: data.moduleId ? '编辑模块' : '添加模块' });
     } else {

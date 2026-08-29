@@ -28,11 +28,9 @@ const [Form, formApi] = useVbenForm({
       'timeArr',
       ['startDate', 'endDate'],
       (value: any, fieldName: string) => {
-        if (fieldName === 'startDate') {
-          return dayjs(value).startOf('day').format('YYYY-MM-DD HH:mm:ss');
-        } else {
-          return dayjs(value).endOf('day').format('YYYY-MM-DD HH:mm:ss');
-        }
+        fieldName === 'startDate'
+          ? dayjs(value).startOf('day').format('YYYY-MM-DD HH:mm:ss')
+          : dayjs(value).endOf('day').format('YYYY-MM-DD HH:mm:ss');
       },
     ],
   ],
@@ -44,12 +42,12 @@ const [Modal, modalApi] = useVbenModal({
   title: '添加版本',
   fullscreenButton: false,
   onConfirm: async () => {
-    await formApi.validateAndSubmitForm();
+    await formApi.validateAndSubmit();
   },
   async onOpenChange(isOpen: boolean) {
     if (isOpen) {
       formApi.reset();
-      const data = modalApi.getData();
+      const data: any = modalApi.getData();
       if (data.versionId) {
         modalApi.setState({
           title: '编辑版本',
