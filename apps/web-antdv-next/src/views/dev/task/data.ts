@@ -249,7 +249,7 @@ export function useColumns(
       width: 120,
       showOverflow: true,
       title: '执行人',
-      field: 'userList',
+      field: 'userInfo',
       editRender: {
         name: 'UserSelect',
         props: {},

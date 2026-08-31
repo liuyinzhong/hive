@@ -4,7 +4,7 @@ import { h } from 'vue';
 
 import { ApiComponent } from '@vben/common-ui';
 
-import { Select } from 'antdv-next';
+import { message, Select } from 'antdv-next';
 
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
 import { getProjectUsersApi } from '#/api/dev';
@@ -26,8 +26,11 @@ export default {
   renderTableEdit(_renderOpts: any, params: any) {
     const { column, row } = params;
     const { props, events } = _renderOpts;
-    let _list: any[] = row?.[column.field];
-    if (!_list) {
+    const rawValue = row?.[column.field];
+    // 判断多人/单人场景：row[field] 为数组时为多人，否则为单人（从扁平字段 userId/realName/avatar 取值）
+    const isMultiple = Array.isArray(rawValue);
+    let _list: any[] = rawValue;
+    if (!isMultiple) {
       _list = [
         {
           userId: row?.userId || '',
@@ -37,11 +40,12 @@ export default {
       ];
     }
 
-    const userIds =
-      _list.map((item: SystemUserApi.SystemUserFace) => item.userId) || [];
+    const userIds = _list
+      .map((item: SystemUserApi.SystemUserFace) => item.userId)
+      .filter(Boolean);
 
-    // 初始化值
-    let _value: any = userIds || [];
+    // 初始化值：多人为数组，单人为字符串
+    let _value: any = isMultiple ? userIds : userIds[0] || undefined;
 
     return h(
       'div',
@@ -55,6 +59,7 @@ export default {
         ...props,
         api: async () => {
           if (!row.projectId) {
+            message.error('未关联项目');
             return [];
           }
           return await getProjectUsersApi(row.projectId || '');
@@ -68,11 +73,12 @@ export default {
         showSearch: true,
         defaultOpen: true,
         popupMatchSelectWidth: false,
-        maxTagCount: 0,
+        // 仅多人场景启用多选与标签折叠
+        ...(isMultiple ? { mode: 'multiple', maxTagCount: 0 } : {}),
         style: {
           width: '100%',
         },
-        modelValue: userIds || [],
+        modelValue: _value,
         modelPropName: 'value',
         // 关键：将下拉菜单挂载到当前单元格元素内
         getPopupContainer: (e: HTMLElement) => {

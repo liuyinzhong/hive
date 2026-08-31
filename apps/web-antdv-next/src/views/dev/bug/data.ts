@@ -260,13 +260,12 @@ export function useColumns(
       width: 120,
       showOverflow: true,
       title: '修复人',
-      field: 'userList',
+      field: 'userInfo',
       editRender: {
         name: 'UserSelect',
         props: {},
         events: {
           change: (val: any, row: DevBugApi.DevBugFace) => {
-            debugger;
             onActionClick &&
               onActionClick({
                 code: 'updateField',
