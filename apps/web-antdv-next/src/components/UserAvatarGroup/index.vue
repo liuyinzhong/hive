@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { Avatar, AvatarGroup, Tooltip } from 'antdv-next';
+interface UserAvatarGroup {
+  avatar: string;
+  realName: string;
+  userId: string;
+}
 
 const props = defineProps({
   userList: {
-    type: Array,
+    type: Array<UserAvatarGroup>,
     required: true,
   },
   maxCount: {
@@ -23,7 +28,7 @@ const data: any = computed(() => props.userList);
       :title="item.realName"
       :overlay-style="{ width: '120px' }"
     >
-      <Avatar :src="item.avatar || undefined" style="background-color: #ccc">
+      <Avatar :src="item.avatar" style="background-color: #ccc">
         {{ item.realName?.charAt(0) }}
       </Avatar>
     </Tooltip>

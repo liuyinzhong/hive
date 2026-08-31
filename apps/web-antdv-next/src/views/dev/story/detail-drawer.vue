@@ -7,7 +7,6 @@ import { useVbenDrawer } from '@vben/common-ui';
 import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import CopyButton from '#/components/CopyButton/index.vue';
-import UserAvatar from '#/components/UserAvatar/index.vue';
 
 import StoryDetail from './components/story-detail.vue';
 import { Button, Flex, Space } from 'antdv-next';

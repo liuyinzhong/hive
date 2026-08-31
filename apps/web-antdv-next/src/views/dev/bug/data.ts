@@ -263,7 +263,11 @@ export function useColumns(
       field: 'userInfo',
       editRender: {
         name: 'UserSelect',
-        props: {},
+        props: {
+          userIdField: 'userId',
+          nameField: 'realName',
+          avatarField: 'avatar',
+        },
         events: {
           change: (val: any, row: DevBugApi.DevBugFace) => {
             onActionClick &&

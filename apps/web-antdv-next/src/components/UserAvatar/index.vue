@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { preferences } from '@vben/preferences';
-import { useUserStore } from '@vben/stores';
 import { Avatar, TypographyText, Space } from 'antdv-next';
 defineProps({
   avatar: {
@@ -14,15 +12,12 @@ defineProps({
     type: String,
   },
 });
-const userStore = useUserStore();
 </script>
 <template>
   <Space :size="5">
-    <Avatar
-      :src="avatar || preferences.app.defaultAvatar"
-      :size="30"
-      style="max-width: 30px; max-height: 30px"
-    />
+    <Avatar :src="avatar" style="max-width: 30px; max-height: 30px">
+      {{ name?.charAt(0) }}
+    </Avatar>
     <TypographyText
       v-if="name"
       :ellipsis="{ tooltip: true }"
