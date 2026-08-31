@@ -370,19 +370,10 @@ export function useColumns(
       title: '来源',
       field: 'bugSource',
       width: 100,
-      editRender: {
-        name: 'DictSelect',
+      cellRender: {
+        name: 'DictTag',
         props: {
           type: 'BUG_SOURCE',
-        },
-        events: {
-          change: (val: any, row: DevBugApi.DevBugFace) => {
-            onActionClick &&
-              onActionClick({
-                code: 'updateField',
-                row: { ...row, value: val || [], key: 'bugSource' },
-              });
-          },
         },
       },
     },
