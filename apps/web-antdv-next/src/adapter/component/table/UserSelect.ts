@@ -9,17 +9,33 @@ import UserAvatar from '#/adapter/component/table/UserAvatar';
 
 import { getProjectUsersApi } from '#/api/dev';
 import UserAvatarComponent from '#/components/UserAvatar/index.vue';
+import { get } from '@vben/utils';
 
-/*
-仅支持两种格式，
-多人参与 所绑定的数据格式为：[{ userId: '', realName: '', avatar: '' }]
-
-//这条数据里必需包含userId、realName、avatar三个字段
-单人参与 所绑定的数据格式为：{ userId: '', realName: '', avatar: '' }
-
-多人时请看 需求管理-参与人员列
-单人时请看 任务管理-执行人列
-
+/* 示例
+{
+  width: 120,
+  showOverflow: true,
+  title: '修复人',
+  field: 'userInfo',
+  editRender: {
+    name: 'UserSelect',
+    props: {
+      userIdField: 'userId', // 或者 'userinfo.userId'
+      nameField: 'realName', // 或者 'userinfo.realName'
+      avatarField: 'avatar', // 或者 'userinfo.avatar'
+      multiple: false,
+    },
+    events: {
+      change: (val: any, row: DevBugApi.DevBugFace) => {
+        onActionClick &&
+          onActionClick({
+            code: 'updateField',
+            row: { ...row, value: val || [], key: 'userId' },
+          });
+      },
+    },
+  },
+}
 */
 
 export default {
@@ -31,7 +47,7 @@ export default {
     // 初始化值：多人为数组，单人为字符串
     let _value: any = props.multiple
       ? rawValue || []
-      : row[props.userIdField || 'userId'] || undefined;
+      : get(row, props.userIdField || 'userId') || undefined;
 
     return h(
       'div',

@@ -267,6 +267,7 @@ export function useColumns(
           userIdField: 'userId',
           nameField: 'realName',
           avatarField: 'avatar',
+          multiple: false,
         },
         events: {
           change: (val: any, row: DevBugApi.DevBugFace) => {
