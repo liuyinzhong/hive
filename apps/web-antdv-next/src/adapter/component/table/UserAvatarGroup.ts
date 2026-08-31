@@ -11,7 +11,12 @@ export default {
     // 优先从列绑定的 field 取值,兼容未配置 field 时回退到 userList
     const field = column?.field || 'userList';
     let userList = row?.[field];
-    if (!userList) {
+    if (userList) {
+      return h(UserAvatarGroup, {
+        ...props,
+        userList,
+      });
+    } else {
       userList = [
         {
           userId: row?.userId || '',
@@ -23,11 +28,6 @@ export default {
         ...props,
         avatar: userList[0].avatar,
         name: userList[0].realName,
-      });
-    } else {
-      return h(UserAvatarGroup, {
-        ...props,
-        userList,
       });
     }
   },
