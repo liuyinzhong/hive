@@ -30,5 +30,6 @@ const userStore = useUserStore();
     >
       {{ name }}
     </TypographyText>
+    <TypographyText v-else> -- </TypographyText>
   </Space>
 </template>

@@ -266,6 +266,7 @@ export function useColumns(
         props: {},
         events: {
           change: (val: any, row: DevBugApi.DevBugFace) => {
+            debugger;
             onActionClick &&
               onActionClick({
                 code: 'updateField',

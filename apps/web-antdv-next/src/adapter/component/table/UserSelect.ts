@@ -51,48 +51,47 @@ export default {
           e.stopPropagation(); // 阻止滚轮事件向上冒泡
         },
       },
-      h(
-        ApiComponent,
-        {
-          ...props,
-          api: async () => {
-            return await getProjectUsersApi(row.projectId || '');
-          },
-          labelField: 'realName',
-          valueField: 'userId',
-          optionFilterProp: 'label',
-          component: Select,
-          allowClear: true,
-          filterOption: true,
-          showSearch: true,
-          defaultOpen: true,
-          popupMatchSelectWidth: false,
-          maxTagCount: 0,
-          style: {
-            width: '100%',
-          },
-          modelValue: userIds || [],
-          modelPropName: 'value',
-          // 关键：将下拉菜单挂载到当前单元格元素内
-          getPopupContainer: (e: HTMLElement) => {
-            return e.parentNode as HTMLElement;
-          },
-          onOpenChange(_visible: boolean) {
-            events.change(_value, row);
-          },
-          onChange: (value: any) => {
-            _value = value;
-          },
+      h(ApiComponent, {
+        ...props,
+        api: async () => {
+          if (!row.projectId) {
+            return [];
+          }
+          return await getProjectUsersApi(row.projectId || '');
         },
-        {
-          option: (optionItem: any) => {
-            return h(UserAvatar, {
-              avatar: optionItem.avatar || '',
-              name: optionItem.label || '',
-            });
-          },
+        labelField: 'realName',
+        valueField: 'userId',
+        optionFilterProp: 'label',
+        component: Select,
+        allowClear: true,
+        filterOption: true,
+        showSearch: true,
+        defaultOpen: true,
+        popupMatchSelectWidth: false,
+        maxTagCount: 0,
+        style: {
+          width: '100%',
         },
-      ),
+        modelValue: userIds || [],
+        modelPropName: 'value',
+        // 关键：将下拉菜单挂载到当前单元格元素内
+        getPopupContainer: (e: HTMLElement) => {
+          return e.parentNode as HTMLElement;
+        },
+        onOpenChange(_visible: boolean) {
+          events.change(_value, row);
+        },
+        onChange: (value: any) => {
+          _value = value;
+        },
+        // 使用 optionRender prop 自定义选项渲染（antdv-next Select 不支持 option slot）
+        optionRender: ({ option }: any) => {
+          return h(UserAvatar, {
+            avatar: option.data?.avatar || '',
+            name: option.label || '',
+          });
+        },
+      }),
     );
   },
 
