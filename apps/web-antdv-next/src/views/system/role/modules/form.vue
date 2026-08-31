@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import type { DataNode } from 'antdv-next/dist/tree/index';
+
 import type { Recordable } from '@vben/types';
 
-import type { SystemMenuApi, SystemRoleApi } from '#/api/system';
+import type { SystemRoleApi } from '#/api/system';
 
 import { ref } from 'vue';
 
@@ -28,7 +30,7 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const permissions = ref<SystemMenuApi.SystemMenuFace[]>([]);
+const permissions = ref<DataNode[]>([]);
 const loadingPermissions = ref(false);
 
 const dataScopes: Set<SystemRoleApi.DataScope> = new Set([
@@ -50,40 +52,8 @@ function toStringArray(value: unknown) {
     : [];
 }
 
-/**
- * 递归收集勾选节点及其全部祖先节点 id
- * @description 级联勾选下表单值仅包含全选节点，半选父节点（如菜单下仅勾选部分按钮时的
- * 菜单节点）不在表单值内；提交前按树结构把"自身或后代存在勾选"的节点统一补齐，
- * 保证半选父级菜单 id 进入提交参数
- * @param nodes 菜单树节点集合
- * @param checked 当前勾选的节点 id 集合
- * @param out 输出的 id 集合（勾选节点 + 全部祖先）
- * @returns 当前子树内是否存在勾选节点
- */
-function collectWithAncestors(
-  nodes: SystemMenuApi.SystemMenuFace[],
-  checked: Set<string>,
-  out: Set<string>,
-): boolean {
-  let hit = false;
-  for (const node of nodes) {
-    const childHit = collectWithAncestors(node.children ?? [], checked, out);
-    if (childHit || checked.has(node.id)) {
-      out.add(node.id);
-      hit = true;
-    }
-  }
-  return hit;
-}
-
-/**
- * 组装角色保存请求
- * @param values 表单值
- * @param mergedPermissions 已补齐半选祖先的权限 id 集合
- */
 function toSaveRoleRequest(
   values: Recordable<unknown>,
-  mergedPermissions: string[],
 ): SystemRoleApi.SaveRoleRequest {
   const dataScope = isDataScope(values.dataScope) ? values.dataScope : 'self';
   return {
@@ -92,7 +62,7 @@ function toSaveRoleRequest(
       dataScope === 'customDepartment'
         ? toStringArray(values.dataScopeDeptIds)
         : [],
-    permissions: mergedPermissions,
+    permissions: toStringArray(values.permissions),
     remark: typeof values.remark === 'string' ? values.remark : undefined,
     roleTitle: typeof values.roleTitle === 'string' ? values.roleTitle : '',
     status: values.status === 0 ? 0 : 1,
@@ -105,15 +75,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     if (!valid) return;
     const values = await formApi.getValues();
     const roleId = typeof values.roleId === 'string' ? values.roleId : '';
-    // 提交前补齐半选父级：级联勾选下表单值仅含全选节点，
-    // 存在勾选子节点的父级菜单（半选态）需按树结构一并提交
-    const mergedPermissions = new Set<string>();
-    collectWithAncestors(
-      permissions.value,
-      new Set(toStringArray(values.permissions)),
-      mergedPermissions,
-    );
-    const payload = toSaveRoleRequest(values, [...mergedPermissions]);
+    const payload = toSaveRoleRequest(values);
     drawerApi.lock();
     try {
       // oxlint-disable-next-line unicorn/prefer-ternary
@@ -155,7 +117,7 @@ async function loadPermissions() {
   loadingPermissions.value = true;
   try {
     const res = await getMenuListApi({ status: 1, hasButton: 1 });
-    permissions.value = res;
+    permissions.value = res as unknown as DataNode[];
   } finally {
     loadingPermissions.value = false;
   }
@@ -184,6 +146,7 @@ function getNodeClass(node: Recordable<any>) {
             multiple
             bordered
             selectAllLabel="全选"
+            :includeIndeterminate="true"
             :default-expanded-level="0"
             :get-node-class="getNodeClass"
             v-bind="slotProps.componentProps"
