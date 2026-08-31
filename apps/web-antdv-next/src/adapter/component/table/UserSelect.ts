@@ -7,7 +7,7 @@ import { ApiComponent } from '@vben/common-ui';
 import { Select } from 'antdv-next';
 
 import UserAvatarGroup from '#/adapter/component/table/UserAvatarGroup';
-import { getUserListAllApi } from '#/api/system';
+import { getProjectUsersApi } from '#/api/dev';
 import UserAvatar from '#/components/UserAvatar/index.vue';
 
 /*
@@ -37,7 +37,8 @@ export default {
       ];
     }
 
-    const userIds = _list.map((item: SystemUserApi.SystemUserFace) => item.userId) || [];
+    const userIds =
+      _list.map((item: SystemUserApi.SystemUserFace) => item.userId) || [];
 
     // 初始化值
     let _value: any = userIds || [];
@@ -54,7 +55,9 @@ export default {
         ApiComponent,
         {
           ...props,
-          api: getUserListAllApi,
+          api: async () => {
+            return await getProjectUsersApi(row.projectId || '');
+          },
           labelField: 'realName',
           valueField: 'userId',
           optionFilterProp: 'label',
