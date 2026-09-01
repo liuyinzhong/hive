@@ -11,11 +11,9 @@
   },
   "story": {
     "title": "Story Management",
-    "addStoryUser": "Add Participant",
-    "storyUser": "Participant",
-    "storyStatusOwner": "Responsible Status",
     "storyUsers": "Participants",
-    "currentOwner": "Current Owner"
+    "currentOwner": "Current Owner",
+    "nextOwner": "Status Owner"
   },
   "project": {
     "title": "Project Management",

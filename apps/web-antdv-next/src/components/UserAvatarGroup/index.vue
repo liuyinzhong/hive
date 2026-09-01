@@ -19,9 +19,11 @@ const props = defineProps({
 });
 
 const data: any = computed(() => props.userList);
+const isEmpty = computed(() => !data.value || data.value.length === 0);
 </script>
 <template>
-  <AvatarGroup :max-count="maxCount">
+  <span v-if="isEmpty"> -- </span>
+  <AvatarGroup v-else :max-count="maxCount">
     <Tooltip
       v-for="item in data"
       :key="item.userId"

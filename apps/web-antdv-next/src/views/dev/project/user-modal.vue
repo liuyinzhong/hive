@@ -9,7 +9,6 @@ import { useVbenModal } from '@vben/common-ui';
 import { message } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
-import { getLocalDictList } from '#/dicts';
 import { getUserListAllApi } from '#/api/system';
 import {
   getProjectUsersApi,
@@ -28,7 +27,7 @@ const emit = defineEmits<{
 const projectId = ref('');
 
 /**
- * 项目用户管理表单schema:数组字段,每行=用户+负责状态(多选)
+ * 项目用户管理表单schema:数组字段,每行=用户
  */
 function useFormSchema(): VbenFormSchema[] {
   return [
@@ -37,7 +36,6 @@ function useFormSchema(): VbenFormSchema[] {
         addButtonText: $t('dev.project.addUser'),
         createRow: () => ({
           userId: '',
-          storyStatus: [] as string[],
         }),
         max: 50,
         min: 0,
@@ -58,20 +56,6 @@ function useFormSchema(): VbenFormSchema[] {
           fieldName: 'userId',
           label: $t('dev.project.user'),
           rules: 'required',
-        },
-        {
-          component: 'Select',
-          componentProps: {
-            allowClear: true,
-            mode: 'multiple',
-            maxTagCount: 3,
-            options: getLocalDictList('STORY_STATUS').map((item: any) => ({
-              label: item.label,
-              value: item.value,
-            })),
-          },
-          fieldName: 'storyStatus',
-          label: $t('dev.story.storyStatusOwner'),
         },
       ],
       fieldName: 'users',
@@ -107,13 +91,12 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 /**
- * 加载项目用户并回显,storyStatus逗号字符串拆为数组
+ * 加载项目用户并回显
  */
 async function loadUsers(pid: string) {
   const res = await getProjectUsersApi(pid);
   const users = (res || []).map((item: DevProjectUserApi.ProjectUserFace) => ({
     userId: item.userId,
-    storyStatus: item.storyStatus ? item.storyStatus.split(',') : [],
   }));
   formApi.setValues({ users }, true, true);
 }
@@ -123,12 +106,8 @@ async function loadUsers(pid: string) {
  */
 async function onSubmit(values: Record<string, any>) {
   const users = (values.users || []).map(
-    (item: { userId: string; storyStatus?: string[] }) => ({
+    (item: { userId: string }) => ({
       userId: item.userId,
-      storyStatus:
-        item.storyStatus && item.storyStatus.length > 0
-          ? item.storyStatus.join(',')
-          : null,
     }),
   );
 

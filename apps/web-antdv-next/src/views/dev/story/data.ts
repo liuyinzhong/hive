@@ -36,99 +36,30 @@ export function useFormSchema(): VbenFormSchema[] {
       formItemClass: 'col-span-10 items-baseline',
     },
 
-    projectSchema({
-      formItemClass: 'col-span-2',
-      dependencies: {
-        componentProps: (values: any, formApi: any) => {
-          /* 新建需求时,选择项目后自动填充默认参与人及负责状态 */
-          if (values.projectId && !values.storyId) {
-            getProjectUsersApi(values.projectId).then((users) => {
-              const userList: { userId: string; storyStatus: string }[] = [];
-              for (const u of users) {
-                if (!u.storyStatus) continue;
-                const statuses = u.storyStatus.split(',');
-                for (const s of statuses) {
-                  userList.push({ userId: u.userId, storyStatus: s });
-                }
-              }
-              // 按负责状态值升序，与字典排序规则保持一致
-              userList.sort((a, b) => Number(a.storyStatus) - Number(b.storyStatus));
-              formApi.setFieldValue('userList', userList);
-            });
-          }
-          return {};
-        },
-      },
-    }),
+    projectSchema({ formItemClass: 'col-span-3' }),
     {
       component: 'RichEditor',
       fieldName: 'storyRichText',
       label: '',
       labelWidth: 0,
       defaultValue: storyRichTemplateText,
-      formItemClass: 'col-span-5 row-span-10 items-baseline',
+      formItemClass: 'col-span-7 row-span-10 items-baseline',
 
       componentProps: {
         editable: true,
         minHeight: 410,
       },
     },
-    {
-      arrayProps: {
-        addButtonText: $t('dev.story.addStoryUser'),
-        showIndex: false,
-        createRow: () => ({
-          userId: '',
-          storyStatus: undefined,
-        }),
-        max: 50,
-        min: 0,
-      },
-      children: [
-        {
-          component: 'ApiSelect',
-          dependencies: {
-            componentProps: (values: any) => ({
-              allowClear: true,
-              key: `storyUser_${values.projectId}`,
-              api: () => getProjectUsersApi(values.projectId),
-              labelField: 'realName',
-              valueField: 'userId',
-              showSearch: true,
-              filterOption: true,
-              optionFilterProp: 'label',
-            }),
-            triggerFields: ['projectId'],
-          },
-          fieldName: 'userId',
-          label: $t('dev.story.storyUser'),
-        },
-        {
-          component: 'ApiSelect',
-          componentProps: {
-            allowClear: true,
-            api: () => getLocalDictList('STORY_STATUS'),
-          },
-          fieldName: 'storyStatus',
-          label: $t('dev.story.storyStatusOwner'),
-        },
-      ],
-      fieldName: 'userList',
-      label: $t('dev.story.storyUsers'),
-      formItemClass: 'col-span-3 row-span-10 items-baseline ',
-      type: 'array',
-      hideLabel: true,
-    },
 
-    versionSchema({ formItemClass: 'col-span-2' }),
-    moduleSchema({ formItemClass: 'col-span-2' }),
+    versionSchema({ formItemClass: 'col-span-3' }),
+    moduleSchema({ formItemClass: 'col-span-3' }),
 
     {
       component: 'ApiSelect',
       fieldName: 'storyStatus',
       label: '需求状态',
       defaultValue: '0',
-      formItemClass: 'col-span-2',
+      formItemClass: 'col-span-3',
       componentProps: {
         api: () => getLocalDictList('STORY_STATUS'),
       },
@@ -145,7 +76,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '需求类型',
       rules: 'required',
       defaultValue: '0',
-      formItemClass: 'col-span-2',
+      formItemClass: 'col-span-3',
       componentProps: {
         api: () => getLocalDictList('STORY_TYPE'),
       },
@@ -155,7 +86,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'storyLevel',
       label: '优先级',
-      formItemClass: 'col-span-2',
+      formItemClass: 'col-span-3',
       defaultValue: '0',
       componentProps: {
         api: () => getLocalDictList('STORY_LEVEL'),
@@ -166,7 +97,7 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'source',
       label: '需求来源',
       defaultValue: '0',
-      formItemClass: 'col-span-2',
+      formItemClass: 'col-span-3',
       componentProps: {
         api: () => getLocalDictList('STORY_SOURCE'),
       },
@@ -175,7 +106,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Upload',
       fieldName: 'fileIds',
       label: '附件',
-      formItemClass: 'col-span-2',
+      formItemClass: 'col-span-3',
       componentProps: {
         // 更多属性见：https://ant.design/components/upload-cn
         // 自动携带认证信息
@@ -280,15 +211,6 @@ export function useColumns(
       },
     },
     {
-      field: 'thisUserList',
-      title: $t('dev.story.currentOwner'),
-      width: 110,
-      showOverflow: true,
-      cellRender: {
-        name: 'UserAvatarGroup',
-      },
-    },
-    {
       field: 'storyTitle',
       title: '需求名称',
       sortable: true,
@@ -303,9 +225,21 @@ export function useColumns(
       },
     },
     {
+      field: 'thisUser',
+      title: $t('dev.story.currentOwner'),
+      width: 110,
+      showOverflow: true,
+      cellRender: {
+        name: 'UserAvatar',
+        props: {
+          avatarField: 'thisUser.avatar',
+          nameField: 'thisUser.realName',
+        },
+      },
+    },
+    {
       width: 165,
       field: 'userList',
-      showOverflow: true,
       title: $t('dev.story.storyUsers'),
       cellRender: {
         name: 'UserAvatarGroup',
@@ -418,6 +352,37 @@ export function useNextFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['storyId'],
         show: false,
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'projectId',
+      label: '项目id',
+      dependencies: {
+        triggerFields: ['storyId'],
+        show: false,
+      },
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'userId',
+      label: $t('dev.story.nextOwner'),
+      dependencies: {
+        // 需求流转到 99(已完成) 时不再需要指定负责人
+        rules(values: any) {
+          return String(values.storyStatus) === '99' ? null : 'required';
+        },
+        componentProps: (values: any) => ({
+          allowClear: true,
+          key: `nextUser_${values.projectId}`,
+          api: () => getProjectUsersApi(values.projectId),
+          labelField: 'realName',
+          valueField: 'userId',
+          showSearch: true,
+          filterOption: true,
+          optionFilterProp: 'label',
+        }),
+        triggerFields: ['storyStatus', 'projectId'],
       },
     },
     {

@@ -47,7 +47,7 @@ export default {
     // 初始化值：多人为数组，单人为字符串
     let _value: any = props.multiple
       ? rawValue || []
-      : get(row, props.userIdField || 'userId') || undefined;
+      : get(row, props.userIdField) || 'userId';
 
     return h(
       'div',

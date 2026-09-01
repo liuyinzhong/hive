@@ -63,10 +63,15 @@ const [Modal, modalApi] = useVbenModal({
     if (isOpen) {
       const data: any = modalApi.getData();
 
-      formApi.setValues(data);
+      /* 只回显流转表单字段,参与人等只读数据不进表单 */
+      formApi.setValues({
+        storyId: data.storyId,
+        storyStatus: data.storyStatus,
+        projectId: data.projectId,
+      });
 
       /* 在步骤条上展示各状态负责人 */
-      applyStatusOwners((data as any)?.userList);
+      applyStatusOwners(data?.userList);
 
       /* 设置当前步骤 */
       current.value = stepsItems.findIndex(

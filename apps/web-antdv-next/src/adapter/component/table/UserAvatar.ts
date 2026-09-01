@@ -26,7 +26,9 @@ export default {
 
     const avatar = get(row, renderOpts.props?.avatarField || 'avatar');
     const name = get(row, renderOpts.props?.nameField || 'realName');
-
+    if (!avatar && !name) {
+      return '';
+    }
     return h(UserAvatarComponent, { avatar, name });
   },
 };

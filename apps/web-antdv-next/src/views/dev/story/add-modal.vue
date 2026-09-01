@@ -3,7 +3,7 @@ import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
 import { createStoryApi, updateStoryApi } from '#/api/dev';
-import { deepClone, filesToUrlString, urlStringToFiles, sleep } from '#/utils';
+import { filesToUrlString } from '#/utils';
 import { getStoryDetailApi } from '#/api/dev/story';
 import type { DevStoryApi } from '#/api/dev/story';
 import { useFormSchema } from './data';
@@ -53,14 +53,10 @@ const [Modal, modalApi] = useVbenModal({
           status: 'done',
         }));
         modalApi.setState({ title: '编辑需求' });
-        // 先设置除 userList 外的值,避免 projectId 联动触发 dependencies
-        // 导致 ApiSelect 数据未加载完时清空已回显的 userList
-        const userList = storyRow.userList;
+        // 参与人由推进接口维护,表单不含该字段,回显前剔除避免脏值提交
         delete storyRow.userList;
+        delete storyRow.thisUser;
         formApi.setValues(storyRow, true, true);
-        // 等待 dependencies 触发的 api 请求完成后再设置 userList
-        await sleep(300);
-        formApi.setFieldValue('userList', userList);
       } else {
         formApi.setValues(storyRow, true, true);
       }

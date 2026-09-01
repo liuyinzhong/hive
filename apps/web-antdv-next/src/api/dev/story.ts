@@ -8,7 +8,7 @@ interface userListFace {
   userId: string;
   realName?: string;
   avatar?: string;
-  /** 负责的需求状态,字典STORY_STATUS值,null=普通参与人 */
+  /** 负责的需求状态(需求推进至该状态时指定),字典STORY_STATUS值 */
   storyStatus?: string;
 }
 
@@ -46,8 +46,8 @@ export namespace DevStoryApi {
     fileList?: DevStoryFileFace[];
     storyType?: string;
     storyStatus?: string;
-    /** 当前状态负责人列表(参与人中story_status等于需求当前状态的用户) */
-    thisUserList?: userListFace[];
+    /** 当前状态负责人(参与人中story_status等于需求当前状态的用户,由流转时指定),无负责人时为undefined */
+    thisUser?: userListFace;
     storyLevel?: string;
     /** 关联版本id */
     versionId?: string;

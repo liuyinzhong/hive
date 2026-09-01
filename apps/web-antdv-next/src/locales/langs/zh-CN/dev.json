@@ -11,11 +11,9 @@
   },
   "story": {
     "title": "需求管理",
-    "addStoryUser": "添加参与人",
-    "storyUser": "参与人",
-    "storyStatusOwner": "负责状态",
     "storyUsers": "参与人员",
-    "currentOwner": "当前负责人"
+    "currentOwner": "当前负责人",
+    "nextOwner": "状态负责人"
   },
   "project": {
     "title": "项目管理",

@@ -5,6 +5,7 @@ import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Descriptions, DescriptionsItem, Tag } from 'antdv-next';
 import DictTag from '#/components/DictTag/index.vue';
+import UserAvatar from '#/components/UserAvatar/index.vue';
 import UserAvatarGroup from '#/components/UserAvatarGroup/index.vue';
 /**
  * 基本信息组件
@@ -20,7 +21,7 @@ const props = defineProps({
 const router = useRouter();
 
 const userList = computed(() => props.storyInfo.userList || []);
-const thisUserList = computed(() => props.storyInfo.thisUserList || []);
+const thisUser = computed(() => props.storyInfo.thisUser);
 
 /**
  * 跳转流程实例详情页
@@ -69,7 +70,10 @@ const goWorkflowDetail = () => {
       <DictTag dict-type="STORY_SOURCE" :value="storyInfo.source" />
     </DescriptionsItem>
     <DescriptionsItem label="当前负责人">
-      <UserAvatarGroup :user-list="thisUserList" />
+      <UserAvatar
+        :avatar="thisUser?.avatar ?? ''"
+        :name="thisUser?.realName ?? ''"
+      />
     </DescriptionsItem>
     <DescriptionsItem label="参与人">
       <UserAvatarGroup :user-list="userList" />

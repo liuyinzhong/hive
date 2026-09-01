@@ -9,16 +9,12 @@ export namespace DevProjectUserApi {
     realName: string;
     /** 头像 */
     avatar?: string;
-    /** 负责状态(逗号拼接STORY_STATUS值),null=普通成员 */
-    storyStatus?: string | null;
   }
 
   /** 项目用户单项(保存用) */
   export interface ProjectUserItemFace {
     /** 用户ID */
     userId: string;
-    /** 负责状态(逗号拼接),null=普通成员 */
-    storyStatus?: string | null;
   }
 
   /** 项目用户全量保存请求 */
