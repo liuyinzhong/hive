@@ -31,6 +31,9 @@ export namespace DevProjectUserApi {
  * @param projectId 项目ID
  */
 export const getProjectUsersApi = async (projectId: string) => {
+  if (!projectId) {
+    return [];
+  }
   return requestClient.get<Array<DevProjectUserApi.ProjectUserFace>>(
     '/dev/project-users',
     { params: { projectId } },

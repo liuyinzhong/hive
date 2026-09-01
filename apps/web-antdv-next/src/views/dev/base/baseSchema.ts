@@ -246,6 +246,7 @@ export const userIdSchema = (config?: any): VbenFormSchema => {
     rules: 'required',
     formItemClass: 'col-span-1',
   } as VbenFormSchema;
+  const fieldName = config?.fieldName || base.fieldName;
   return {
     ...base,
     ...config,
@@ -261,7 +262,7 @@ export const userIdSchema = (config?: any): VbenFormSchema => {
       };
     },
     dependencies: {
-      componentProps: (values: any) => {
+      componentProps: (values: any, formApi: any) => {
         if (!values.projectId) {
           return { ...config?.componentProps };
         }
@@ -274,6 +275,20 @@ export const userIdSchema = (config?: any): VbenFormSchema => {
           allowClear: true,
           filterOption: true,
           optionFilterProp: 'label',
+          afterFetch: (res: any) => {
+            // 项目切换后,已选用户不属于新项目成员时自动清空
+            const current = values[fieldName];
+            if (!current) {
+              return;
+            }
+            if (
+              !res ||
+              res.length === 0 ||
+              !res.find((item: any) => item.userId === current)
+            ) {
+              formApi.setFieldValue(fieldName, undefined);
+            }
+          },
           ...config?.componentProps,
         };
       },

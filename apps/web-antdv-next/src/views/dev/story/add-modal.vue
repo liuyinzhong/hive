@@ -83,7 +83,7 @@ async function onSubmit(values: Record<string, any>) {
 }
 </script>
 <template>
-  <Modal class="w-[80%]">
+  <Modal class="w-[60%]">
     <Form />
   </Modal>
 </template>

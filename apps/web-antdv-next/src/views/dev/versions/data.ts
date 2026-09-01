@@ -150,7 +150,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
         api: () => getProjectsListApi(),
         labelField: 'projectTitle',
         valueField: 'projectId',
-        allowClear: true,
+        autoSelect: 'first',
+        allowClear: false,
       },
     },
     {

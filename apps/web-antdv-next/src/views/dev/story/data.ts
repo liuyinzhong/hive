@@ -4,7 +4,6 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
 import { upload_file } from '#/api/examples/upload';
-import { getProjectUsersApi } from '#/api/dev';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { storyRichTemplateText } from '#/template/richText';
@@ -12,6 +11,7 @@ import {
   projectSchema,
   versionSchema,
   moduleSchema,
+  userIdSchema,
 } from '#/views/dev/base/baseSchema';
 
 /** 新增表单配置 */
@@ -128,8 +128,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     projectSchema({
       rules: '',
       componentProps: {
-        autoSelect: false,
-        allowClear: true,
+        allowClear: false,
       },
     }),
     versionSchema({
@@ -167,6 +166,11 @@ export function useGridFormSchema(): VbenFormSchema[] {
         api: () => getLocalDictList('STORY_STATUS'),
       },
     },
+    userIdSchema({
+      fieldName: 'thisUserId',
+      rules: '',
+      label: $t('dev.story.currentOwner'),
+    }),
   ];
 }
 
@@ -363,28 +367,16 @@ export function useNextFormSchema(): VbenFormSchema[] {
         show: false,
       },
     },
-    {
-      component: 'ApiSelect',
-      fieldName: 'userId',
+    userIdSchema({
       label: $t('dev.story.nextOwner'),
       dependencies: {
         // 需求流转到 99(已完成) 时不再需要指定负责人
         rules(values: any) {
           return String(values.storyStatus) === '99' ? null : 'required';
         },
-        componentProps: (values: any) => ({
-          allowClear: true,
-          key: `nextUser_${values.projectId}`,
-          api: () => getProjectUsersApi(values.projectId),
-          labelField: 'realName',
-          valueField: 'userId',
-          showSearch: true,
-          filterOption: true,
-          optionFilterProp: 'label',
-        }),
         triggerFields: ['storyStatus', 'projectId'],
       },
-    },
+    }),
     {
       component: 'RichEditor',
       fieldName: 'changeRichText',

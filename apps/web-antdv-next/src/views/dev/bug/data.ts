@@ -165,8 +165,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     projectSchema({
       rules: '',
       componentProps: {
-        autoSelect: false,
-        allowClear: true,
+        allowClear: false,
       },
     }),
     versionSchema({
