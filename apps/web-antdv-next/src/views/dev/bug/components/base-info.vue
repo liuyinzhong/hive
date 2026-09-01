@@ -47,7 +47,16 @@ const props = defineProps({
     </DescriptionsItem>
 
     <DescriptionsItem label="修复人">
-      <UserAvatar :avatar="bugInfo.avatar" :name="bugInfo.realName" />
+      <UserAvatar
+        :avatar="bugInfo.fixUserInfo?.avatar"
+        :name="bugInfo.fixUserInfo?.realName"
+      />
+    </DescriptionsItem>
+    <DescriptionsItem label="验证人">
+      <UserAvatar
+        :avatar="bugInfo.verifierUserInfo?.avatar"
+        :name="bugInfo.verifierUserInfo?.realName"
+      />
     </DescriptionsItem>
   </Descriptions>
 </template>

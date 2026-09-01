@@ -91,6 +91,7 @@ export function useFormSchema(): VbenFormSchema[] {
     }),
     userIdSchema({
       label: '修复人',
+      fieldName: 'fixUserId',
     }),
     {
       component: 'Select',
@@ -260,13 +261,13 @@ export function useColumns(
       width: 120,
       showOverflow: true,
       title: '修复人',
-      field: 'userInfo',
+      field: 'fixUserInfo',
       editRender: {
         name: 'UserSelect',
         props: {
-          userIdField: 'userId',
-          nameField: 'realName',
-          avatarField: 'avatar',
+          userIdField: 'fixUserInfo.userId',
+          nameField: 'fixUserInfo.realName',
+          avatarField: 'fixUserInfo.avatar',
           multiple: false,
         },
         events: {
@@ -274,9 +275,22 @@ export function useColumns(
             onActionClick &&
               onActionClick({
                 code: 'updateField',
-                row: { ...row, value: val || [], key: 'userId' },
+                row: { ...row, value: val || [], key: 'fixUserId' },
               });
           },
+        },
+      },
+    },
+    {
+      width: 120,
+      showOverflow: true,
+      title: '验证人',
+      field: 'verifierUserInfo',
+      cellRender: {
+        name: 'UserAvatar',
+        props: {
+          avatarField: 'verifierUserInfo.avatar',
+          nameField: 'verifierUserInfo.realName',
         },
       },
     },

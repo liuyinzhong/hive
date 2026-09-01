@@ -4,6 +4,16 @@ import { objectOmit } from '@vueuse/core';
 
 import { requestClient } from '#/api/request';
 export namespace DevBugApi {
+  /** 缺陷关联用户信息（修复人/验证人） */
+  export interface BugUserItem {
+    /** 用户id */
+    userId?: string;
+    /** 用户头像 */
+    avatar?: string;
+    /** 真实姓名 */
+    realName?: string;
+  }
+
   export interface DevBugFace {
     [key: string]: any;
     /** bugID,UUID格式 */
@@ -26,12 +36,10 @@ export namespace DevBugApi {
     bugType?: string;
     /** 浏览器信息 navigator.userAgent */
     bugUa?: string;
-    /** 修复人id */
-    userId?: string;
-    /** 修复人姓名 */
-    realName?: string;
-    /** 修复人头像 */
-    avatar?: string;
+    /** 修复人信息 */
+    fixUserInfo?: BugUserItem;
+    /** 验证人信息 */
+    verifierUserInfo?: BugUserItem;
     /** 创建人姓名 */
     creatorName?: string;
     /** 创建人id */

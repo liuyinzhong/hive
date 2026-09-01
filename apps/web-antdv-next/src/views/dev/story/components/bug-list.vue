@@ -23,7 +23,7 @@ const props = defineProps({
         class="bug-list-item"
       >
         <div class="bug-list-item-avatar">
-          <Avatar :src="item.avatar" />
+          <Avatar :src="item.fixUserInfo?.avatar" />
         </div>
         <div class="bug-list-item-content">
           <div class="bug-list-item-title">
