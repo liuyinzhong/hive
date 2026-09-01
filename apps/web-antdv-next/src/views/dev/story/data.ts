@@ -51,6 +51,8 @@ export function useFormSchema(): VbenFormSchema[] {
                   userList.push({ userId: u.userId, storyStatus: s });
                 }
               }
+              // 按负责状态值升序，与字典排序规则保持一致
+              userList.sort((a, b) => Number(a.storyStatus) - Number(b.storyStatus));
               formApi.setFieldValue('userList', userList);
             });
           }

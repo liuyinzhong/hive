@@ -380,19 +380,14 @@ const options = enumToOptions(TaskStatusEnum);
 
 ## 验证
 
-在 `D:\vben\hive` 中执行。普通业务修改至少运行：
-
-```bash
-pnpm --filter @vben/web-antdv-next typecheck
-pnpm --filter @vben/web-antdv-next build
-```
-
 涉及公共包、工具链或影响范围较大时，再按需运行：
 
 ```bash
 pnpm lint
 pnpm check
 pnpm test:unit
+pnpm --filter @vben/web-antdv-next typecheck
+pnpm --filter @vben/web-antdv-next build
 ```
 
 只修改局部业务代码时，不要为了验证而自动修复或格式化整个仓库。若命令因存量问题失败，应说明失败位置及其与当前修改的关系。
