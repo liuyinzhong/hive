@@ -320,6 +320,12 @@ export function useColumns(
       },
     },
     {
+      title: '打回次数',
+      field: 'returnNum',
+      width: 90,
+      align: 'center',
+    },
+    {
       title: '级别',
       field: 'bugLevel',
       sortable: true,

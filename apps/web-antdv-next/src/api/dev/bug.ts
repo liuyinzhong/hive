@@ -22,6 +22,8 @@ export namespace DevBugApi {
     bugTitle?: string;
     /** bug编号 */
     bugNum?: number;
+    /** 打回次数,流转到待修复时累加 */
+    returnNum?: number;
     /** bug描述,富文本格式 */
     bugRichText?: string;
     /** bug状态 */
