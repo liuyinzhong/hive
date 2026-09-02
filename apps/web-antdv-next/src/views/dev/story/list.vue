@@ -181,9 +181,10 @@ const [BatchFormModal, BatchFormModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
-/** 打开批量添加弹窗 */
-function openAddBatchStoryModal() {
-  BatchFormModalApi.open();
+/** 打开批量添加弹窗,行内项目继承列表当前查询项目 */
+async function openAddBatchStoryModal() {
+  const formValues = await gridApi.formApi.getValues();
+  BatchFormModalApi.setData({ projectId: formValues?.projectId }).open();
 }
 
 // #endregion
@@ -314,7 +315,7 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
       </template>
     </Grid>
     <AddFormModal @success="gridApi.query" />
-    <BatchFormModal />
+    <BatchFormModal @success="gridApi.query" />
     <BatchNextModal @success="gridApi.query" />
     <NextModal @success="gridApi.query" />
     <DetailDrawer />

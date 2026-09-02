@@ -98,6 +98,15 @@ export const createStoryApi = async (
 };
 
 /**
+ * 批量创建需求
+ */
+export const createStorysApi = async (
+  data: Omit<DevStoryApi.DevStoryFace, 'storyId'>[],
+) => {
+  return requestClient.post('/dev/storys/batch', data);
+};
+
+/**
  * 更新需求
  */
 export const updateStoryApi = async (

@@ -1,57 +1,63 @@
 <script lang="ts" setup>
 import type { DevStoryApi } from '#/api/dev';
 
-import { ref } from 'vue';
-
 import { useVbenModal, VbenButton, VbenButtonGroup } from '@vben/common-ui';
 
 import * as VTable from '@visactor/vtable';
 import { message } from 'antdv-next';
 
-import {
-  getModulesListApi,
-  getProjectsListApi,
-  getVersionsListApi,
-} from '#/api/dev';
-import { getLocalDictList } from '#/dicts';
-import {
-  InputEditor,
-  RichTextEditor,
-  SelectEditor,
-  UploadFileEditor,
-} from '#/vtable';
+import { getModulesListApi, getVersionsListApi } from '#/api/dev';
+import { createStorysApi } from '#/api/dev/story';
+import { getLocalDictList, getLocalDictText } from '#/dicts';
+import { InputEditor, SelectEditor } from '#/vtable';
 
 defineOptions({
   name: 'StoryBatchFormModel',
 });
 
-const { CHANGE_CELL_VALUE, DROPDOWN_MENU_CLICK } = VTable.ListTable.EVENT_TYPE;
+const emit = defineEmits<{
+  success: [];
+}>();
+
+const { DROPDOWN_MENU_CLICK } = VTable.ListTable.EVENT_TYPE;
 
 let ListTableApi: VTable.ListTable;
 
-// 初始化为 10个空对象
-const records = ref<DevStoryApi.DevStoryFace[]>();
+/** 列表查询项目,所有行继承,不在表格中展示 */
+let inheritedProjectId = '';
+
+/** 新增行预填:项目继承列表查询,状态/类型/优先级默认 0 */
+const createDefaultRow = (): Partial<DevStoryApi.DevStoryFace> => ({
+  projectId: inheritedProjectId,
+  storyStatus: '0',
+  storyType: '0',
+  storyLevel: '0',
+  storyStatusTitle: getLocalDictText('STORY_STATUS', '0'),
+  storyTypeTitle: getLocalDictText('STORY_TYPE', '0'),
+  storyLevelTitle: getLocalDictText('STORY_LEVEL', '0'),
+});
 
 const addRow = (installIndex?: number) => {
-  ListTableApi.addRecord({} as DevStoryApi.DevStoryFace, installIndex);
-};
-
-const getRecords = () => {
-  // console.log(ListTableApi.records);
+  ListTableApi.addRecord(createDefaultRow(), installIndex);
 };
 
 const columns: VTable.ColumnsDefine = [
   {
-    field: 'projectTitle',
-    title: '关联项目',
+    field: 'version',
+    title: '迭代版本',
     width: 'auto',
     editor: new SelectEditor({
-      api: () => getProjectsListApi(),
-      labelField: 'projectTitle',
-      valueField: 'projectId',
-      resultField: '',
+      api: (e: any) =>
+        getVersionsListApi({
+          projectId: e.projectId || '',
+          page: 1,
+          pageSize: 100,
+        }),
+      labelField: 'version',
+      valueField: 'versionId',
+      resultField: 'items',
       change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
-        rowData.projectId = e.projectId || '';
+        rowData.versionId = e.versionId || '';
       },
     }),
   },
@@ -70,32 +76,11 @@ const columns: VTable.ColumnsDefine = [
     }),
   },
   {
-    field: 'version',
-    title: '迭代版本',
-    width: 'auto',
-    editor: new SelectEditor({
-      api: (e: any) =>
-        getVersionsListApi({
-          projectId: e.projectId || '',
-          page: 1,
-          pageSize: 100,
-        }),
-      labelField: 'version',
-      valueField: 'versionId',
-      resultField: 'items',
-      change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
-        rowData.versionId = e.versionId || '';
-        // rowData.version = e.label;
-      },
-    }),
-  },
-  {
     field: 'storyTitle',
     title: '需求标题',
     width: 300,
     editor: new InputEditor(),
   },
-
   {
     field: 'storyStatusTitle',
     title: '需求状态',
@@ -106,6 +91,7 @@ const columns: VTable.ColumnsDefine = [
       valueField: 'value',
       change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.storyStatus = e.value ?? '';
+        rowData.storyStatusTitle = e.label ?? '';
       },
     }),
   },
@@ -117,6 +103,7 @@ const columns: VTable.ColumnsDefine = [
       options: getLocalDictList('STORY_TYPE'),
       change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.storyType = e.value ?? '';
+        rowData.storyTypeTitle = e.label ?? '';
       },
     }),
   },
@@ -128,21 +115,8 @@ const columns: VTable.ColumnsDefine = [
       options: getLocalDictList('STORY_LEVEL'),
       change: (rowData: DevStoryApi.DevStoryFace, e: any) => {
         rowData.storyLevel = e.value ?? '';
+        rowData.storyLevelTitle = e.label ?? '';
       },
-    }),
-  },
-  {
-    field: 'storyRichText',
-    title: '需求描述',
-    width: 'auto',
-    editor: new RichTextEditor(),
-  },
-  {
-    field: 'files',
-    title: '需求附件',
-    width: 'auto',
-    editor: new UploadFileEditor({
-      maxCount: 10,
     }),
   },
 ];
@@ -151,12 +125,8 @@ const initTable = () => {
   ListTableApi = new VTable.ListTable(
     document.querySelector('#tableContainer') as HTMLDivElement,
     {
-      records: records.value,
+      records: [],
       columns,
-      /* formatCopyValue: (e: any) => {
-        debugger;
-        return e;
-      }, */
       menu: {
         contextMenuItems: ['复制', '粘贴', '清空单元格', '删除行', '新增行'],
       },
@@ -173,7 +143,7 @@ const initTable = () => {
         moveEditCellOnArrowKeys: true,
         /* 开启快捷键复制，与浏览器的快捷键一致。 */
         copySelected: true,
-        /* 开启快捷键粘贴，与浏览器的快捷键一致。粘贴生效仅针对配置了编辑 editor 的单元格 */
+        /* 开启快捷键粘贴，与浏览器的快捷键一致。粘贴生效仅针对配置了 editor 的单元格 */
         pasteValueToCell: true,
       },
       editor: '', // 配置一个空的编辑器，以遍能粘贴到单元格中
@@ -184,31 +154,10 @@ const initTable = () => {
     addRow();
   }
 
-  ListTableApi.on(CHANGE_CELL_VALUE, (params) => {
-    // console.log('编辑单元格数据', params);
-    if (params.col === 0 || params.col === 1) {
-      const data = ListTableApi.getRecordByCell(params.col, params.row);
-      ListTableApi.changeCellValue(params.col + 1, params.row, '');
-      const editor: any = ListTableApi.getEditor(params.col + 1, params.row);
-      editor?.changeCallback(data, {});
-    }
-  });
-  /* ListTableApi.on(DBLCLICK_CELL, (params) => {
-    console.log('双击单元格', params);
-  }); */
-
-  /* ListTableApi.on(COPY_DATA, (params) => {
-    console.log('已触发复制', params);
-  }); */
-  /* ListTableApi.on(PASTED_DATA, (params) => {
-    console.log('已触发粘贴', params);
-    // ListTableApi.renderWithRecreateCells();
-  }); */
   ListTableApi.on(DROPDOWN_MENU_CLICK, (params) => {
     switch (params.menuKey) {
       case '删除行': {
         ListTableApi.deleteRecords([params.row - 1]);
-        // message.error('未实现,请使用Ctrl+D删除');
         break;
       }
       case '复制': {
@@ -241,17 +190,74 @@ const initTable = () => {
   });
 };
 
+/**
+ * 校验并收集行数据:完全空行跳过,部分填写行校验必填(标题/版本/模块)
+ */
+function collectRows() {
+  const records = (ListTableApi.records ?? []) as DevStoryApi.DevStoryFace[];
+  const rows: Record<string, any>[] = [];
+  for (let i = 0; i < records.length; i++) {
+    const row = records[i]!;
+    const isEmpty = !row.storyTitle && !row.versionId && !row.moduleId;
+    if (isEmpty) continue;
+
+    const missing: string[] = [];
+    if (!row.versionId) missing.push('迭代版本');
+    if (!row.moduleId) missing.push('关联模块');
+    if (!row.storyTitle) missing.push('需求标题');
+    if (missing.length > 0) {
+      return { error: `第${i + 1}行缺少：${missing.join('、')}` };
+    }
+    rows.push({
+      storyTitle: row.storyTitle,
+      storyStatus: row.storyStatus || '0',
+      storyType: row.storyType || '0',
+      storyLevel: row.storyLevel || '0',
+      source: '0',
+      projectId: inheritedProjectId,
+      versionId: row.versionId,
+      moduleId: row.moduleId,
+    });
+  }
+  return { rows };
+}
+
 const [Modal, modalApi] = useVbenModal({
-  onConfirm: async () => {
-    modalApi.close();
+  onOpenChange(isOpen: boolean) {
+    if (isOpen) {
+      const data: any = modalApi.getData();
+      inheritedProjectId = data?.projectId || '';
+    }
   },
   onOpened() {
     initTable();
   },
+  async onConfirm() {
+    const { rows, error } = collectRows();
+    if (error) {
+      message.warning(error);
+      return;
+    }
+    if (!rows || rows.length === 0) {
+      message.warning('请至少填写一条需求');
+      return;
+    }
+    modalApi.lock();
+    try {
+      await createStorysApi(rows);
+      message.success('批量创建成功');
+      modalApi.close();
+      emit('success');
+    } catch {
+      // 错误由请求拦截器处理
+    } finally {
+      modalApi.unlock();
+    }
+  },
 });
 </script>
 <template>
-  <Modal class="w-[1100px]">
+  <Modal class="w-[900px]">
     <div class="h-[600px] w-full">
       <div
         id="tableContainer"
@@ -263,7 +269,6 @@ const [Modal, modalApi] = useVbenModal({
     <template #center-footer>
       <VbenButtonGroup v-bind="{ gap: 10 }" :border="true">
         <VbenButton @click="addRow()"> 添加行 </VbenButton>
-        <VbenButton @click="getRecords()"> 获取数据 </VbenButton>
       </VbenButtonGroup>
     </template>
   </Modal>
