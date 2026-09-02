@@ -28,14 +28,14 @@ let ListTableApi: VTable.ListTable;
 /** 列表查询项目,所有行继承,不在表格中展示 */
 let inheritedProjectId = '';
 
-/** 新增行预填:项目继承列表查询,类型/状态默认 0,工时默认 1,起止时间默认当天 */
+/** 新增行预填:项目继承列表查询,类型/状态默认 0,工时默认 1,开始为当天 00:00:00、结束为当天 23:59:59 */
 const createDefaultRow = (): Partial<DevTaskApi.DevTaskFace> => {
-  const today = `${dayjs().format('YYYY-MM-DD')} 00:00:00`;
+  const today = dayjs().format('YYYY-MM-DD');
   return {
     projectId: inheritedProjectId,
     planHours: 1,
-    startDate: today,
-    endDate: today,
+    startDate: `${today} 00:00:00`,
+    endDate: `${today} 23:59:59`,
     taskType: '0',
     taskStatus: '0',
     taskTypeTitle: getLocalDictText('TASK_TYPE', '0'),
@@ -91,20 +91,29 @@ const columns: VTable.ColumnsDefine = [
   {
     field: 'planHours',
     title: '计划工时',
-    width: 90,
+    width: 100,
     editor: new NumberEditor({ min: 0.1, precision: 2 }),
   },
   {
     field: 'startDate',
     title: '开始时间',
-    width: 170,
-    editor: new DateEditor(),
+    width: 130,
+    // 显示为日期,写值为当天 00:00:00
+    editor: new DateEditor({
+      format: 'YYYY-MM-DD HH:mm:ss',
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    }),
   },
   {
     field: 'endDate',
     title: '结束时间',
-    width: 170,
-    editor: new DateEditor(),
+    width: 130,
+    // 显示为日期,写值为当天 23:59:59
+    editor: new DateEditor({
+      format: 'YYYY-MM-DD HH:mm:ss',
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      time: '23:59:59',
+    }),
   },
   {
     field: 'taskTypeTitle',

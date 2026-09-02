@@ -66,6 +66,7 @@ export function useFormSchema(): VbenFormSchema[] {
         min: 0.1,
         precision: 2,
         addonAfter: '小时',
+        changeOnWheel: true,
       },
     },
 

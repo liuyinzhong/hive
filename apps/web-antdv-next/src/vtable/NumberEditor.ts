@@ -77,7 +77,9 @@ export class NumberEditor implements IEditor {
     }
 
     // 检查目标元素是否在编辑器包装元素内
-    return this.wrapperElement === target || this.wrapperElement.contains(target);
+    return (
+      this.wrapperElement === target || this.wrapperElement.contains(target)
+    );
   }
 
   /**
@@ -91,7 +93,11 @@ export class NumberEditor implements IEditor {
     }
 
     // 移除 DOM 元素
-    if (this.wrapperElement && this.container && this.container.contains(this.wrapperElement)) {
+    if (
+      this.wrapperElement &&
+      this.container &&
+      this.container.contains(this.wrapperElement)
+    ) {
       this.wrapperElement.remove();
     }
 
@@ -108,7 +114,10 @@ export class NumberEditor implements IEditor {
   onStart({ container, value, referencePosition, endEdit }: EditContext) {
     this.container = container;
     this.successCallback = endEdit;
-    this.numberValue = value === '' || value === null || value === undefined ? '' : Number(value);
+    this.numberValue =
+      value === '' || value === null || value === undefined
+        ? ''
+        : Number(value);
 
     // 创建包装元素
     this.wrapperElement = document.createElement('div');
@@ -146,7 +155,10 @@ export class NumberEditor implements IEditor {
                 number.value = val ?? '';
               },
               autofocus: true,
-              variant: 'borderless',
+              changeOnWheel: true,
+              suffix: '小时',
+              bordered: false,
+              controls: false,
               min: min ?? 0,
               max,
               precision,

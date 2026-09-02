@@ -79,7 +79,9 @@ export class DateEditor implements IEditor {
     }
 
     // 检查目标元素是否在编辑器包装元素内
-    return this.wrapperElement === target || this.wrapperElement.contains(target);
+    return (
+      this.wrapperElement === target || this.wrapperElement.contains(target)
+    );
   }
 
   /**
@@ -93,7 +95,11 @@ export class DateEditor implements IEditor {
     }
 
     // 移除 DOM 元素
-    if (this.wrapperElement && this.container && this.container.contains(this.wrapperElement)) {
+    if (
+      this.wrapperElement &&
+      this.container &&
+      this.container.contains(this.wrapperElement)
+    ) {
       this.wrapperElement.remove();
     }
 
@@ -126,6 +132,12 @@ export class DateEditor implements IEditor {
     // 保存 this 引用
     // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias
     const that = this;
+    // 编辑器配置:显示格式/值格式/无时间面板时的默认时刻
+    const displayFormat = this.editorConfig?.format || 'YYYY-MM-DD HH:mm:ss';
+    const valueFormat = this.editorConfig?.valueFormat || displayFormat;
+    const defaultTime: string | undefined = this.editorConfig?.time;
+    // 显示格式含时间时才展示时间面板
+    const showTime = displayFormat.includes('HH');
 
     // 创建 Vue 应用并挂载 DatePicker 组件
     // 注意:必须使用 h() 渲染函数,项目 vue 为运行时构建,不支持 template 字符串编译
@@ -138,7 +150,12 @@ export class DateEditor implements IEditor {
         const getPopupContainer = () => that.container as HTMLElement;
 
         const handleDateChange = (_dateValue: any, dateString: string) => {
-          that.selectedDate = dateString || ''; // 更新选择的日期
+          let result = dateString || '';
+          // 无时间面板时按配置补默认时刻,如结束日期取当天 23:59:59
+          if (result && !showTime && defaultTime) {
+            result = `${result.slice(0, 10)} ${defaultTime}`;
+          }
+          that.selectedDate = result; // 更新选择的日期
         };
 
         const handleOpenChange = (open: boolean) => {
@@ -164,11 +181,12 @@ export class DateEditor implements IEditor {
               },
               locale,
               open: isOpen.value,
-              showTime: { format: 'HH:mm' },
+              showTime: showTime ? { format: 'HH:mm:ss' } : false,
               autofocus: true,
-              format: 'YYYY-MM-DD HH:mm:ss',
-              valueFormat: 'YYYY-MM-DD HH:mm:ss',
+              format: displayFormat,
+              valueFormat,
               variant: 'borderless',
+              style: { width: '100%' },
               getPopupContainer,
               onChange: handleDateChange,
               onOpenChange: handleOpenChange,
