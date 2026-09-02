@@ -43,7 +43,7 @@ import type { Sortable } from '@vben/hooks';
 import type { TipTapProps } from '@vben/plugins/tiptap';
 import type { Recordable } from '@vben/types';
 
-import { upload_file } from '#/api/examples/upload';
+import { upload_file } from '#/api/system';
 
 import {
   computed,
@@ -196,6 +196,13 @@ const IMAGE_EXTENSIONS = new Set([
   'svg',
   'webp',
 ]);
+
+/** 过滤外部传入 fileList 中已移除的文件,与 handleChange 过滤语义保持一致;非数组归一为空数组。 */
+function normalizeIncomingFileList(list: unknown): UploadFile[] {
+  return Array.isArray(list)
+    ? list.filter((file) => (file as UploadFile)?.status !== 'removed')
+    : [];
+}
 
 /**
  * 检查是否为图片文件
@@ -445,13 +452,22 @@ function withPreviewUpload() {
       const previewVisible = ref<boolean>(false);
       const placeholder = attrs?.placeholder || $t('ui.placeholder.upload');
       const listType = attrs?.listType || attrs?.['list-type'] || 'text';
+      // 初始值需同时考虑表单 modelValue:组件挂载晚于 setValues 时 watch 等不到变化,直接用它初始化
       const fileList = ref<UploadProps['fileList']>(
-        attrs?.fileList || attrs?.['file-list'] || [],
+        attrs?.fileList ||
+          attrs?.['file-list'] ||
+          (Array.isArray(attrs?.modelValue) ? attrs.modelValue : []),
       );
 
       const maxSize = computed(() => attrs?.maxSize ?? attrs?.['max-size']);
       const aspectRatio = computed(
         () => attrs?.aspectRatio ?? attrs?.['aspect-ratio'],
+      );
+      // 未配置上传地址时默认走项目统一上传接口 /system/upload
+      const hasUploadTarget = computed(() =>
+        Boolean(
+          attrs?.action || attrs?.customRequest || attrs?.['custom-request'],
+        ),
       );
 
       async function handleBeforeUpload(
@@ -585,11 +601,19 @@ function withPreviewUpload() {
         sortableInstance.value = await initializeSortable();
       }
 
-      // 监听表单值变化
+      // 监听表单值变化:表单对 Upload 按 fileList 绑定(modelPropNameMap),直接使用时也可能传 file-list/modelValue,三种来源都要覆盖。
+      // 传入列表与当前列表 uid 序列一致时跳过,避免 antd 变更后回灌的 fileList 覆盖本地过滤结果(如 maxSize 校验置为 removed 的文件)。
       watch(
-        () => attrs.modelValue,
-        (res) => {
-          fileList.value = res;
+        () => attrs.fileList ?? attrs?.['file-list'] ?? attrs.modelValue,
+        (next) => {
+          const incoming = normalizeIncomingFileList(next);
+          const current = normalizeIncomingFileList(fileList.value);
+          const unchanged =
+            incoming.length === current.length &&
+            incoming.every((file, index) => file.uid === current[index]?.uid);
+          if (!unchanged) {
+            fileList.value = incoming;
+          }
         },
       );
 
@@ -608,6 +632,7 @@ function withPreviewUpload() {
             {
               ...props,
               ...attrs,
+              ...(hasUploadTarget.value ? {} : { customRequest: upload_file }),
               fileList: fileList.value,
               beforeUpload: handleBeforeUpload,
               onChange: handleChange,

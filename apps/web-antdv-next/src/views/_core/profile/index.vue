@@ -6,6 +6,7 @@ import { useUserStore } from "@vben/stores";
 
 import ProfileBase from "./base-setting.vue";
 import ProfilePasswordSetting from "./password-setting.vue";
+import ProfileSignatureSetting from "./signature-setting.vue";
 
 const userStore = useUserStore();
 
@@ -15,6 +16,10 @@ const tabs = ref([
   {
     label: "基本设置",
     value: "basic",
+  },
+  {
+    label: "我的签名",
+    value: "signature",
   },
   {
     label: "修改密码",
@@ -31,6 +36,7 @@ const tabs = ref([
   >
     <template #content>
       <ProfileBase v-if="tabsValue === 'basic'" />
+      <ProfileSignatureSetting v-if="tabsValue === 'signature'" />
       <ProfilePasswordSetting v-if="tabsValue === 'password'" />
     </template>
   </Profile>

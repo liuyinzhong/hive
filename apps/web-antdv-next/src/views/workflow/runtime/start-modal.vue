@@ -19,6 +19,13 @@ import {
   loadVbenFormSchema,
 } from '#/utils/form-schema';
 
+import {
+  applyFieldPermissions,
+  parseStartFieldPermissions,
+  pickVariablesByPermission,
+  type WorkflowFieldPermissions,
+} from './field-permission';
+
 interface StartableDefinition {
   definition: WorkflowDefinitionApi.WorkflowDefinition;
 }
@@ -28,6 +35,9 @@ const emit = defineEmits<{ success: [] }>();
 const definitions = ref<WorkflowDefinitionApi.WorkflowDefinition[]>([]);
 const loading = ref(false);
 const selectedDefinitionId = ref<string>();
+// 当前申请的发起节点字段权限与字段全集,提交时用于剔除隐藏字段
+const startFieldPermissions = ref<WorkflowFieldPermissions>({});
+const startFieldNames = ref<string[]>([]);
 
 const [ApplicationForm, applicationFormApi] = useVbenForm({
   schema: [],
@@ -56,7 +66,15 @@ const [Modal, modalApi] = useVbenModal({
     }
     const { valid } = await applicationFormApi.validate();
     if (!valid) return;
-    const variables = await applicationFormApi.getValues();
+    const rawValues = await applicationFormApi.getValues();
+    // 按发起节点字段权限剔除隐藏字段,避免其默认值被意外提交
+    const variables = pickVariablesByPermission(
+      rawValues,
+      startFieldNames.value,
+      startFieldPermissions.value,
+      ['editable', 'readonly'],
+      'editable',
+    );
     modalApi.lock();
     try {
       await startWorkflowInstanceApi({
@@ -73,6 +91,8 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(open) {
     if (!open) return;
     selectedDefinitionId.value = undefined;
+    startFieldPermissions.value = {};
+    startFieldNames.value = [];
     applicationFormApi.setState({ schema: [] });
     await loadDefinitions();
   },
@@ -89,7 +109,7 @@ async function loadDefinitions() {
   }
 }
 
-/** 选择申请类型并加载其绑定的 Vben 表单 Schema。 */
+/** 选择申请类型并按发起节点字段权限加载其绑定的 Vben 表单 Schema。 */
 async function selectDefinition(item: StartableDefinition) {
   const formSchemaId = item.definition.formSchemaId;
   if (!formSchemaId) return;
@@ -98,8 +118,17 @@ async function selectDefinition(item: StartableDefinition) {
   await nextTick();
   try {
     const loaded = await loadVbenFormSchema(formSchemaId);
+    // 发起节点字段权限:隐藏字段不渲染;存量流程未配置时按全部可编辑处理
+    startFieldPermissions.value = parseStartFieldPermissions(
+      item.definition.flowData,
+    );
+    startFieldNames.value = loaded.schema.map((field) => field.fieldName);
     applicationFormApi.setState({
-      schema: loaded.schema,
+      schema: applyFieldPermissions(
+        loaded.schema,
+        startFieldPermissions.value,
+        'editable',
+      ),
       wrapperClass: loaded.wrapperClass,
     });
     await nextTick();
@@ -115,6 +144,8 @@ async function selectDefinition(item: StartableDefinition) {
 /** 返回申请类型选择页并清空尚未提交的数据。 */
 function backToApplications() {
   selectedDefinitionId.value = undefined;
+  startFieldPermissions.value = {};
+  startFieldNames.value = [];
   applicationFormApi.setState({ schema: [] });
 }
 </script>

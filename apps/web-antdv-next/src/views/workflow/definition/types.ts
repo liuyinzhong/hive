@@ -1,7 +1,12 @@
-export type WorkflowAssigneeType = 'leader' | 'role' | 'user';
+export type WorkflowAssigneeType =
+  | 'leader'
+  | 'role'
+  | 'starter'
+  | 'user';
 export type WorkflowApprovalMode = 'all' | 'any';
 export type WorkflowBranchMode = 'firstMatch';
 export type WorkflowConditionLogic = 'and' | 'or';
+export type WorkflowCopyType = 'participant' | 'role' | 'user';
 export type WorkflowNodeType =
   | 'approve'
   | 'condition'
@@ -26,7 +31,7 @@ export interface WorkflowElementProperties {
   conditionRules?: WorkflowConditionRule[];
   copyIds?: string[];
   copyNames?: string[];
-  copyType?: Exclude<WorkflowAssigneeType, 'leader'>;
+  copyType?: WorkflowCopyType;
   fieldPermissions?: Record<
     string,
     import('#/api/workflow').WorkflowDefinitionApi.WorkflowFormFieldPermission

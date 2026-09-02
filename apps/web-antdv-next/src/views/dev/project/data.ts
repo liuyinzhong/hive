@@ -3,7 +3,6 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { DevModuleApi } from '#/api/dev';
 
-import { upload_file } from '#/api/examples/upload';
 /** 新增项目表单配置 */
 export function useFormProjectSchema(): VbenFormSchema[] {
   return [
@@ -42,8 +41,6 @@ export function useFormProjectSchema(): VbenFormSchema[] {
       componentProps: {
         // 更多属性见：https://ant.design/components/upload-cn
         accept: '.png,.jpg,.jpeg',
-        // 自动携带认证信息
-        customRequest: upload_file,
         disabled: false,
         maxCount: 1,
         multiple: false,

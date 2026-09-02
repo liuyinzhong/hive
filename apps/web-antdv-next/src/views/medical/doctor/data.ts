@@ -8,7 +8,6 @@ import { h } from 'vue';
 import { Tag } from 'antdv-next';
 
 import { z } from '#/adapter/form';
-import { upload_file } from '#/api/examples/upload';
 import {
   getAllMedicalDepartmentsApi,
   updateDoctorStatusApi,
@@ -40,7 +39,6 @@ export function useDoctorFormSchema(): VbenFormSchema[] {
         accept: '.png,.jpg,.jpeg',
         aspectRatio: '1:1',
         crop: true,
-        customRequest: upload_file,
         listType: 'picture-card',
         maxCount: 1,
         maxSize: 2,

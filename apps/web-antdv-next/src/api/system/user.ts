@@ -11,6 +11,7 @@ export namespace SystemUserApi {
     username: string;
     realName: string;
     email?: null | string;
+    signature?: null | string;
     leaderUserId?: null | string;
     leaderUserName?: null | string;
     desc: string;

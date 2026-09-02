@@ -3,7 +3,6 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
-import { upload_file } from '#/api/examples/upload';
 import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 import { storyRichTemplateText } from '#/template/richText';
@@ -109,8 +108,6 @@ export function useFormSchema(): VbenFormSchema[] {
       formItemClass: 'col-span-3',
       componentProps: {
         // 更多属性见：https://ant.design/components/upload-cn
-        // 自动携带认证信息
-        customRequest: upload_file,
         disabled: false,
         maxCount: 10,
         multiple: true,

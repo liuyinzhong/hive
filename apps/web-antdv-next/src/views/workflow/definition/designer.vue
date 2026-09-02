@@ -467,6 +467,14 @@ function onBack() {
   router.push('/workflow/definition/list');
 }
 
+/** 跳转到当前关联表单的设计器，便于切换修改表单。 */
+function onEditFormSchema() {
+  if (!selectedFormSchemaId.value) {
+    return;
+  }
+  router.push(`/form/schema/designer/${selectedFormSchemaId.value}`);
+}
+
 /** 根据 LogicFlow 变换矩阵同步缩放百分比。 */
 function syncZoomPercent() {
   const transform = lfRef.value?.getTransform();
@@ -531,6 +539,14 @@ function onFitView() {
               option-filter-prop="label"
               show-search
             />
+            <Button
+              :disabled="!selectedFormSchemaId"
+              :title="$t('flow.designer.editFormSchema')"
+              @click="onEditFormSchema"
+            >
+              <IconifyIcon class="size-4" icon="lucide:square-pen" />
+              {{ $t('flow.designer.editFormSchema') }}
+            </Button>
           </div>
           <Button @click="lfRef?.undo()">
             <IconifyIcon class="size-4" icon="lucide:undo-2" />

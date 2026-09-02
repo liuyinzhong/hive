@@ -19,7 +19,7 @@ import { useVbenDrawer } from '@vben/common-ui';
 
 import { message, Upload, UploadDragger } from 'antdv-next';
 
-import { upload_file } from '#/api/examples/upload';
+import { upload_file } from '#/api/system';
 import { filesToUrlString, urlStringToFiles } from '#/utils';
 /**
  * 选择编辑器配置接口

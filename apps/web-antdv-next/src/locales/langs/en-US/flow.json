@@ -6,6 +6,7 @@
     "flowTab": "Flow Design",
     "formSchema": "Form Schema",
     "selectFormSchema": "Select an enabled form schema",
+    "editFormSchema": "Edit Form",
     "property": "Properties",
     "selectElement": "Select a node or edge",
     "id": "ID",
@@ -48,6 +49,10 @@
       "selectCopyUser": "Select CC users",
       "selectCopyRole": "Select CC roles",
       "leaderHint": "The initiator's direct superior will be resolved at runtime.",
+      "initiator": "Initiator",
+      "initiatorHint": "The initiator of this instance will approve this node at runtime.",
+      "participant": "Approval Participants",
+      "participantHint": "Resolved at runtime to the initiator plus everyone who has approved any node of this instance.",
       "nodeBusinessKey": "Status Sync Event",
       "nodeBusinessKeyPlaceholder": "Select the state change triggered on approval; empty means no sync",
       "nodeBusinessKeyHint": "After the node is approved, the linked business object's state is updated by the selected event (e.g., Review Passed → reviewed). Must match the business type declared by the definition."
@@ -85,6 +90,7 @@
     "fieldPermission": {
       "title": "Field Permissions",
       "hint": "Control which request fields approvers can view or edit at this node. Unconfigured fields are read-only.",
+      "startHint": "Control which request fields the initiator can view or fill when starting. Unconfigured fields are editable; hiding a required field will be rejected by backend validation.",
       "empty": "Add fields in Form Design first",
       "hidden": "Hidden",
       "readonly": "Read-only",

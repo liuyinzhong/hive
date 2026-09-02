@@ -1,6 +1,5 @@
 import type { VbenFormSchema } from '#/adapter/form';
 
-import { upload_file } from '#/api/examples/upload';
 import { $t } from '#/locales';
 
 export interface InstitutionUploadFile {
@@ -115,7 +114,6 @@ export function useInstitutionFormSchema(): VbenFormSchema<InstitutionFormValues
       component: 'Upload',
       componentProps: {
         accept: '.png,.jpg,.jpeg,.svg',
-        customRequest: upload_file,
         listType: 'picture-card',
         maxCount: 1,
         maxSize: 5,
@@ -453,7 +451,6 @@ export function useInstitutionFormSchema(): VbenFormSchema<InstitutionFormValues
           component: 'Upload',
           componentProps: {
             accept: '.pdf,.png,.jpg,.jpeg,.doc,.docx',
-            customRequest: upload_file,
             maxCount: 1,
             maxSize: 20,
             listType: 'picture',

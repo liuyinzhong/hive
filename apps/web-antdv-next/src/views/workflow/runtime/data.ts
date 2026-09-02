@@ -70,7 +70,6 @@ export function useTaskGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Select',
-      defaultValue: ['0'],
       fieldName: 'status',
       label: $t('flow.runtime.common.status'),
       componentProps: {

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import type { WorkflowDefinitionApi, WorkflowRuntimeApi } from '#/api/workflow';
-import type { VbenFormSchema } from '#/adapter/form';
+import type { WorkflowRuntimeApi } from '#/api/workflow';
 
 import { nextTick, ref } from 'vue';
 
@@ -20,6 +19,12 @@ import {
   getFormSchemaWrapperClass,
 } from '#/utils/form-schema';
 
+import {
+  applyFieldPermissions,
+  pickVariablesByPermission,
+  type WorkflowFieldPermissions,
+} from './field-permission';
+
 interface ModalData {
   action: 'approve' | 'reject';
   task: WorkflowRuntimeApi.WorkflowTask;
@@ -27,9 +32,7 @@ interface ModalData {
 
 const emit = defineEmits<{ success: [] }>();
 const comment = ref('');
-const fieldPermissions = ref<
-  Record<string, WorkflowDefinitionApi.WorkflowFormFieldPermission>
->({});
+const fieldPermissions = ref<WorkflowFieldPermissions>({});
 const hasApplicationFields = ref(false);
 const loading = ref(false);
 const modalData = ref<ModalData>();
@@ -55,7 +58,13 @@ const [Modal, modalApi] = useVbenModal({
           const { valid } = await applicationFormApi.validate();
           if (!valid) return;
           const values = await applicationFormApi.getValues();
-          const variables = pickEditableVariables(values, fieldPermissions.value);
+          const variables = pickVariablesByPermission(
+            values,
+            Object.keys(fieldPermissions.value),
+            fieldPermissions.value,
+            ['editable'],
+            'readonly',
+          );
           if (Object.keys(variables).length > 0) request.variables = variables;
         }
         await approveWorkflowTaskApi(data.task.taskId, request);
@@ -100,11 +109,12 @@ async function loadApplication() {
     if (!node) throw new Error('Workflow node instance not found');
     fieldPermissions.value = node.fieldPermissions;
     const schema = compileVbenFormSchema(detail.instance.formSchema ?? []);
-    const runtimeSchema = applyFieldPermissions(
-      schema,
-      node.fieldPermissions,
-      data.action,
-    );
+    // 拒绝时非隐藏字段退化为只读,防止拒绝操作误改表单值
+    const permissions =
+      data.action === 'reject'
+        ? degradeRejectPermissions(node.fieldPermissions)
+        : node.fieldPermissions;
+    const runtimeSchema = applyFieldPermissions(schema, permissions, 'readonly');
     hasApplicationFields.value = runtimeSchema.length > 0;
     // 空表单(未绑定表单 Schema 或字段权限全隐藏)跳过 setState/setValues,避免空 schema 触发表单组件异常导致 await 挂起
     if (runtimeSchema.length === 0) return;
@@ -122,80 +132,16 @@ async function loadApplication() {
   }
 }
 
-/** 按字段权限提取可编辑值，并保留 Vben 点路径生成的嵌套结构。 */
-function pickEditableVariables(
-  values: Record<string, unknown>,
-  permissions: Record<
-    string,
-    WorkflowDefinitionApi.WorkflowFormFieldPermission
-  >,
-) {
-  const result: Record<string, unknown> = {};
-  for (const [fieldName, permission] of Object.entries(permissions)) {
-    if (permission !== 'editable') continue;
-    const fieldValue = valueAtPath(values, fieldName);
-    if (!fieldValue.found) continue;
-    setValueAtPath(result, fieldName, fieldValue.value);
-  }
-  return result;
-}
-
-function valueAtPath(values: Record<string, unknown>, fieldName: string) {
-  let current: unknown = values;
-  for (const part of fieldName.split('.')) {
-    if (!isRecord(current) || !(part in current)) {
-      return { found: false, value: undefined };
-    }
-    current = current[part];
-  }
-  return { found: true, value: current };
-}
-
-function setValueAtPath(
-  values: Record<string, unknown>,
-  fieldName: string,
-  value: unknown,
-) {
-  const parts = fieldName.split('.');
-  let current = values;
-  for (const part of parts.slice(0, -1)) {
-    const next = current[part];
-    if (isRecord(next)) {
-      current = next;
-    } else {
-      const nested: Record<string, unknown> = {};
-      current[part] = nested;
-      current = nested;
-    }
-  }
-  const lastPart = parts.at(-1);
-  if (lastPart) current[lastPart] = value;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-/** 将审批节点字段权限应用到编译后的 Vben Schema。 */
-function applyFieldPermissions(
-  schema: VbenFormSchema[],
-  permissions: Record<
-    string,
-    WorkflowDefinitionApi.WorkflowFormFieldPermission
-  >,
-  action: ModalData['action'],
-) {
-  return schema.map((field) => {
-    const configured = permissions[field.fieldName] ?? 'readonly';
-    const permission =
-      action === 'reject' && configured !== 'hidden' ? 'readonly' : configured;
-    return {
-      ...field,
-      disabled: permission !== 'editable' || field.disabled,
-      hide: permission === 'hidden' || field.hide,
-      rules: permission === 'editable' ? field.rules : undefined,
-    } as VbenFormSchema;
-  });
+/** 拒绝时将非隐藏字段权限退化为只读,保留隐藏字段不渲染。 */
+function degradeRejectPermissions(
+  permissions: WorkflowFieldPermissions,
+): WorkflowFieldPermissions {
+  return Object.fromEntries(
+    Object.entries(permissions).map(([fieldName, permission]) => [
+      fieldName,
+      permission === 'hidden' ? 'hidden' : 'readonly',
+    ]),
+  );
 }
 </script>
 

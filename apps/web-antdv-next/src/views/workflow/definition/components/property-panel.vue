@@ -28,6 +28,7 @@ import type {
   WorkflowBranchMode,
   WorkflowConditionLogic,
   WorkflowConditionRule,
+  WorkflowCopyType,
   WorkflowElement,
   WorkflowPropertyValues,
 } from '../types';
@@ -48,7 +49,7 @@ interface PropertyFormState {
   conditionRules: WorkflowConditionRule[];
   copyIds: string[];
   copyNames: string[];
-  copyType: Exclude<WorkflowAssigneeType, 'leader'>;
+  copyType: WorkflowCopyType;
   fieldPermissions: Record<
     string,
     WorkflowDefinitionApi.WorkflowFormFieldPermission
@@ -120,6 +121,7 @@ const assigneeTypeOptions = [
   { label: $t('flow.designer.actor.specifiedUser'), value: 'user' },
   { label: $t('flow.designer.actor.initiatorLeader'), value: 'leader' },
   { label: $t('flow.designer.actor.specifiedRole'), value: 'role' },
+  { label: $t('flow.designer.actor.initiator'), value: 'starter' },
 ];
 const approvalModeOptions = [
   { label: $t('flow.designer.actor.approvalAny'), value: 'any' },
@@ -128,6 +130,7 @@ const approvalModeOptions = [
 const copyTypeOptions = [
   { label: $t('flow.designer.actor.specifiedUser'), value: 'user' },
   { label: $t('flow.designer.actor.specifiedRole'), value: 'role' },
+  { label: $t('flow.designer.actor.participant'), value: 'participant' },
 ];
 const conditionLogicOptions = [
   { label: $t('flow.designer.condition.all'), value: 'and' },
@@ -257,9 +260,11 @@ function readStringArray(value: unknown): string[] {
   return value.filter((item): item is string => typeof item === 'string');
 }
 
-/** 读取审批节点字段权限，新字段默认只读。 */
+/** 读取节点字段权限,未配置字段按节点类型取默认值:发起节点默认可编辑,其余节点默认只读。 */
 function normalizeFieldPermissions(value: unknown) {
   const source = isRecord(value) ? value : {};
+  const fallback: WorkflowDefinitionApi.WorkflowFormFieldPermission =
+    nodeType.value === 'start' ? 'editable' : 'readonly';
   return Object.fromEntries(
     (props.formFields ?? []).map((field) => {
       const permission = source[field.fieldName];
@@ -267,7 +272,7 @@ function normalizeFieldPermissions(value: unknown) {
         field.fieldName,
         permission === 'editable' || permission === 'hidden'
           ? permission
-          : 'readonly',
+          : fallback,
       ];
     }),
   ) as Record<string, WorkflowDefinitionApi.WorkflowFormFieldPermission>;
@@ -501,38 +506,45 @@ function submit() {
   };
 
   if (nodeType.value === 'approve') {
-    if (
+    const dynamicAssignee =
       formState.assigneeType !== 'leader' &&
-      formState.assigneeIds.length === 0
-    ) {
+      formState.assigneeType !== 'starter';
+    if (dynamicAssignee && formState.assigneeIds.length === 0) {
       message.warning($t('flow.designer.message.selectAssignee'));
       return;
     }
     values.assigneeType = formState.assigneeType;
-    values.approvalMode = formState.approvalMode;
+    // 发起人节点恒为单人,审批方式固定或签
+    values.approvalMode =
+      formState.assigneeType === 'starter' ? 'any' : formState.approvalMode;
     values.nodeBusinessKey = formState.nodeBusinessKey;
-    const assigneeIds =
-      formState.assigneeType === 'leader' ? [] : [...formState.assigneeIds];
+    const assigneeIds = dynamicAssignee ? [...formState.assigneeIds] : [];
     values.assigneeIds = assigneeIds;
     values.assigneeNames = resolveSelectionNames(
       assigneeIds,
       activeAssigneeOptions.value,
       assigneeNameSnapshot.value,
     );
+  }
+
+  // 发起和审批节点均支持字段权限配置
+  if (nodeType.value === 'approve' || nodeType.value === 'start') {
     values.fieldPermissions = normalizeFieldPermissions(
       formState.fieldPermissions,
     );
   }
 
   if (nodeType.value === 'copy') {
-    if (formState.copyIds.length === 0) {
+    if (formState.copyType !== 'participant' && formState.copyIds.length === 0) {
       message.warning($t('flow.designer.message.selectCopy'));
       return;
     }
     values.copyType = formState.copyType;
-    values.copyIds = [...formState.copyIds];
+    const copyIds =
+      formState.copyType === 'participant' ? [] : [...formState.copyIds];
+    values.copyIds = copyIds;
     values.copyNames = resolveSelectionNames(
-      formState.copyIds,
+      copyIds,
       activeCopyOptions.value,
       copyNameSnapshot.value,
     );
@@ -583,34 +595,6 @@ defineExpose({ submit });
 
       <template v-if="nodeType === 'approve'">
         <label class="field">
-          <span>{{ $t('flow.designer.actor.approvalMode') }}</span>
-          <Select
-            v-model:value="formState.approvalMode"
-            :options="approvalModeOptions"
-          />
-        </label>
-
-        <div class="field-hint">
-          {{ $t('flow.designer.actor.approvalModeHint') }}
-        </div>
-
-        <label class="field">
-          <span>{{ $t('flow.designer.actor.nodeBusinessKey') }}</span>
-          <Select
-            v-model:value="formState.nodeBusinessKey"
-            allow-clear
-            :options="nodeKeyOptions"
-            :placeholder="$t('flow.designer.actor.nodeBusinessKeyPlaceholder')"
-            option-filter-prop="label"
-            show-search
-          />
-        </label>
-
-        <div class="field-hint">
-          {{ $t('flow.designer.actor.nodeBusinessKeyHint') }}
-        </div>
-
-        <label class="field">
           <span>{{ $t('flow.designer.actor.assigneeType') }}</span>
           <Select
             v-model:value="formState.assigneeType"
@@ -619,7 +603,10 @@ defineExpose({ submit });
           />
         </label>
 
-        <label v-if="formState.assigneeType !== 'leader'" class="field">
+        <label
+          v-if="formState.assigneeType !== 'leader' && formState.assigneeType !== 'starter'"
+          class="field"
+        >
           <span>
             {{
               formState.assigneeType === 'role'
@@ -643,16 +630,58 @@ defineExpose({ submit });
           />
         </label>
 
-        <div v-else class="field-hint">
+        <div v-if="formState.assigneeType === 'leader'" class="field-hint">
           {{ $t('flow.designer.actor.leaderHint') }}
         </div>
+        <div
+          v-else-if="formState.assigneeType === 'starter'"
+          class="field-hint"
+        >
+          {{ $t('flow.designer.actor.initiatorHint') }}
+        </div>
 
+        <template v-if="formState.assigneeType !== 'starter'">
+          <label class="field">
+            <span>{{ $t('flow.designer.actor.approvalMode') }}</span>
+            <Select
+              v-model:value="formState.approvalMode"
+              :options="approvalModeOptions"
+            />
+          </label>
+
+          <div class="field-hint">
+            {{ $t('flow.designer.actor.approvalModeHint') }}
+          </div>
+        </template>
+
+        <label class="field">
+          <span>{{ $t('flow.designer.actor.nodeBusinessKey') }}</span>
+          <Select
+            v-model:value="formState.nodeBusinessKey"
+            allow-clear
+            :options="nodeKeyOptions"
+            :placeholder="$t('flow.designer.actor.nodeBusinessKeyPlaceholder')"
+            option-filter-prop="label"
+            show-search
+          />
+        </label>
+
+        <div class="field-hint">
+          {{ $t('flow.designer.actor.nodeBusinessKeyHint') }}
+        </div>
+      </template>
+
+      <template v-if="nodeType === 'approve' || nodeType === 'start'">
         <div class="field-permission-section">
           <div class="field-permission-heading">
             {{ $t('flow.designer.fieldPermission.title') }}
           </div>
           <div class="field-hint">
-            {{ $t('flow.designer.fieldPermission.hint') }}
+            {{
+              nodeType === 'start'
+                ? $t('flow.designer.fieldPermission.startHint')
+                : $t('flow.designer.fieldPermission.hint')
+            }}
           </div>
           <div v-if="formFields?.length" class="field-permission-list">
             <div
@@ -686,7 +715,10 @@ defineExpose({ submit });
           />
         </label>
 
-        <label class="field">
+        <label
+          v-if="formState.copyType !== 'participant'"
+          class="field"
+        >
           <span>
             {{
               formState.copyType === 'role'
@@ -709,6 +741,10 @@ defineExpose({ submit });
             show-search
           />
         </label>
+
+        <div v-else class="field-hint">
+          {{ $t('flow.designer.actor.participantHint') }}
+        </div>
       </template>
 
       <template v-if="nodeType === 'condition'">

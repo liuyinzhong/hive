@@ -6,6 +6,7 @@
     "flowTab": "流程设计",
     "formSchema": "关联表单",
     "selectFormSchema": "请选择启用的表单 Schema",
+    "editFormSchema": "编辑表单",
     "property": "属性",
     "selectElement": "请选择节点或连线",
     "id": "ID",
@@ -48,6 +49,10 @@
       "selectCopyUser": "请选择抄送用户",
       "selectCopyRole": "请选择抄送角色",
       "leaderHint": "运行时将根据流程发起人自动查找其直属上级。",
+      "initiator": "流程发起人",
+      "initiatorHint": "运行时由流程发起人本人审批该节点。",
+      "participant": "审批参与人",
+      "participantHint": "运行时解析为流程发起人和截至该节点已审批过的全部人员。",
       "nodeBusinessKey": "状态同步事件",
       "nodeBusinessKeyPlaceholder": "选择节点通过后触发的状态变更,空表示不同步业务状态",
       "nodeBusinessKeyHint": "节点审批通过后,按所选事件把关联业务数据的状态更新为对应值(如「评审通过」→需求变为已评审)。需与流程定义声明的业务类型对应。"
@@ -85,6 +90,7 @@
     "fieldPermission": {
       "title": "节点字段权限",
       "hint": "配置审批人在当前节点可查看和修改的申请字段，未配置字段默认只读。",
+      "startHint": "配置发起人发起申请时可查看和填写的字段，未配置字段默认可编辑；隐藏的必填字段会导致发起被后端校验拒绝。",
       "empty": "请先在表单设计中添加字段",
       "hidden": "隐藏",
       "readonly": "只读",

@@ -10,7 +10,6 @@ import { message } from "antdv-next";
 
 import { z } from "#/adapter/form";
 import { getProfileApi, updateProfileApi } from "#/api/auth";
-import { upload_file } from "#/api/examples/upload";
 import { filesToUrlString, urlStringToFiles } from "#/utils/file";
 
 const userStore = useUserStore();
@@ -27,7 +26,6 @@ const formSchema = computed((): VbenFormSchema[] => {
         accept: ".png,.jpg,.jpeg",
         aspectRatio: "1:1",
         crop: true,
-        customRequest: upload_file,
         listType: "picture-card",
         maxCount: 1,
         maxSize: 2,

@@ -24,6 +24,8 @@ export namespace AuthApi {
     avatar?: null | string;
     /** 邮箱；null 表示不修改，空字符串表示清空 */
     email?: null | string;
+    /** 签名图片URL；null 表示不修改，空字符串表示清空 */
+    signature?: null | string;
   }
 }
 
@@ -69,7 +71,7 @@ export async function getProfileApi() {
 }
 
 /**
- * 更新当前用户资料（头像、邮箱），返回更新后的用户信息
+ * 更新当前用户资料（头像、邮箱、签名图片），返回更新后的用户信息
  */
 export async function updateProfileApi(data: AuthApi.UpdateProfileParams) {
   return requestClient.put<SystemUserApi.SystemUserFace>(

@@ -55,3 +55,54 @@ export async function getFileListApi(params: Recordable<any>) {
 export async function uploadFileApi(data: { file: File }) {
   return requestClient.upload<SystemFileApi.SystemFileFace>("/system/upload", data);
 }
+
+/** antd Upload 组件 customRequest 回调参数 */
+export interface UploadFileParams {
+  file: File;
+  onError?: (error: Error) => void;
+  onProgress?: (progress: { percent: number }) => void;
+  onSuccess?: (data: any, file: File) => void;
+}
+
+/**
+ * antd Upload 组件 customRequest 包装，走登录态统一上传接口 /system/upload
+ * @param params file 及上传进度、成功、失败回调
+ */
+export async function upload_file({
+  file,
+  onError,
+  onProgress,
+  onSuccess,
+}: UploadFileParams) {
+  try {
+    onProgress?.({ percent: 0 });
+    const data = await uploadFileApi({ file });
+    onProgress?.({ percent: 100 });
+    onSuccess?.(data, file);
+  } catch (error) {
+    onError?.(error instanceof Error ? error : new Error(String(error)));
+  }
+}
+
+/**
+ * 公开上传 customRequest 包装，走公开端点 /public/upload（无登录态，外部反馈附件使用）
+ * @param params file 及上传进度、成功、失败回调
+ */
+export async function upload_file_public({
+  file,
+  onError,
+  onProgress,
+  onSuccess,
+}: UploadFileParams) {
+  try {
+    onProgress?.({ percent: 0 });
+    const data = await requestClient.upload<SystemFileApi.SystemFileFace>(
+      "/public/upload",
+      { file },
+    );
+    onProgress?.({ percent: 100 });
+    onSuccess?.(data, file);
+  } catch (error) {
+    onError?.(error instanceof Error ? error : new Error(String(error)));
+  }
+}

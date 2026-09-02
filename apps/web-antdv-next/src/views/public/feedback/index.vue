@@ -13,7 +13,7 @@ import { Button, Card, message } from 'antdv-next';
 import type { VbenFormSchema } from '#/adapter/form';
 import { useVbenForm } from '#/adapter/form';
 import { createFeedbackApi } from '#/api/public/feedback';
-import { upload_file_public } from '#/api/examples/upload';
+import { upload_file_public } from '#/api/system';
 import type { PublicFeedbackApi } from '#/api/public/feedback';
 import { $t } from '#/locales';
 import { filesToUrlString } from '#/utils';

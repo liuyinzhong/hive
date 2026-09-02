@@ -43,6 +43,7 @@ import {
   useCopyDetailColumns,
   useTaskDetailColumns,
 } from '#/views/workflow/runtime/data';
+import { withRichEditorEditable } from '#/views/workflow/runtime/field-permission';
 
 defineOptions({ name: 'WorkflowInstanceDetail' });
 
@@ -147,13 +148,15 @@ async function renderApplicationForm(
 ) {
   const schema = compileVbenFormSchema(
     workflowDetail.instance.formSchema ?? [],
-  ).map(
-    (field) =>
-      ({
+  ).map((field) =>
+    withRichEditorEditable(
+      {
         ...field,
         disabled: true,
         rules: undefined,
-      }) as VbenFormSchema,
+      } as VbenFormSchema,
+      true,
+    ),
   );
   hasApplicationFields.value = schema.length > 0;
   // 空表单(未绑定表单 Schema 的流程实例)跳过 setState/setValues,避免空 schema 触发表单组件异常导致 await 挂起
