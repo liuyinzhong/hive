@@ -72,6 +72,15 @@ export const createTaskApi = async (
 };
 
 /**
+ * 批量创建任务
+ */
+export const createTasksApi = async (
+  data: Omit<DevTaskApi.DevTaskFace, 'taskId'>[],
+) => {
+  return requestClient.post('/dev/tasks/batch', data);
+};
+
+/**
  * 更新任务
  */
 export const updateTaskApi = async (

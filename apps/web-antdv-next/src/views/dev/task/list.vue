@@ -152,9 +152,10 @@ const [BatchFormModal, BatchFormModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
-/** 打开批量添加弹窗 */
-function openBatchFormModal() {
-  BatchFormModalApi.open();
+/** 打开批量添加弹窗,行内项目继承列表当前查询项目 */
+async function openBatchFormModal() {
+  const formValues = await gridApi.formApi.getValues();
+  BatchFormModalApi.setData({ projectId: formValues?.projectId }).open();
 }
 // #endregion
 
@@ -225,7 +226,7 @@ const [DetailDrawer, DetailDrawerApi] = useVbenDrawer({
       </template>
     </Grid>
     <AddFormModal @success="gridApi.query" />
-    <BatchFormModal />
+    <BatchFormModal @success="gridApi.query" />
     <NextModal @success="gridApi.query" />
     <DetailDrawer />
   </Page>
