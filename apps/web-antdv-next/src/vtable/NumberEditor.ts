@@ -8,25 +8,23 @@ import type {
 
 import type { ComponentPublicInstance } from 'vue';
 
-import { createApp, h, onMounted, ref } from 'vue';
+import { createApp, h, ref } from 'vue';
 
-import { DatePicker } from 'antdv-next';
-import locale from 'antdv-next/dist/date-picker/locale/zh_CN';
-import dayjs from 'dayjs';
+import { InputNumber } from 'antdv-next';
 
 // 文档地址：https://visactor.io/vtable/guide/edit/edit_cell
-// 自定义日期编辑组件  请按照编辑器中定义的IEditor接口来实现
-export class DateEditor implements IEditor {
+// 自定义数字编辑组件,基于 antd InputNumber 实现,请按照编辑器中定义的IEditor接口来实现
+export class NumberEditor implements IEditor {
   /** Vue 应用实例 */
   app: any = null;
   /** 容器元素 */
   container: HTMLElement | null = null;
-  /** DatePicker 组件实例 */
-  datePickerInstance: ComponentPublicInstance | null = null;
-  /** 编辑器配置 */
+  /** InputNumber 组件实例 */
+  inputNumberInstance: ComponentPublicInstance | null = null;
+  /** 编辑器配置,支持 min/max/precision/step */
   editorConfig: any;
-  /** 选择的日期值 */
-  selectedDate: string = '';
+  /** 当前数值,未填写时为空字符串 */
+  numberValue: number | '' = '';
   /** 结束编辑回调函数 */
   successCallback: ((result?: any) => void) | null = null;
   /** 编辑器包装元素 */
@@ -62,10 +60,10 @@ export class DateEditor implements IEditor {
 
   /**
    * 获取编辑器当前值。将在 `onEnd` 调用后调用。
-   * @returns 当前选择的日期字符串
+   * @returns 当前数值
    */
-  getValue(): string {
-    return this.selectedDate;
+  getValue(): number | '' {
+    return this.numberValue;
   }
 
   /**
@@ -99,7 +97,7 @@ export class DateEditor implements IEditor {
 
     this.wrapperElement = null;
     this.container = null;
-    this.datePickerInstance = null;
+    this.inputNumberInstance = null;
     this.successCallback = null;
   }
 
@@ -110,74 +108,59 @@ export class DateEditor implements IEditor {
   onStart({ container, value, referencePosition, endEdit }: EditContext) {
     this.container = container;
     this.successCallback = endEdit;
-    this.selectedDate = value || '';
+    this.numberValue = value === '' || value === null || value === undefined ? '' : Number(value);
+
     // 创建包装元素
     this.wrapperElement = document.createElement('div');
-
-    // 处理日期格式转换
-    let dateValue = null;
-    if (this.selectedDate) {
-      const parsedDate = dayjs(this.selectedDate);
-      if (parsedDate.isValid()) {
-        dateValue = parsedDate;
-      }
-    }
 
     // 保存 this 引用
     // eslint-disable-next-line unicorn/no-this-assignment, @typescript-eslint/no-this-alias
     const that = this;
 
-    // 创建 Vue 应用并挂载 DatePicker 组件
+    const { min, max, precision, step } = this.editorConfig || {};
+
+    // 创建 Vue 应用并挂载 InputNumber 组件
     // 注意:必须使用 h() 渲染函数,项目 vue 为运行时构建,不支持 template 字符串编译
     this.app = createApp({
       setup: () => {
-        // 使用 ref 创建响应式日期值
-        const date = ref(dateValue);
-        const isOpen = ref(false);
+        const number = ref<number | ''>(that.numberValue);
 
-        const getPopupContainer = () => that.container as HTMLElement;
-
-        const handleDateChange = (_dateValue: any, dateString: string) => {
-          that.selectedDate = dateString || ''; // 更新选择的日期
+        const handleChange = (value: number | null) => {
+          that.numberValue = value ?? '';
         };
 
-        const handleOpenChange = (open: boolean) => {
-          isOpen.value = open;
-          // 当日期选择器关闭时，结束编辑
-          if (!open && that.successCallback) {
+        /** 回车或失焦时结束编辑,getValue 的返回值写回单元格 */
+        const endEdit = () => {
+          if (that.successCallback) {
             const callback = that.successCallback;
             that.successCallback = null;
             callback();
           }
         };
 
-        onMounted(() => {
-          isOpen.value = true;
-        });
-
         return () =>
-          h('div', { class: 'date-editor-container' }, [
-            h(DatePicker as any, {
-              value: date.value,
-              'onUpdate:value': (val: any) => {
-                date.value = val;
+          h('div', { class: 'number-editor-container' }, [
+            h(InputNumber as any, {
+              value: number.value,
+              'onUpdate:value': (val: number | null) => {
+                number.value = val ?? '';
               },
-              locale,
-              open: isOpen.value,
-              showTime: { format: 'HH:mm' },
               autofocus: true,
-              format: 'YYYY-MM-DD HH:mm:ss',
-              valueFormat: 'YYYY-MM-DD HH:mm:ss',
               variant: 'borderless',
-              getPopupContainer,
-              onChange: handleDateChange,
-              onOpenChange: handleOpenChange,
+              min: min ?? 0,
+              max,
+              precision,
+              step: step ?? 1,
+              style: { width: '100%' },
+              onChange: handleChange,
+              onPressEnter: endEdit,
+              onBlur: endEdit,
             }),
           ]);
       },
     });
 
-    this.datePickerInstance = this.app.mount(this.wrapperElement);
+    this.inputNumberInstance = this.app.mount(this.wrapperElement);
 
     // 将包装元素添加到容器
     container.append(this.wrapperElement);
@@ -197,10 +180,10 @@ export class DateEditor implements IEditor {
     _position?: CellAddress,
     _table?: any,
   ): boolean | ValidateEnum {
-    // 这里可以添加日期验证逻辑
-    if (newValue && !dayjs(newValue).isValid()) {
-      return false; // 日期无效
+    // 空值或数值有效
+    if (newValue === '' || newValue === null || newValue === undefined) {
+      return true;
     }
-    return true; // 验证通过
+    return typeof newValue === 'number' && !Number.isNaN(newValue);
   }
 }

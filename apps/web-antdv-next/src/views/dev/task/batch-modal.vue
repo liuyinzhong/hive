@@ -11,7 +11,7 @@ import { getProjectUsersApi } from '#/api/dev';
 import { getStoryListApi } from '#/api/dev/story';
 import { createTasksApi } from '#/api/dev/task';
 import { getLocalDictList, getLocalDictText } from '#/dicts';
-import { DateEditor, InputEditor, SelectEditor } from '#/vtable';
+import { DateEditor, InputEditor, NumberEditor, SelectEditor } from '#/vtable';
 
 defineOptions({
   name: 'TaskBatchFormModel',
@@ -92,7 +92,7 @@ const columns: VTable.ColumnsDefine = [
     field: 'planHours',
     title: '计划工时',
     width: 90,
-    editor: new InputEditor(),
+    editor: new NumberEditor({ min: 0.1, precision: 2 }),
   },
   {
     field: 'startDate',
