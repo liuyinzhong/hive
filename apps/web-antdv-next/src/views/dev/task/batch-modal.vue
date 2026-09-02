@@ -97,7 +97,7 @@ const columns: VTable.ColumnsDefine = [
   {
     field: 'startDate',
     title: '开始时间',
-    width: 130,
+    width: 120,
     // 显示为日期,写值为当天 00:00:00
     editor: new DateEditor({
       format: 'YYYY-MM-DD HH:mm:ss',
@@ -107,7 +107,7 @@ const columns: VTable.ColumnsDefine = [
   {
     field: 'endDate',
     title: '结束时间',
-    width: 130,
+    width: 120,
     // 显示为日期,写值为当天 23:59:59
     editor: new DateEditor({
       format: 'YYYY-MM-DD HH:mm:ss',
