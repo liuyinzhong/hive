@@ -7,6 +7,7 @@ import type {
 } from '#/adapter/vxe-table';
 import type { DevStoryApi } from '#/api/dev';
 
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
@@ -17,6 +18,7 @@ import { Button, message } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   deleteStoryApi,
+  getProjectsListApi,
   getStoryListApi,
   updateStoryFieldApi,
 } from '#/api/dev';
@@ -25,6 +27,7 @@ import addTaskModal from '#/views/dev/task/add-modal.vue';
 
 import addFormModal from './add-modal.vue';
 import batchFormModal from './batch-modal.vue';
+import batchNextModal from './batch-next-modal.vue';
 import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
@@ -40,9 +43,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     // 控制表单是否显示折叠按钮
     showCollapseButton: false,
     schema: useGridFormSchema(),
+    submitOnEnter: true,
   },
   gridOptions: {
     columns: useColumns(onActionClick),
+    checkboxConfig: {
+      // 已关闭的需求禁止勾选流转
+      checkMethod: ({ row }: any) => row.storyStatus !== '99',
+    },
     toolbarConfig: {
       zoom: true,
       custom: true,
@@ -59,6 +67,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       multiple: true,
     },
     proxyConfig: {
+      autoLoad: false,
       sort: true,
       ajax: {
         query: async (
@@ -76,6 +85,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions<DevStoryApi.DevStoryFace>,
   gridEvents: {},
+});
+
+onMounted(async () => {
+  /* 项目默认选中第一个后再生效首查;query不实时读表单,须显式传参 */
+  const projects = await getProjectsListApi();
+  const projectId = projects?.[0]?.projectId;
+  if (projectId) {
+    await gridApi.formApi.setValues({ projectId });
+  }
+  gridApi.query(projectId ? { projectId } : {});
 });
 
 // #region 单个添加需求
@@ -169,6 +188,28 @@ function openAddBatchStoryModal() {
 
 // #endregion
 
+// #region 批量流转需求
+const [BatchNextModal, BatchNextModalApi] = useVbenModal({
+  title: '批量流转需求',
+  connectedComponent: batchNextModal,
+  destroyOnClose: true,
+});
+
+/** 打开批量流转弹窗 */
+function openBatchNextModal() {
+  const rows = gridApi.grid.getCheckboxRecords() as DevStoryApi.DevStoryFace[];
+  if (rows.length === 0) {
+    message.warning('请先勾选要流转的需求');
+    return;
+  }
+  BatchNextModalApi.setData({
+    storyIds: rows.map((row) => row.storyId ?? ''),
+    projectId: rows[0]?.projectId,
+  }).open();
+}
+
+// #endregion
+
 // #region 流转弹窗
 const [NextModal, NextModalApi] = useVbenModal({
   title: '流转需求',
@@ -223,6 +264,8 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
           </template>
           批量新建
         </Button>
+
+        <Button class="mr-2" @click="openBatchNextModal"> 批量流转 </Button>
       </template>
       <template #action="{ row }">
         <VbenTableAction
@@ -272,6 +315,7 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
     </Grid>
     <AddFormModal @success="gridApi.query" />
     <BatchFormModal />
+    <BatchNextModal @success="gridApi.query" />
     <NextModal @success="gridApi.query" />
     <DetailDrawer />
     <AddTaskModal />

@@ -49,6 +49,7 @@
     "projectUpdate": "Update Project",
     "projectUser": "Project User Management",
     "storyAdvance": "Advance",
+    "storyBatchAdvance": "Batch Advance",
     "storyBatchCreate": "Batch Create",
     "storyCreate": "Create",
     "storyDelete": "Delete",

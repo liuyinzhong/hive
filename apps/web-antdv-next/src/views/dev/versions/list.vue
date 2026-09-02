@@ -4,6 +4,7 @@ import type { Recordable } from '@vben/types';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { DevVersionApi } from '#/api/dev';
 
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal } from '@vben/common-ui';
@@ -11,7 +12,11 @@ import { Page, useVbenModal } from '@vben/common-ui';
 import { message, Button } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
-import { getVersionsListApi, deleteVersionApi } from '#/api/dev';
+import {
+  getProjectsListApi,
+  getVersionsListApi,
+  deleteVersionApi,
+} from '#/api/dev';
 import { $t } from '#/locales';
 
 import addFormModal from './add-modal.vue';
@@ -46,6 +51,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       multiple: true,
     },
     proxyConfig: {
+      autoLoad: false,
       sort: true,
       ajax: {
         query: async (
@@ -63,6 +69,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions<DevVersionApi.DevVersionFace>,
   gridEvents: {},
+});
+
+onMounted(async () => {
+  /* 项目默认选中第一个后再生效首查;query不实时读表单,须显式传参 */
+  const projects = await getProjectsListApi();
+  const projectId = projects?.[0]?.projectId;
+  if (projectId) {
+    await gridApi.formApi.setValues({ projectId });
+  }
+  gridApi.query(projectId ? { projectId } : {});
 });
 
 // #region 单个添加，编辑 表单弹窗

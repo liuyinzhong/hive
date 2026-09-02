@@ -129,6 +129,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       rules: '',
       componentProps: {
         allowClear: false,
+        autoSelect: 'first',
       },
     }),
     versionSchema({
@@ -182,6 +183,7 @@ export function useColumns(
   onActionClick?: OnActionClickFn<DevStoryApi.DevStoryFace>,
 ): VxeTableGridOptions<DevStoryApi.DevStoryFace>['columns'] {
   return [
+    { type: 'checkbox', width: 40 },
     {
       field: 'storyNum',
       title: '编号',

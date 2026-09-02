@@ -49,6 +49,7 @@
     "projectUpdate": "修改项目",
     "projectUser": "项目用户管理",
     "storyAdvance": "推进",
+    "storyBatchAdvance": "批量流转",
     "storyBatchCreate": "批量新增",
     "storyCreate": "新增",
     "storyDelete": "删除",

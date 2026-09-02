@@ -6,12 +6,14 @@ import type {
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 import type { DevBugApi } from '#/api/dev';
+import { onMounted } from 'vue';
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, message } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
+import { getProjectsListApi } from '#/api/dev';
 import { getBugListApi, deleteBugApi, updateBugFieldApi } from '#/api/dev/bug';
 import { formatVxeTableSorts } from '#/utils';
 
@@ -46,6 +48,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       multiple: true,
     },
     proxyConfig: {
+      autoLoad: false,
       sort: true,
       ajax: {
         query: async (
@@ -63,6 +66,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
     } as VxeTableGridOptions<DevBugApi.DevBugFace>,
   },
   gridEvents: {},
+});
+
+onMounted(async () => {
+  /* 项目默认选中第一个后再生效首查;query不实时读表单,须显式传参 */
+  const projects = await getProjectsListApi();
+  const projectId = projects?.[0]?.projectId;
+  if (projectId) {
+    await gridApi.formApi.setValues({ projectId });
+  }
+  gridApi.query(projectId ? { projectId } : {});
 });
 
 // #region 表格操作按钮的回调函数

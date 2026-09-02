@@ -147,3 +147,10 @@ export const nextStoryApi = async (storyId: string, data: Recordable<any>) => {
   const newData = objectOmit(data, ['storyId']);
   return requestClient.put(`/dev/storys/${storyId}/next`, newData);
 };
+
+/**
+ * 批量流转
+ */
+export const batchNextStoryApi = async (data: Recordable<any>) => {
+  return requestClient.put('/dev/storys/batch-next', data);
+};
