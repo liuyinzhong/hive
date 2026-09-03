@@ -67,7 +67,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       multiple: true,
     },
     proxyConfig: {
-      autoLoad: false,
       sort: true,
       ajax: {
         query: async (
@@ -87,15 +86,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {},
 });
 
-onMounted(async () => {
-  /* 项目默认选中第一个后再生效首查;query不实时读表单,须显式传参 */
-  const projects = await getProjectsListApi();
-  const projectId = projects?.[0]?.projectId;
-  if (projectId) {
-    await gridApi.formApi.setValues({ projectId });
-  }
-  gridApi.query(projectId ? { projectId } : {});
-});
+onMounted(async () => {});
 
 // #region 单个添加需求
 const [AddFormModal, AddFormModalApi] = useVbenModal({
