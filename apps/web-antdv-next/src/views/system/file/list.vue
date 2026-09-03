@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
-import type { SystemFileApi } from '#/api';
+import type { SystemFileApi } from '#/api/system';
 
 import { nextTick } from 'vue';
 
@@ -82,7 +82,7 @@ async function handleUpload(options: any) {
  * 复制文件链接
  * @param row 行数据
  */
-function onCopyUrl(row: SystemFileApi.SystemFileFace) {
+function onCopyUrl(row: any) {
   copy(row.url);
   message.success($t('system.file.copyLinkSuccess'));
 }

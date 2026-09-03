@@ -1,6 +1,6 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemRoleApi } from '#/api';
+import type { SystemRoleApi } from '#/api/system';
 
 import { getAllDeptListApi, updateRoleStatusApi } from '#/api/system';
 import { $t } from '#/locales';

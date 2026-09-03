@@ -31,13 +31,13 @@ import {
 } from 'antdv-next';
 
 import {
-  getPurchaseInboundListApi,
   getPurchaseInboundPrintDataApi,
   getPrintTemplateDetailApi,
   getPrintTemplateMetadataApi,
   publishPrintTemplateApi,
   updatePrintTemplateApi,
-} from '#/api';
+} from '#/api/print';
+import { getPurchaseInboundListApi } from '#/api/erp';
 import type { ErpPurchaseInboundApi } from '#/api/erp';
 import { $t } from '#/locales';
 
@@ -120,12 +120,14 @@ const itemFieldOptions = computed(() =>
     value: field.path,
   })),
 );
+// oxlint-disable-next-line vue/return-in-computed-property
 const selectedElement = computed<PrintLayoutElement | undefined>(() => {
   if (selection.value?.kind !== 'element') return;
   return layout.value.sections[selection.value.section].elements[
     selection.value.index
   ];
 });
+// oxlint-disable-next-line vue/return-in-computed-property
 const selectedColumn = computed<PrintTableColumn | undefined>(() => {
   if (selection.value?.kind !== 'column') return;
   return layout.value.sections.body.table?.columns[selection.value.index];
@@ -298,6 +300,7 @@ function addField(field: PrintFieldDefinition) {
     return;
   }
   const section: SectionKey =
+    // oxlint-disable-next-line no-nested-ternary
     field.scope === 'header'
       ? 'documentHeader'
       : field.scope === 'summary'
@@ -1076,9 +1079,9 @@ function defaultElementStyle() {
 .designer-shell {
   display: grid;
   grid-template-columns: 240px minmax(600px, 1fr) 260px;
+  gap: 12px;
   height: 100%;
   min-height: 0;
-  gap: 12px;
 }
 
 .designer-sidebar,
@@ -1096,8 +1099,8 @@ function defaultElementStyle() {
 .designer-canvas-wrap {
   flex: 1;
   min-height: 0;
-  overflow: auto;
   padding: 16px;
+  overflow: auto;
   background: #f1f5f9;
   border-radius: 8px;
 }
@@ -1122,14 +1125,14 @@ function defaultElementStyle() {
 
 .section-label {
   position: absolute;
-  z-index: 2;
   top: 1mm;
   right: 1mm;
+  z-index: 2;
   padding: 0.5mm 1mm;
-  color: #64748b;
   font-size: 2.5mm;
-  background: rgb(241 245 249 / 80%);
+  color: #64748b;
   pointer-events: none;
+  background: rgb(241 245 249 / 80%);
 }
 
 .designer-element {
@@ -1138,11 +1141,11 @@ function defaultElementStyle() {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  overflow: hidden;
   padding: 1mm;
+  overflow: hidden;
   overflow-wrap: anywhere;
-  cursor: move;
   white-space: pre-wrap;
+  cursor: move;
 }
 
 .designer-element:hover,
@@ -1164,17 +1167,17 @@ function defaultElementStyle() {
 .designer-detail-table {
   position: absolute;
   z-index: 1;
+  font-size: 3.2mm;
   table-layout: fixed;
   border-collapse: collapse;
-  font-size: 3.2mm;
 }
 
 .designer-detail-table th,
 .designer-detail-table td {
   padding: 1mm;
   overflow-wrap: anywhere;
-  border: 0.25mm solid #94a3b8;
   white-space: pre-wrap;
+  border: 0.25mm solid #94a3b8;
 }
 
 .designer-detail-table th {
@@ -1198,8 +1201,8 @@ function defaultElementStyle() {
 
 .field-group-title {
   margin-bottom: 6px;
-  color: #64748b;
   font-size: 12px;
+  color: #64748b;
 }
 
 .field-chip {
@@ -1223,8 +1226,8 @@ function defaultElementStyle() {
 
 .field-chip small {
   margin-top: 2px;
-  color: #94a3b8;
   font-size: 10px;
+  color: #94a3b8;
 }
 
 .property-grid {
@@ -1236,9 +1239,9 @@ function defaultElementStyle() {
 .preview-host {
   display: flex;
   flex-direction: column;
+  gap: 12px;
   height: 100%;
   min-height: 0;
-  gap: 12px;
   overflow: auto;
 }
 
