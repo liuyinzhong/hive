@@ -32,12 +32,14 @@ export interface WorkflowElementProperties {
   copyIds?: string[];
   copyNames?: string[];
   copyType?: WorkflowCopyType;
+  // 结束后动作:结束节点开启时,流程实例通过后按表单同名字段映射落地创建一条规划中需求;与流程定义业务类型互斥
+  createStoryOnFinish?: boolean;
   fieldPermissions?: Record<
     string,
     import('#/api/workflow').WorkflowDefinitionApi.WorkflowFormFieldPermission
   >;
   isDefaultBranch?: boolean;
-  // 节点业务键:业务模块在节点属性中配置的稳定语义标识(如 review),流程引擎在节点完成时按此键调用业务状态钩子。
+  // 状态同步事件(原节点业务键):业务模块在节点属性中配置的稳定语义标识(如 review),流程引擎在节点完成时按此键调用业务状态钩子。
   nodeBusinessKey?: string;
   nodeType?: WorkflowNodeType;
   priority?: number;

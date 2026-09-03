@@ -50,12 +50,14 @@ interface PropertyFormState {
   copyIds: string[];
   copyNames: string[];
   copyType: WorkflowCopyType;
+  // 结束后动作:结束节点开启时流程通过后落地创建需求
+  createStoryOnFinish: boolean;
   fieldPermissions: Record<
     string,
     WorkflowDefinitionApi.WorkflowFormFieldPermission
   >;
   isDefaultBranch: boolean;
-  // 节点业务键:流程节点上配置的稳定语义标识,空表示不触发状态同步
+  // 状态同步事件:流程节点上配置的稳定语义标识,空表示不触发状态同步
   nodeBusinessKey: string;
   priority: number;
   text: string;
@@ -92,6 +94,7 @@ const formState = reactive<PropertyFormState>({
   copyIds: [],
   copyNames: [],
   copyType: 'user',
+  createStoryOnFinish: false,
   fieldPermissions: {},
   isDefaultBranch: false,
   nodeBusinessKey: '',
@@ -99,7 +102,7 @@ const formState = reactive<PropertyFormState>({
   text: '',
 });
 
-/** 节点业务键下拉选项:按当前流程定义声明的 businessType 联动过滤。
+/** 状态同步事件下拉选项:按当前流程定义声明的 businessType 联动过滤。
  *  businessType 为空(新建中或纯流程)时显示全部节点键并带业务类型分组标签,避免无选项可选。 */
 const nodeKeyOptions = computed<SelectOption[]>(() => {
   const registry = props.businessHookRegistry ?? [];
@@ -201,6 +204,7 @@ watch(
     );
     formState.copyType = properties.copyType ?? 'user';
     formState.nodeBusinessKey = properties.nodeBusinessKey ?? '';
+    formState.createStoryOnFinish = properties.createStoryOnFinish === true;
     formState.fieldPermissions = normalizeFieldPermissions(
       properties.fieldPermissions,
     );
@@ -534,6 +538,10 @@ function submit() {
     );
   }
 
+  if (nodeType.value === 'end') {
+    values.createStoryOnFinish = formState.createStoryOnFinish;
+  }
+
   if (nodeType.value === 'copy') {
     if (formState.copyType !== 'participant' && formState.copyIds.length === 0) {
       message.warning($t('flow.designer.message.selectCopy'));
@@ -702,6 +710,24 @@ defineExpose({ submit });
           <div v-else class="field-hint">
             {{ $t('flow.designer.fieldPermission.empty') }}
           </div>
+        </div>
+      </template>
+
+      <template v-if="nodeType === 'end'">
+        <div class="switch-field">
+          <div>
+            <div class="switch-label">
+              {{ $t('flow.designer.endAction.createStory') }}
+            </div>
+            <div class="switch-description">
+              {{ $t('flow.designer.endAction.createStoryHint') }}
+            </div>
+          </div>
+          <Switch v-model:checked="formState.createStoryOnFinish" />
+        </div>
+
+        <div class="field-hint">
+          {{ $t('flow.designer.endAction.createStoryRule') }}
         </div>
       </template>
 

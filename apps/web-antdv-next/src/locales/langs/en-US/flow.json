@@ -57,6 +57,11 @@
       "nodeBusinessKeyPlaceholder": "Select the state change triggered on approval; empty means no sync",
       "nodeBusinessKeyHint": "After the node is approved, the linked business object's state is updated by the selected event (e.g., Review Passed → reviewed). Must match the business type declared by the definition."
     },
+    "endAction": {
+      "createStory": "Create story after approval",
+      "createStoryHint": "Once all nodes are approved, a planned story is created in story management automatically",
+      "createStoryRule": "Story fields are mapped from form fields with identical names (e.g., story_title, story_rich_text); fields absent from the form stay empty, and the story cannot advance until its project is filled in. When enabled, the definition must not declare a business type and the form must contain the story_title field, otherwise publishing fails."
+    },
     "branch": {
       "strategy": "Branch Strategy",
       "firstMatch": "First match by priority",

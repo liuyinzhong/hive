@@ -57,6 +57,11 @@
       "nodeBusinessKeyPlaceholder": "选择节点通过后触发的状态变更,空表示不同步业务状态",
       "nodeBusinessKeyHint": "节点审批通过后,按所选事件把关联业务数据的状态更新为对应值(如「评审通过」→需求变为已评审)。需与流程定义声明的业务类型对应。"
     },
+    "endAction": {
+      "createStory": "流程通过后创建需求",
+      "createStoryHint": "全部节点审批通过后,自动在需求管理创建一条规划中需求",
+      "createStoryRule": "按表单同名字段映射写入需求(字段名须与需求表字段一致,如 story_title、story_rich_text);表单未提供的字段留空,需求补齐所属项目前不可流转。开启后流程定义不能声明业务类型,且表单必须包含 story_title 字段,否则无法发布。"
+    },
     "branch": {
       "strategy": "分支策略",
       "firstMatch": "按优先级命中第一条",

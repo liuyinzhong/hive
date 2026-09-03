@@ -28,7 +28,7 @@ import {
 import {
   addChangeApi,
   getStoryDetailApi,
-  getStoryWorkflowBindingApi,
+  getStoryWorkflowBindingsApi,
 } from '#/api/dev';
 import addBugModal from '#/views/dev/bug/add-modal.vue';
 import addFormModal from '#/views/dev/story/add-modal.vue';
@@ -110,20 +110,16 @@ const loadStoryDetail = () => {
 };
 
 /**
- * 加载需求关联的流程实例绑定,把流程编号和实例ID融合进 detail.value。
- * 未绑定为正常状态(如流程定义未发布时创建的需求),失败静默不阻塞详情。
+ * 加载需求关联的流程实例列表(按绑定时间倒序,含自动发起的需求流程和审批落地创建的来源审批实例)。
+ * 未关联为正常状态(如流程定义未发布时创建的需求),失败静默不阻塞详情。
  */
 const loadWorkflowBinding = () => {
-  getStoryWorkflowBindingApi(Number(props.storyNum))
+  getStoryWorkflowBindingsApi(Number(props.storyNum))
     .then((res) => {
-      if (res) {
-        detail.value.workflowInstanceNo = res.instanceNo;
-        detail.value.workflowInstanceId = res.instanceId;
-        detail.value.workflowStatus = res.status;
-      }
+      detail.value.workflowInstances = res ?? [];
     })
     .catch(() => {
-      // 绑定查询失败保持 detail 现状,关联流程展示为空
+      // 关联流程查询失败保持 detail 现状,关联流程展示为空
     });
 };
 

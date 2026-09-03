@@ -22,12 +22,15 @@ const router = useRouter();
 
 const userList = computed(() => props.storyInfo.userList || []);
 const thisUser = computed(() => props.storyInfo.thisUser);
+// 关联流程列表:按绑定时间倒序,含自动发起的需求流程和审批落地创建的来源审批实例
+const workflowInstances = computed(
+  () => props.storyInfo.workflowInstances ?? [],
+);
 
 /**
  * 跳转流程实例详情页
  */
-const goWorkflowDetail = () => {
-  const instanceId = props.storyInfo.workflowInstanceId;
+const goWorkflowDetail = (instanceId: string) => {
   if (instanceId) {
     router.push(`/workflow/instance/detail/${instanceId}`);
   }
@@ -39,16 +42,25 @@ const goWorkflowDetail = () => {
       <Tag>#{{ storyInfo.storyNum || '-' }}</Tag>
     </DescriptionsItem>
     <DescriptionsItem label="关联流程">
-      <template v-if="storyInfo.workflowInstanceNo">
-        <a class="workflow-link" @click="goWorkflowDetail">
-          {{ storyInfo.workflowInstanceNo }}
-        </a>
-        {{
-          getTaskStatusOptions().find(
-            (item) => item.value === storyInfo.workflowStatus,
-          )?.label || '-'
-        }}
-      </template>
+      <div v-if="workflowInstances.length" class="workflow-list">
+        <div
+          v-for="item in workflowInstances"
+          :key="item.bindingId"
+          class="workflow-item"
+        >
+          <a class="workflow-link" @click="goWorkflowDetail(item.instanceId)">
+            {{ item.instanceNo }}
+          </a>
+          <span class="workflow-definition">{{ item.definitionName }}</span>
+          <span>
+            {{
+              getTaskStatusOptions().find(
+                (option) => option.value === item.status,
+              )?.label || '-'
+            }}
+          </span>
+        </div>
+      </div>
       <template v-else>-</template>
     </DescriptionsItem>
     <DescriptionsItem label="关联版本">
@@ -80,3 +92,21 @@ const goWorkflowDetail = () => {
     </DescriptionsItem>
   </Descriptions>
 </template>
+
+<style scoped>
+.workflow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.workflow-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.workflow-definition {
+  color: hsl(var(--muted-foreground));
+}
+</style>

@@ -14,6 +14,24 @@ interface userListFace {
 
 export namespace DevStoryApi {
   /**
+   * 需求关联流程摘要(wf_business_instance 绑定聚合)
+   */
+  export interface StoryWorkflowBindingFace {
+    bindingId: string;
+    businessType: string;
+    businessId: string;
+    instanceId: string;
+    instanceNo: string;
+    definitionId: string;
+    definitionName: string;
+    title: string;
+    starterId: string;
+    starterName: string;
+    /** 流程实例状态:0运行中 1已完成 2已拒绝 3已取消 */
+    status: string;
+    createDate?: string;
+  }
+  /**
    * 需求附件文件
    */
   export interface DevStoryFileFace {
@@ -65,12 +83,8 @@ export namespace DevStoryApi {
     createDate?: string;
     updateDate?: string;
     userList?: userListFace[];
-    /** 关联流程实例编号,未绑定流程时为 undefined */
-    workflowInstanceNo?: string;
-    /** 关联流程实例ID,未绑定流程时为 undefined */
-    workflowInstanceId?: string;
-    /** 关联流程实例状态:0运行中 1已完成 2已拒绝 3已取消,未绑定为 undefined */
-    workflowStatus?: string;
+    /** 关联流程实例列表(按绑定时间倒序),含自动发起的需求流程和审批落地创建的来源审批实例,未关联时为空 */
+    workflowInstances?: StoryWorkflowBindingFace[];
   }
 }
 
@@ -125,10 +139,12 @@ export const getStoryDetailApi = async (storyNum: number) => {
 };
 
 /**
- * 查询需求当前绑定的流程实例摘要,未绑定时返回 null
+ * 查询需求关联的全部流程实例列表,按绑定时间倒序,未关联时返回空数组
  */
-export const getStoryWorkflowBindingApi = async (storyNum: number) => {
-  return requestClient.get(`/dev/storys/${storyNum}/workflow`);
+export const getStoryWorkflowBindingsApi = async (storyNum: number) => {
+  return requestClient.get<DevStoryApi.StoryWorkflowBindingFace[]>(
+    `/dev/storys/${storyNum}/workflow`,
+  );
 };
 
 /**
