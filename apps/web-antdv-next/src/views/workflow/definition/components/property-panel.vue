@@ -14,8 +14,9 @@ import {
 } from 'antdv-next';
 
 import { getAllRoleListApi, getUserListAllApi } from '#/api/system';
+import { getAutomationOptionsApi } from '#/api/workflow';
 import type {
-  BusinessHookRegistryItem,
+  WorkflowAutomationApi,
   WorkflowDefinitionApi,
 } from '#/api/workflow';
 import { $t } from '#/locales';
@@ -25,6 +26,7 @@ import { getFormComponentMeta } from '#/utils/form-schema';
 import type {
   WorkflowAssigneeType,
   WorkflowApprovalMode,
+  WorkflowAutomationMount,
   WorkflowBranchMode,
   WorkflowConditionLogic,
   WorkflowConditionRule,
@@ -44,30 +46,25 @@ interface PropertyFormState {
   assigneeNames: string[];
   assigneeType: WorkflowAssigneeType;
   approvalMode: WorkflowApprovalMode;
+  automations: WorkflowAutomationMount[];
   branchMode: WorkflowBranchMode;
   conditionLogic: WorkflowConditionLogic;
   conditionRules: WorkflowConditionRule[];
   copyIds: string[];
   copyNames: string[];
   copyType: WorkflowCopyType;
-  // 结束后动作:结束节点开启时流程通过后落地创建需求
-  createStoryOnFinish: boolean;
   fieldPermissions: Record<
     string,
     WorkflowDefinitionApi.WorkflowFormFieldPermission
   >;
   isDefaultBranch: boolean;
-  // 状态同步事件:流程节点上配置的稳定语义标识,空表示不触发状态同步
-  nodeBusinessKey: string;
   priority: number;
   text: string;
 }
 
 const props = defineProps<{
-  // 当前流程定义声明的业务类型,用于联动过滤节点业务键选项
+  // 当前流程定义声明的业务类型,用于过滤可挂载的自动化动作选项
   businessType?: string;
-  // 业务状态钩子注册表,供节点业务键下拉加载选项
-  businessHookRegistry?: BusinessHookRegistryItem[];
   conditionEdge?: boolean;
   element?: WorkflowElement;
   formFields?: PersistentFormSchema[];
@@ -79,6 +76,9 @@ const emit = defineEmits<{
 
 const actorLoading = ref(false);
 const assigneeNameSnapshot = ref(new Map<string, string>());
+// 自动化动作选项:按流程定义业务类型过滤的启用动作,供节点挂载选择
+const automationOptions = ref<WorkflowAutomationApi.AutomationResponse[]>([]);
+const automationLoading = ref(false);
 const copyNameSnapshot = ref(new Map<string, string>());
 const roleOptions = ref<SelectOption[]>([]);
 const userOptions = ref<SelectOption[]>([]);
@@ -88,37 +88,87 @@ const formState = reactive<PropertyFormState>({
   assigneeNames: [],
   assigneeType: 'user',
   approvalMode: 'any',
+  automations: [],
   branchMode: 'firstMatch',
   conditionLogic: 'and',
   conditionRules: [],
   copyIds: [],
   copyNames: [],
   copyType: 'user',
-  createStoryOnFinish: false,
   fieldPermissions: {},
   isDefaultBranch: false,
-  nodeBusinessKey: '',
   priority: 1,
   text: '',
 });
 
-/** 状态同步事件下拉选项:按当前流程定义声明的 businessType 联动过滤。
- *  businessType 为空(新建中或纯流程)时显示全部节点键并带业务类型分组标签,避免无选项可选。 */
-const nodeKeyOptions = computed<SelectOption[]>(() => {
-  const registry = props.businessHookRegistry ?? [];
-  const matched = props.businessType
-    ? registry.filter((item) => item.businessType === props.businessType)
-    : registry;
-  return matched.flatMap((item) =>
-    item.nodeKeys.map((node) => ({
-      label: props.businessType
-        ? `${node.label} (${node.nodeKey})`
-        : `${node.label} (${node.nodeKey}) - ${item.label}`,
-      title: node.description,
-      value: node.nodeKey,
+/** 加载可挂载的自动化动作选项:按流程定义声明的业务类型过滤启用的动作。 */
+async function loadAutomationOptions() {
+  automationLoading.value = true;
+  try {
+    automationOptions.value = await getAutomationOptionsApi(
+      props.businessType,
+    );
+  } catch {
+    message.error($t('flow.designer.automation.loadFailed'));
+  } finally {
+    automationLoading.value = false;
+  }
+}
+
+/** 动作选择器选项:展示动作名与目标摘要。 */
+const automationSelectOptions = computed<SelectOption[]>(() =>
+  automationOptions.value
+    .filter((item) => item.automationId)
+    .map((item) => ({
+      label: `${item.automationName} (${item.targetFieldLabel || item.targetField} → ${item.targetValue})`,
+      title: item.remark,
+      value: item.automationId as string,
     })),
+);
+
+/** 选择器选中即挂载动作;选择器保持未选中状态,可连续添加。 */
+function onSelectAutomation(automationId: string) {
+  addAutomation(automationId);
+}
+
+/** 挂载动作:选中即把动作配置快照写入画布,同一节点同一动作只挂一次。 */
+function addAutomation(automationId: string) {
+  const automation = automationOptions.value.find(
+    (item) => item.automationId === automationId,
   );
-});
+  if (!automation?.automationId) return;
+  if (
+    formState.automations.some(
+      (item) => item.automationId === automation.automationId,
+    )
+  ) {
+    message.warning($t('flow.designer.automation.duplicate'));
+    return;
+  }
+  formState.automations.push({
+    automationId: automation.automationId,
+    automationName: automation.automationName,
+    businessType: automation.businessType,
+    actionType: automation.actionType,
+    targetField: automation.targetField,
+    targetValue: automation.targetValue,
+  });
+}
+
+/** 移除挂载的动作。 */
+function removeAutomation(index: number) {
+  formState.automations.splice(index, 1);
+}
+
+/** 上移/下移挂载动作,列表顺序即执行顺序。 */
+function moveAutomation(index: number, offset: -1 | 1) {
+  const target = index + offset;
+  if (target < 0 || target >= formState.automations.length) return;
+  const removed = formState.automations.splice(index, 1);
+  const item = removed[0];
+  if (!item) return;
+  formState.automations.splice(target, 0, item);
+}
 
 const assigneeTypeOptions = [
   { label: $t('flow.designer.actor.specifiedUser'), value: 'user' },
@@ -203,8 +253,7 @@ watch(
       formState.assigneeNames,
     );
     formState.copyType = properties.copyType ?? 'user';
-    formState.nodeBusinessKey = properties.nodeBusinessKey ?? '';
-    formState.createStoryOnFinish = properties.createStoryOnFinish === true;
+    formState.automations = readAutomationMounts(properties.automations);
     formState.fieldPermissions = normalizeFieldPermissions(
       properties.fieldPermissions,
     );
@@ -226,7 +275,26 @@ watch(
 
 onMounted(() => {
   void loadActorOptions();
+  void loadAutomationOptions();
 });
+
+/** 读取画布中的自动化动作挂载快照,过滤结构不完整的脏数据。 */
+function readAutomationMounts(value: unknown): WorkflowAutomationMount[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.filter(
+    (
+      item,
+    ): item is WorkflowAutomationMount =>
+      typeof item === 'object' &&
+      item !== null &&
+      typeof (item as WorkflowAutomationMount).automationId === 'string' &&
+      typeof (item as WorkflowAutomationMount).actionType === 'string' &&
+      typeof (item as WorkflowAutomationMount).targetField === 'string' &&
+      typeof (item as WorkflowAutomationMount).targetValue === 'string',
+  );
+}
 
 /** 加载可用于流程配置的启用用户和启用角色。 */
 async function loadActorOptions() {
@@ -521,7 +589,6 @@ function submit() {
     // 发起人节点恒为单人,审批方式固定或签
     values.approvalMode =
       formState.assigneeType === 'starter' ? 'any' : formState.approvalMode;
-    values.nodeBusinessKey = formState.nodeBusinessKey;
     const assigneeIds = dynamicAssignee ? [...formState.assigneeIds] : [];
     values.assigneeIds = assigneeIds;
     values.assigneeNames = resolveSelectionNames(
@@ -531,15 +598,14 @@ function submit() {
     );
   }
 
+  // 任意节点类型均可挂载自动化动作,提交挂载快照(顺序即执行顺序)
+  values.automations = formState.automations.map((item) => ({ ...item }));
+
   // 发起和审批节点均支持字段权限配置
   if (nodeType.value === 'approve' || nodeType.value === 'start') {
     values.fieldPermissions = normalizeFieldPermissions(
       formState.fieldPermissions,
     );
-  }
-
-  if (nodeType.value === 'end') {
-    values.createStoryOnFinish = formState.createStoryOnFinish;
   }
 
   if (nodeType.value === 'copy') {
@@ -661,22 +727,6 @@ defineExpose({ submit });
             {{ $t('flow.designer.actor.approvalModeHint') }}
           </div>
         </template>
-
-        <label class="field">
-          <span>{{ $t('flow.designer.actor.nodeBusinessKey') }}</span>
-          <Select
-            v-model:value="formState.nodeBusinessKey"
-            allow-clear
-            :options="nodeKeyOptions"
-            :placeholder="$t('flow.designer.actor.nodeBusinessKeyPlaceholder')"
-            option-filter-prop="label"
-            show-search
-          />
-        </label>
-
-        <div class="field-hint">
-          {{ $t('flow.designer.actor.nodeBusinessKeyHint') }}
-        </div>
       </template>
 
       <template v-if="nodeType === 'approve' || nodeType === 'start'">
@@ -713,23 +763,64 @@ defineExpose({ submit });
         </div>
       </template>
 
-      <template v-if="nodeType === 'end'">
-        <div class="switch-field">
-          <div>
-            <div class="switch-label">
-              {{ $t('flow.designer.endAction.createStory') }}
-            </div>
-            <div class="switch-description">
-              {{ $t('flow.designer.endAction.createStoryHint') }}
-            </div>
-          </div>
-          <Switch v-model:checked="formState.createStoryOnFinish" />
+      <!-- 自动化动作:任意节点类型可挂载多个,节点完成时按列表顺序同事务执行 -->
+      <div class="automation-section">
+        <div class="field-permission-heading">
+          {{ $t('flow.designer.automation.title') }}
+        </div>
+        <div class="field-hint">
+          {{ $t('flow.designer.automation.hint') }}
         </div>
 
-        <div class="field-hint">
-          {{ $t('flow.designer.endAction.createStoryRule') }}
+        <div v-if="formState.automations.length" class="automation-list">
+          <div
+            v-for="(item, index) in formState.automations"
+            :key="item.automationId"
+            class="automation-item"
+          >
+            <div class="automation-info">
+              <span class="automation-name">{{ item.automationName }}</span>
+              <small>{{ item.targetField }} → {{ item.targetValue }}</small>
+            </div>
+            <div class="automation-actions">
+              <Button
+                :disabled="index === 0"
+                size="small"
+                type="text"
+                @click="moveAutomation(index, -1)"
+              >
+                <IconifyIcon class="size-4" icon="lucide:arrow-up" />
+              </Button>
+              <Button
+                :disabled="index === formState.automations.length - 1"
+                size="small"
+                type="text"
+                @click="moveAutomation(index, 1)"
+              >
+                <IconifyIcon class="size-4" icon="lucide:arrow-down" />
+              </Button>
+              <Button
+                danger
+                size="small"
+                type="text"
+                @click="removeAutomation(index)"
+              >
+                <IconifyIcon class="size-4" icon="lucide:trash-2" />
+              </Button>
+            </div>
+          </div>
         </div>
-      </template>
+
+        <Select
+          :loading="automationLoading"
+          :options="automationSelectOptions"
+          :placeholder="$t('flow.designer.automation.addPlaceholder')"
+          :value="undefined"
+          option-filter-prop="label"
+          show-search
+          @change="onSelectAutomation"
+        />
+      </div>
 
       <template v-if="nodeType === 'copy'">
         <label class="field">
@@ -956,6 +1047,64 @@ defineExpose({ submit });
   gap: 8px;
   border-top: 1px solid hsl(var(--border));
   padding-top: 12px;
+}
+
+.automation-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid hsl(var(--border));
+  padding-top: 12px;
+}
+
+.automation-section :deep(.ant-select) {
+  width: 100%;
+}
+
+.automation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.automation-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.automation-info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.automation-name {
+  color: hsl(var(--foreground));
+  font-size: 13px;
+}
+
+.automation-info small {
+  overflow: hidden;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.automation-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.automation-actions :deep(.ant-btn) {
+  width: 26px;
+  padding-inline: 0;
 }
 
 .field-permission-heading {

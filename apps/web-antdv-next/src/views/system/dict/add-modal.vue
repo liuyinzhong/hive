@@ -52,7 +52,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = modalApi.getData<SystemDictApi.SystemDictFace>() || {};
+      const data: SystemDictApi.SystemDictFace = modalApi.getData() || {};
       formData.value = data;
       formApi.setValues(data);
       modalApi.setState({ title: data.id ? '编辑字典' : '添加字典' });

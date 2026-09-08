@@ -663,7 +663,7 @@ const [Form, formApi] = useVbenForm({
   commonConfig: {
     colon: true,
     formItemClass: 'col-span-2 md:col-span-1',
-    labelWidth: 120,
+    labelWidth: 140,
   },
   schema,
   showDefaultActions: false,

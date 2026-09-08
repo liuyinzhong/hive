@@ -20,6 +20,20 @@ export interface WorkflowConditionRule {
   value: string;
 }
 
+/** 节点挂载的自动化动作快照:选中动作时固化配置到画布,发布后按快照执行,不回查动作库 */
+export interface WorkflowAutomationMount {
+  automationId: string;
+  automationName: string;
+  /** 业务类型,字典BUSINESS_TYPE的值 */
+  businessType: string;
+  /** 动作类型:update_field修改字段值;预留insert_record */
+  actionType: string;
+  targetField: string;
+  targetValue: string;
+  /** 执行条件留位,版本1恒为空(始终执行) */
+  condition?: string;
+}
+
 export interface WorkflowElementProperties {
   [key: string]: unknown;
   assigneeIds?: string[];
@@ -32,15 +46,13 @@ export interface WorkflowElementProperties {
   copyIds?: string[];
   copyNames?: string[];
   copyType?: WorkflowCopyType;
-  // 结束后动作:结束节点开启时,流程实例通过后按表单同名字段映射落地创建一条规划中需求;与流程定义业务类型互斥
-  createStoryOnFinish?: boolean;
   fieldPermissions?: Record<
     string,
     import('#/api/workflow').WorkflowDefinitionApi.WorkflowFormFieldPermission
   >;
+  /** 自动化动作挂载快照,任意节点类型可配多个,按顺序同事务执行 */
+  automations?: WorkflowAutomationMount[];
   isDefaultBranch?: boolean;
-  // 状态同步事件(原节点业务键):业务模块在节点属性中配置的稳定语义标识(如 review),流程引擎在节点完成时按此键调用业务状态钩子。
-  nodeBusinessKey?: string;
   nodeType?: WorkflowNodeType;
   priority?: number;
 }

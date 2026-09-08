@@ -15,16 +15,12 @@ import { Button, message, Select, Space } from 'antdv-next';
 import type { FormSchemaApi } from '#/api/form';
 import { getAllFormSchemasApi } from '#/api/form';
 import {
-  getBusinessHooksApi,
   getWorkflowDefinitionDetailApi,
   publishWorkflowDefinitionApi,
   saveWorkflowDefinitionCanvasApi,
   saveWorkflowDefinitionFormApi,
 } from '#/api/workflow';
-import type {
-  BusinessHookRegistryItem,
-  WorkflowDefinitionApi,
-} from '#/api/workflow';
+import type { WorkflowDefinitionApi } from '#/api/workflow';
 import { $t } from '#/locales';
 
 import NodePanel from './components/node-panel.vue';
@@ -56,7 +52,6 @@ const definition = ref<WorkflowDefinitionApi.WorkflowDefinition>();
 const loading = ref(false);
 const zoomPercent = ref('100%');
 const formSchemas = ref<FormSchemaApi.FormSchemaRecord[]>([]);
-const businessHookRegistry = ref<BusinessHookRegistryItem[]>([]);
 const selectedFormSchemaId = ref<string>();
 const selectedFormSchema = computed(() =>
   formSchemas.value.find(
@@ -64,6 +59,8 @@ const selectedFormSchema = computed(() =>
   ),
 );
 const formFields = computed(() => selectedFormSchema.value?.schema ?? []);
+// 被动触发流程由业务对象自动发起,没有发起人填表单环节,不允许关联表单
+const isPassiveStart = computed(() => definition.value?.startType === 1);
 const formSchemaOptions = computed(() =>
   formSchemas.value.map((item) => ({
     label: item.schemaName,
@@ -102,14 +99,12 @@ onBeforeUnmount(() => {
 async function initDesigner() {
   loading.value = true;
   try {
-    const [definitionRecord, schemaRecords, hookRegistry] = await Promise.all([
+    const [definitionRecord, schemaRecords] = await Promise.all([
       getWorkflowDefinitionDetailApi(definitionId),
       getAllFormSchemasApi({ status: '1' }),
-      getBusinessHooksApi(),
     ]);
     definition.value = definitionRecord;
     formSchemas.value = schemaRecords;
-    businessHookRegistry.value = hookRegistry.items;
     selectedFormSchemaId.value = definitionRecord.formSchemaId ?? undefined;
     await nextTick();
     initLogicFlow();
@@ -534,8 +529,13 @@ function onFitView() {
             <Select
               v-model:value="selectedFormSchemaId"
               class="form-schema-select"
+              :disabled="isPassiveStart"
               :options="formSchemaOptions"
-              :placeholder="$t('flow.designer.selectFormSchema')"
+              :placeholder="
+                isPassiveStart
+                  ? $t('flow.designer.formSchemaDisabledHint')
+                  : $t('flow.designer.selectFormSchema')
+              "
               option-filter-prop="label"
               show-search
             />
@@ -592,7 +592,6 @@ function onFitView() {
       <PropertyDrawer class="w-[440px]">
         <PropertyPanel
           ref="propertyPanelRef"
-          :business-hook-registry="businessHookRegistry"
           :business-type="definition?.businessType"
           :condition-edge="isConditionEdge"
           :element="selectedElement"

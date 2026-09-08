@@ -99,11 +99,14 @@ const [Modal, modalApi] = useVbenModal({
   title: $t('flow.form.runtime.startApplication'),
 });
 
-/** 加载所有已发布且绑定有效表单的申请类型。 */
+/** 加载所有已发布、绑定有效表单的手动发起流程(被动触发流程由业务对象发起,不出现在申请入口)。 */
 async function loadDefinitions() {
   loading.value = true;
   try {
-    definitions.value = await getAllWorkflowDefinitionsApi({ status: '1' });
+    definitions.value = await getAllWorkflowDefinitionsApi({
+      status: '1',
+      startType: '0',
+    });
   } finally {
     loading.value = false;
   }

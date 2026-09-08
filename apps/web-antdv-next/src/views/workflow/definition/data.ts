@@ -3,15 +3,17 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { WorkflowDefinitionApi } from '#/api/workflow';
 
-import { getBusinessHooksApi } from '#/api/workflow';
 import { getLocalDictList } from '#/dicts';
-import { Flex } from 'antdv-next';
-import { h } from 'vue';
 
 const statusOptions = [
   { label: '草稿', value: '0' },
   { label: '已发布', value: '1' },
   { label: '已停用', value: '2' },
+];
+
+const startTypeOptions = [
+  { label: '手动发起流程', value: 0 },
+  { label: '被动触发流程', value: 1 },
 ];
 
 export function getWorkflowStatusOptions() {
@@ -22,68 +24,10 @@ export function getWorkflowStatusText(status?: string) {
   return statusOptions.find((item) => item.value === status)?.label ?? '未知';
 }
 
-export function useFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      component: 'Input',
-      fieldName: 'definitionId',
-      label: '流程定义ID',
-      dependencies: {
-        triggerFields: ['definitionId'],
-        show() {
-          return false;
-        },
-      },
-    },
-    {
-      component: 'Input',
-      fieldName: 'definitionName',
-      label: '流程名称',
-      rules: 'required',
-      componentProps: {
-        allowClear: true,
-        maxlength: 128,
-      },
-    },
-    {
-      component: 'Select',
-      fieldName: 'category',
-      label: '流程分类',
-      componentProps: {
-        options: getLocalDictList('WORKFLOW_CATEGORY'),
-      },
-    },
-    {
-      component: 'ApiSelect',
-      fieldName: 'businessType',
-      label: '业务类型',
-      renderComponentContent: () => ({
-        optionRender: ({ option }: any) => {
-          return h('div', {}, `${option.label}-${option.value}`);
-        },
-      }),
-      componentProps: {
-        allowClear: true,
-        api: getBusinessHooksApi,
-        labelField: 'label',
-        valueField: 'businessType',
-        resultField: 'items',
-        placeholder: '请选择业务类型,空表示纯流程不绑定业务',
-        // 业务绑定暂未投入业务使用,禁用选择;关联表/钩子等基础设施保留,启用时移除 disabled 即可
-        disabled: true,
-      },
-    },
-    {
-      component: 'Textarea',
-      fieldName: 'remark',
-      label: '备注',
-      componentProps: {
-        maxlength: 256,
-        rows: 3,
-        showCount: true,
-      },
-    },
-  ];
+export function getWorkflowStartTypeText(startType?: number) {
+  return (
+    startTypeOptions.find((item) => item.value === startType)?.label ?? '未知'
+  );
 }
 
 export function useGridFormSchema(): VbenFormSchema[] {
@@ -141,6 +85,24 @@ export function useColumns(): VxeTableGridOptions<WorkflowDefinitionApi.Workflow
     {
       field: 'businessType',
       title: '业务类型',
+      cellRender: {
+        name: 'DictTag',
+        props: {
+          type: 'BUSINESS_TYPE',
+        },
+      },
+    },
+    {
+      field: 'startType',
+      title: '启动类型',
+      width: 120,
+      formatter: ({ row }) => getWorkflowStartTypeText(row.startType),
+    },
+    {
+      field: 'isDefault',
+      title: '默认流程',
+      width: 90,
+      slots: { default: 'defaultFlag' },
     },
     {
       field: 'category',

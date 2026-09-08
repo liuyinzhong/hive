@@ -52,15 +52,14 @@
       "initiator": "Initiator",
       "initiatorHint": "The initiator of this instance will approve this node at runtime.",
       "participant": "Approval Participants",
-      "participantHint": "Resolved at runtime to the initiator plus everyone who has approved any node of this instance.",
-      "nodeBusinessKey": "Status Sync Event",
-      "nodeBusinessKeyPlaceholder": "Select the state change triggered on approval; empty means no sync",
-      "nodeBusinessKeyHint": "After the node is approved, the linked business object's state is updated by the selected event (e.g., Review Passed → reviewed). Must match the business type declared by the definition."
+      "participantHint": "Resolved at runtime to the initiator plus everyone who has approved any node of this instance."
     },
-    "endAction": {
-      "createStory": "Create story after approval",
-      "createStoryHint": "Once all nodes are approved, a planned story is created in story management automatically",
-      "createStoryRule": "Story fields are mapped from form fields with identical names (e.g., story_title, story_rich_text); fields absent from the form stay empty, and the story cannot advance until its project is filled in. When enabled, the definition must not declare a business type and the form must contain the story_title field, otherwise publishing fails."
+    "automation": {
+      "title": "Automation Actions",
+      "hint": "Executed in list order when the node completes, updating fields of the linked business object; any failure rolls back the whole approval. Selecting an action snapshots its config into this flow; later changes in the action library do not affect mounted content.",
+      "addPlaceholder": "Search and add automation action",
+      "loadFailed": "Failed to load automation action options",
+      "duplicate": "This action is already mounted on the current node"
     },
     "branch": {
       "strategy": "Branch Strategy",
@@ -116,7 +115,8 @@
       "conditionMissing": "Condition node “{0}” has a branch without conditions",
       "priorityInvalid": "Condition node “{0}” has an invalid branch priority",
       "priorityDuplicate": "Non-default branch priorities for condition node “{0}” must be unique"
-    }
+    },
+    "formSchemaDisabledHint": "Passive-triggered flows start from business objects and cannot bind a form"
   },
   "form": {
     "common": {
@@ -251,15 +251,19 @@
     }
   },
   "permission": {
+    "automationList": "List",
+    "automationCreate": "Create",
+    "automationUpdate": "Update",
+    "automationDelete": "Delete",
     "copyList": "List",
     "copyRead": "View",
     "definitionCanvasUpdate": "Update Canvas",
     "definitionCreate": "Create",
     "definitionDelete": "Delete",
     "definitionDetail": "Details",
-    "definitionFormSchemaUpdate": "Update Form",
     "definitionList": "List",
     "definitionPublish": "Publish",
+    "definitionSetDefault": "Set as Default",
     "definitionStatus": "Enable/Disable",
     "definitionUpdate": "Update",
     "instanceCancel": "Cancel",

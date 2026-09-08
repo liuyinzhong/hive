@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router';
 import { Page, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button, message } from 'antdv-next';
+import { Button, message, Tag } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
@@ -122,6 +122,10 @@ async function onDelete(row: WorkflowDefinitionApi.WorkflowDefinition) {
           <Plus class="size-5" />
           新建流程
         </Button>
+      </template>
+      <template #defaultFlag="{ row }">
+        <Tag v-if="row.isDefault" color="gold">是</Tag>
+        <Tag v-else>否</Tag>
       </template>
       <template #action="{ row }">
         <VbenTableAction
