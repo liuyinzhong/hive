@@ -79,6 +79,8 @@ const assigneeNameSnapshot = ref(new Map<string, string>());
 // 自动化动作选项:按流程定义业务类型过滤的启用动作,供节点挂载选择
 const automationOptions = ref<WorkflowAutomationApi.AutomationResponse[]>([]);
 const automationLoading = ref(false);
+// 动作选择器当前选中值:受控绑定,添加挂载后立即清空
+const selectedAutomationToAdd = ref<string>();
 const copyNameSnapshot = ref(new Map<string, string>());
 const roleOptions = ref<SelectOption[]>([]);
 const userOptions = ref<SelectOption[]>([]);
@@ -140,9 +142,10 @@ function getAutomationOptionSummary(
   return '-';
 }
 
-/** 选择器选中即挂载动作;选择器保持未选中状态,可连续添加。 */
+/** 选择器选中即挂载动作;添加后立即清空选择器,避免与列表已挂载项产生歧义,可连续添加下一个。 */
 function onSelectAutomation(automationId: string) {
   addAutomation(automationId);
+  selectedAutomationToAdd.value = undefined;
 }
 
 /** 挂载动作:选中即把动作配置快照写入画布,同一节点同一动作只挂一次。 */
@@ -888,10 +891,10 @@ defineExpose({ submit });
         </div>
 
         <Select
+          v-model:value="selectedAutomationToAdd"
           :loading="automationLoading"
           :options="automationSelectOptions"
           :placeholder="$t('flow.designer.automation.addPlaceholder')"
-          :value="undefined"
           option-filter-prop="label"
           show-search
           @change="onSelectAutomation"
