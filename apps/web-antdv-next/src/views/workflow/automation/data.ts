@@ -3,11 +3,12 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { WorkflowAutomationApi } from '#/api/workflow';
 
-import { getLocalDictList } from '#/dicts';
+import { getLocalDictList, getLocalDictText } from '#/dicts';
 
-/** 动作类型选项:版本1仅修改字段值,预留插入记录等 */
+/** 动作类型选项 */
 export const automationActionTypeOptions = [
   { label: '修改字段值', value: 'update_field' },
+  { label: '插入记录', value: 'insert_record' },
 ];
 
 /** 按动作类型返回展示文本。 */
@@ -18,12 +19,23 @@ export function getActionTypeText(actionType?: string) {
   );
 }
 
-/** 动作摘要:目标字段 → 目标值。 */
+/** 动作摘要:按动作类型把参数翻译成一句人话。 */
 export function getAutomationSummary(
   row: WorkflowAutomationApi.AutomationResponse,
 ) {
-  const field = row.targetFieldLabel || row.targetField;
-  return `${field} → ${row.targetValue}`;
+  if (row.actionType === 'insert_record' && row.insertRecord) {
+    const target = getLocalDictText('BUSINESS_TYPE', row.businessType);
+    const fields = (row.insertRecord.mappings || [])
+      .map((item) => item.fieldLabel || item.field)
+      .slice(0, 3)
+      .join('、');
+    return `插入${target}:${fields}`;
+  }
+  const updateField = row.updateField;
+  if (updateField) {
+    return `${updateField.targetFieldLabel || updateField.targetField} → ${updateField.targetValue}`;
+  }
+  return '-';
 }
 
 export function useGridFormSchema(): VbenFormSchema[] {

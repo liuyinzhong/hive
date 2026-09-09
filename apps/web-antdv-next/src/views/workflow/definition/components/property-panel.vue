@@ -115,16 +115,30 @@ async function loadAutomationOptions() {
   }
 }
 
-/** 动作选择器选项:展示动作名与目标摘要。 */
+/** 动作选择器选项:按动作类型生成摘要文案。 */
 const automationSelectOptions = computed<SelectOption[]>(() =>
   automationOptions.value
     .filter((item) => item.automationId)
     .map((item) => ({
-      label: `${item.automationName} (${item.targetFieldLabel || item.targetField} → ${item.targetValue})`,
+      label: `${item.automationName} (${getAutomationOptionSummary(item)})`,
       title: item.remark,
       value: item.automationId as string,
     })),
 );
+
+/** 按动作类型生成挂载选项摘要。 */
+function getAutomationOptionSummary(
+  item: WorkflowAutomationApi.AutomationResponse,
+) {
+  if (item.actionType === 'insert_record') {
+    return '插入记录';
+  }
+  const updateField = item.updateField;
+  if (updateField) {
+    return `${updateField.targetFieldLabel || updateField.targetField} → ${updateField.targetValue}`;
+  }
+  return '-';
+}
 
 /** 选择器选中即挂载动作;选择器保持未选中状态,可连续添加。 */
 function onSelectAutomation(automationId: string) {
@@ -145,19 +159,83 @@ function addAutomation(automationId: string) {
     message.warning($t('flow.designer.automation.duplicate'));
     return;
   }
-  formState.automations.push({
-    automationId: automation.automationId,
+  const mount = buildAutomationMount(automation);
+  warnMissingFormFields(automation, mount);
+  formState.automations.push(mount);
+}
+
+/** 按动作类型把动作配置固化为画布快照。 */
+function buildAutomationMount(
+  automation: WorkflowAutomationApi.AutomationResponse,
+): WorkflowAutomationMount {
+  const base: WorkflowAutomationMount = {
+    automationId: automation.automationId as string,
     automationName: automation.automationName,
     businessType: automation.businessType,
     actionType: automation.actionType,
-    targetField: automation.targetField,
-    targetValue: automation.targetValue,
-  });
+  };
+  if (
+    automation.actionType === 'insert_record' &&
+    automation.insertRecord
+  ) {
+    base.mappings = (automation.insertRecord.mappings || []).map((item) => ({
+      field: item.field,
+      sourceType: item.sourceType,
+      ...(item.sourceType === 'fixed'
+        ? { value: item.value ?? '' }
+        : { formField: item.formField ?? '' }),
+    }));
+  } else if (automation.updateField) {
+    base.targetField = automation.updateField.targetField;
+    base.targetValue = automation.updateField.targetValue;
+  }
+  return base;
+}
+
+/** 挂载时按当前流程绑定表单校验表单字段引用,缺失给出警告但不阻断(发布校验为最终依据)。 */
+function warnMissingFormFields(
+  automation: WorkflowAutomationApi.AutomationResponse,
+  mount: WorkflowAutomationMount,
+) {
+  if (automation.actionType !== 'insert_record' || !mount.mappings) {
+    return;
+  }
+  const formFieldNames = new Set(
+    (props.formFields ?? []).map((field) => field.fieldName),
+  );
+  const missing = mount.mappings
+    .filter(
+      (item) => item.sourceType === 'form' && !formFieldNames.has(item.formField ?? ''),
+    )
+    .map((item) => item.formField);
+  if (!props.formFields?.length) {
+    message.warning($t('flow.designer.automation.noFormBinding'));
+    return;
+  }
+  if (missing.length) {
+    message.warning(
+      $t('flow.designer.automation.formFieldMissing', [missing.join('、')]),
+    );
+  }
 }
 
 /** 移除挂载的动作。 */
 function removeAutomation(index: number) {
   formState.automations.splice(index, 1);
+}
+
+/** 挂载项摘要:按动作类型把快照参数翻译成一行说明。 */
+function getMountSummary(mount: WorkflowAutomationMount) {
+  if (mount.actionType === 'insert_record') {
+    const filled = (mount.mappings ?? []).filter((item) =>
+      item.sourceType === 'fixed'
+        ? !!item.value?.trim()
+        : !!item.formField?.trim(),
+    );
+    const fields = filled.map((item) => item.field).join('、');
+    return `插入 ${fields}${filled.length ? `(${filled.length}项)` : ''}`;
+  }
+  return `${mount.targetField ?? ''} → ${mount.targetValue ?? ''}`;
 }
 
 /** 上移/下移挂载动作,列表顺序即执行顺序。 */
@@ -290,9 +368,7 @@ function readAutomationMounts(value: unknown): WorkflowAutomationMount[] {
       typeof item === 'object' &&
       item !== null &&
       typeof (item as WorkflowAutomationMount).automationId === 'string' &&
-      typeof (item as WorkflowAutomationMount).actionType === 'string' &&
-      typeof (item as WorkflowAutomationMount).targetField === 'string' &&
-      typeof (item as WorkflowAutomationMount).targetValue === 'string',
+      typeof (item as WorkflowAutomationMount).actionType === 'string',
   );
 }
 
@@ -780,7 +856,7 @@ defineExpose({ submit });
           >
             <div class="automation-info">
               <span class="automation-name">{{ item.automationName }}</span>
-              <small>{{ item.targetField }} → {{ item.targetValue }}</small>
+              <small>{{ getMountSummary(item) }}</small>
             </div>
             <div class="automation-actions">
               <Button

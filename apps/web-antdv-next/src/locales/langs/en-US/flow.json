@@ -59,7 +59,9 @@
       "hint": "Executed in list order when the node completes, updating fields of the linked business object; any failure rolls back the whole approval. Selecting an action snapshots its config into this flow; later changes in the action library do not affect mounted content.",
       "addPlaceholder": "Search and add automation action",
       "loadFailed": "Failed to load automation action options",
-      "duplicate": "This action is already mounted on the current node"
+      "duplicate": "This action is already mounted on the current node",
+      "noFormBinding": "This flow has no bound form; form-field sources will resolve to nothing at runtime",
+      "formFieldMissing": "Form field(s) {0} not found in the bound form; publishing will be rejected"
     },
     "branch": {
       "strategy": "Branch Strategy",

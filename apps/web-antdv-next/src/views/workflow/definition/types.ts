@@ -20,16 +20,27 @@ export interface WorkflowConditionRule {
   value: string;
 }
 
+/** 插入记录动作的字段映射快照 */
+export interface WorkflowInsertMapping {
+  field: string;
+  sourceType: 'fixed' | 'form';
+  value?: string;
+  formField?: string;
+}
+
 /** 节点挂载的自动化动作快照:选中动作时固化配置到画布,发布后按快照执行,不回查动作库 */
 export interface WorkflowAutomationMount {
   automationId: string;
   automationName: string;
   /** 业务类型,字典BUSINESS_TYPE的值 */
   businessType: string;
-  /** 动作类型:update_field修改字段值;预留insert_record */
+  /** 动作类型:update_field修改字段值 insert_record插入记录 */
   actionType: string;
-  targetField: string;
-  targetValue: string;
+  /** 修改字段值参数 */
+  targetField?: string;
+  targetValue?: string;
+  /** 插入记录参数(插入目标即动作业务类型) */
+  mappings?: WorkflowInsertMapping[];
   /** 执行条件留位,版本1恒为空(始终执行) */
   condition?: string;
 }

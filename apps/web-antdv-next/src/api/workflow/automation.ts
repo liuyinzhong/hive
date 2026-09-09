@@ -3,45 +3,70 @@ import type { Recordable } from '@vben/types';
 import { requestClient } from '#/api/request';
 
 export namespace WorkflowAutomationApi {
-  /** 动作类型:修改字段值;预留插入记录 */
-  export type AutomationActionType = 'update_field';
+  /** 动作类型:修改字段值(挂被动触发流程) / 插入记录(挂手动发起流程) */
+  export type AutomationActionType = 'insert_record' | 'update_field';
 
-  /** 动作参数,结构随动作类型变化;update_field 为修改字段值参数 */
-  export interface AutomationActionConfig {
-    /** 目标字段,须在业务类型可写字段白名单内 */
+  /** 插入记录的值来源:fixed固定值 form表单字段 */
+  export type InsertSourceType = 'fixed' | 'form';
+
+  /** 修改字段值参数 */
+  export interface UpdateFieldConfig {
+    /** 目标字段,须在业务类型状态字段白名单内 */
     targetField: string;
     /** 目标值,字典字段须为对应字典的合法值 */
     targetValue: string;
+    targetFieldLabel?: string;
+    dictType?: string;
+  }
+
+  /** 插入记录的字段映射行 */
+  export interface InsertRecordMapping {
+    /** 目标字段,须在目标业务类型可插字段目录内 */
+    field: string;
+    sourceType: InsertSourceType;
+    /** 固定值 */
+    value?: string;
+    /** 表单字段名(弱引用,发布时按流程绑定表单校验) */
+    formField?: string;
+  }
+
+  /** 插入记录参数:插入目标即动作的业务类型,无独立目标类型 */
+  export interface InsertRecordConfig {
+    mappings: InsertRecordMapping[];
+  }
+
+  /** 插入记录响应:附目录元数据供渲染 */
+  export interface InsertRecordConfigResponse extends InsertRecordConfig {
+    targetBusinessLabel?: string;
+    mappings: Array<InsertRecordMapping & {
+      fieldLabel?: string;
+      required?: boolean;
+      dictType?: string;
+      isRefField?: boolean;
+    }>;
   }
 
   export interface WfAutomation {
     automationId?: string;
     automationName: string;
-    /** 业务类型,字典BUSINESS_TYPE的值(0需求/10任务/20缺陷/30版本) */
+    /** 业务类型,字典BUSINESS_TYPE的值(0需求/10任务/20缺陷/30版本),设计器挂载过滤维度 */
     businessType: string;
     actionType: AutomationActionType;
-    actionConfig: AutomationActionConfig;
+    /** 动作参数:actionType=update_field 时为 UpdateFieldConfig,insert_record 时为 InsertRecordConfig */
+    actionConfig: InsertRecordConfig | UpdateFieldConfig;
     /** 状态:0启用 1停用;提交数字,列表响应为字符串 */
     status?: number | string;
     remark?: string;
-    creatorId?: string;
-    creatorName?: string;
-    createDate?: string;
-    updateDate?: string;
   }
 
-  /** 动作响应:附带字段元数据,供摘要渲染和字典翻译 */
+  /** 动作响应:参数按动作类型挂载在 updateField / insertRecord 上 */
   export interface AutomationResponse {
     automationId?: string;
     automationName: string;
     businessType: string;
     actionType: string;
-    targetField: string;
-    targetValue: string;
-    /** 目标字段中文名,来自后端业务类型注册表 */
-    targetFieldLabel: string;
-    /** 目标值字典类型,前端按字典翻译展示 */
-    dictType: string;
+    updateField?: UpdateFieldConfig;
+    insertRecord?: InsertRecordConfigResponse;
     status: string;
     remark?: string;
     creatorId?: string;
@@ -50,11 +75,12 @@ export namespace WorkflowAutomationApi {
     updateDate?: string;
   }
 
-  /** 业务类型可写字段元数据 */
+  /** 业务类型字段元数据;required 仅可插字段目录携带 */
   export interface AutomationFieldMeta {
     field: string;
     label: string;
     dictType: string;
+    required?: boolean;
   }
 }
 
@@ -77,11 +103,14 @@ export const getAutomationOptionsApi = async (businessType?: string) => {
   );
 };
 
-/** 返回业务类型的可写字段元数据,供动作库表单目标字段下拉 */
-export const getAutomationFieldsApi = async (businessType: string) => {
+/** 返回业务类型的字段元数据:purpose=update 状态字段白名单;purpose=insert 可插字段目录(含必填) */
+export const getAutomationFieldsApi = async (
+  businessType: string,
+  purpose?: 'insert' | 'update',
+) => {
   return requestClient.get<WorkflowAutomationApi.AutomationFieldMeta[]>(
     '/workflow/automations/fields',
-    { params: { businessType } },
+    { params: { businessType, purpose } },
   );
 };
 
