@@ -81,6 +81,9 @@ const automationOptions = ref<WorkflowAutomationApi.AutomationResponse[]>([]);
 const automationLoading = ref(false);
 // 动作选择器当前选中值:受控绑定,添加挂载后立即清空
 const selectedAutomationToAdd = ref<string>();
+// 动作选择器重建键:antdv Select 的 update:value 与 change 时序会导致受控清空被覆盖,
+// 添加动作后递增此键强制销毁重建选择器,确保回到未选中状态
+const automationSelectKey = ref(0);
 const copyNameSnapshot = ref(new Map<string, string>());
 const roleOptions = ref<SelectOption[]>([]);
 const userOptions = ref<SelectOption[]>([]);
@@ -146,6 +149,8 @@ function getAutomationOptionSummary(
 function onSelectAutomation(automationId: string) {
   addAutomation(automationId);
   selectedAutomationToAdd.value = undefined;
+  // 递增重建键销毁重建选择器,清掉 antdv 内部残留的选中/搜索状态
+  automationSelectKey.value += 1;
 }
 
 /** 挂载动作:选中即把动作配置快照写入画布,同一节点同一动作只挂一次。 */
@@ -324,6 +329,8 @@ watch(
   [() => props.element, () => props.formFields],
   ([element]) => {
     const properties = element?.properties ?? {};
+    // 切换节点时清空动作选择器的选中残留
+    selectedAutomationToAdd.value = undefined;
     formState.text = normalizeText(element?.text);
     formState.assigneeType = properties.assigneeType ?? 'user';
     formState.approvalMode = properties.approvalMode === 'all' ? 'all' : 'any';
@@ -891,6 +898,7 @@ defineExpose({ submit });
         </div>
 
         <Select
+          :key="automationSelectKey"
           v-model:value="selectedAutomationToAdd"
           :loading="automationLoading"
           :options="automationSelectOptions"
