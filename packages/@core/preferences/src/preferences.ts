@@ -177,18 +177,22 @@ class PreferenceManager {
     Object.assign(this.state, this.initialPreferences);
     this.replaceCustomPreferences(this.initialCustomPreferences);
 
-    // 保存偏好设置至缓存
-    await this.saveToCache();
-
     // 直接触发 UI 更新
     this.handleUpdates(this.state);
+
+    // 保存偏好设置至缓存
+    await this.saveToCache();
   };
 
   /**
    * 更新扩展偏好设置
    * @param updates - 要更新的扩展偏好设置
    */
-  updateCustomPreferences = (updates: DeepPartial<object>) => {
+  updateCustomPreferences = <
+    TCustomPreferences extends object = CustomPreferencesRecord,
+  >(
+    updates: DeepPartial<TCustomPreferences>,
+  ) => {
     if (!this.customPreferencesExtension) {
       return;
     }
