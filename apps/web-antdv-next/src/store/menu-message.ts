@@ -1,8 +1,11 @@
 import {
   SystemMenuMessageApi,
+  getMenuMessageListApi,
   getMenuMessageUnreadSummaryApi,
   markMenuMessageReadApi,
   openMenuMessageStreamApi,
+  readAllMenuMessagesApi,
+  readMenuMessageItemApi,
 } from '#/api/system';
 
 import { computed, ref, watch } from 'vue';
@@ -28,6 +31,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
   const accessStore = useAccessStore();
   const { customPreferences } = usePreferences();
   const summaries = ref<SystemMenuMessageApi.UnreadSummary[]>([]);
+  const recentMessages = ref<SystemMenuMessageApi.MenuMessageItem[]>([]);
   const downloadTaskRevision = ref(0);
   const running = ref(false);
   const readingPaths = new Set<string>();
@@ -82,6 +86,9 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
     return result;
   });
 
+  /** 通知中心红点依据:当前用户未读总数 */
+  const totalUnreadCount = computed(() => sumUnreadCount(summaries.value));
+
   watch(
     () => accessStore.accessMenus,
     () => syncMenuBadges(),
@@ -107,6 +114,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
     abortController = null;
     streamBuffer = '';
     summaries.value = [];
+    recentMessages.value = [];
     downloadTaskRevision.value = 0;
     readingPaths.clear();
     // 暂停正在播放的提示音，避免登出或重置后继续响铃
@@ -160,6 +168,37 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
         readingPaths.delete(path);
       }
     }
+  }
+
+  /** 拉取通知中心最近消息列表,在弹层打开时调用;失败保持现有列表,下次打开重试 */
+  async function fetchRecentMessages() {
+    try {
+      recentMessages.value = await getMenuMessageListApi();
+    } catch {
+      // 列表属于瞬时视图,拉取失败不阻塞弹层展示
+    }
+  }
+
+  /** 逐条已读:仅标记单条消息,不影响同菜单其它消息的角标 */
+  async function readMessageItem(id: string) {
+    await readMenuMessageItemApi(id);
+    const target = recentMessages.value.find((item) => item.id === id);
+    if (target) {
+      target.readAt = new Date().toISOString();
+    }
+  }
+
+  /** 全量已读:本地先行清零角标,服务端通过 SSE 推送校准 */
+  async function readAllMessages() {
+    await readAllMenuMessagesApi();
+    const readAt = new Date().toISOString();
+    for (const item of recentMessages.value) {
+      if (!item.readAt) {
+        item.readAt = readAt;
+      }
+    }
+    summaries.value = [];
+    syncMenuBadges();
   }
 
   async function consumeStream(currentLifecycleId: number) {
@@ -284,8 +323,13 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
   return {
     $reset,
     downloadTaskRevision,
+    fetchRecentMessages,
     markMenuRead,
+    readAllMessages,
+    readMessageItem,
+    recentMessages,
     start,
     stop,
+    totalUnreadCount,
   };
 });

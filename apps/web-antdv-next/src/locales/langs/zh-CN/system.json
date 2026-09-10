@@ -1,4 +1,11 @@
 {
+  "notice": {
+    "empty": "暂无消息",
+    "listHint": "仅显示最近 100 条消息",
+    "markAllRead": "全部已读",
+    "markRead": "标为已读",
+    "title": "通知中心"
+  },
   "dept": {
     "list": "部门列表",
     "createDate": "创建时间",

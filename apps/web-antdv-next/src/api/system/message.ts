@@ -14,8 +14,7 @@ export namespace SystemMenuMessageApi {
     DownloadTaskChanged: 'downloadTaskChanged',
   } as const;
 
-  export type EventName =
-    (typeof EventName)[keyof typeof EventName];
+  export type EventName = (typeof EventName)[keyof typeof EventName];
 
   export interface UnreadSummary {
     menuId: string;
@@ -32,6 +31,34 @@ export namespace SystemMenuMessageApi {
   export interface ReadMessageRequest {
     menuId: string;
   }
+
+  /** 通知中心列表项 */
+  export interface MenuMessageItem {
+    /** 发送方头像;当前后端未返回,为空时展示"系统"文字头像 */
+    avatar?: null | string;
+    content: string;
+    createDate: string;
+    id: string;
+    menuId: string;
+    menuName: string;
+    menuPath: string;
+    readAt: null | string;
+    title: string;
+  }
+}
+
+export function getMenuMessageListApi() {
+  return requestClient.get<SystemMenuMessageApi.MenuMessageItem[]>(
+    '/system/messages',
+  );
+}
+
+export function readMenuMessageItemApi(messageId: string) {
+  return requestClient.put(`/system/messages/${messageId}/read`);
+}
+
+export function readAllMenuMessagesApi() {
+  return requestClient.put('/system/messages/readAll');
 }
 
 export function getMenuMessageUnreadSummaryApi() {

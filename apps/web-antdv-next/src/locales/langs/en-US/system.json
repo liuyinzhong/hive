@@ -1,4 +1,11 @@
 {
+  "notice": {
+    "empty": "No messages",
+    "listHint": "Showing the latest 100 messages",
+    "markAllRead": "Mark all read",
+    "markRead": "Mark as read",
+    "title": "Notifications"
+  },
   "dept": {
     "list": "Department List",
     "createDate": "Create Time",

@@ -41,7 +41,7 @@
 | src/views/system、src/api/system、src/api/auth | [系统管理](./system/README.md) |
 | src/views/_core/authentication、src/views/_core/profile | [登录与访问控制 UI](./system/access-control-ui.md) |
 | src/views/public | [外部页面 UI](./system/audit-public-page-ui.md) |
-| src/store/menu-message.ts、src/layouts/basic.vue 的消息接入 | [菜单消息 UI](./system/message-push-ui.md) |
+| src/api/system/message.ts、src/store/menu-message.ts、src/layouts/components/notification-center.vue、src/layouts/basic.vue 的消息接入 | [菜单消息 UI](./system/message-push-ui.md) |
 
 ## 不属于 Hive 业务文档的源码
 
