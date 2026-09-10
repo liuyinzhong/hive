@@ -156,7 +156,17 @@
     "dataScopeDepartment": "Current Department Data",
     "dataScopeDepartmentAndChildren": "Current and Child Department Data",
     "dataScopeSelf": "Own Data Only",
-    "dataScopeNone": "No Data"
+    "dataScopeNone": "No Data",
+    "userTitle": "Role Users - {0}",
+    "joinDate": "Join Date",
+    "keyword": "Keyword",
+    "addUser": "Add User",
+    "addUserEmpty": "Please select users to add first",
+    "addUserSuccess": "{0} user(s) added",
+    "removeUser": "Remove",
+    "removeUserConfirm": "Are you sure to remove user \"{0}\" from this role?",
+    "removeUserSuccess": "{0} user(s) removed",
+    "removing": "Removing {0}..."
   },
   "dict": {
     "title": "Dict Management",
@@ -336,6 +346,7 @@
     "roleList": "List",
     "roleStatus": "Enable/Disable",
     "roleUpdate": "Update",
+    "roleUser": "User",
     "userCreate": "Create",
     "userDelete": "Delete",
     "userDetail": "Details",

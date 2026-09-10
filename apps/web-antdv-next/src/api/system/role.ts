@@ -18,6 +18,7 @@ export namespace SystemRoleApi {
     roleId: string;
     roleTitle: string;
     status: 0 | 1;
+    userCount?: number;
   }
 
   export interface RoleListParams {
@@ -37,6 +38,31 @@ export namespace SystemRoleApi {
   }
 
   export type SaveRoleRequest = Omit<SystemRoleFace, 'createDate' | 'roleId'>;
+
+  export interface RoleUserItem {
+    deptTitles: string[];
+    joinDate?: string;
+    realName: string;
+    status: 0 | 1;
+    userId: string;
+    username: string;
+  }
+
+  export interface RoleUserListParams {
+    keyword?: string;
+    page?: number;
+    pageSize?: number;
+    status?: 0 | 1;
+  }
+
+  export interface RoleUserListResult {
+    items: RoleUserItem[];
+    total: number;
+  }
+
+  export interface RoleUserChangeResult {
+    count: number;
+  }
 }
 
 /**
@@ -102,5 +128,45 @@ export const getAllRoleListApi = async () => {
 export const getRoleDetailApi = async (roleId: string) => {
   return requestClient.get<SystemRoleApi.SystemRoleFace>(
     `/system/roles/${roleId}`,
+  );
+};
+
+/**
+ * 分页获取角色用户列表
+ */
+export const getRoleUsersApi = async (
+  roleId: string,
+  params: SystemRoleApi.RoleUserListParams,
+) => {
+  return requestClient.get<SystemRoleApi.RoleUserListResult>(
+    `/system/roles/${roleId}/users`,
+    {
+      params,
+    },
+  );
+};
+
+/**
+ * 批量添加角色用户，已存在的关联幂等跳过，返回实际新增数量
+ */
+export const addRoleUsersApi = async (roleId: string, userIds: string[]) => {
+  return requestClient.post<SystemRoleApi.RoleUserChangeResult>(
+    `/system/roles/${roleId}/users`,
+    { userIds },
+  );
+};
+
+/**
+ * 批量移除角色用户，不存在的关联幂等跳过，返回实际移除数量
+ */
+export const removeRoleUsersApi = async (
+  roleId: string,
+  userIds: string[],
+) => {
+  return requestClient.delete<SystemRoleApi.RoleUserChangeResult>(
+    `/system/roles/${roleId}/users`,
+    {
+      data: { userIds },
+    },
   );
 };

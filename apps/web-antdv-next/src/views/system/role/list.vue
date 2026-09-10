@@ -15,10 +15,16 @@ import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
+import UserDrawer from './modules/user-drawer.vue';
 import { formatVxeTableSorts } from '#/utils';
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
+  destroyOnClose: true,
+});
+
+const [RoleUserDrawer, roleUserDrawerApi] = useVbenDrawer({
+  connectedComponent: UserDrawer,
   destroyOnClose: true,
 });
 
@@ -27,7 +33,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     wrapperClass: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4',
     fieldMappingTime: [['createDate', ['startDate', 'endDate']]],
     schema: useGridFormSchema(),
-    submitOnChange: false,
+    submitOnEnter: true,
   },
   gridOptions: {
     columns: useColumns(),
@@ -66,6 +72,12 @@ function onEdit(row: SystemRoleApi.SystemRoleFace) {
   formDrawerApi.setData(row).open();
 }
 
+function onUsers(row: SystemRoleApi.SystemRoleFace) {
+  roleUserDrawerApi
+    .setData({ roleId: row.roleId, roleTitle: row.roleTitle })
+    .open();
+}
+
 function onDelete(row: SystemRoleApi.SystemRoleFace) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.roleTitle]),
@@ -96,6 +108,7 @@ function onCreate() {
 <template>
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
+    <RoleUserDrawer @change="onRefresh" />
     <Grid>
       <template #action="{ row }">
         <VbenTableAction
@@ -104,6 +117,12 @@ function onCreate() {
               text: '编辑',
               icon: 'lucide:edit',
               onClick: () => onEdit(row),
+            },
+            {
+              text: `${$t('system.permission.roleUser')}(${row.userCount ?? 0})`,
+              icon: 'lucide:users',
+              auth: ['system:role:detail'],
+              onClick: () => onUsers(row),
             },
           ]"
           :dropdown-actions="[
@@ -117,7 +136,7 @@ function onCreate() {
               },
             },
           ]"
-          align="center"
+          align="start"
         />
       </template>
       <template #toolbar-tools>

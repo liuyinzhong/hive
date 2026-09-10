@@ -198,12 +198,73 @@ export function useColumns(): VxeTableGridOptions['columns'] {
       sortBy: 'createDate',
     },
     {
+      field: 'operation',
+      fixed: 'right',
+      slots: { default: 'action' },
+      title: $t('system.role.operation'),
+      width: 210,
+    },
+  ];
+}
+
+export function useRoleUserColumns(): VxeTableGridOptions['columns'] {
+  return [
+    {
+      field: 'username',
+      title: $t('system.user.username'),
+      width: 140,
+    },
+    {
+      field: 'realName',
+      title: $t('system.user.realName'),
+      width: 120,
+    },
+    {
+      field: 'deptTitles',
+      title: $t('system.user.dept'),
+    },
+    {
+      field: 'status',
+      title: $t('system.user.status'),
+      width: 90,
+      cellRender: {
+        name: 'CellTag',
+      },
+    },
+    {
+      field: 'joinDate',
+      title: $t('system.role.joinDate'),
+      width: 180,
+    },
+    {
       align: 'center',
       field: 'operation',
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('system.role.operation'),
-      width: 130,
+      width: 100,
+    },
+  ];
+}
+
+export function useRoleUserSelectColumns(): VxeTableGridOptions['columns'] {
+  return [
+    {
+      type: 'checkbox',
+      width: 50,
+    },
+    {
+      field: 'username',
+      title: $t('system.user.username'),
+    },
+    {
+      field: 'realName',
+      title: $t('system.user.realName'),
+    },
+    { field: 'roleTitles', title: '角色' },
+    {
+      field: 'deptTitles',
+      title: $t('system.user.dept'),
     },
   ];
 }
