@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { SystemMenuMessageApi } from '#/api/system';
 
-import { ref } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Bell, CircleCheckBig, MailCheck } from '@vben/icons';
@@ -18,6 +18,30 @@ defineOptions({ name: 'NotificationCenter' });
 const open = ref(false);
 const router = useRouter();
 const menuMessageStore = useMenuMessageStore();
+
+/** 新未读到货时摇铃一次:监听 store 脉冲套上动画类,动画结束(1 秒)后移除,保证下次推送可重复触发 */
+const ringing = ref(false);
+let ringingTimer: null | ReturnType<typeof setTimeout> = null;
+
+watch(
+  () => menuMessageStore.bellPulse,
+  () => {
+    ringing.value = true;
+    if (ringingTimer) {
+      clearTimeout(ringingTimer);
+    }
+    ringingTimer = setTimeout(() => {
+      ringing.value = false;
+      ringingTimer = null;
+    }, 1000);
+  },
+);
+
+onUnmounted(() => {
+  if (ringingTimer) {
+    clearTimeout(ringingTimer);
+  }
+});
 
 function handleOpenChange(visible: boolean) {
   open.value = visible;
@@ -150,6 +174,7 @@ function handleItemClick(item: SystemMenuMessageApi.MenuMessageItem) {
     <div class="mr-2 flex h-full items-center">
       <button
         class="bell-button relative flex size-8 cursor-pointer items-center justify-center rounded-md text-foreground hover:bg-accent"
+        :class="{ 'bell-ringing': ringing }"
         type="button"
       >
         <span
@@ -164,7 +189,8 @@ function handleItemClick(item: SystemMenuMessageApi.MenuMessageItem) {
 
 <style scoped>
 .bell-button {
-  &:hover {
+  &:hover,
+  &.bell-ringing {
     svg {
       animation: bell-ring 1s both;
     }

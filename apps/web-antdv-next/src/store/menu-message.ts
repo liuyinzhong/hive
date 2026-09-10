@@ -32,6 +32,9 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
   const { customPreferences } = usePreferences();
   const summaries = ref<SystemMenuMessageApi.UnreadSummary[]>([]);
   const recentMessages = ref<SystemMenuMessageApi.MenuMessageItem[]>([]);
+  /** 新未读到货脉冲:每遇未读总数增加的推送自增一次,驱动顶栏铃铛播放摇铃动画 */
+  const bellPulse = ref(0);
+  /** 下载任务完成脉冲:每下载任务完成一次自增一次,驱动对比下载任务是否完成 */
   const downloadTaskRevision = ref(0);
   const running = ref(false);
   const readingPaths = new Set<string>();
@@ -264,6 +267,8 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
           if (isFirstUnreadSummary) {
             isFirstUnreadSummary = false;
           } else if (nextTotal > previousTotal) {
+            // 新未读到货:铃铛动画与提示音同源触发;动画是视觉信号,不受提示音偏好开关控制
+            bellPulse.value += 1;
             playMessageSound();
           }
         } else if (
@@ -322,6 +327,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
 
   return {
     $reset,
+    bellPulse,
     downloadTaskRevision,
     fetchRecentMessages,
     markMenuRead,
