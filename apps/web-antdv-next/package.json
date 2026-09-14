@@ -52,6 +52,8 @@
     "@visactor/vtable-editors": "catalog:",
     "@visactor/vtable-gantt": "catalog:",
     "@vueuse/core": "catalog:",
+    "@worm-vue3-print/canvas": "1.2.2",
+    "@worm-vue3-print/core": "1.2.2",
     "antdv-next": "catalog:",
     "dayjs": "catalog:",
     "json-bigint": "catalog:",

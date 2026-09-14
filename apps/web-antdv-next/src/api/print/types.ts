@@ -1,89 +1,14 @@
+import type { TemplateData } from '@worm-vue3-print/canvas';
+
+/**
+ * 打印模板版式协议：直接复用 worm-vue3-print 的 TemplateData，
+ * 后端只做边界校验并原样存储（draft_layout/published_layout longtext）。
+ */
+export type { TemplateData };
+
 export type PrintDocumentType = 'PURCHASE_INBOUND';
 
 export type PrintTemplateStatus = 'DRAFT' | 'PUBLISHED';
-
-export interface PrintPageMargins {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-export interface PrintPageSettings {
-  size: 'A4';
-  orientation: 'landscape' | 'portrait';
-  margin: PrintPageMargins;
-}
-
-export interface PrintElementStyle {
-  color: string;
-  fontSize: number;
-  fontWeight: string;
-  lineHeight: number;
-  textAlign: 'center' | 'left' | 'right';
-  border: string;
-}
-
-export type PrintElementKind =
-  | 'field'
-  | 'image'
-  | 'line'
-  | 'signature'
-  | 'text';
-
-export interface PrintLayoutElement {
-  id: string;
-  kind: PrintElementKind;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  text: string;
-  fieldPath: string;
-  imageUrl: string;
-  style: PrintElementStyle;
-}
-
-export interface PrintSection {
-  height: number;
-  elements: PrintLayoutElement[];
-}
-
-export interface PrintTableColumn {
-  id: string;
-  fieldPath: string;
-  title: string;
-  width: number;
-  format: string;
-}
-
-export interface PrintDetailTable {
-  id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  columns: PrintTableColumn[];
-}
-
-export interface PrintBodySection {
-  height: number;
-  table: null | PrintDetailTable;
-}
-
-export interface PrintLayoutSections {
-  pageHeader: PrintSection;
-  documentHeader: PrintSection;
-  body: PrintBodySection;
-  documentFooter: PrintSection;
-  pageFooter: PrintSection;
-}
-
-export interface PrintLayout {
-  version: 1;
-  page: PrintPageSettings;
-  sections: PrintLayoutSections;
-}
 
 export interface PrintTemplateListItem {
   createDate?: null | string;
@@ -98,8 +23,8 @@ export interface PrintTemplateListItem {
 }
 
 export interface PrintTemplateDetail extends PrintTemplateListItem {
-  draftLayout: PrintLayout;
-  publishedLayout: PrintLayout | null;
+  draftLayout: TemplateData;
+  publishedLayout: TemplateData | null;
 }
 
 export interface PrintFieldDefinition {
@@ -127,6 +52,7 @@ export interface PrintDocumentData {
   items: Array<Record<string, unknown>>;
   schemaVersion: number;
   summary: Record<string, unknown>;
+  system: Record<string, unknown>;
 }
 
 export interface PrintDocumentBundle {
@@ -136,12 +62,12 @@ export interface PrintDocumentBundle {
 
 export interface CreatePrintTemplateRequest {
   documentType: PrintDocumentType;
-  draftLayout: PrintLayout;
+  draftLayout: TemplateData;
   templateName: string;
 }
 
 export interface UpdatePrintTemplateRequest {
-  draftLayout: PrintLayout;
+  draftLayout: TemplateData;
   rowVersion: number;
   templateName: string;
 }

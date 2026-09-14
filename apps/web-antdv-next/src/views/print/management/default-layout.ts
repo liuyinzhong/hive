@@ -1,188 +1,185 @@
-import type {
-  PrintLayout,
-  PrintLayoutElement,
-  PrintElementStyle,
-} from '#/api/print';
+import type { PrintElementData, TableCell } from '@worm-vue3-print/canvas';
 
-const normalStyle = (): PrintElementStyle => ({
-  color: '#1f2937',
-  fontSize: 3.5,
-  fontWeight: 'normal',
-  lineHeight: 1.35,
-  textAlign: 'left',
-  border: 'none',
-});
+import type { TemplateData } from '#/api/print';
 
-function element(
-  value: Partial<PrintLayoutElement> & Pick<PrintLayoutElement, 'id' | 'kind'>,
-): PrintLayoutElement {
-  return {
-    fieldPath: '',
-    height: 7,
-    imageUrl: '',
-    style: normalStyle(),
-    text: '',
-    width: 40,
-    x: 0,
-    y: 0,
-    ...value,
-  };
-}
+/**
+ * 采购入库单默认版式（worm-vue3-print TemplateData）。
+ * 内容区宽度 = A4 宽 210 - 左右边距 20 = 190mm；坐标单位 mm。
+ */
 
-export function createDefaultPrintLayout(): PrintLayout {
-  return {
-    version: 1,
-    page: {
-      margin: { bottom: 10, left: 10, right: 10, top: 10 },
-      orientation: 'portrait',
-      size: 'A4',
-    },
-    sections: {
-      pageHeader: {
-        height: 22,
-        elements: [
-          element({
-            id: 'page-header-title',
-            kind: 'text',
-            style: {
-              ...normalStyle(),
-              fontSize: 6,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            },
-            text: '采购入库单',
-            width: 190,
-            x: 0,
-            y: 1,
-          }),
-          element({
-            id: 'page-header-inbound-no',
-            kind: 'field',
-            fieldPath: 'header.inboundNo',
-            text: '入库单号：',
-            width: 190,
-            x: 0,
-            y: 10,
-          }),
-        ],
-      },
-      documentHeader: {
-        height: 28,
-        elements: [
-          element({
-            id: 'document-header-inbound-date',
-            kind: 'field',
-            fieldPath: 'header.inboundDate',
-            text: '入库日期：',
-            width: 90,
-            x: 100,
-            y: 3,
-          }),
-          element({
-            id: 'document-header-supplier',
-            kind: 'field',
-            fieldPath: 'header.supplierName',
-            text: '供应商：',
-            width: 90,
-            x: 0,
-            y: 12,
-          }),
-          element({
-            id: 'document-header-warehouse',
-            kind: 'field',
-            fieldPath: 'header.warehouseName',
-            text: '入库仓库：',
-            width: 90,
-            x: 100,
-            y: 12,
-          }),
-          element({
-            id: 'document-header-remark',
-            kind: 'field',
-            fieldPath: 'header.remark',
-            text: '备注：',
-            width: 190,
-            x: 0,
-            y: 21,
-          }),
-        ],
-      },
-      body: {
-        height: 189,
-        table: {
-          columns: [
-            tableColumn('line-no', 'items.lineNo', '行号', 12),
-            tableColumn('sku-code', 'items.skuCode', 'SKU编码', 25),
-            tableColumn('product-name', 'items.productName', '产品名称', 35),
-            tableColumn('spec-name', 'items.specName', '规格', 25),
-            tableColumn('batch-no', 'items.batchNo', '批号', 28),
-            tableColumn('expiry-date', 'items.expiryDate', '有效期至', 25),
-            tableColumn('quantity', 'items.quantity', '数量', 15, 'number'),
-            tableColumn('amount', 'items.amount', '金额', 25, 'currency'),
-          ],
-          height: 189,
-          id: 'detail-table',
-          width: 190,
-          x: 0,
-          y: 0,
-        },
-      },
-      documentFooter: {
-        height: 28,
-        elements: [
-          element({
-            id: 'document-footer-line-count',
-            kind: 'field',
-            fieldPath: 'summary.lineCount',
-            text: '合计行数：',
-            width: 60,
-            x: 0,
-            y: 4,
-          }),
-          element({
-            id: 'document-footer-total-amount',
-            kind: 'field',
-            fieldPath: 'summary.totalAmount',
-            text: '合计金额：',
-            width: 70,
-            x: 70,
-            y: 4,
-          }),
-          element({
-            id: 'document-footer-signature',
-            kind: 'signature',
-            text: '制单：________________    收货：________________    复核：________________',
-            width: 190,
-            x: 0,
-            y: 16,
-          }),
-        ],
-      },
-      pageFooter: {
-        height: 10,
-        elements: [
-          element({
-            id: 'page-footer-number',
-            kind: 'field',
-            fieldPath: 'system.pageNumber',
-            style: { ...normalStyle(), textAlign: 'right' },
-            text: '第',
-            width: 50,
-            x: 140,
-            y: 1,
-          }),
-        ],
-      },
-    },
-  };
-}
+const detailTableColumns = [
+  { field: 'items.lineNo', title: '行号', width: 14 },
+  { field: 'items.skuCode', title: 'SKU编码', width: 26 },
+  { field: 'items.productName', title: '产品名称', width: 38 },
+  { field: 'items.specName', title: '规格', width: 22 },
+  { field: 'items.batchNo', title: '批号', width: 28 },
+  { field: 'items.expiryDate', title: '有效期至', width: 24 },
+  { field: 'items.quantity', title: '数量', width: 16 },
+  { field: 'items.amount', title: '金额', width: 22 },
+] as const;
 
-function tableColumn(
+function textElement(
   id: string,
-  fieldPath: string,
-  title: string,
-  width: number,
-  format = 'text',
-) {
-  return { fieldPath, format, id, title, width };
+  formatter: string,
+  options: Partial<PrintElementData['options']> = {},
+): PrintElementData {
+  return {
+    id,
+    options: {
+      fontSize: 10,
+      height: 6,
+      left: 0,
+      textAlign: 'left',
+      top: 0,
+      verticalAlign: 'middle',
+      width: 190,
+      ...options,
+      formatter,
+    },
+    printElementType: { title: '文本', type: 'text' },
+  };
+}
+
+function tableCell(
+  id: string,
+  formatter: string,
+  extra: Partial<TableCell> = {},
+): TableCell {
+  return {
+    borders: {
+      bottom: { color: '#333333', style: 'solid', width: 0.5 },
+      left: { color: '#333333', style: 'solid', width: 0.5 },
+      right: { color: '#333333', style: 'solid', width: 0.5 },
+      top: { color: '#333333', style: 'solid', width: 0.5 },
+    },
+    formatter,
+    id,
+    ...extra,
+  };
+}
+
+export function createDefaultPrintTemplate(): TemplateData {
+  return {
+    firstPageOverlay: { elements: [], height: 0 },
+    footer: {
+      elements: [
+        textElement('pi-footer-print-time', '打印时间：{system.printTime}', {
+          width: 80,
+        }),
+        textElement('pi-footer-page', '第 {pageIndex} 页 / 共 {totalPages} 页', {
+          left: 120,
+          textAlign: 'right',
+          width: 70,
+        }),
+      ],
+      height: 8,
+    },
+    header: {
+      elements: [
+        textElement('pi-title', '采购入库单', {
+          fontSize: 16,
+          fontWeight: 'bold',
+          height: 9,
+          letterSpacing: 2,
+          textAlign: 'center',
+        }),
+        textElement('pi-header-inbound-no', '入库单号：{header.inboundNo}', {
+          top: 10,
+          width: 120,
+        }),
+      ],
+      height: 18,
+    },
+    margins: { bottom: 10, left: 10, right: 10, top: 10 },
+    orientation: 'portrait',
+    paperSize: 'A4',
+    unit: 'mm',
+    watermark: {},
+    elements: [
+      textElement('pi-info-inbound-date', '入库日期：{header.inboundDate}', {
+        left: 100,
+        width: 90,
+      }),
+      textElement('pi-info-supplier', '供应商：{header.supplierName}', {
+        top: 6,
+        width: 95,
+      }),
+      textElement('pi-info-warehouse', '入库仓库：{header.warehouseName}', {
+        left: 100,
+        top: 6,
+        width: 90,
+      }),
+      textElement('pi-info-remark', '备注：{header.remark}', { top: 12 }),
+      {
+        id: 'pi-detail-table',
+        options: {
+          dataSource: 'items',
+          height: 32,
+          left: 0,
+          tableColWidths: detailTableColumns.map((column) => column.width),
+          tableDefaultFontSize: 10,
+          tableDefaultPadding: 1,
+          tablePagination: { enabled: true },
+          tableRows: [
+            {
+              cells: detailTableColumns.map((column, index) =>
+                tableCell(`pi-th-${index}`, column.title, {
+                  align: 'center',
+                  fontWeight: 'bold',
+                }),
+              ),
+              height: 8,
+              id: 'pi-th-row',
+              repeatOnPage: true,
+              type: 'header',
+            },
+            {
+              cells: detailTableColumns.map((column, index) =>
+                tableCell(
+                  `pi-td-${index}`,
+                  index === 7
+                    ? `{MONEY(${column.field})}`
+                    : `{${column.field}}`,
+                ),
+              ),
+              height: 8,
+              id: 'pi-td-row',
+              type: 'data',
+            },
+            {
+              cells: [
+                tableCell('pi-tf-0', '合计', { colspan: 6, align: 'right' }),
+                // colspan=6 消耗前 6 列，需补 5 个被合并占位格使 cells 长度恒等于列数
+                ...Array.from({ length: 5 }, (_, index) =>
+                  tableCell(`pi-tf-merged-${index}`, '', {
+                    colspan: 1,
+                    merged: true,
+                    rowspan: 1,
+                  }),
+                ),
+                tableCell('pi-tf-6', '{COUNT(items.lineNo)}', {
+                  align: 'right',
+                }),
+                tableCell('pi-tf-7', '{MONEY(SUM(items.amount))}', {
+                  align: 'right',
+                }),
+              ],
+              height: 8,
+              id: 'pi-tf-row',
+              type: 'summary',
+            },
+          ],
+          tableMode: 'dynamic',
+          top: 20,
+          width: 190,
+        },
+        printElementType: { title: '表格', type: 'table' },
+      },
+      textElement(
+        'pi-signature',
+        '制单：____________    收货：____________    复核：____________',
+        { top: 60 },
+      ),
+    ],
+  };
 }

@@ -19,7 +19,7 @@ import {
 import { $t } from '#/locales';
 import { formatVxeTableSorts } from '#/utils';
 
-import { createDefaultPrintLayout } from './default-layout';
+import { createDefaultPrintTemplate } from './default-layout';
 
 defineOptions({ name: 'PrintTemplateList' });
 
@@ -86,7 +86,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 async function createTemplate() {
   const template = await createPrintTemplateApi({
     documentType: 'PURCHASE_INBOUND',
-    draftLayout: createDefaultPrintLayout(),
+    draftLayout: createDefaultPrintTemplate(),
     templateName: $t('print.template.defaultName'),
   });
   message.success($t('print.messages.createSuccess'));
