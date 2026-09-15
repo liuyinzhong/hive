@@ -14,6 +14,16 @@ export type WorkflowNodeType =
   | 'end'
   | 'start';
 
+/** 节点操作集动作代码:approve 强制必选,其余按勾选进入集合 */
+export type WorkflowNodeOperation =
+  | 'addSign'
+  | 'approve'
+  | 'reject'
+  | 'removeSign'
+  | 'returnNode'
+  | 'returnPrevious'
+  | 'transfer';
+
 export interface WorkflowConditionRule {
   field: string;
   operator: string;
@@ -63,6 +73,8 @@ export interface WorkflowElementProperties {
   >;
   /** 自动化动作挂载快照,任意节点类型可配多个,按顺序同事务执行 */
   automations?: WorkflowAutomationMount[];
+  /** 节点操作集:审批节点办理人可用动作,缺失或为空按同意+拒绝缺省集 */
+  operations?: WorkflowNodeOperation[];
   isDefaultBranch?: boolean;
   nodeType?: WorkflowNodeType;
   priority?: number;

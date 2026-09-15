@@ -30,6 +30,10 @@
       "end": "End Node",
       "endShort": "End"
     },
+    "operations": {
+      "title": "Available Actions",
+      "approveHint": "Approve is required to advance the flow and cannot be disabled; unchecked actions are hidden from assignees of this node."
+    },
     "actor": {
       "assigneeType": "Assignee Type",
       "approvalMode": "Approval Mode",

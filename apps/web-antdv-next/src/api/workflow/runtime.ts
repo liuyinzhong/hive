@@ -41,6 +41,8 @@ export namespace WorkflowRuntimeApi {
   }
 
   export interface WorkflowTask {
+    /** 节点操作集投影：该任务办理人可用的动作代码列表 */
+    allowedActions?: string[];
     approvalMode: ApprovalMode;
     assigneeId: string;
     assigneeName: string;

@@ -62,6 +62,14 @@ function openDetail(row: WorkflowRuntimeApi.WorkflowTask) {
   router.push(`/workflow/instance/detail/${row.instanceId}`);
 }
 
+/** 任务可用操作包含指定动作时才渲染对应按钮（后端下发的节点操作集投影）。 */
+function actionAllowed(
+  row: WorkflowRuntimeApi.WorkflowTask,
+  action: string,
+): boolean {
+  return (row.allowedActions ?? []).includes(action);
+}
+
 function openAction(
   action: 'approve' | 'reject',
   task: WorkflowRuntimeApi.WorkflowTask,
@@ -96,6 +104,7 @@ function openOperation(
             {
               disabled: row.status !== '0',
               icon: 'lucide:check',
+              ifShow: actionAllowed(row, 'approve'),
               text: $t('flow.runtime.task.approve'),
               onClick: () => openAction('approve', row),
             },
@@ -103,6 +112,7 @@ function openOperation(
               danger: true,
               disabled: row.status !== '0',
               icon: 'lucide:x',
+              ifShow: actionAllowed(row, 'reject'),
               text: $t('flow.runtime.task.reject'),
               onClick: () => openAction('reject', row),
             },
@@ -112,30 +122,35 @@ function openOperation(
             {
               disabled: row.status !== '0',
               icon: 'lucide:send',
+              ifShow: actionAllowed(row, 'transfer'),
               text: $t('flow.runtime.task.operation.transfer'),
               onClick: () => openOperation('transfer', row),
             },
             {
               disabled: row.status !== '0',
               icon: 'lucide:user-round-plus',
+              ifShow: actionAllowed(row, 'addSign'),
               text: $t('flow.runtime.task.operation.addSign'),
               onClick: () => openOperation('addSign', row),
             },
             {
               disabled: row.status !== '0',
               icon: 'lucide:user-round-minus',
+              ifShow: actionAllowed(row, 'removeSign'),
               text: $t('flow.runtime.task.operation.removeSign'),
               onClick: () => openOperation('removeSign', row),
             },
             {
               disabled: row.status !== '0',
               icon: 'lucide:undo-2',
+              ifShow: actionAllowed(row, 'returnPrevious'),
               text: $t('flow.runtime.task.operation.returnPrevious'),
               onClick: () => openOperation('returnPrevious', row),
             },
             {
               disabled: row.status !== '0',
               icon: 'lucide:corner-up-left',
+              ifShow: actionAllowed(row, 'returnNode'),
               text: $t('flow.runtime.task.operation.returnNode'),
               onClick: () => openOperation('returnNode', row),
             },

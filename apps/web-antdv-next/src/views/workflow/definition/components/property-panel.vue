@@ -5,6 +5,7 @@ import { IconifyIcon } from '@vben/icons';
 
 import {
   Button,
+  CheckboxGroup,
   Input,
   InputNumber,
   message,
@@ -32,6 +33,7 @@ import type {
   WorkflowConditionRule,
   WorkflowCopyType,
   WorkflowElement,
+  WorkflowNodeOperation,
   WorkflowPropertyValues,
 } from '../types';
 
@@ -58,6 +60,7 @@ interface PropertyFormState {
     WorkflowDefinitionApi.WorkflowFormFieldPermission
   >;
   isDefaultBranch: boolean;
+  operations: WorkflowNodeOperation[];
   priority: number;
   text: string;
 }
@@ -102,6 +105,7 @@ const formState = reactive<PropertyFormState>({
   copyType: 'user',
   fieldPermissions: {},
   isDefaultBranch: false,
+  operations: ['approve', 'reject'],
   priority: 1,
   text: '',
 });
@@ -266,6 +270,30 @@ const approvalModeOptions = [
   { label: $t('flow.designer.actor.approvalAny'), value: 'any' },
   { label: $t('flow.designer.actor.approvalAll'), value: 'all' },
 ];
+// 节点操作集选项:同意置首且锁定选中,文案复用运行时动作词条
+const nodeOperationOptions: Array<{
+  disabled?: boolean;
+  label: string;
+  value: WorkflowNodeOperation;
+}> = [
+  {
+    disabled: true,
+    label: $t('flow.runtime.task.approve'),
+    value: 'approve',
+  },
+  { label: $t('flow.runtime.task.reject'), value: 'reject' },
+  { label: $t('flow.runtime.task.operation.transfer'), value: 'transfer' },
+  { label: $t('flow.runtime.task.operation.addSign'), value: 'addSign' },
+  { label: $t('flow.runtime.task.operation.removeSign'), value: 'removeSign' },
+  {
+    label: $t('flow.runtime.task.operation.returnPrevious'),
+    value: 'returnPrevious',
+  },
+  {
+    label: $t('flow.runtime.task.operation.returnNode'),
+    value: 'returnNode',
+  },
+];
 const copyTypeOptions = [
   { label: $t('flow.designer.actor.specifiedUser'), value: 'user' },
   { label: $t('flow.designer.actor.specifiedRole'), value: 'role' },
@@ -356,6 +384,7 @@ watch(
     formState.conditionRules = readConditionRules(properties.conditionRules);
     formState.branchMode = 'firstMatch';
     formState.isDefaultBranch = properties.isDefaultBranch === true;
+    formState.operations = readNodeOperations(properties.operations);
     formState.priority = normalizePriority(properties.priority);
   },
   { immediate: true },
@@ -380,6 +409,22 @@ function readAutomationMounts(value: unknown): WorkflowAutomationMount[] {
       typeof (item as WorkflowAutomationMount).automationId === 'string' &&
       typeof (item as WorkflowAutomationMount).actionType === 'string',
   );
+}
+
+/** 读取画布中的节点操作集:过滤枚举外脏数据,缺失或为空按操作缺省集回显,同意恒选中。 */
+function readNodeOperations(value: unknown): WorkflowNodeOperation[] {
+  const selected = nodeOperationOptions
+    .map((option) => option.value)
+    .filter((operation) =>
+      Array.isArray(value) ? value.includes(operation) : false,
+    );
+  if (selected.length === 0) {
+    return ['approve', 'reject'];
+  }
+  if (!selected.includes('approve')) {
+    selected.unshift('approve');
+  }
+  return selected;
 }
 
 /** 加载可用于流程配置的启用用户和启用角色。 */
@@ -675,6 +720,11 @@ function submit() {
     // 发起人节点恒为单人,审批方式固定或签
     values.approvalMode =
       formState.assigneeType === 'starter' ? 'any' : formState.approvalMode;
+    // 操作集显式固化:同意强制保留置首,未勾选项不写入
+    const operations = formState.operations.filter(
+      (operation) => operation !== 'approve',
+    );
+    values.operations = ['approve', ...operations];
     const assigneeIds = dynamicAssignee ? [...formState.assigneeIds] : [];
     values.assigneeIds = assigneeIds;
     values.assigneeNames = resolveSelectionNames(
@@ -813,6 +863,18 @@ defineExpose({ submit });
             {{ $t('flow.designer.actor.approvalModeHint') }}
           </div>
         </template>
+
+        <div class="field">
+          <span>{{ $t('flow.designer.operations.title') }}</span>
+          <CheckboxGroup
+            v-model:value="formState.operations"
+            class="node-operation-options"
+            :options="nodeOperationOptions"
+          />
+        </div>
+        <div class="field-hint">
+          {{ $t('flow.designer.operations.approveHint') }}
+        </div>
       </template>
 
       <template v-if="nodeType === 'approve' || nodeType === 'start'">
@@ -1126,6 +1188,14 @@ defineExpose({ submit });
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* 节点操作集复选框平铺:单行排布自动换行,不折叠不下拉 */
+.node-operation-options {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 12px;
+  row-gap: 4px;
 }
 
 .field-permission-section {

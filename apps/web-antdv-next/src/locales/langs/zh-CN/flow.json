@@ -30,6 +30,10 @@
       "end": "结束节点",
       "endShort": "结束"
     },
+    "operations": {
+      "title": "可执行操作",
+      "approveHint": "同意为流程推进必需，不可取消；未勾选的操作对该节点办理人不可见。"
+    },
     "actor": {
       "assigneeType": "审批人类型",
       "approvalMode": "审批方式",
