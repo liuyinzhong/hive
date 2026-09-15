@@ -50,7 +50,9 @@ export default {
 
     function confirmChange(newStatus: 0 | 1) {
       const statusText =
-        newStatus === 1 ? $t('common.enabled') : $t('common.disabled');
+        newStatus === 1
+          ? $t('form.status.enabled')
+          : $t('form.status.disabled');
       return new Promise<boolean>((resolve) => {
         confirm({
           content: $t('ui.actionMessage.statusChangeConfirm', [statusText]),
