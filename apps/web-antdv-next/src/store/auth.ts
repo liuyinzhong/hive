@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
           getAccessCodesApi(),
         ]);
 
-        userInfo = fetchUserInfoResult;
+        userInfo = fetchUserInfoResult as any;
 
         userStore.setUserInfo(userInfo);
         accessStore.setAccessCodes(accessCodes);
@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
           onSuccess
             ? await onSuccess?.()
             : await router.push(
-                userInfo.homePath || preferences.app.defaultHomePath,
+                userInfo?.homePath || preferences.app.defaultHomePath,
               );
         }
 
@@ -88,6 +88,15 @@ export const useAuthStore = defineStore('auth', () => {
     } catch {
       // 不做任何处理
     }
+    await logoutLocal(redirect);
+  }
+
+  /**
+   * 本地清理会话并返回登录页，不调用登出接口。
+   * 用于凭证已被服务端判定失效的场景（修改或重置密码后的强制退出）：
+   * 此时调用登出接口只会得到 401 并再次触发重新认证流程。
+   */
+  async function logoutLocal(redirect: boolean = false) {
     resetAllStores();
     accessStore.setLoginExpired(false);
 
@@ -104,7 +113,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function fetchUserInfo() {
     const userInfo = await getProfileApi();
-    userStore.setUserInfo(userInfo);
+    userStore.setUserInfo(userInfo as any);
     return userInfo;
   }
 
@@ -118,5 +127,6 @@ export const useAuthStore = defineStore('auth', () => {
     fetchUserInfo,
     loginLoading,
     logout,
+    logoutLocal,
   };
 });

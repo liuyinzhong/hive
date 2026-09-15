@@ -48,18 +48,30 @@ function createRequestClient(
   /**
    * 重新认证逻辑
    */
+  // 重新认证进行中标记：凭证失效时登出接口本身也会 401，
+  // 若不加保护会形成"重新认证 -> 登出 -> 401 -> 重新认证"的无限循环
+  let reauthenticating = false;
+
   async function doReAuthenticate() {
-    console.warn('Access token or refresh token is invalid or expired. ');
-    const accessStore = useAccessStore();
-    const authStore = useAuthStore();
-    accessStore.setAccessToken(null);
-    if (
-      preferences.app.loginExpiredMode === 'modal' &&
-      accessStore.isAccessChecked
-    ) {
-      accessStore.setLoginExpired(true);
-    } else {
-      await authStore.logout();
+    if (reauthenticating) {
+      return;
+    }
+    reauthenticating = true;
+    try {
+      console.warn('Access token or refresh token is invalid or expired. ');
+      const accessStore = useAccessStore();
+      const authStore = useAuthStore();
+      accessStore.setAccessToken(null);
+      if (
+        preferences.app.loginExpiredMode === 'modal' &&
+        accessStore.isAccessChecked
+      ) {
+        accessStore.setLoginExpired(true);
+      } else {
+        await authStore.logout();
+      }
+    } finally {
+      reauthenticating = false;
     }
   }
 

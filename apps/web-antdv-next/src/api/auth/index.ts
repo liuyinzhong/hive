@@ -27,6 +27,14 @@ export namespace AuthApi {
     /** 签名图片URL；null 表示不修改，空字符串表示清空 */
     signature?: null | string;
   }
+
+  /** 修改密码接口参数 */
+  export interface ChangePasswordParams {
+    /** 旧密码 */
+    oldPassword: string;
+    /** 新密码，至少 8 位且含字母、数字、特殊字符中的两类 */
+    newPassword: string;
+  }
 }
 
 /**
@@ -78,6 +86,13 @@ export async function updateProfileApi(data: AuthApi.UpdateProfileParams) {
     '/auth/profile',
     data,
   );
+}
+
+/**
+ * 修改当前用户密码；成功后密码版本号递增，当前会话凭证立即失效，需使用新密码重新登录
+ */
+export async function changePasswordApi(data: AuthApi.ChangePasswordParams) {
+  return requestClient.put('/auth/password', data);
 }
 
 /**

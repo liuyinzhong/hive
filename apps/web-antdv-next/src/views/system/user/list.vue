@@ -4,7 +4,7 @@ import type { SystemUserApi, SystemDeptApi } from '#/api/system';
 
 import { nextTick, onMounted, ref, watch } from 'vue';
 
-import { Page, Tree, useVbenDrawer } from '@vben/common-ui';
+import { Page, Tree, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { Button, message, Card } from 'antdv-next';
@@ -18,6 +18,7 @@ import {
 import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
+import ResetPasswordModal from './reset-password-modal.vue';
 import Detail from './detail.vue';
 
 import { formatVxeTableSorts } from '#/utils';
@@ -91,6 +92,11 @@ const [DetailDrawer, detailDrawerApi] = useVbenDrawer({
   destroyOnClose: true,
 });
 
+const [ResetPasswordModalComp, resetPasswordModalApi] = useVbenModal({
+  connectedComponent: ResetPasswordModal,
+  destroyOnClose: true,
+});
+
 function onEdit(row: SystemUserApi.SystemUserFace) {
   drawerApi.setData(row).open();
 }
@@ -101,6 +107,10 @@ function onDetail(row: SystemUserApi.SystemUserFace) {
 
 function onCreate() {
   drawerApi.setData({}).open();
+}
+
+function onResetPassword(row: SystemUserApi.SystemUserFace) {
+  resetPasswordModalApi.setData(row).open();
 }
 
 async function onDelete(row: SystemUserApi.SystemUserFace) {
@@ -133,6 +143,7 @@ function onRefresh() {
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
     <DetailDrawer @success="onRefresh" />
+    <ResetPasswordModalComp />
     <div class="flex size-full">
       <Card class="w-1/6">
         <Tree
@@ -165,6 +176,12 @@ function onRefresh() {
                   text: '编辑',
                   icon: 'lucide:edit',
                   onClick: () => onEdit(row),
+                },
+                {
+                  text: '重置密码',
+                  icon: 'lucide:key-round',
+                  auth: 'system:user:resetPassword',
+                  onClick: () => onResetPassword(row),
                 },
               ]"
               :dropdown-actions="[

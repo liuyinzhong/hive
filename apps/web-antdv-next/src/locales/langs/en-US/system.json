@@ -358,6 +358,7 @@
     "userDelete": "Delete",
     "userDetail": "Details",
     "userList": "List",
+    "userResetPassword": "Reset Password",
     "userStatus": "Enable/Disable",
     "userUpdate": "Update",
     "operationLogList": "List",

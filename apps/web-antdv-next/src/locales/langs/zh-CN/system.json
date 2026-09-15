@@ -359,6 +359,7 @@
     "userDelete": "删除",
     "userDetail": "详情",
     "userList": "列表",
+    "userResetPassword": "重置密码",
     "userStatus": "启停",
     "userUpdate": "修改",
     "operationLogList": "列表",

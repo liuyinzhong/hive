@@ -15,6 +15,8 @@ import { usePreferences } from '@vben/preferences';
 
 import { defineStore } from 'pinia';
 
+import { useAuthStore } from '#/store/auth';
+
 const reconnectDelay = 2000;
 
 /** 新消息提示音静态资源路径，位于 public/sounds/ 下 */
@@ -29,6 +31,7 @@ function sumUnreadCount(
 
 export const useMenuMessageStore = defineStore('menu-message', () => {
   const accessStore = useAccessStore();
+  const authStore = useAuthStore();
   const { customPreferences } = usePreferences();
   const summaries = ref<SystemMenuMessageApi.UnreadSummary[]>([]);
   const recentMessages = ref<SystemMenuMessageApi.MenuMessageItem[]>([]);
@@ -275,6 +278,12 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
           eventName === SystemMenuMessageApi.EventName.DownloadTaskChanged
         ) {
           downloadTaskRevision.value += 1;
+        } else if (
+          eventName === SystemMenuMessageApi.EventName.ForceLogout
+        ) {
+          // 密码变更（本人修改或管理员重置）后的强制退出：静默清理会话返回登录页；
+          // 旧凭证的服务端失效由密码版本号比对保证
+          void authStore.logoutLocal(false);
         }
       } catch {
         // 不应用格式错误的推送，下一次完整汇总会自动校准。

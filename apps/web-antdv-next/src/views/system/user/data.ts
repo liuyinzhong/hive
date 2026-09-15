@@ -15,6 +15,44 @@ import {
   updateUserStatusApi,
 } from '#/api/system';
 import { $t } from '#/locales';
+import { passwordSchema } from '#/utils/password';
+
+/** 重置密码表单配置：管理员为目标用户直接设置新密码 */
+export function useResetPasswordFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'VbenInputPassword',
+      fieldName: 'newPassword',
+      label: '新密码',
+      componentProps: {
+        passwordStrength: true,
+        placeholder: '请输入新密码',
+      },
+      rules: passwordSchema,
+    },
+    {
+      component: 'VbenInputPassword',
+      fieldName: 'confirmPassword',
+      label: '确认密码',
+      componentProps: {
+        placeholder: '请再次输入新密码',
+      },
+      dependencies: {
+        rules(values) {
+          const { newPassword } = values;
+          return z
+            .string({ error: '请再次输入新密码' })
+            .min(1, { message: '请再次输入新密码' })
+            .refine((value) => value === newPassword, {
+              message: '两次输入的密码不一致',
+            });
+        },
+        triggerFields: ['newPassword'],
+      },
+    },
+  ];
+}
+
 /** 新增表单配置 */
 export function useFormSchema(): VbenFormSchema[] {
   return [
@@ -60,10 +98,14 @@ export function useFormSchema(): VbenFormSchema[] {
     },
 
     {
-      component: 'InputPassword',
+      component: 'VbenInputPassword',
       fieldName: 'password',
       label: '密码',
-      rules: 'required',
+      componentProps: {
+        passwordStrength: true,
+        placeholder: '请输入密码',
+      },
+      rules: passwordSchema,
       dependencies: {
         triggerFields: ['userId'],
         if: (values) => !values.userId,
@@ -221,7 +263,7 @@ export function useColumns(): VxeTableGridOptions<SystemUserApi.SystemUserFace>[
       fixed: 'right',
       slots: { default: 'action' },
       title: '操作',
-      width: 180,
+      width: 300,
     },
   ];
 }

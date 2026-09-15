@@ -484,6 +484,12 @@ watch(() => route.params.instanceId, loadDetail, { immediate: true });
                             <div class="min-w-0 break-words text-sm">
                               {{ recordComment(operation) || '-' }}
                             </div>
+                            <img
+                              v-if="operation.signature"
+                              :src="operation.signature"
+                              :alt="`${operation.operatorName ?? ''} 的签名`"
+                              class="h-9 w-auto shrink-0 rounded border bg-white object-contain px-1"
+                            />
                             <time
                               class="text-muted-foreground shrink-0 whitespace-nowrap text-xs"
                             >

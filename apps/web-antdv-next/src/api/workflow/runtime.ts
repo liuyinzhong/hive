@@ -83,6 +83,8 @@ export namespace WorkflowRuntimeApi {
     operatorId?: null | string;
     operatorName?: null | string;
     recordId: string;
+    /** 签署人签名快照URL，仅同意/拒绝/退回记录有值 */
+    signature?: null | string;
     taskId?: null | string;
   }
 

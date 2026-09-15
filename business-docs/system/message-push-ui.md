@@ -23,6 +23,7 @@
 |---|---|---|---|
 | `unreadSummary` | `EventName.UnreadSummary` | 建立连接后立即推送一次；之后未读汇总发生变化时推送 | 以服务端完整数组覆盖本地汇总并重新计算全部菜单角标 |
 | `downloadTaskChanged` | `EventName.DownloadTaskChanged` | 下载任务终态生成或状态变化时推送 | 仅递增下载任务修订号，由下载中心监听后重新查询列表 |
+| `forceLogout` | `EventName.ForceLogout` | 本人修改密码或管理员重置密码成功后推送 | 静默调用 `authStore.logoutLocal(false)` 清理会话并返回登录页，不弹窗、不调用登出接口；数据体为空对象 |
 
 - 格式错误的事件不写入状态，等待后续完整汇总校准。
 - 服务端每 30 秒发送一次心跳，心跳事件不携带业务数据，前端不写入状态。

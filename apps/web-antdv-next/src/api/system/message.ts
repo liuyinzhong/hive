@@ -12,6 +12,8 @@ export namespace SystemMenuMessageApi {
     UnreadSummary: 'unreadSummary',
     /** 下载任务变化事件：仅递增下载任务修订号，由下载中心监听后重新查询列表 */
     DownloadTaskChanged: 'downloadTaskChanged',
+    /** 强制退出事件：密码变更后要求当前用户全部在线页签清理会话返回登录页 */
+    ForceLogout: 'forceLogout',
   } as const;
 
   export type EventName = (typeof EventName)[keyof typeof EventName];

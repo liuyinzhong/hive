@@ -15,11 +15,16 @@ export namespace SystemUserApi {
     leaderUserId?: null | string;
     leaderUserName?: null | string;
     desc: string;
-    password?: string;
     disabled: boolean;
     createDate: string;
     updateDate: string;
     status: 0 | 1;
+  }
+
+  /** 管理员重置密码参数 */
+  export interface ResetUserPasswordParams {
+    /** 新密码，至少 8 位且含字母、数字、特殊字符中的两类 */
+    newPassword: string;
   }
 }
 
@@ -74,4 +79,14 @@ export const updateUserStatusApi = async (
   data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
 ) => {
   return requestClient.put(`/system/users/${userId}/status`, data);
+};
+
+/**
+ * 管理员重置用户密码；成功后目标用户全部会话失效，需使用新密码重新登录
+ */
+export const resetUserPasswordApi = async (
+  userId: number | string,
+  data: SystemUserApi.ResetUserPasswordParams,
+) => {
+  return requestClient.put(`/system/users/${userId}/password`, data);
 };
