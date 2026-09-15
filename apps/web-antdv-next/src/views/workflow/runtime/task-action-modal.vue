@@ -22,8 +22,8 @@ import {
 import {
   applyFieldPermissions,
   pickVariablesByPermission,
-  type WorkflowFieldPermissions,
 } from './field-permission';
+import type { WorkflowFieldPermissions } from './field-permission';
 
 interface ModalData {
   action: 'approve' | 'reject';
@@ -81,7 +81,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(open) {
     if (!open) return;
-    modalData.value = modalApi.getData<ModalData>();
+    modalData.value = modalApi.getData() as ModalData | undefined;
     comment.value = '';
     hasApplicationFields.value = false;
     applicationFormApi.setState({ schema: [] });
@@ -114,7 +114,11 @@ async function loadApplication() {
       data.action === 'reject'
         ? degradeRejectPermissions(node.fieldPermissions)
         : node.fieldPermissions;
-    const runtimeSchema = applyFieldPermissions(schema, permissions, 'readonly');
+    const runtimeSchema = applyFieldPermissions(
+      schema,
+      permissions,
+      'readonly',
+    );
     hasApplicationFields.value = runtimeSchema.length > 0;
     // 空表单(未绑定表单 Schema 或字段权限全隐藏)跳过 setState/setValues,避免空 schema 触发表单组件异常导致 await 挂起
     if (runtimeSchema.length === 0) return;
@@ -146,22 +150,29 @@ function degradeRejectPermissions(
 </script>
 
 <template>
-  <Modal class="w-[720px]">
+  <Modal class="w-[1260px]">
     <Spin :spinning="loading">
-      <div class="task-action-content">
-        <section v-if="hasApplicationFields" class="application-section">
-          <div class="section-title">
-            {{ $t('flow.form.runtime.applicationContent') }}
-          </div>
+      <!-- 左右布局：申请内容在左，审批意见在右；无表单内容或窄屏时退化为上下堆叠 -->
+      <div
+        class="grid grid-cols-1 gap-6"
+        :class="
+          hasApplicationFields
+            ? 'lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'
+            : ''
+        "
+      >
+        <section
+          v-if="hasApplicationFields"
+          class="application-section min-w-0"
+        >
           <ApplicationForm />
         </section>
-        <label class="comment-field">
-          <span>{{ $t('flow.runtime.common.comment') }}</span>
+        <label class="comment-field min-w-0">
           <TextArea
             v-model:value="comment"
             :maxlength="512"
             :placeholder="$t('flow.runtime.task.commentPlaceholder')"
-            :rows="4"
+            :rows="8"
             show-count
           />
         </label>

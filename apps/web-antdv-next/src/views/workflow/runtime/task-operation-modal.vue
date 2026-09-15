@@ -104,7 +104,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(open) {
     if (!open) return;
-    modalData.value = modalApi.getData<ModalData>();
+    modalData.value = modalApi.getData() as ModalData | undefined;
     comment.value = '';
     options.value = [];
     selectedIds.value = [];
@@ -227,14 +227,14 @@ async function loadOptions() {
 
 .operation-field {
   gap: 8px;
-  color: hsl(var(--foreground));
   font-size: 13px;
   font-weight: 500;
+  color: hsl(var(--foreground));
 }
 
 .operation-field small {
-  color: hsl(var(--muted-foreground));
   font-size: 12px;
   font-weight: 400;
+  color: hsl(var(--muted-foreground));
 }
 </style>
