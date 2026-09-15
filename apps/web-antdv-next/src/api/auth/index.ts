@@ -4,8 +4,17 @@ import type { SystemMenuApi, SystemUserApi } from '../system';
 export namespace AuthApi {
   /** 登录接口参数 */
   export interface LoginParams {
+    /** 登录密码 */
     password?: string;
+    /** 登录用户名 */
     username?: string;
+    /** 滑块挑战票据ID；该用户名失败达到阈值后必填 */
+    captchaId?: string;
+  }
+
+  /** 滑块挑战票据签发结果 */
+  export interface CaptchaIssueResult {
+    captchaId: string;
   }
 
   /** 登录接口返回值 */
@@ -44,6 +53,13 @@ export async function loginApi(data: AuthApi.LoginParams) {
   return requestClient.post<AuthApi.LoginResult>('/auth/login', data, {
     withCredentials: true,
   });
+}
+
+/**
+ * 领取滑块挑战票据（公开接口，同 IP 每分钟限 10 次）；票据随登录提交一次性消费
+ */
+export async function issueCaptchaApi() {
+  return requestClient.post<AuthApi.CaptchaIssueResult>('/public/captcha');
 }
 
 /**
