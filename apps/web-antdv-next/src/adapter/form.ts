@@ -23,10 +23,6 @@ async function initSetupVbenForm() {
         RichEditor: 'modelValue',
         Switch: 'checked',
         Upload: 'fileList',
-        ApiCascader: 'modelValue',
-        ApiSelect: 'modelValue',
-        ApiTreeSelect: 'modelValue',
-        IconPicker: 'modelValue',
       },
     },
     rules: {
