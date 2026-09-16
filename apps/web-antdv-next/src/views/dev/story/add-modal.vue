@@ -44,7 +44,7 @@ const [Modal, modalApi] = useVbenModal({
     if (isOpen) {
       let storyRow: DevStoryApi.DevStoryFace =
         modalApi.getData() as DevStoryApi.DevStoryFace;
-      if (storyRow.storyNum) {
+      if (storyRow?.storyNum) {
         storyRow = await getStoryDetailApi(storyRow.storyNum);
         storyRow.fileIds = storyRow.fileList?.map((item: any) => ({
           ...item,
