@@ -34,84 +34,48 @@ apps/web-antdv-next
 
 ### 业务文档一致性规则
 
-`business-docs` 是业务人员、开发、测试和 AI 共用的业务知识库。新增功能、修改既有功能或修复会改变用户可见行为的缺陷时，文档同步属于同一项工作的完成条件，不能在代码完成后遗漏。
+`business-docs` 是业务人员、开发、测试和 AI 共用的业务知识库。新增功能、修改既有功能或修复会改变用户可见行为的缺陷时，文档同步是同一项工作的完成条件，不能留作后续事项。
 
-#### 文档边界
+文档边界：
 
-- 后端仓库 `../hive-admin-go/business-docs/<领域>` 是术语、业务规则、状态流转、前置条件、副作用和权限的唯一正文。
-- 本仓库 `business-docs/<领域>` 只维护页面入口、按钮展示、表单联动、刷新和交互规则，并链接后端正文。
-- `business-docs/README.md` 是页面和 API 到业务领域的总索引；新增顶层业务页面、API、Store 或菜单时必须登记。
+- 后端仓库 `../hive-admin-go/business-docs/<领域>` 是术语、业务规则、状态流转、前置条件、副作用和权限的唯一正文；本仓库 `business-docs/<领域>` 只维护页面入口、按钮展示、表单联动、刷新和交互规则，并链接后端正文。
+- `business-docs/README.md` 是页面和 API 到业务领域的总索引，新增顶层业务页面、API、Store 或菜单时必须登记。
 - 前端 `docs` 只用于 Vben 上游框架和通用技术文档，不混入 Hive 业务文档。
-- 后端 `CONTEXT.md` 只定义领域词汇，具体规则写入模块文档；新领域或跨领域关系还要同步后端 `CONTEXT-MAP.md`。
+- 后端 `CONTEXT.md` 只定义领域词汇，具体规则写入模块文档；新领域或跨领域关系同步后端 `CONTEXT-MAP.md`。
 - API 类型和页面代码不能代替业务文档，按钮隐藏也不能代替后端权限和状态校验。
 
-#### 新增功能时
+新增功能时：先与后端共同判断功能归入现有领域还是新建领域，避免前后端上下文名称不一致；后端先建立或补充领域词汇、README 和模块规则，前端再建立对应 README 与 `*-ui.md` 并链接后端正文，不复制成两套可能分叉的规则；为新页面和 API 目录增加或更新就近 `AGENTS.md`；稳定规则编号以后端正文为准，必须唯一且不复用旧含义。
 
-1. 先与后端共同判断功能应归入现有领域还是建立新领域，避免前后端使用不同上下文名称。
-2. 后端先建立或补充领域词汇、README 和模块规则；前端再建立对应 README 与 `*-ui.md`。
-3. 前端文档必须链接后端规则正文，不能复制后形成两套可能分叉的业务规则。
-4. 为新页面和 API 目录增加或更新就近 `AGENTS.md`，让 AI 在修改源码前读取对应文档。
-5. 新增或调整稳定规则编号时以后端正文为准，编号必须唯一且不得复用旧含义。
+修改功能时逐项判断并同步：术语、状态、业务前置条件和跨模块关系；接口地址、方法、字段、类型、必填、枚举、错误和分页；权限码、菜单按钮及不同状态下的可用动作；页面入口、按钮显示、表单联动、默认值、刷新和失败表现；异步任务、实时事件、幂等、并发、保留期和清理行为；对其它页面、API、Store、公共组件和后端副作用的影响。
 
-#### 修改功能时
+纯重构、格式化或内部性能调整确认没有改变业务语义时可以不改业务正文，但交付前仍必须完成文档影响检查，并在交付说明中明确“业务文档已核对，无语义变化”。
 
-必须逐项判断并同步受影响文档：
+不一致时先列出差异、当前实际行为和影响，不得静默选择一方；用户当前确认的新规则优先于旧文档，但代码、API 类型和前后端业务文档必须在同一次修改中恢复一致。完成前检查前后端相对链接、规则编号唯一性、UTF-8 编码，以及业务文档没有进入 `docs`。交付总结必须列出同步修改的业务文档，无需修改时说明核对结果和原因；业务文档未同步时，不得声称功能完整交付。
 
-- 术语、状态、业务前置条件和跨模块关系；
-- 接口地址、方法、字段、类型、必填、枚举、错误和分页；
-- 权限码、菜单按钮及不同状态下的可用动作；
-- 页面入口、按钮显示、表单联动、默认值、刷新和失败表现；
-- 异步任务、实时事件、幂等、并发、保留期和清理行为；
-- 对其它页面、API、Store、公共组件和后端副作用的影响。
+### 领域业务文档
 
-纯重构、格式化或内部性能调整如果确认没有改变业务语义，可以不改业务正文，但交付前仍必须完成文档影响检查，并在交付说明中明确“业务文档已核对，无语义变化”。
+各业务领域的阅读顺序已下沉到对应源码目录的就近 `AGENTS.md`。改动某领域前必须先读就近规则，再按其中顺序读前后端业务文档：
 
-#### 不一致处理与验证
+- ERP：`src/views/erp/AGENTS.md`、`src/api/erp/AGENTS.md`
+- 产品：`src/views/product/AGENTS.md`、`src/api/product/AGENTS.md`
+- 医疗：`src/views/medical/AGENTS.md`（`doctor`、`schedule` 子目录另有更细规则）
+- 系统管理：`src/views/system/AGENTS.md`、`src/api/system/AGENTS.md`
+- 其它领域：`src/views/<领域>/AGENTS.md` 与 `src/api/<领域>/AGENTS.md`
 
-- 文档、前端代码、后端代码、Swagger 和 SQL 不一致时，先列出差异、当前实际行为和影响，不得静默选择一方。
-- 用户当前确认的新规则优先于旧文档，但代码、API 类型和前后端业务文档必须在同一次修改中恢复一致。
-- 完成前检查前后端相对链接、规则编号唯一性、UTF-8 编码，以及业务文档没有进入 `docs`。
-- 交付总结必须列出同步修改的业务文档；若无需修改，必须说明核对结果和原因。
-- 业务文档未同步时，不得声称功能完整交付。
-
-### ERP 业务文档
-
-处理 `src/views/erp`、`src/api/erp`、ERP 国际化或其关联前后端契约前，必须按以下顺序阅读：
-
-1. `business-docs/erp/README.md`。
-2. 后端仓库 `../hive-admin-go/business-docs/erp/CONTEXT.md`。
-3. 后端仓库 `../hive-admin-go/business-docs/erp` 下当前子模块规则。
-4. `business-docs/erp` 下当前子模块 UI 文档。
-5. 当前 API、页面和后端对应 Router、Controller、Service、Model/DTO。
-
-后端业务手册是 ERP 术语、状态、业务前置条件和库存副作用的唯一正文；前端文档只维护页面入口、按钮展示、表单联动和交互规则。代码、Swagger 与业务文档不一致时，必须列出差异和影响，不得静默以任一方覆盖另一方。ERP 业务规则或 UI 行为变化时，在同一次修改中同步对应文档。
-
-### 产品与医疗业务文档
-
-处理 `src/views/product` 或 `src/api/product` 前，依次阅读 `business-docs/product/README.md`、后端 `../hive-admin-go/business-docs/product` 的领域词汇及当前规则、对应 UI 文档和当前代码。
-
-处理任一医疗模块前，依次阅读 `business-docs/medical/README.md`、后端 `../hive-admin-go/business-docs/medical/CONTEXT.md`、后端当前模块规则、对应 `*-ui.md`，最后再读当前 API、页面与后端实现。
-
-后端业务手册是产品和医疗业务规则正文，前端文档只维护页面交互。产品档案、科室、医生、患者、诊断、挂号费、排班、挂号候诊、接诊或处方审核的规则、接口、权限或 UI 行为变化时，在同一次修改中同步对应文档。
-
-### 系统管理业务文档
-
-处理 `src/api/auth`、`src/api/system`、`src/views/system`、登录与个人资料页、外部页面、消息 Store、下载中心或任一来源模块异步导出入口前，依次阅读 `business-docs/system/README.md`、后端 `../hive-admin-go/business-docs/system` 的领域词汇及当前规则、对应 UI 文档，最后再读当前代码。
-
-登录授权、动态菜单、字典参数、文件、审计、外部页面、支付渠道、菜单消息和下载中心分别有独立规则，不能互相套用。修改权限、敏感配置、SSE 生命周期、事件名、菜单角标、下载状态、文件条件、来源筛选或导出权限时，在同一次修改中同步对应文档。
+后端业务手册是该领域术语、状态、业务前置条件与副作用的唯一正文，前端只维护页面入口、按钮展示、表单联动和交互规则。登录授权、动态菜单、字典参数、文件、审计、外部页面、支付渠道、菜单消息和下载中心各有独立规则，不能互相套用。领域规则、接口、权限或 UI 行为变化时，必须在同一次修改中同步对应文档。
 
 ## 技能自动调用
 
-工程技能为全局安装（见工作区根 `AGENTS.md` 的技能路由），遵循工作区根 `AGENTS.md` 的通用技能路由。任务与技能说明匹配时，无需用户点名，必须先阅读对应 `SKILL.md` 再使用。
+工程技能全局安装，通用规则见工作区根 `AGENTS.md` 的“技能调用与路由”一节；本节只列前端技术栈的定制路由。任务与技能说明匹配时无需用户点名，先阅读对应 `SKILL.md` 再使用。
 
-- 新增页面、组件、API 调用或修复明确缺陷时，使用 `implement`；可在函数、Hook、组件行为或数据转换边界稳定验证时，同时使用 `tdd`，沿用 Vitest、Playwright 和项目现有测试方式。
-- 页面异常、请求竞态、渲染错误、构建失败或性能回退的根因不明时，使用 `diagnosing-bugs`，先建立能稳定复现问题的最小反馈命令。
-- 复杂交互、状态模型或 UI 方向无法仅靠讨论确定时，使用 `prototype`；原型与正式页面隔离，结论确认前不接入业务路由或公共组件。
-- 涉及公共组件、适配器、请求封装、状态边界或跨模块复用设计时，使用 `codebase-design`；这不改变修改公共能力前必须评估调用方并说明影响的要求。
-- 前后端字段、枚举、业务术语或页面概念存在歧义时，使用 `domain-modeling`；需要集中澄清并沉淀文档时组合 `grilling` 与 `grill-with-docs`。
-- 完成有实质代码变更的实现后使用 `code-review`，重点核对 Vben5 约定、类型安全、国际化、权限、请求状态和需求一致性。
-- 只有用户明确要求规格、任务拆分或架构巡检时，才使用 `to-spec`、`to-tickets`、`improve-codebase-architecture`；不得自动向外部工单系统发布内容。
-- 技能不能作为修改 `RequestClient`、权限框架、动态路由、登录流程、Layout、公共包或新增依赖的默认授权。
+- 新增页面、组件、API 调用或修复明确缺陷：`implement`；可在函数、Hook、组件行为或数据转换边界稳定验证时并用 `tdd`（Vitest、Playwright、项目现有测试方式）。
+- 页面异常、请求竞态、渲染错误、构建失败或性能回退且根因不明：`diagnosing-bugs`，先建立能稳定复现的最小反馈命令。
+- 复杂交互、状态模型或 UI 方向无法仅靠讨论确定：`prototype`，原型与正式页面隔离，结论确认前不接入业务路由或公共组件。
+- 涉及公共组件、适配器、请求封装、状态边界或跨模块复用设计：`codebase-design`；这不改变修改公共能力前必须评估调用方并说明影响的要求。
+- 前后端字段、枚举、业务术语或页面概念有歧义：`domain-modeling`；需集中澄清并沉淀文档时组合 `grilling` 与 `grill-with-docs`。
+- 有实质代码变更的实现完成后：`code-review`，重点核对 Vben5 约定、类型安全、国际化、权限、请求状态和需求一致性。
+- 只有用户明确要求规格、任务拆分或架构巡检时才用 `to-spec`、`to-tickets`、`improve-codebase-architecture`；不得自动向外部工单系统发布内容。
+- 技能不构成修改 `RequestClient`、权限框架、动态路由、登录流程、Layout、公共包或新增依赖的授权。
 
 ## 复用优先级
 
@@ -226,37 +190,19 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 
 ## kkFileView 文件预览
 
-凡是通过 kkFileView 预览文件的场景，统一调用公共方法 `previewWithKkFileView(fileUrl, fileName?)`（位于 `apps/web-antdv-next/src/utils/preview.ts`，通过 `#/utils` 引入）。不要在业务页面内自己拼接 base64、`fullfilename` 参数、`openWindow` 或直接复制 kkFileView URL 拼接逻辑。
+统一调用公共方法 `previewWithKkFileView(fileUrl, fileName?)`（`src/utils/preview.ts`，通过 `#/utils` 引入）。公共方法负责 `/onlinePreview` URL 拼接、`fullfilename` 附加、Base64 编码和 `openWindow`；调用方负责调后端 API 取可访问的文件 URL、提供文件名、处理 loading 和异常。不要在业务页面自行拼接 base64、`fullfilename`、`openWindow` 或复制 URL 拼接逻辑。
 
-### 公共方法职责
+调用约束：
 
-公共方法负责：kkFileView `/onlinePreview` URL 拼接 + `fullfilename` 附加 + Base64 编码 + `openWindow`。调用方负责：调用后端 API 拿到可访问的文件 URL、提供文件名、处理 loading 和异常。
+- `fileUrl` 必须是 kkFileView 服务端能直接 fetch 到的绝对 URL：相对路径用 `window.location.origin` 拼接（dev 走 vite proxy，生产走 nginx 反代，保持与登录态同源）；公开文件可直接用绝对 URL。
+- `fileName` 含扩展名（如 `库存余额.xlsx`）；URL 路径不含扩展名时必须提供，供 kkFileView 识别类型。
+- `VITE_KKFILEVIEW_URL` 未配置时公共方法抛 `Error`，调用方必须 `try/catch` 并用 `message.error` 提示。
 
-### 调用约束
+配置要求：`.env.development` 与 `.env.production` 必须配置 `VITE_KKFILEVIEW_URL`（dev 通常 `http://127.0.0.1:8012`，生产独立部署）；kkFileView 服务端 `application.properties` 的 `trust.host` 必须加入后端访问域名白名单（dev 配 `localhost,127.0.0.1`，生产配后端真实域名，不要用 `*`）。改 `.env.*` 需重启 vite dev server，改 `trust.host` 需重启 kkFileView。
 
-- `fileUrl` 必须是 kkFileView 服务端能直接 fetch 到的**绝对 URL**：
-  - 后端返回相对路径时，前端用 `window.location.origin` 拼接（dev 走 vite proxy，生产走 nginx 反代），保持与登录态同源
-  - 公开文件（如 CDN 资源）可直接用绝对 URL
-- `fileName` 含扩展名（如 `库存余额.xlsx`）；当 URL 路径不含文件扩展名时必须提供，让 kkFileView 识别文件类型
-- 公共方法在 `VITE_KKFILEVIEW_URL` 未配置时抛 `Error`，调用方必须 `try/catch` 并以 `message.error` 提示用户
+安全约束：**私有文件预览必须走短时 token**——需登录态才能访问的文件（如下载中心任务结果）先调后端短时 token 接口换临时签名 URL 再传给 kkFileView，不要把用户 Token 附加到 URL，也不要把长期可访问的私有文件 URL 暴露给前端；后端规范见 `hive-admin-go/utils/AGENTS.md`。公开文件（CDN 资源、机构 logo）可直接传 URL。
 
-### 配置要求
-
-- `apps/web-antdv-next/.env.development` 和 `.env.production` 必须配置 `VITE_KKFILEVIEW_URL`，指向对应环境的 kkFileView 地址（dev 通常 `http://127.0.0.1:8012`，生产独立部署）
-- kkFileView 服务端 `application.properties` 的 `trust.host` 必须把后端访问域名加入白名单（dev 配 `localhost,127.0.0.1`，生产配后端真实域名，**不要用 `*`**）
-- 改 `.env.*` 必须重启 vite dev server 才能生效；改 `trust.host` 必须重启 kkFileView
-
-### 安全约束
-
-- **私有文件预览必须走短时 token**：需登录态才能访问的文件（如下载中心任务结果、用户私有文件），必须先调用后端短时 token 接口换取临时签名 URL，再传给 kkFileView；**不要**把用户 Token 直接附加到 URL 上传给 kkFileView，也不要把长期可访问的私有文件 URL 暴露给前端
-- 后端短时 token 规范见 `../hive-admin-go/AGENTS.md` "短时 token 与临时凭证" 章节
-- 公开文件（如已公开的 CDN 资源、机构 logo）可直接传 URL，无需 token
-
-### 现有调用方
-
-- 下载中心 `apps/web-antdv-next/src/views/system/downloadCenter/list.vue` 的 `previewFile`：先调 `getDownloadTaskPreviewUrlApi(id)` 拿短时 token URL，再用 `window.location.origin` 拼接，最后调 `previewWithKkFileView`。详见 `business-docs/system/download-center-ui.md`。
-
-新增预览入口必须复用本公共方法；并在交付说明中列出文件来源、是否需要短时 token、`fullfilename` 来源和 kkFileView 配置变更。
+新增预览入口必须复用本公共方法，并在交付说明中列出文件来源、是否需要短时 token、`fullfilename` 来源和 kkFileView 配置变更。下载中心现有实现见 `business-docs/system/download-center-ui.md`。
 
 ## 权限
 
@@ -293,90 +239,31 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 
 ## 字典与枚举
 
-- 表单字段使用字典时参考：
+字典方法统一从 `#/dicts` 引入，按场景选择：
 
 ```ts
+// 表单字段
 import { getLocalDictList } from '#/dicts'
-{
-  component: 'Select',
-  fieldName: 'category',
-  label: '流程分类',
-  componentProps: {
-    options: getLocalDictList('WORKFLOW_CATEGORY'),
-  },
-},
+{ component: 'Select', fieldName: 'category', label: '流程分类',
+  componentProps: { options: getLocalDictList('WORKFLOW_CATEGORY') } }
+
+// 表格列
+{ field: 'category', title: '分类',
+  cellRender: { name: 'DictTag', props: { type: 'WORKFLOW_CATEGORY' } } }
+
+// 回显文本与其它
+import { getLocalDictText, getLocalDictColor, getLocalDictRow } from '#/dicts';
+getLocalDictText('WORKFLOW_CATEGORY', value);   // 名称
+getLocalDictColor('WORKFLOW_CATEGORY', value);  // 标签颜色
+getLocalDictRow('WORKFLOW_CATEGORY', value);    // 行数据
 ```
 
-- 表格列使用字典时参考：
-
-```ts
-{
-  field: 'category',
-  title: '分类',
-  cellRender: {
-    name: 'DictTag',
-    props: {
-      type: 'WORKFLOW_CATEGORY',
-    },
-  },
-},
-```
-
-- 回显字典值的文本时参考：
-
-```ts
-import { getLocalDictText } from '#/dicts';
-getLocalDictText('WORKFLOW_CATEGORY', value);
-```
-
-- 字典其它可用方法：
-
-```ts
-import {
-  getLocalDictList,
-  getLocalDictText,
-  getLocalDictColor,
-  getLocalDictRow,
-} from '#/dicts';
-
-// 获取本地字典列表
-getLocalDictList('WORKFLOW_CATEGORY');
-// 获取本地字典名称
-getLocalDictText('WORKFLOW_CATEGORY', value);
-// 获取本地字典标签颜色
-getLocalDictColor('WORKFLOW_CATEGORY', value);
-// 获取本地字典行数据
-getLocalDictRow('WORKFLOW_CATEGORY', value);
-```
-
-使用枚举时，如果有枚举转选项数组函数，建议使用该函数获取选项数组，而不是直接使用枚举值。
+使用枚举时，若存在枚举转选项数组函数，用该函数获取选项数组，不直接使用枚举值：
 
 ```ts
 import { enumToOptions } from '#/utils/enumUtils';
 const options = enumToOptions(TaskStatusEnum);
 ```
-
-## 数据库备份限制
-
-- 禁止自动在数据库中创建备份库、备份表、影子表或复制表，包括但不限于 `*_backup_*`、`*_bak_*`、`CREATE DATABASE`、`CREATE TABLE ... AS SELECT`、`CREATE TABLE ... LIKE` 后复制数据等形式。
-- 即使涉及迁移、批量修复、菜单权限调整、排查或回滚准备，也不得代替用户创建数据库备份对象。
-- 如确需备份，只能提示用户手动创建备份，并在用户明确确认备份已完成后继续后续工作。
-
-## 临时 SQL 文件
-
-- 前端联调、验证或排查过程中需要生成的临时 SQL 查询、分析、迁移草稿、回滚草稿、数据修复草稿及一次性输出，统一放入当前前端仓库根目录的 `sql_cache/`；目录不存在时只创建该目录，不得散落在仓库根目录、源码目录、业务文档目录或 `temp/`。
-- `sql_cache/` 仅用于临时文档缓存，不属于正式前端源码或业务文档；不得把其中内容提交为正式迁移、API 文档或长期维护脚本，也不得默认提交到 Git。
-- 只有确认需要长期维护的内容才进入正式目录；后端正式迁移脚本必须放在 `../hive-admin-go/migrations/`，并由后端规则负责兼容性和回滚说明。
-- 已有 SQL 文件不因本规则被移动、删除或改名；本规则只约束今后生成临时 SQL 文件的位置。
-
-## 禁止事项
-
-除非需求明确授权并已说明影响，不得：
-
-- 修改项目整体架构或公共包行为。
-- 修改 `RequestClient`、权限框架、动态路由、登录流程或 Layout。
-- 引入新的 UI 库、状态管理方案或请求方案。
-- 修改与需求无关的页面或执行全仓库格式化。
 
 ## 验证
 
@@ -392,23 +279,10 @@ pnpm --filter @vben/web-antdv-next build
 
 只修改局部业务代码时，不要为了验证而自动修复或格式化整个仓库。若命令因存量问题失败，应说明失败位置及其与当前修改的关系。
 
-## 完成检查
+## 完成检查与交付
 
-- 是否符合 Vben5 和当前项目风格。
-- 是否复用了已有组件、API、Hook 和工具函数。
-- 是否同步维护类型与中英文国际化资源。
-- API 地址、业务路由名称和权限码是否按小驼峰命名且不含连字符。
-- 权限按钮的父级、`name`、`title`、`auth_code` 是否符合约定，接口权限按钮是否与后端受保护路由一一对应。
-- 是否存在重复代码、未使用 import、无必要的 `any` 或类型断言。
-- 是否正确处理错误、loading、副作用和权限。
-- 是否按“业务文档一致性规则”同步后端业务正文、前端 UI 文档和就近 `AGENTS.md`，或明确核对后无需修改。
-- 是否影响其它页面、公共组件或接口。
+完成检查：是否符合 Vben5 与项目风格；是否复用已有组件、API、Hook 和工具函数；是否同步维护类型与中英文国际化资源；API 地址、业务路由名称和权限码是否小驼峰且不含连字符；权限按钮的父级、`name`、`title`、`auth_code` 是否符合约定且与后端受保护路由一一对应；是否存在重复代码、未使用 import、无必要的 `any` 或类型断言；是否正确处理错误、loading、副作用和权限；是否按“业务文档一致性规则”同步后端业务正文、前端 UI 文档和就近 `AGENTS.md`（或明确核对后无需修改）；是否影响其它页面、公共组件或接口。
 
-## 交付时的手动配置清单
-
-- 任务完成后，必须列出需要手动配置的数据。
-- 按钮权限必须使用三列表格：`标题`、`国际化`、`权限码`。
-- 菜单权限必须列出六项：`类型`、`标题`、`名称`、`路径`、`组件`、`图标`。
-- 其它需要手动调整的数据逐项使用列表或表格列出；没有其它数据时明确写“无”。
+交付时必须列出需要手动配置的数据：按钮权限用三列表格 `标题`／`国际化`／`权限码`；菜单权限列出六项 `类型`／`标题`／`名称`／`路径`／`组件`／`图标`；其它需手动调整的数据逐项用列表或表格列出，没有时明确写“无”。
 
 最终代码应像项目原有代码一样自然、一致、易维护。
