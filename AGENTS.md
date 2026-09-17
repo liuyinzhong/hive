@@ -172,7 +172,7 @@ import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 
 使用优先级：
 
-0. 优先使用组件默认样式。按UI 组件优先级来
+0. 优先使用组件默认样式，组件选择按「UI 组件」章节的优先级执行。
 1. 组件自身能力和现有设计变量。
 2. Tailwind。
 3. 局部 scoped 样式或项目现有 SCSS。
