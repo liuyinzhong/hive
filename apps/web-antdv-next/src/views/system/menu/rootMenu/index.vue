@@ -16,11 +16,17 @@ import { deleteMenuApi, getMenuListApi, SystemMenuApi } from "#/api/system";
 
 import { useColumns } from "./data";
 import Form from "./form.vue";
+import GrantDrawer from "./grant-drawer.vue";
 
 watchEffect(() => {});
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
+  destroyOnClose: true,
+});
+
+const [GrantDrawerComp, grantDrawerApi] = useVbenDrawer({
+  connectedComponent: GrantDrawer,
   destroyOnClose: true,
 });
 
@@ -69,6 +75,10 @@ function onAppend(row: SystemMenuApi.SystemMenuFace) {
   formDrawerApi.setData({ pid: row.id }).open();
 }
 
+function onShowGrant(row: SystemMenuApi.SystemMenuFace) {
+  grantDrawerApi.setData(row).open();
+}
+
 function onDelete(row: SystemMenuApi.SystemMenuFace) {
   const hideLoading = message.loading({
     content: $t("ui.actionMessage.deleting", [
@@ -93,6 +103,7 @@ function onDelete(row: SystemMenuApi.SystemMenuFace) {
 <template>
   <div class="h-[calc(100%_-_30px)]">
     <FormDrawer @success="onRefresh" />
+    <GrantDrawerComp />
     <Grid>
       <template #action="{ row }">
         <VbenTableAction
@@ -100,6 +111,12 @@ function onDelete(row: SystemMenuApi.SystemMenuFace) {
             {
               text: '新增下级',
               onClick: () => onAppend(row),
+            },
+            {
+              text: '受众',
+              icon: 'lucide:users',
+              auth: 'system:menu:detail',
+              onClick: () => onShowGrant(row),
             },
             {
               text: '编辑',

@@ -33,7 +33,7 @@ const routes: RouteRecordRaw[] = [
       activePath: '/workflow/instance/mine',
       hideInMenu: true,
       maxNumOfOpenTab: 3,
-      title: $t('flow.detail.title'),
+      title: $t('flow.runtime.detail.title'),
       icon: 'lucide:file-search',
     },
   },

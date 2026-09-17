@@ -3,6 +3,8 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { SystemUserApi } from '#/api/system';
 import type { DescriptionsItemType } from '@vben/common-ui';
+import { useAccess } from '@vben/access';
+
 import { Tag, Flex } from 'antdv-next';
 
 import { h } from 'vue';
@@ -221,9 +223,15 @@ export function useGridFormSchema(): VbenFormSchema[] {
 
 /**
  * 获取表格列配置
+ * @param onShowPermission 角色单元格点击回调；仅在当前用户持有 system:user:permission 权限码且传入回调时渲染为链接，否则保持静态文本
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns(): VxeTableGridOptions<SystemUserApi.SystemUserFace>['columns'] {
+export function useColumns(
+  onShowPermission?: (row: SystemUserApi.SystemUserFace) => void,
+): VxeTableGridOptions<SystemUserApi.SystemUserFace>['columns'] {
+  const { hasAccessByCodes } = useAccess();
+  const canShowPermission =
+    !!onShowPermission && hasAccessByCodes(['system:user:permission']);
   return [
     {
       field: 'avatar',
@@ -254,7 +262,18 @@ export function useColumns(): VxeTableGridOptions<SystemUserApi.SystemUserFace>[
     { field: 'deptTitles', title: '部门' },
     { field: 'leaderUserName', title: '直属上级' },
     { field: 'phone', title: '手机号' },
-    { field: 'roleTitles', title: '角色' },
+    canShowPermission
+      ? {
+          cellRender: {
+            name: 'CellLink' as const,
+            events: {
+              click: (val: any) => onShowPermission?.(val),
+            },
+          },
+          field: 'roleTitles',
+          title: '角色',
+        }
+      : { field: 'roleTitles', title: '角色' },
     { field: 'desc', title: '描述' },
     { field: 'createDate', title: '创建时间' },
     {

@@ -104,7 +104,7 @@ export function useColumns(): VxeTableGridOptions<SystemMenuApi.SystemMenuFace>[
       showOverflow: false,
       slots: { default: 'action' },
       title: $t('system.menu.operation'),
-      width: 200,
+      width: 300,
     },
   ];
 }

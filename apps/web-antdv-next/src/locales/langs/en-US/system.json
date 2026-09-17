@@ -84,7 +84,12 @@
     "typeLink": "External Link",
     "typeMenu": "Menu",
     "systemMenuTab": "System Menus",
-    "externalPageTab": "External Pages"
+    "externalPageTab": "External Pages",
+    "denyUsers": "Denied Users",
+    "grantDate": "Granted At",
+    "grantRoles": "Audience Roles",
+    "grantTitle": "Audience - {0}",
+    "grantUsers": "Granted Users"
   },
   "message": {
     "title": "Message Push",
@@ -289,7 +294,18 @@
     "role": "Role",
     "status": "Status",
     "remark": "Remark",
-    "leader": "Direct Superior"
+    "leader": "Direct Superior",
+    "permissionTitle": "User Permissions - {0}",
+    "permissionName": "Permission",
+    "noRole": "The user has no roles",
+    "permissionSearch": "Search permission name / path / auth code",
+    "permissionCount": "{0} items",
+    "permissionView": "View Permissions",
+    "personalDeny": "Deny",
+    "personalDenyPriority": "Priority",
+    "personalGrant": "Extra Grants",
+    "personalPermissionScopeTip": "Personal permissions only affect menu and button grants; data scope is unchanged. Effective = role ∪ grant − deny.",
+    "personalPermissionTitle": "Personal Permissions - {0}"
   },
   "log": {
     "title": "Log Management",

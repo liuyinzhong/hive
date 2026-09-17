@@ -135,6 +135,7 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'RangePicker',
       fieldName: 'timeArr',
       label: '起止时间',
+      rules: 'required',
     },
   ];
 }

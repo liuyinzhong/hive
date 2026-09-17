@@ -18,6 +18,8 @@ import {
 import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
+import PermissionDrawer from './permission-drawer.vue';
+import PersonalPermissionDrawer from './personal-permission-drawer.vue';
 import ResetPasswordModal from './reset-password-modal.vue';
 import Detail from './detail.vue';
 
@@ -51,7 +53,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    columns: useColumns(),
+    columns: useColumns(onShowPermission),
     toolbarConfig: {
       zoom: true,
       custom: true,
@@ -96,6 +98,25 @@ const [ResetPasswordModalComp, resetPasswordModalApi] = useVbenModal({
   connectedComponent: ResetPasswordModal,
   destroyOnClose: true,
 });
+
+const [PermissionDrawerComp, permissionDrawerApi] = useVbenDrawer({
+  connectedComponent: PermissionDrawer,
+  destroyOnClose: true,
+});
+
+const [PersonalPermissionDrawerComp, personalPermissionDrawerApi] =
+  useVbenDrawer({
+    connectedComponent: PersonalPermissionDrawer,
+    destroyOnClose: true,
+  });
+
+function onShowPermission(row: SystemUserApi.SystemUserFace) {
+  permissionDrawerApi.setData(row).open();
+}
+
+function onEditPersonalPermission(row: SystemUserApi.SystemUserFace) {
+  personalPermissionDrawerApi.setData(row).open();
+}
 
 function onEdit(row: SystemUserApi.SystemUserFace) {
   drawerApi.setData(row).open();
@@ -144,6 +165,8 @@ function onRefresh() {
     <FormDrawer @success="onRefresh" />
     <DetailDrawer @success="onRefresh" />
     <ResetPasswordModalComp />
+    <PermissionDrawerComp />
+    <PersonalPermissionDrawerComp @success="onRefresh" />
     <div class="flex size-full">
       <Card class="w-1/6">
         <Tree
@@ -185,6 +208,12 @@ function onRefresh() {
                 },
               ]"
               :dropdown-actions="[
+                {
+                  text: '个人权限',
+                  icon: 'lucide:user-cog',
+                  auth: 'system:user:personalPermission',
+                  onClick: () => onEditPersonalPermission(row),
+                },
                 {
                   text: '删除',
                   icon: 'lucide:trash-2',

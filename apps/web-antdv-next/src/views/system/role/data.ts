@@ -28,7 +28,7 @@ function dataScopeOptions() {
   }>;
 }
 
-function dataScopeLabel(value: SystemRoleApi.DataScope) {
+export function dataScopeLabel(value: SystemRoleApi.DataScope) {
   return (
     dataScopeOptions().find((item) => item.value === value)?.label ?? value
   );

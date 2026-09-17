@@ -84,7 +84,12 @@
     "typeLink": "外链",
     "typeMenu": "菜单",
     "systemMenuTab": "系统菜单",
-    "externalPageTab": "外部页面"
+    "externalPageTab": "外部页面",
+    "denyUsers": "被禁止用户",
+    "grantDate": "收录时间",
+    "grantRoles": "受众角色",
+    "grantTitle": "受众 - {0}",
+    "grantUsers": "额外授权用户"
   },
   "message": {
     "title": "消息推送",
@@ -290,7 +295,18 @@
     "role": "角色",
     "status": "状态",
     "remark": "备注",
-    "leader": "直属上级"
+    "leader": "直属上级",
+    "permissionTitle": "用户权限明细 - {0}",
+    "permissionName": "权限名称",
+    "noRole": "该用户未关联角色",
+    "permissionSearch": "搜索权限名称 / 路径 / 权限码",
+    "permissionCount": "{0} 项",
+    "permissionView": "查看权限",
+    "personalDeny": "禁止",
+    "personalDenyPriority": "合并优先",
+    "personalGrant": "额外授权",
+    "personalPermissionScopeTip": "个人权限只影响菜单和按钮授权，不改变数据范围；生效权限 = 角色授权 ∪ 额外授权 − 禁止。",
+    "personalPermissionTitle": "个人权限 - {0}"
   },
   "log": {
     "title": "日志管理",

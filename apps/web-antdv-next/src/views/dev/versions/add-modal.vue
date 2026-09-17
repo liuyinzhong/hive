@@ -28,7 +28,7 @@ const [Form, formApi] = useVbenForm({
       'timeArr',
       ['startDate', 'endDate'],
       (value: any, fieldName: string) => {
-        fieldName === 'startDate'
+        return fieldName === 'startDate'
           ? dayjs(value).startOf('day').format('YYYY-MM-DD HH:mm:ss')
           : dayjs(value).endOf('day').format('YYYY-MM-DD HH:mm:ss');
       },

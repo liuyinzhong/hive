@@ -1,4 +1,12 @@
 {
+  "date": {
+    "last7Days": "最近7天",
+    "last14Days": "最近14天",
+    "last30Days": "最近30天",
+    "last60Days": "最近60天",
+    "last90Days": "最近90天",
+    "last180Days": "最近180天"
+  },
   "classification": {
     "createChild": "新增子节点",
     "deleteConfirm": "确定删除「{0}」吗？",

@@ -86,6 +86,41 @@ export namespace SystemMenuApi {
     status?: 0 | 1 | null;
     type?: (typeof MenuTypes)[number];
   }
+
+  /** 菜单收录角色项：收录了该菜单的角色（配置事实，含停用并携带状态） */
+  export interface MenuGrantedRoleItem {
+    dataScope: string;
+    grantDate?: null | string;
+    remark?: null | string;
+    roleId: string;
+    roleTitle: string;
+    status: 0 | 1;
+  }
+
+  /** 菜单收录用户项：被直接额外授权或禁止该菜单的用户 */
+  export interface MenuGrantedUserItem {
+    deptTitles: string[];
+    grantDate?: null | string;
+    realName: string;
+    status: 0 | 1;
+    userId: string;
+    username: string;
+  }
+
+  /** 菜单收录用户列表查询参数 */
+  export interface MenuGrantedUserListParams {
+    /** 个人权限类型 grant=额外授权 deny=禁止 */
+    grantType: 'deny' | 'grant';
+    keyword?: string;
+    page?: number;
+    pageSize?: number;
+    status?: 0 | 1;
+  }
+
+  export interface MenuGrantedUserListResult {
+    items: MenuGrantedUserItem[];
+    total: number;
+  }
 }
 
 /**
@@ -95,6 +130,28 @@ export const getMenuListApi = async (data: SystemMenuApi.MenuListParams = {}) =>
   return requestClient.get<Array<SystemMenuApi.SystemMenuFace>>("/system/menus", {
     params: { ...data },
   });
+};
+
+/**
+ * 获取菜单收录角色：收录该菜单的全部未删除角色（含停用并携带状态）
+ */
+export const getMenuGrantedRolesApi = async (menuId: string) => {
+  return requestClient.get<Array<SystemMenuApi.MenuGrantedRoleItem>>(
+    `/system/menus/${menuId}/roles`,
+  );
+};
+
+/**
+ * 分页获取菜单收录用户：被直接额外授权或禁止该菜单的普通用户
+ */
+export const getMenuGrantedUsersApi = async (
+  menuId: string,
+  params: SystemMenuApi.MenuGrantedUserListParams,
+) => {
+  return requestClient.get<SystemMenuApi.MenuGrantedUserListResult>(
+    `/system/menus/${menuId}/users`,
+    { params },
+  );
 };
 
 /**

@@ -5,7 +5,8 @@ export default {
   renderTableDefault(renderOpts: any, params: any) {
     const { props, events } = renderOpts;
     const { column, row } = params;
-    const text = props?.text || row[column.field];
+    const fieldText = row[column.field];
+    const text = props?.text || (Array.isArray(fieldText) ? fieldText.join('、') : fieldText);
     return h(
       Button,
       {

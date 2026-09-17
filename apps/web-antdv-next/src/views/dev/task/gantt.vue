@@ -10,8 +10,7 @@ import { Page, useVbenDrawer } from '@vben/common-ui';
 import { preferences } from '@vben/preferences';
 
 import * as VTable from '@visactor/vtable';
-import { Gantt } from '@visactor/vtable-gantt';
-import * as VTableGantt from '@visactor/vtable-gantt';
+import { Gantt, TYPES } from '@visactor/vtable-gantt';
 
 import { Alert, Spin } from 'antdv-next';
 import dayjs from 'dayjs';
@@ -21,8 +20,9 @@ import { getProjectsListApi, getTaskListApi } from '#/api/dev';
 import { getLocalDictList, getLocalDictText } from '#/dicts';
 import { projectSchema, versionSchema } from '#/views/dev/base/baseSchema';
 import taskDetailDrawerComponent from './detail-drawer.vue';
+import { getRangePresets } from '#/utils/date';
 
-const { CLICK_TASK_BAR } = VTableGantt.TYPES.GANTT_EVENT_TYPE;
+const { CLICK_TASK_BAR } = TYPES.GANTT_EVENT_TYPE;
 const { CLICK_CELL } = VTable.ListTable.EVENT_TYPE;
 
 const [TaskDetailDrawer, TaskDetailDrawerApi] = useVbenDrawer({
@@ -99,13 +99,21 @@ const [GanttQueryForm, ganttFormApi] = useVbenForm({
     {
       component: 'RangePicker',
       fieldName: 'dateRange',
-      label: '时间窗口',
+      label: '范围',
       componentProps: {
         allowClear: true,
+        presets: getRangePresets(),
         valueFormat: 'YYYY-MM-DD',
       },
     },
   ],
+  commonConfig: {
+    // 所有表单项
+    componentProps: {
+      class: 'w-full',
+    },
+    labelWidth: 80,
+  },
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5',
 });
 
@@ -117,6 +125,10 @@ const unscheduledCount = ref(0);
 const totalCount = ref(0);
 
 let ganttInstance: Gantt | null = null;
+/** 上次自动推导回填的时间窗口，用于区分用户手选值 */
+let lastDerivedRange: [string, string] | undefined;
+/** 查询序号，丢弃快速连续查询时先发慢回的过期响应 */
+let requestSeq = 0;
 
 /** 左侧任务列表列：执行人合并单元格，任务标题点击打开详情抽屉 */
 const taskListColumns = [
@@ -150,6 +162,7 @@ const taskListColumns = [
 
 /** 按当前表单条件查询任务并渲染甘特图 */
 async function loadTasks() {
+  const seq = ++requestSeq;
   const values = await ganttFormApi.getValues();
   if (!values.projectId) {
     return;
@@ -163,6 +176,9 @@ async function loadTasks() {
       taskStatus: values.taskStatus || undefined,
       versionId: values.versionId || undefined,
     });
+    if (seq !== requestSeq) {
+      return;
+    }
     const items = result.items || [];
     totalCount.value = result.total;
     // 未设置起止日期的任务不参与甘特图；按执行人加开始日期排序保证执行人合并单元格连续
@@ -174,22 +190,31 @@ async function loadTasks() {
           (a.startDate ?? '').localeCompare(b.startDate ?? ''),
       );
     unscheduledCount.value = items.length - scheduled.length;
-    // 用户未选时间窗口时按数据推导默认值并回填表单
-    let dateRange = values.dateRange as string[] | undefined;
-    if (!dateRange || dateRange.length !== 2) {
+    // 用户手选的时间窗口优先保留；自动推导值不算手选，随每次查询的数据重算
+    const formRange = values.dateRange as string[] | undefined;
+    const isManualRange =
+      !!formRange &&
+      formRange.length === 2 &&
+      (formRange[0] !== lastDerivedRange?.[0] ||
+        formRange[1] !== lastDerivedRange?.[1]);
+    let dateRange: [string, string];
+    if (isManualRange) {
+      dateRange = formRange as [string, string];
+    } else {
       dateRange = deriveDateRange(scheduled);
+      lastDerivedRange = dateRange;
       await ganttFormApi.setFieldValue('dateRange', dateRange);
     }
-    renderGantt(scheduled, dateRange as [string, string]);
+    renderGantt(scheduled, dateRange);
   } finally {
-    loading.value = false;
+    if (seq === requestSeq) {
+      loading.value = false;
+    }
   }
 }
 
 /** 时间窗口默认值：数据最早开始前推 7 天到最晚结束后延 7 天，并始终包含今天 */
-function deriveDateRange(
-  records: DevTaskApi.DevTaskFace[],
-): [string, string] {
+function deriveDateRange(records: DevTaskApi.DevTaskFace[]): [string, string] {
   const today = dayjs();
   let min = today.subtract(7, 'day');
   let max = today.add(1, 'month');
@@ -226,7 +251,15 @@ function renderGantt(
     taskKeyField: 'taskId',
     minDate: dateRange[0],
     maxDate: dateRange[1],
-    markLine: true,
+    // 今天标记线（主题色虚线），加载后自动滚动定位
+    markLine: {
+      date: dayjs().format('YYYY-MM-DD'),
+      style: {
+        lineColor: preferences.theme.colorPrimary,
+        lineWidth: 1,
+        lineDash: [4, 2],
+      },
+    },
     taskListTable: {
       columns: taskListColumns,
       theme: {
@@ -265,7 +298,7 @@ function renderGantt(
       },
       verticalSplitLineMoveable: true,
       verticalSplitLineHighlight: {
-        lineColor: 'green',
+        lineColor: preferences.theme.colorPrimary,
         lineWidth: 3,
       },
     },
@@ -361,9 +394,9 @@ function renderGantt(
   });
   ganttInstance.taskListTableInstance?.on(
     CLICK_CELL,
-    (_args: MousePointerCellEvent) => {
-      if (_args.field === 'taskTitle') {
-        TaskDetailDrawerApi.setData(_args.originData).open();
+    (args: MousePointerCellEvent) => {
+      if (args.field === 'taskTitle') {
+        TaskDetailDrawerApi.setData(args.originData).open();
       }
     },
   );
@@ -401,7 +434,11 @@ onUnmounted(() => {
         type="warning"
       />
       <div class="min-h-0 flex-1">
-        <Spin :spinning="loading" wrapper-class-name="h-full">
+        <!-- Spin 内外两层都需撑满高度，内层容器默认 auto 高会把甘特图容器压成 0 -->
+        <Spin
+          :spinning="loading"
+          :classes="{ root: 'h-full', container: 'h-full' }"
+        >
           <div
             ref="containerRef"
             class="h-full w-full"
