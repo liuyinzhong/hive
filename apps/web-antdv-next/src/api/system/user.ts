@@ -22,12 +22,37 @@ export namespace SystemUserApi {
     createDate: string;
     updateDate: string;
     status: 0 | 1;
+    roleIds?: string[];
+    /** 权限摘要：各角色授权菜单节点数之和（多角色重复授权不去重），仅分页列表填充 */
+    rolePermissionCount: number;
+    /** 权限摘要：个人额外授权菜单节点数，仅分页列表填充 */
+    grantCount: number;
+    /** 权限摘要：个人禁止菜单节点数，仅分页列表填充 */
+    denyCount: number;
   }
 
   /** 管理员重置密码参数 */
   export interface ResetUserPasswordParams {
     /** 新密码，至少 8 位且含字母、数字、特殊字符中的两类 */
     newPassword: string;
+  }
+
+  /** 用户管理详情：基础信息之上聚合个人额外授权与个人禁止两个菜单ID集合，供编辑抽屉一次加载 */
+  export interface UserDetailResult extends SystemUserFace {
+    denyMenuIds: string[];
+    grantMenuIds: string[];
+  }
+
+  /** 个人权限可授权菜单树：用户新建与编辑抽屉共用的唯一树来源 */
+  export interface PersonalPermissionMenuTreeResult {
+    menuTree: null | SystemMenuApi.SystemMenuFace[];
+  }
+
+  /** 创建/更新用户提交参数：基础信息之外可携带个人权限两个集合（携带时要求操作者持有个人权限维护权限码，按完整集合替换） */
+  export interface SaveUserParams
+    extends Omit<SystemUserFace, 'userId'> {
+    denyMenuIds?: string[];
+    grantMenuIds?: string[];
   }
 
   /** 权限明细树节点：按菜单树层级嵌套（目录→页面→按钮），目录作为层级节点保留其下被授权的后代 */
@@ -81,21 +106,6 @@ export namespace SystemUserApi {
     grant: UserPermissionItem[];
     grantCount: number;
   }
-
-  /** 用户个人权限：额外授权与禁止两个菜单ID集合，附带可勾选的启用菜单树 */
-  export interface UserPersonalPermissionResult {
-    denyMenuIds: string[];
-    grantMenuIds: string[];
-    menuTree: null | SystemMenuApi.SystemMenuFace[];
-    realName: string;
-    userId: string;
-  }
-
-  /** 保存用户个人权限参数：两个集合均按提交内容完整替换 */
-  export interface SaveUserPersonalPermissionParams {
-    denyMenuIds: string[];
-    grantMenuIds: string[];
-  }
 }
 
 /**
@@ -117,19 +127,35 @@ export const getUserListAllApi = async (params?: Recordable<any>) => {
   );
 };
 
-export const createUserApi = async (
-  data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
-) => {
+export const createUserApi = async (data: SystemUserApi.SaveUserParams) => {
   const newData = objectOmit(data, ['userId']);
   return requestClient.post('/system/users', newData);
 };
 
 export const updateUserApi = async (
   userId: number | string,
-  data: Omit<SystemUserApi.SystemUserFace, 'userId'>,
+  data: SystemUserApi.SaveUserParams,
 ) => {
   const newData = objectOmit(data, ['userId']);
   return requestClient.put(`/system/users/${userId}`, newData);
+};
+
+/**
+ * 获取用户管理详情：基础信息之上聚合个人权限两个菜单ID集合，供编辑抽屉一次加载
+ */
+export const getUserDetailApi = async (userId: string) => {
+  return requestClient.get<SystemUserApi.UserDetailResult>(
+    `/system/users/${userId}`,
+  );
+};
+
+/**
+ * 获取个人权限可授权菜单树：用户新建与编辑抽屉共用的唯一树来源
+ */
+export const getPersonalPermissionMenuTreeApi = async () => {
+  return requestClient.get<SystemUserApi.PersonalPermissionMenuTreeResult>(
+    '/system/users/personalPermissionMenuTree',
+  );
 };
 
 /**
@@ -168,23 +194,4 @@ export const getUserPermissionsApi = async (userId: string) => {
   return requestClient.get<SystemUserApi.UserPermissionResult>(
     `/system/users/${userId}/permissions`,
   );
-};
-
-/**
- * 获取用户个人权限：额外授权与禁止两个菜单ID集合
- */
-export const getUserPersonalPermissionsApi = async (userId: string) => {
-  return requestClient.get<SystemUserApi.UserPersonalPermissionResult>(
-    `/system/users/${userId}/personalPermissions`,
-  );
-};
-
-/**
- * 保存用户个人权限：两个集合均按提交内容完整替换
- */
-export const saveUserPersonalPermissionsApi = async (
-  userId: string,
-  data: SystemUserApi.SaveUserPersonalPermissionParams,
-) => {
-  return requestClient.put(`/system/users/${userId}/personalPermissions`, data);
 };

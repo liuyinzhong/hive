@@ -166,6 +166,11 @@ export function useColumns(): VxeTableGridOptions['columns'] {
       width: 200,
     },
     {
+      field: 'permissionsCount',
+      title: $t('system.role.permissionsCount'),
+      width: 120,
+    },
+    {
       field: 'dataScope',
       formatter: ({ cellValue }) =>
         dataScopeLabel(cellValue as SystemRoleApi.DataScope),

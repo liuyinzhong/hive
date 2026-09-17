@@ -19,7 +19,6 @@ import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import ExtraDrawer from './drawer.vue';
 import PermissionDrawer from './permission-drawer.vue';
-import PersonalPermissionDrawer from './personal-permission-drawer.vue';
 import ResetPasswordModal from './reset-password-modal.vue';
 import Detail from './detail.vue';
 
@@ -53,7 +52,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
-    columns: useColumns(onShowPermission),
+    columns: useColumns(),
     toolbarConfig: {
       zoom: true,
       custom: true,
@@ -104,18 +103,8 @@ const [PermissionDrawerComp, permissionDrawerApi] = useVbenDrawer({
   destroyOnClose: true,
 });
 
-const [PersonalPermissionDrawerComp, personalPermissionDrawerApi] =
-  useVbenDrawer({
-    connectedComponent: PersonalPermissionDrawer,
-    destroyOnClose: true,
-  });
-
 function onShowPermission(row: SystemUserApi.SystemUserFace) {
   permissionDrawerApi.setData(row).open();
-}
-
-function onEditPersonalPermission(row: SystemUserApi.SystemUserFace) {
-  personalPermissionDrawerApi.setData(row).open();
 }
 
 function onEdit(row: SystemUserApi.SystemUserFace) {
@@ -166,7 +155,6 @@ function onRefresh() {
     <DetailDrawer @success="onRefresh" />
     <ResetPasswordModalComp />
     <PermissionDrawerComp />
-    <PersonalPermissionDrawerComp @success="onRefresh" />
     <div class="flex size-full">
       <Card class="w-1/6">
         <Tree
@@ -194,26 +182,30 @@ function onRefresh() {
                   text: $t('common.detail'),
                   icon: 'lucide:eye',
                   onClick: () => onDetail(row),
+                  size: 'sm',
                 },
                 {
                   text: '编辑',
                   icon: 'lucide:edit',
                   onClick: () => onEdit(row),
+                  size: 'sm',
                 },
                 {
-                  text: '重置密码',
+                  text: '重置',
                   icon: 'lucide:key-round',
                   auth: 'system:user:resetPassword',
                   onClick: () => onResetPassword(row),
+                  size: 'sm',
+                },
+                {
+                  text: '权限',
+                  icon: 'lucide:key',
+                  auth: 'system:user:permission',
+                  onClick: () => onShowPermission(row),
+                  size: 'sm',
                 },
               ]"
               :dropdown-actions="[
-                {
-                  text: '个人权限',
-                  icon: 'lucide:user-cog',
-                  auth: 'system:user:personalPermission',
-                  onClick: () => onEditPersonalPermission(row),
-                },
                 {
                   text: '删除',
                   icon: 'lucide:trash-2',

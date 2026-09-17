@@ -19,6 +19,8 @@ export namespace SystemRoleApi {
     roleTitle: string;
     status: 0 | 1;
     userCount?: number;
+    /** 权限数量：角色当前配置的菜单授权节点总数（配置事实口径，不筛菜单启停），分页与全量接口均填充 */
+    permissionsCount?: number;
   }
 
   export interface RoleListParams {

@@ -3,7 +3,6 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { VbenFormSchema } from '#/adapter/form';
 import type { SystemUserApi } from '#/api/system';
 import type { DescriptionsItemType } from '@vben/common-ui';
-import { useAccess } from '@vben/access';
 
 import { Tag, Flex } from 'antdv-next';
 
@@ -156,6 +155,7 @@ export function useFormSchema(): VbenFormSchema[] {
           return h(Flex, { gap: 10, align: 'center' }, [
             h('div', {}, option.label),
             h('div', { title: option.data.remark }, option.data.remark),
+            h('div', {}, `${option.data.permissionsCount ?? 0}个权限`),
           ]);
         },
       }),
@@ -169,6 +169,17 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
   ];
+}
+
+/**
+ * 组装权限摘要文本：始终显示全三项（额外授权/禁止为 0 时也展示）
+ * @param row 用户列表行数据
+ */
+export function formatPermissionSummary(
+  row: SystemUserApi.SystemUserFace,
+): string {
+  const roleCount = row.roleIds?.length ?? 0;
+  return `${roleCount}个角色共${row.rolePermissionCount ?? 0}个、额外授权${row.grantCount ?? 0}个、禁止${row.denyCount ?? 0}个`;
 }
 
 /** 表格查询表单配置 */
@@ -223,15 +234,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
 
 /**
  * 获取表格列配置
- * @param onShowPermission 角色单元格点击回调；仅在当前用户持有 system:user:permission 权限码且传入回调时渲染为链接，否则保持静态文本
+ * @param onShowPermission 权限明细单元格点击回调；仅在当前用户持有 system:user:permission 权限码且传入回调时渲染为链接，否则保持静态文本
  * @description 使用函数的形式返回列数据而不是直接export一个Array常量，是为了响应语言切换时重新翻译表头
  */
-export function useColumns(
-  onShowPermission?: (row: SystemUserApi.SystemUserFace) => void,
-): VxeTableGridOptions<SystemUserApi.SystemUserFace>['columns'] {
-  const { hasAccessByCodes } = useAccess();
-  const canShowPermission =
-    !!onShowPermission && hasAccessByCodes(['system:user:permission']);
+export function useColumns(): VxeTableGridOptions<SystemUserApi.SystemUserFace>['columns'] {
   return [
     {
       field: 'avatar',
@@ -262,18 +268,11 @@ export function useColumns(
     { field: 'deptTitles', title: '部门' },
     { field: 'leaderUserName', title: '直属上级' },
     { field: 'phone', title: '手机号' },
-    canShowPermission
-      ? {
-          cellRender: {
-            name: 'CellLink' as const,
-            events: {
-              click: (val: any) => onShowPermission?.(val),
-            },
-          },
-          field: 'roleTitles',
-          title: '角色',
-        }
-      : { field: 'roleTitles', title: '角色' },
+    {
+      field: 'permissionSummary',
+      title: '权限明细',
+      formatter: (params: any) => formatPermissionSummary(params.row),
+    },
     { field: 'desc', title: '描述' },
     { field: 'createDate', title: '创建时间' },
     {
