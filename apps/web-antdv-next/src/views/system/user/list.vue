@@ -191,13 +191,6 @@ function onRefresh() {
                   size: 'sm',
                 },
                 {
-                  text: '重置',
-                  icon: 'lucide:key-round',
-                  auth: 'system:user:resetPassword',
-                  onClick: () => onResetPassword(row),
-                  size: 'sm',
-                },
-                {
                   text: '权限',
                   icon: 'lucide:key',
                   auth: 'system:user:permission',
@@ -206,6 +199,13 @@ function onRefresh() {
                 },
               ]"
               :dropdown-actions="[
+                {
+                  text: '重置',
+                  icon: 'lucide:key-round',
+                  auth: 'system:user:resetPassword',
+                  onClick: () => onResetPassword(row),
+                  size: 'sm',
+                },
                 {
                   text: '删除',
                   icon: 'lucide:trash-2',

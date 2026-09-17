@@ -140,7 +140,10 @@ function getNodeClass(node: any) {
           show-icon
         />
         <Tabs>
-          <TabPane key="grant" :tab="$t('system.user.personalGrant')">
+          <TabPane
+            key="grant"
+            :tab="`${$t('system.user.personalGrant')} (${grantValue.length})`"
+          >
             <Spin :spinning="permissionLoading" wrapper-class-name="w-full">
               <Tree
                 v-model="grantValue"
@@ -167,7 +170,10 @@ function getNodeClass(node: any) {
               </Tree>
             </Spin>
           </TabPane>
-          <TabPane key="deny" :tab="$t('system.user.personalDeny')">
+          <TabPane
+            key="deny"
+            :tab="`${$t('system.user.personalDeny')} (${denyValue.length})`"
+          >
             <Spin :spinning="permissionLoading" wrapper-class-name="w-full">
               <Tree
                 v-model="denyValue"

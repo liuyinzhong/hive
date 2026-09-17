@@ -281,7 +281,7 @@ export function useColumns(): VxeTableGridOptions<SystemUserApi.SystemUserFace>[
       fixed: 'right',
       slots: { default: 'action' },
       title: '操作',
-      width: 300,
+      width: 250,
     },
   ];
 }
