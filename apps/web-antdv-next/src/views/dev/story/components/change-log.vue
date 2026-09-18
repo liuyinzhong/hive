@@ -55,6 +55,7 @@ watch(
 function isOwnComment(item: DevChangeApi.DevChangeFace) {
   return (
     item.changeBehavior === '30' &&
+    !!item.changeId &&
     !!item.creatorId &&
     item.creatorId === currentUserId
   );
@@ -72,11 +73,15 @@ function handleEditComment(item: DevChangeApi.DevChangeFace) {
     componentProps: {
       placeholder: '请输入内容',
     },
-  }).then((val) => {
-    updateChangeApi(item.changeId!, { changeRichText: val ?? '' }).then(() => {
-      loadChangeLog();
+  })
+    .then((val) => {
+      updateChangeApi(item.changeId!, { changeRichText: val ?? '' }).then(() => {
+        loadChangeLog();
+      });
+    })
+    .catch(() => {
+      // 取消编辑,不做处理
     });
-  });
 }
 
 /**
