@@ -6,8 +6,7 @@ import { useRouter } from 'vue-router';
 
 import { Bell, CircleCheckBig, MailCheck } from '@vben/icons';
 
-import { Popover, Tooltip, Avatar } from 'antdv-next';
-
+import { Popover, Tooltip, Avatar, notification } from 'antdv-next';
 import dayjs from 'dayjs';
 
 import { $t } from '#/locales';
@@ -115,11 +114,17 @@ function handleItemClick(item: SystemMenuMessageApi.MenuMessageItem) {
                 class="absolute top-2 right-2 size-2 rounded-sm bg-primary"
               ></span>
 
-              <Avatar :src="item.avatar" style="width: 50px; height: 50px">
+              <Avatar
+                :src="item.avatar"
+                style="min-width: 50px; min-height: 50px"
+              >
                 系统
               </Avatar>
 
-              <div class="flex min-w-0 flex-col gap-1 leading-none">
+              <div
+                class="flex min-w-0 flex-col gap-1 leading-none"
+                style="padding-right: 20px"
+              >
                 <p
                   class="truncate text-sm font-semibold"
                   :class="{ 'opacity-60': item.readAt }"

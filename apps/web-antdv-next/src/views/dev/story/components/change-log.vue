@@ -3,7 +3,11 @@ import type { DevChangeApi } from '#/api/dev';
 
 import { ref, watch } from 'vue';
 
-import { getChangeListApi } from '#/api/dev';
+import { prompt } from '@vben/common-ui';
+import { VbenTiptap } from '@vben/plugins/tiptap';
+import { useUserStore } from '@vben/stores';
+
+import { getChangeListApi, updateChangeApi } from '#/api/dev';
 import { getLocalDictText } from '#/dicts';
 import { Timeline, TimelineItem, Empty, Tag } from 'antdv-next';
 /**
@@ -17,21 +21,63 @@ const props = defineProps({
   },
 });
 
+const userStore = useUserStore();
+// 当前用户ID,用于判断评论是否本人可编辑
+const currentUserId = userStore.userInfo?.userId;
+
 // #region 变更记录
 const changeLogList = ref<DevChangeApi.DevChangeFace[]>([]);
+
+/**
+ * 按业务ID加载变更记录时间线
+ */
+function loadChangeLog() {
+  getChangeListApi({
+    businessId: props.businessId,
+  }).then((res: DevChangeApi.DevChangeFace[]) => {
+    changeLogList.value = res || [];
+  });
+}
+
 watch(
   () => props.businessId,
   (newVal) => {
     if (newVal) {
-      getChangeListApi({
-        businessId: newVal,
-      }).then((res: DevChangeApi.DevChangeFace[]) => {
-        changeLogList.value = res || [];
-      });
+      loadChangeLog();
     }
   },
 );
 // #endregion
+
+/**
+ * 判断记录是否为本人创建的评论(可编辑)
+ */
+function isOwnComment(item: DevChangeApi.DevChangeFace) {
+  return (
+    item.changeBehavior === '30' &&
+    !!item.creatorId &&
+    item.creatorId === currentUserId
+  );
+}
+
+/**
+ * 编辑自己的评论:富文本弹窗预填原内容,保存后仅保留最新内容,不记录编辑历史
+ */
+function handleEditComment(item: DevChangeApi.DevChangeFace) {
+  prompt({
+    component: VbenTiptap,
+    defaultValue: item.changeRichText ?? '',
+    title: '编辑评论',
+    modelPropName: 'modelValue',
+    componentProps: {
+      placeholder: '请输入内容',
+    },
+  }).then((val) => {
+    updateChangeApi(item.changeId!, { changeRichText: val ?? '' }).then(() => {
+      loadChangeLog();
+    });
+  });
+}
 
 /**
  * 格式化变更明细的旧值/新值展示文本
@@ -62,6 +108,13 @@ function formatChangeValue(
             {{ getLocalDictText('CHANGE_BEHAVIOR', item.changeBehavior)
             }}{{ getLocalDictText('BUSINESS_TYPE', item.businessType) }}
           </Tag>
+          <a
+            v-if="isOwnComment(item)"
+            class="comment-edit-link"
+            @click="handleEditComment(item)"
+          >
+            编辑
+          </a>
         </div>
         <div v-if="item.changeItems?.length" class="change-items">
           <div
@@ -98,5 +151,10 @@ function formatChangeValue(
 
 .change-item-arrow {
   padding: 0 4px;
+}
+
+.comment-edit-link {
+  margin-left: 8px;
+  font-size: 13px;
 }
 </style>

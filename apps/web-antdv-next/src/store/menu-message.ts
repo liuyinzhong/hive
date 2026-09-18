@@ -278,9 +278,7 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
           eventName === SystemMenuMessageApi.EventName.DownloadTaskChanged
         ) {
           downloadTaskRevision.value += 1;
-        } else if (
-          eventName === SystemMenuMessageApi.EventName.ForceLogout
-        ) {
+        } else if (eventName === SystemMenuMessageApi.EventName.ForceLogout) {
           // 密码变更（本人修改或管理员重置）后的强制退出：静默清理会话返回登录页；
           // 旧凭证的服务端失效由密码版本号比对保证
           void authStore.logoutLocal(false);

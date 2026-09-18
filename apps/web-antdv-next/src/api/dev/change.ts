@@ -54,3 +54,11 @@ export const addChangeApi = async (
   const newData = objectOmit(data, ['changeId']);
   return requestClient.post('/dev/changeHistory', newData);
 };
+
+// 编辑自己的评论(复用创建接口,携带 changeId 即更新;仅保存最新内容,不记录编辑历史)
+export const updateChangeApi = async (
+  changeId: string,
+  data: { changeRichText: string },
+) => {
+  return requestClient.post('/dev/changeHistory', { changeId, ...data });
+};
