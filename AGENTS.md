@@ -74,7 +74,7 @@ apps/web-antdv-next
 - 涉及公共组件、适配器、请求封装、状态边界或跨模块复用设计：`codebase-design`；这不改变修改公共能力前必须评估调用方并说明影响的要求。
 - 前后端字段、枚举、业务术语或页面概念有歧义：`domain-modeling`；需集中澄清并沉淀文档时组合 `grilling` 与 `grill-with-docs`。
 - 有实质代码变更的实现完成后：`code-review`，重点核对 Vben5 约定、类型安全、国际化、权限、请求状态和需求一致性。
-- 只有用户明确要求规格、任务拆分或架构巡检时才用 `to-spec`、`to-tickets`、`improve-codebase-architecture`；不得自动向外部工单系统发布内容。
+- 新需求按工作区根 `AGENTS.md` 的「需求开发流程」执行时，推导完成后用 `to-spec` 沉淀方案、`to-tickets` 拆分任务；该流程之外的架构巡检或独立规格仍需用户明确要求才用 `to-spec`、`to-tickets`、`improve-codebase-architecture`；不得自动向外部工单系统发布内容。
 - 技能不构成修改 `RequestClient`、权限框架、动态路由、登录流程、Layout、公共包或新增依赖的授权。
 
 ## 复用优先级
