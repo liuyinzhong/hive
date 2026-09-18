@@ -13,6 +13,7 @@ import { openWindow } from '@vben/utils';
 
 import { $t } from '#/locales';
 import { useAuthStore, useMenuMessageStore } from '#/store';
+import { messageBus } from '#/store/message-bus';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
 import NotificationCenter from './components/notification-center.vue';
@@ -73,6 +74,13 @@ async function handleLogout() {
 function handleMenuSelect(path: string) {
   void menuMessageStore.markMenuRead(path);
 }
+
+// 密码变更（本人修改或管理员重置）后的强制退出：消息 Store 只广播事件，
+// 会话清理由布局承担。必须写在 setup 顶层而不是 onMounted 内 —— 挂载回调执行时
+// 已无活跃 effectScope，总线的自动解绑会失效，导致监听器泄漏。
+messageBus.forceLogout.on(() => {
+  void authStore.logoutLocal(false);
+});
 
 onMounted(() => {
   void menuMessageStore.start();

@@ -4,7 +4,7 @@
 
 1. 后端业务正文：[message-push.md](../../../../../../hive-admin-go/business-docs/system/message-push.md)（重点 SYS-MSG-001/003/010/011）
 2. 前端 UI 规则：[message-push-ui.md](../../../../../business-docs/system/message-push-ui.md)
-3. 消息数据层：`../store/menu-message.ts` 与 `../../api/system/message.ts`
+3. 消息数据层：`../store/menu-message.ts`、`../store/message-bus.ts` 与 `../../api/system/message.ts`
 
 ## 硬性约定
 
@@ -13,5 +13,6 @@
 - 红点 = Store 的 `totalUnreadCount > 0`，不显示具体数字。
 - 文案一律使用 `system.notice.*` 国际化 key，中英文（`src/locales/langs/{zh-CN,en-US}/system.json`）同步维护。
 - SSE 事件名只引用 `SystemMenuMessageApi.EventName` 常量，禁止裸字符串。
+- 一次性信号（新未读到货等）通过 `messageBus` 订阅，不得用 `watch` 监听消息 Store 的字段。消息 Store 只持有状态（汇总、最近消息、未读总数）并派发事件，不认识订阅方。
 - 弹层、tooltip 使用项目已有 `antdv-next` 的 `Popover`/`Tooltip`，图标使用 `@vben/icons`；`VbenPopover`/`VbenScrollbar` 等基础组件未被 `@vben/common-ui` 再导出，不为此新增 `@vben-core/shadcn-ui` 依赖。
 - 不得修改 `packages` 公共包与上游 Notification 组件相关代码。

@@ -2,14 +2,13 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemDownloadApi } from '#/api/system';
 
-import { onBeforeUnmount, watch } from 'vue';
+import { onBeforeUnmount } from 'vue';
 
 import { Page } from '@vben/common-ui';
 import { downloadFileFromBlob, debounce } from '@vben/utils';
 
 import { Alert, Button, message, Progress, Tag } from 'antdv-next';
 import dayjs from 'dayjs';
-import { storeToRefs } from 'pinia';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
@@ -18,13 +17,10 @@ import {
   getDownloadTaskPreviewUrlApi,
 } from '#/api/system';
 import { $t } from '#/locales';
-import { useMenuMessageStore } from '#/store/menu-message';
+import { messageBus } from '#/store/message-bus';
 
 import { useColumns, useSearchSchema } from './data';
 import { previewWithKkFileView } from '#/utils';
-
-const menuMessageStore = useMenuMessageStore();
-const { downloadTaskRevision } = storeToRefs(menuMessageStore);
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
@@ -56,9 +52,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
  *
  * SSE 在短时间内可能推送多次 downloadTaskChanged 事件，
  * 使用 debounce 合并为 300ms 内的最后一次触发，避免重复请求。
+ * 总线事件是瞬时的，进入页面之前到达的事件收不到，列表本身已按进入页面查询，
+ * 因此不需要额外的版本号兜底。
  */
 const refreshListDebounced = debounce(() => gridApi.query(), 300);
-watch(downloadTaskRevision, () => {
+messageBus.downloadTaskChanged.on((data: any) => {
   refreshListDebounced();
 });
 onBeforeUnmount(() => refreshListDebounced.cancel());

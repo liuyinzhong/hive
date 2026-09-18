@@ -55,10 +55,10 @@ export const addChangeApi = async (
   return requestClient.post('/dev/changeHistory', newData);
 };
 
-// 编辑自己的评论(复用创建接口,携带 changeId 即更新;仅保存最新内容,不记录编辑历史)
+// 编辑自己的评论(仅保存最新内容,不记录编辑历史;后端限定 changeBehavior=30 且创建人本人)
 export const updateChangeApi = async (
   changeId: string,
   data: { changeRichText: string },
 ) => {
-  return requestClient.post('/dev/changeHistory', { changeId, ...data });
+  return requestClient.put(`/dev/changeHistory/${changeId}`, data);
 };

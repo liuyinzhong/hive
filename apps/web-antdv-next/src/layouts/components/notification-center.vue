@@ -1,16 +1,17 @@
 <script lang="ts" setup>
 import type { SystemMenuMessageApi } from '#/api/system';
 
-import { onUnmounted, ref, watch } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Bell, CircleCheckBig, MailCheck } from '@vben/icons';
 
-import { Popover, Tooltip, Avatar, notification } from 'antdv-next';
+import { Popover, Tooltip, Avatar } from 'antdv-next';
 import dayjs from 'dayjs';
 
 import { $t } from '#/locales';
 import { useMenuMessageStore } from '#/store';
+import { messageBus } from '#/store/message-bus';
 
 defineOptions({ name: 'NotificationCenter' });
 
@@ -18,23 +19,20 @@ const open = ref(false);
 const router = useRouter();
 const menuMessageStore = useMenuMessageStore();
 
-/** 新未读到货时摇铃一次:监听 store 脉冲套上动画类,动画结束(1 秒)后移除,保证下次推送可重复触发 */
+/** 新未读到货时摇铃一次:订阅总线套上动画类,动画结束(1 秒)后移除,保证下次推送可重复触发 */
 const ringing = ref(false);
 let ringingTimer: null | ReturnType<typeof setTimeout> = null;
 
-watch(
-  () => menuMessageStore.bellPulse,
-  () => {
-    ringing.value = true;
-    if (ringingTimer) {
-      clearTimeout(ringingTimer);
-    }
-    ringingTimer = setTimeout(() => {
-      ringing.value = false;
-      ringingTimer = null;
-    }, 1000);
-  },
-);
+messageBus.newUnreadArrived.on((data: any) => {
+  ringing.value = true;
+  if (ringingTimer) {
+    clearTimeout(ringingTimer);
+  }
+  ringingTimer = setTimeout(() => {
+    ringing.value = false;
+    ringingTimer = null;
+  }, 1000);
+});
 
 onUnmounted(() => {
   if (ringingTimer) {

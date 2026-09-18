@@ -35,8 +35,8 @@
 
 新增、字段修改、状态推进和删除由后端追加变更记录。时间线默认只读展示，不能把缺失时间线等同于操作未发生；唯一例外是本人评论可二次编辑（见下）。
 
-- 评论条目的编辑入口：仅当记录 `changeBehavior=30` 且 `creatorId` 等于当前登录用户（`useUserStore().userInfo.userId`）时，在行为标签右侧显示「编辑」文字链接；非评论记录和他人评论不显示。需求、任务、缺陷详情共用同一时间线组件（`views/dev/story/components/change-log.vue`），三处行为一致。
-- 点击「编辑」打开与「添加评论」相同的富文本 `prompt` 弹窗（`VbenTiptap`，标题「编辑评论」），通过 `defaultValue` 预填当前正文；确认后复用评论创建接口 `POST /dev/changeHistory`（携带 `changeId` 与最新 `changeRichText`，不新增编辑接口或权限码），成功后按当前 `businessId` 重新拉取时间线；取消弹窗不发请求。
+- 评论条目的编辑入口：仅当当前用户持有 `dev:changeHistory:update` 权限码、记录 `changeBehavior=30` 且 `creatorId` 等于当前登录用户（`useUserStore().userInfo.userId`）时，在行为标签右侧显示「编辑」文字链接；无权限码、非评论记录和他人评论不显示。需求、任务、缺陷详情共用同一时间线组件（`views/dev/story/components/change-log.vue`），三处行为一致。
+- 点击「编辑」打开与「添加评论」相同的富文本 `prompt` 弹窗（`VbenTiptap`，标题「编辑评论」），通过 `defaultValue` 预填当前正文；确认后调用独立编辑接口 `PUT /dev/changeHistory/{changeId}`（请求体仅含最新 `changeRichText`，原子权限码 `dev:changeHistory:update`，后端限定仅评论且创建人本人），成功后按当前 `businessId` 重新拉取时间线；取消弹窗不发请求。
 - 评论只保存最新正文并刷新 `updateDate`，不追加变更记录、不提供编辑历史查看；时间线条目位置仍按原创建时间倒序排列。
 
 后端在变更记录中携带字段级变更明细（`changeItems` 数组，规则见后端[研发工作项规则](../../../hive-admin-go/business-docs/dev/work-items.md) DEV-ITEM-012）。时间线在行为标签与富文本正文之间渲染明细块：每行展示 `字段名：旧值 → 新值`；字典值按 `dictType` 用 `getLocalDictText` 翻译，非字典值直接展示；空值统一显示「空」；附件类单侧增删（旧值或新值一侧为空）不显示箭头，只展示有值一侧。`changeItems` 为空数组时不渲染明细块，降级为原有样式；评论、创建、删除记录不产生明细，展示不受影响。

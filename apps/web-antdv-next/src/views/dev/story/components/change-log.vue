@@ -3,6 +3,7 @@ import type { DevChangeApi } from '#/api/dev';
 
 import { ref, watch } from 'vue';
 
+import { useAccess } from '@vben/access';
 import { prompt } from '@vben/common-ui';
 import { VbenTiptap } from '@vben/plugins/tiptap';
 import { useUserStore } from '@vben/stores';
@@ -24,6 +25,9 @@ const props = defineProps({
 const userStore = useUserStore();
 // 当前用户ID,用于判断评论是否本人可编辑
 const currentUserId = userStore.userInfo?.userId;
+// 编辑评论的原子权限码,未授予时不显示编辑入口
+const { hasAccessByCodes } = useAccess();
+const canEditComment = hasAccessByCodes(['dev:changeHistory:update']);
 
 // #region 变更记录
 const changeLogList = ref<DevChangeApi.DevChangeFace[]>([]);
@@ -114,7 +118,7 @@ function formatChangeValue(
             }}{{ getLocalDictText('BUSINESS_TYPE', item.businessType) }}
           </Tag>
           <a
-            v-if="isOwnComment(item)"
+            v-if="canEditComment && isOwnComment(item)"
             class="comment-edit-link"
             @click="handleEditComment(item)"
           >

@@ -7,6 +7,7 @@ import {
   readAllMenuMessagesApi,
   readMenuMessageItemApi,
 } from '#/api/system';
+import type { SystemDownloadApi } from '#/api/system';
 
 import { computed, ref, watch } from 'vue';
 
@@ -15,7 +16,7 @@ import { usePreferences } from '@vben/preferences';
 
 import { defineStore } from 'pinia';
 
-import { useAuthStore } from '#/store/auth';
+import { messageBus } from '#/store/message-bus';
 
 const reconnectDelay = 2000;
 
@@ -29,16 +30,27 @@ function sumUnreadCount(
   return summaries.reduce((total, summary) => total + summary.unreadCount, 0);
 }
 
+/**
+ * 解析下载任务变化事件体
+ *
+ * 失败时返回 undefined，事件本身照常派发：下载任务状态以列表接口为准，载荷
+ * 只是参考，不能因为一段无法解析的 JSON 丢掉一次刷新。
+ */
+function parseTaskChanged(
+  data: string,
+): SystemDownloadApi.TaskChangedEvent | undefined {
+  try {
+    return JSON.parse(data) as SystemDownloadApi.TaskChangedEvent;
+  } catch {
+    return undefined;
+  }
+}
+
 export const useMenuMessageStore = defineStore('menu-message', () => {
   const accessStore = useAccessStore();
-  const authStore = useAuthStore();
   const { customPreferences } = usePreferences();
   const summaries = ref<SystemMenuMessageApi.UnreadSummary[]>([]);
   const recentMessages = ref<SystemMenuMessageApi.MenuMessageItem[]>([]);
-  /** 新未读到货脉冲:每遇未读总数增加的推送自增一次,驱动顶栏铃铛播放摇铃动画 */
-  const bellPulse = ref(0);
-  /** 下载任务完成脉冲:每下载任务完成一次自增一次,驱动对比下载任务是否完成 */
-  const downloadTaskRevision = ref(0);
   const running = ref(false);
   const readingPaths = new Set<string>();
   const originalBadges = new WeakMap<
@@ -121,7 +133,6 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
     streamBuffer = '';
     summaries.value = [];
     recentMessages.value = [];
-    downloadTaskRevision.value = 0;
     readingPaths.clear();
     // 暂停正在播放的提示音，避免登出或重置后继续响铃
     if (audioInstance) {
@@ -264,24 +275,30 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
           const nextTotal = sumUnreadCount(nextSummaries);
           summaries.value = nextSummaries;
           syncMenuBadges();
-          // 首个 unreadSummary 是服务端的初始化全量推送，不参与提示音判断；
-          // 之后未读总数增加才视为新消息事件并播放，用户已读触发的
-          // 校准推送总数不变或减少，不再响铃
+          // 首个 unreadSummary 是服务端的初始化全量推送，不参与新消息提醒判断；
+          // 之后未读总数增加才视为新消息事件，用户已读触发的校准推送总数
+          // 不变或减少，不再广播也不再响铃
           if (isFirstUnreadSummary) {
             isFirstUnreadSummary = false;
           } else if (nextTotal > previousTotal) {
-            // 新未读到货:铃铛动画与提示音同源触发;动画是视觉信号,不受提示音偏好开关控制
-            bellPulse.value += 1;
+            // 新未读到货：广播给订阅方，铃铛摇铃由通知中心自行订阅；提示音仍
+            // 由本 Store 播放，它受偏好开关控制，不属于任何界面组件
+            messageBus.newUnreadArrived.emit({
+              delta: nextTotal - previousTotal,
+              total: nextTotal,
+            });
             playMessageSound();
           }
         } else if (
           eventName === SystemMenuMessageApi.EventName.DownloadTaskChanged
         ) {
-          downloadTaskRevision.value += 1;
+          // 事件体只作参考，任务状态仍以列表接口为准（SSE 事件不是权威状态）；
+          // 解析失败时仍派发，消费方照常刷新，下载任务没有别的校准通道
+          messageBus.downloadTaskChanged.emit(parseTaskChanged(data));
         } else if (eventName === SystemMenuMessageApi.EventName.ForceLogout) {
-          // 密码变更（本人修改或管理员重置）后的强制退出：静默清理会话返回登录页；
-          // 旧凭证的服务端失效由密码版本号比对保证
-          void authStore.logoutLocal(false);
+          // 密码变更（本人修改或管理员重置）后的强制退出：只广播，由订阅方清理
+          // 会话；旧凭证的服务端失效由密码版本号比对保证
+          messageBus.forceLogout.emit();
         }
       } catch {
         // 不应用格式错误的推送，下一次完整汇总会自动校准。
@@ -334,8 +351,6 @@ export const useMenuMessageStore = defineStore('menu-message', () => {
 
   return {
     $reset,
-    bellPulse,
-    downloadTaskRevision,
     fetchRecentMessages,
     markMenuRead,
     readAllMessages,
