@@ -2,7 +2,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
 import type { FormSchemaApi } from '#/api/form';
-
+import { getLocalDictList } from '#/dicts';
 import { $t } from '#/locales';
 
 export const formSchemaStatusOptions = [
@@ -26,10 +26,13 @@ export function useFormSchemaBaseForm(): VbenFormSchema[] {
       rules: 'required',
     },
     {
-      component: 'Input',
-      componentProps: { allowClear: true, maxlength: 64 },
+      component: 'Select',
       fieldName: 'category',
       label: $t('form.fields.category'),
+      componentProps: {
+        allowClear: true,
+        options: getLocalDictList('WORKFLOW_CATEGORY'),
+      },
     },
     {
       component: 'Select',
@@ -104,6 +107,12 @@ export function useFormSchemaColumns(): VxeTableGridOptions<FormSchemaApi.FormSc
       minWidth: 120,
       sortable: true,
       title: $t('form.fields.category'),
+      cellRender: {
+        name: 'DictTag',
+        props: {
+          type: 'WORKFLOW_CATEGORY',
+        },
+      },
     },
     {
       cellRender: { name: 'CellTag', options: formSchemaLayoutOptions },

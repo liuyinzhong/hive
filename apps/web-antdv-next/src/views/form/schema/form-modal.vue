@@ -24,7 +24,7 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(open) {
     if (!open) return;
     await formApi.reset();
-    const data = modalApi.getData<FormSchemaApi.FormSchemaRecord>();
+    const data: any = modalApi.getData();
     modalApi.setState({
       title: data?.formSchemaId
         ? $t('form.actions.editSchema')
@@ -37,7 +37,7 @@ const [Modal, modalApi] = useVbenModal({
 async function onSubmit(values: Record<string, unknown>) {
   modalApi.lock();
   try {
-    const existing = modalApi.getData<FormSchemaApi.FormSchemaRecord>();
+    const existing: any = modalApi.getData();
     const formSchemaId = existing?.formSchemaId;
     const payload: FormSchemaApi.FormSchemaPayload = {
       category: String(values.category ?? '') || undefined,

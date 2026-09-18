@@ -3,7 +3,7 @@ import { h, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 
-import { message, Row, Col, Steps, Divider } from 'antdv-next';
+import { message, Row, Col, Steps, Divider, Alert } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
@@ -138,6 +138,11 @@ function setChangeRichText(value: string) {
       </Col>
       <Col :span="18">
         <Form />
+        <Alert
+          message="需求只能向前推进，不可回转。推进到下一个状态时,应当符合节点语义,并准确操作"
+          type="info"
+          show-icon
+        />
       </Col>
     </Row>
   </Modal>

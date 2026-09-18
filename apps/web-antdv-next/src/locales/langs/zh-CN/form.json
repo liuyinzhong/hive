@@ -2,8 +2,8 @@
   "title": "表单管理",
   "status": { "disabled": "禁用", "enabled": "启用" },
   "fields": {
-    "schemaName": "Schema 名称",
-    "schemaKey": "Schema 标识",
+    "schemaName": "表单名称",
+    "schemaKey": "表单标识",
     "category": "分类",
     "layout": "表单布局",
     "status": "状态",

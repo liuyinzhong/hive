@@ -2,8 +2,8 @@
   "title": "Form Management",
   "status": { "disabled": "Disabled", "enabled": "Enabled" },
   "fields": {
-    "schemaName": "Schema Name",
-    "schemaKey": "Schema Key",
+    "schemaName": "Form Name",
+    "schemaKey": "Form Identifier",
     "category": "Category",
     "layout": "Form Layout",
     "status": "Status",
