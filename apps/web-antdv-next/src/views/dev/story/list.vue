@@ -9,7 +9,7 @@ import type { DevStoryApi } from '#/api/dev';
 
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { LucidePlus, LucideTableProperties } from '@vben/icons';
 
@@ -35,6 +35,9 @@ import { formatVxeTableSorts } from '#/utils';
 // 跳转路由
 // eslint-disable-next-line unused-imports/no-unused-vars
 const router = useRouter();
+
+// eslint-disable-next-line unused-imports/no-unused-vars
+const { userInfo, userRoles } = useUserStore();
 
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -243,21 +246,37 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
   <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
-        <Button class="mr-2" type="primary" @click="onCreate()">
+        <Button
+          class="mr-2"
+          type="primary"
+          v-access:code="'dev:story:create'"
+          @click="onCreate()"
+        >
           <template #icon>
             <LucidePlus class="size-5" />
           </template>
           新建需求
         </Button>
 
-        <Button class="mr-2" type="primary" @click="openAddBatchStoryModal">
+        <Button
+          class="mr-2"
+          type="primary"
+          v-access:code="'dev:story:batchCreate'"
+          @click="openAddBatchStoryModal"
+        >
           <template #icon>
             <LucideTableProperties class="size-5" />
           </template>
           批量新建
         </Button>
 
-        <Button class="mr-2" @click="openBatchNextModal"> 批量流转 </Button>
+        <Button
+          class="mr-2"
+          v-access:code="'dev:story:batchAdvance'"
+          @click="openBatchNextModal"
+        >
+          批量流转
+        </Button>
       </template>
       <template #action="{ row }">
         <VbenTableAction
@@ -265,6 +284,7 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
             {
               text: '',
               icon: 'lucide:badge-plus',
+              auth: 'dev:task:create',
               disabled:
                 !row.versionId || ['0', '99'].includes(row.storyStatus ?? ''),
               onClick: () => addTask(row),
@@ -272,18 +292,23 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
             {
               text: '',
               icon: 'lucide:bug',
+              auth: 'dev:bug:create',
               disabled: !row.versionId || ['0'].includes(row.storyStatus ?? ''),
               onClick: () => addBug(row),
             },
             {
               text: '',
               icon: 'lucide:redo-dot',
-              disabled: row.storyStatus === '99',
+              auth: 'dev:story:advance',
+              disabled:
+                row.storyStatus === '99' ||
+                row?.thisUser?.userId !== userInfo?.userId,
               onClick: () => openNextModal(row),
             },
             {
               text: '',
               icon: 'lucide:pencil-line',
+              auth: 'dev:story:update',
               disabled: row.storyStatus === '99',
               onClick: () => onEdit(row),
             },
@@ -292,6 +317,7 @@ const [AddBugModal, AddBugModalApi] = useVbenModal({
             {
               text: '删除',
               icon: 'lucide:trash-2',
+              auth: 'dev:story:delete',
               danger: true,
               popConfirm: {
                 title: $t('ui.actionMessage.deleteConfirm', [
