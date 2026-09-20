@@ -65,11 +65,13 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useColumns(): VxeTableGridOptions['columns'] {
   return [
     {
+      // 缩略图列按 MIME 判断是否渲染图片，见 list.vue 的 #thumbnail 插槽：
+      // 非图片文件只显示扩展名占位，不把 PDF、Excel 等当图片加载
       field: 'url',
       title: $t('system.file.imagePreview'),
       width: 90,
       align: 'center',
-      cellRender: { name: 'CellImage' },
+      slots: { default: 'thumbnail' },
     },
     {
       field: 'originalName',

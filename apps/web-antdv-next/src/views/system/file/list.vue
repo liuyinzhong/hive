@@ -1,14 +1,10 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
-import type { SystemFileApi } from '#/api/system';
-
-import { nextTick } from 'vue';
-
 import { Page } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button, Image, message, Upload } from 'antdv-next';
+import { Button, message, Upload } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getFileListApi, uploadFileApi } from '#/api/system';
@@ -99,6 +95,19 @@ function isImageType(type: string): boolean {
 <template>
   <Page auto-content-height>
     <Grid>
+      <template #thumbnail="{ row }">
+        <div class="flex w-full items-center justify-center">
+          <img
+            v-if="isImageType(row.type)"
+            :alt="row.originalName"
+            :src="row.thumbnailUrl || row.url"
+            class="size-10 rounded object-cover"
+          />
+          <span v-else class="text-xs text-gray-400">
+            {{ row.fileExt || '-' }}
+          </span>
+        </div>
+      </template>
       <template #action="{ row }">
         <VbenTableAction
           :actions="[
