@@ -7,6 +7,6 @@
 - file 对应 file-management-ui.md。
 - log、menu/externalMenu 对应 audit-external-page-ui.md。
 - payChannel 对应 payment-channel-ui.md。
-- message、downloadCenter 继续遵循子目录规则。
+- file、message、downloadCenter 继续遵循子目录规则。
 
 敏感配置不得输出到控制台或普通日志。动态菜单、按钮权限、状态和后台业务校验必须分别核对。
