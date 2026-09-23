@@ -4,10 +4,8 @@ import type { DevBugApi } from '#/api/dev';
 import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
-import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import CopyButton from '#/components/CopyButton/index.vue';
-import UserAvatar from '#/components/UserAvatar/index.vue';
 import { Space, Button, Flex } from 'antdv-next';
 
 import BugDetail from './components/bug-detail.vue';
@@ -19,7 +17,10 @@ const [Drawer, DrawerApi] = useVbenDrawer({
   showConfirmButton: false,
   onOpenChange: (open: boolean) => {
     if (open) {
-      bugInfo.value = DrawerApi.getData();
+      const data = DrawerApi.getData();
+      if (data) {
+        bugInfo.value = data;
+      }
     }
   },
 });
@@ -33,19 +34,6 @@ const newTab = () => {
   window.open(bugLink.value);
 };
 
-const submit = () => {
-  DrawerApi.lock();
-  setTimeout(() => {
-    const _params = {
-      businessId: bugInfo.value.bugId,
-      businessType: 20,
-      changeBehavior: 20,
-      changeRichText: bugInfo.value.changeRichText || '',
-    };
-    DrawerApi.unlock();
-    DrawerApi.close();
-  }, 1000);
-};
 </script>
 <template>
   <Drawer title="缺陷详情" class="w-[45%]">

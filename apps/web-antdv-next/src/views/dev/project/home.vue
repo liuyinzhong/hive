@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { Recordable } from '@vben/types';
-
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { DevModuleApi, DevProjectApi } from '#/api/dev';
 
@@ -50,8 +48,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       autoLoad: false,
       ajax: {
-        // eslint-disable-next-line unused-imports/no-unused-vars
-        query: async ({ page }: any, formValues: Recordable<any>) => {
+        query: async () => {
           return await getModulesListApi({
             projectId: activeProjectId.value,
           });
@@ -60,7 +57,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions<DevModuleApi.DevModuleFace>,
   gridEvents: {
-    rowDragstart: (e: any) => {},
+    rowDragstart: () => {},
     /* rowDragend: ({ _oldRow, _index }: any) => {
       console.log(
         '排序后' + oldRow.moduleTitle + '在' + _index.newIndex + '位',

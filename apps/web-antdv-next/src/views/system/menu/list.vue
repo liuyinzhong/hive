@@ -2,9 +2,8 @@
 import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
-import { $t } from '@vben/locales';
 
-import { TabPane, Tabs, Segmented } from 'antdv-next';
+import { Segmented } from 'antdv-next';
 
 import ExternalPageList from './externalMenu/index.vue';
 

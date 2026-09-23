@@ -136,25 +136,25 @@ function refreshGrid() {
 }
 
 /** 环境模式标签颜色 */
-function envModeColor(envMode: string): string {
+function envModeColor(envMode?: string): string {
   const map: Record<string, string> = {
     development: 'default',
     testing: 'blue',
     staging: 'orange',
     production: 'red',
   };
-  return map[envMode] ?? 'default';
+  return (envMode && map[envMode]) ?? 'default';
 }
 
 /** 环境模式标签文案(已翻译) */
-function envModeLabel(envMode: string): string {
+function envModeLabel(envMode?: string): string {
   const map: Record<string, string> = {
     development: $t('system.payChannel.development'),
     testing: $t('system.payChannel.testing'),
     staging: $t('system.payChannel.staging'),
     production: $t('system.payChannel.production'),
   };
-  return map[envMode] ?? envMode;
+  return (envMode && map[envMode]) ?? envMode ?? '';
 }
 </script>
 

@@ -33,7 +33,7 @@ const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2',
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<{ diagnosisId?: string }>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -53,7 +53,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<{ diagnosisId?: string }>() ?? {};
+    const data = drawerApi.getData() ?? {};
     diagnosisId.value = data.diagnosisId;
     await formApi.reset();
     if (diagnosisId.value) {

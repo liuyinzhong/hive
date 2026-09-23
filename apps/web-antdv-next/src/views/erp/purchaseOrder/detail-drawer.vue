@@ -91,12 +91,11 @@ const [Grid, gridApi] =
     } as VxeTableGridOptions<ErpPurchaseOrderApi.PurchaseOrderItem>,
   });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<{ purchaseOrderId: string }>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const { purchaseOrderId } = drawerApi.getData<{
-      purchaseOrderId: string;
-    }>();
+    const { purchaseOrderId } = drawerApi.getData() ?? {};
+    if (!purchaseOrderId) return;
     loading.value = true;
     detail.value = undefined;
     logs.value = [];

@@ -13,11 +13,14 @@ defineOptions({
   name: 'StoryTrackDrawer',
 });
 
-const [Drawer, DrawerApi] = useVbenDrawer({
+const [Drawer, DrawerApi] = useVbenDrawer<DevTaskApi.DevTaskFace>({
   showConfirmButton: false,
   onOpenChange: (open: boolean) => {
     if (open) {
-      taskInfo.value = DrawerApi.getData();
+      const data = DrawerApi.getData();
+      if (data) {
+        taskInfo.value = data;
+      }
     }
   },
 });

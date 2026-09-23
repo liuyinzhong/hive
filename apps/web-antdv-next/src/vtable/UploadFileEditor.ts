@@ -157,7 +157,7 @@ export class UploadFileEditor implements IEditor {
    */
   validateValue?(
     newValue?: any,
-    oldValue?: any,
+    _oldValue?: any,
     position?: CellAddress,
     table?: any,
   ): boolean | ValidateEnum {
@@ -248,7 +248,8 @@ export class UploadFileEditor implements IEditor {
         const handleChange = (_info: UploadChangeParam) => {};
 
         const beforeUpload = (file: UploadFile, files: UploadFile[]) => {
-          if (file.size > 0 && file.size > 1024 * 1024 * 100) {
+          const size = file.size ?? 0;
+          if (size > 0 && size > 1024 * 1024 * 100) {
             message.error('文件大小不能超过100MB');
             return Upload.LIST_IGNORE;
           }

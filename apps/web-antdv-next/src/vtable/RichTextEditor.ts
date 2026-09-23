@@ -149,8 +149,8 @@ export class RichTextEditor implements IEditor {
    * 支持通过 label 验证选项，解决复制粘贴时的验证问题
    */
   validateValue?(
-    newValue?: any,
-    oldValue?: any,
+    _newValue?: any,
+    _oldValue?: any,
     position?: CellAddress,
     table?: any,
   ): boolean | ValidateEnum {

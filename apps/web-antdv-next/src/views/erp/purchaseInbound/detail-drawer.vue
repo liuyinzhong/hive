@@ -74,13 +74,12 @@ const [Grid, gridApi] =
     } as VxeTableGridOptions<ErpPurchaseInboundApi.PurchaseInboundItem>,
   });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<Pick<ErpPurchaseInboundApi.PurchaseInbound, 'inboundId'>>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
     const data =
-      drawerApi.getData<
-        Pick<ErpPurchaseInboundApi.PurchaseInbound, 'inboundId'>
-      >();
+      drawerApi.getData();
+    if (!data) return;
     loading.value = true;
     detail.value = undefined;
     await gridApi.grid?.loadData?.([]);

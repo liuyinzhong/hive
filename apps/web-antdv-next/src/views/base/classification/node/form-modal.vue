@@ -18,6 +18,11 @@ import { useClassificationNodeFormSchema } from './data';
 
 const emit = defineEmits<{ success: [] }>();
 
+/** 弹窗数据：待编辑节点字段 + 当前体系编码 */
+type NodeModalData = Partial<BaseClassificationApi.ClassificationNode> & {
+  systemCode?: string;
+};
+
 /** 当前节点编辑数据 */
 const formData = ref<{
   classificationNodeId?: string;
@@ -42,7 +47,7 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<NodeModalData>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -70,9 +75,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = modalApi.getData<Partial<BaseClassificationApi.ClassificationNode> & {
-      systemCode?: string;
-    }>() ?? {};
+    const data = modalApi.getData() ?? ({} as NodeModalData);
     formData.value = {
       classificationNodeId: data.classificationNodeId,
       classificationSystemId: data.classificationSystemId,

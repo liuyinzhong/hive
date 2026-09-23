@@ -45,11 +45,13 @@ const columns = computed(() => [
   { dataIndex: 'dispenseQuantity', key: 'dispenseQuantity', title: $t('medical.workbench.totalQuantity') },
 ]);
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<{ prescriptionId: string }>({
   footer: false,
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const { prescriptionId } = drawerApi.getData<{ prescriptionId: string }>();
+    const data = drawerApi.getData();
+    if (!data) return;
+    const { prescriptionId } = data;
     prescription.value = await getPrescriptionReviewDetailApi(prescriptionId);
   },
 });

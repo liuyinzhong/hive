@@ -33,7 +33,7 @@ function resetFormHandler() {
   formApi.setValues(formData.value || {});
 }
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<SystemParamApi.SystemParamFace>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (valid) {
@@ -59,7 +59,7 @@ const [Modal, modalApi] = useVbenModal({
   onOpenChange(isOpen) {
     if (isOpen) {
       const data =
-        modalApi.getData<SystemParamApi.SystemParamFace>() || {};
+        modalApi.getData() || {};
       formData.value = data;
       formApi.setValues(data);
       modalApi.setState({

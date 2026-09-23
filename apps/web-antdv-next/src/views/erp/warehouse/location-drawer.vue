@@ -87,10 +87,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<ErpWarehouseApi.WarehouseLocation>,
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<DrawerData>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<DrawerData>();
+    const data = drawerApi.getData();
+    if (!data) return;
     currentWarehouse.value = data.warehouse;
     currentZone.value = data.zone;
     await gridApi.query();

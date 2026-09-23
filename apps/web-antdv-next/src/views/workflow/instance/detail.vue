@@ -34,6 +34,7 @@ import {
   compileVbenFormSchema,
   FORM_SCHEMA_WRAPPER_CLASS,
   getFormSchemaWrapperClass,
+  hydrateFormValues,
 } from '#/utils/form-schema';
 import {
   getCopyStatusOptions,
@@ -167,7 +168,9 @@ async function renderApplicationForm(
     wrapperClass: getFormSchemaWrapperClass(workflowDetail.instance.formLayout),
   });
   await nextTick();
-  await applicationFormApi.setValues(workflowDetail.instance.variables ?? {});
+  await applicationFormApi.setValues(
+    hydrateFormValues(schema, workflowDetail.instance.variables ?? {}),
+  );
 }
 
 async function loadUserAvatars() {

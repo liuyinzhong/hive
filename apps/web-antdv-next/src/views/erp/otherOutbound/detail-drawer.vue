@@ -56,13 +56,12 @@ const [Grid, gridApi] = useVbenVxeGrid<ErpOtherOutboundApi.OtherOutboundItem>({
   } as VxeTableGridOptions<ErpOtherOutboundApi.OtherOutboundItem>,
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<Pick<ErpOtherOutboundApi.OtherOutbound, 'outboundId'>>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
     const data =
-      drawerApi.getData<
-        Pick<ErpOtherOutboundApi.OtherOutbound, 'outboundId'>
-      >();
+      drawerApi.getData();
+    if (!data) return;
     loading.value = true;
     detail.value = undefined;
     await gridApi.grid?.loadData?.([]);

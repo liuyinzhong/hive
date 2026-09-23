@@ -32,7 +32,7 @@ function resetFormHandler() {
   formApi.setValues(formData.value || {});
 }
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<SystemDeptApi.SystemDeptFace>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (valid) {
@@ -51,7 +51,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = modalApi.getData<SystemDeptApi.SystemDeptFace>();
+      const data = modalApi.getData();
       if (data) {
         if (!data.pid) {
           data.pid = undefined;

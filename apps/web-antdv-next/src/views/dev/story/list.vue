@@ -8,8 +8,7 @@ import type {
 import type { DevStoryApi } from '#/api/dev';
 
 import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
+import { useUserStore } from '@vben/stores';
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { LucidePlus, LucideTableProperties } from '@vben/icons';
 
@@ -18,7 +17,6 @@ import { Button, message } from 'antdv-next';
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import {
   deleteStoryApi,
-  getProjectsListApi,
   getStoryListApi,
   updateStoryFieldApi,
 } from '#/api/dev';
@@ -32,12 +30,8 @@ import { useColumns, useGridFormSchema } from './data';
 import detailDrawer from './detail-drawer.vue';
 import nextModal from './next-modal.vue';
 import { formatVxeTableSorts } from '#/utils';
-// 跳转路由
-// eslint-disable-next-line unused-imports/no-unused-vars
-const router = useRouter();
 
-// eslint-disable-next-line unused-imports/no-unused-vars
-const { userInfo, userRoles } = useUserStore();
+const { userInfo } = useUserStore();
 
 // 表格分页
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -73,7 +67,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async (
-          { page, sorts, filters }: any,
+          { page, sorts }: any,
           formValues: Recordable<any>,
         ) => {
           return await getStoryListApi({

@@ -55,7 +55,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async (
-          { page, sorts, filters }: any,
+          { page, sorts }: any,
           formValues: Recordable<any>,
         ) => {
           return await getVersionsListApi({

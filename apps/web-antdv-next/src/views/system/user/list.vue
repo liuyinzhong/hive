@@ -2,7 +2,7 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemUserApi, SystemDeptApi } from '#/api/system';
 
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { Page, Tree, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
@@ -65,7 +65,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async ({ page, sorts, filters }: any, formValues: any) => {
+        query: async ({ page, sorts }: any, formValues: any) => {
           return await getUsersListApi({
             page: page.currentPage,
             pageSize: page.pageSize,

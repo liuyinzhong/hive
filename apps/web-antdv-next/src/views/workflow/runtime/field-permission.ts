@@ -14,15 +14,17 @@ export function applyFieldPermissions(
   permissions: WorkflowFieldPermissions,
   defaultPermission: WorkflowDefinitionApi.WorkflowFormFieldPermission,
 ) {
-  return schema.map((field) => {
-    const permission = permissions[field.fieldName] ?? defaultPermission;
-    const disabled = permission !== 'editable' || field.disabled;
+  return schema.map((item) => {
+    // 分组项(FormGroupSchema)不是表单字段,没有字段名、禁用态和校验规则,直接透传
+    if ('children' in item && item.type === 'group') return item;
+    const permission = permissions[item.fieldName] ?? defaultPermission;
+    const disabled = permission !== 'editable' || !!item.disabled;
     return withRichEditorEditable(
       {
-        ...field,
+        ...item,
         disabled,
-        hide: permission === 'hidden' || field.hide,
-        rules: permission === 'editable' ? field.rules : undefined,
+        hide: permission === 'hidden' || item.hide,
+        rules: permission === 'editable' ? item.rules : undefined,
       } as VbenFormSchema,
       disabled,
     );

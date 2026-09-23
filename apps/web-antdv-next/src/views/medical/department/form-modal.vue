@@ -29,7 +29,7 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<Partial<MedicalDepartmentApi.Department>>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -53,7 +53,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = modalApi.getData<Partial<MedicalDepartmentApi.Department>>();
+    const data = modalApi.getData();
     formData.value = data ?? {};
     await formApi.reset();
     await formApi.setValues({ status: 1, sort: 0, ...formData.value });

@@ -91,10 +91,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<ErpInventoryApi.InventoryMovement>,
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<InventoryMovementDrawerData>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    currentData.value = drawerApi.getData<InventoryMovementDrawerData>();
+    currentData.value = drawerApi.getData();
     await gridApi.query();
   },
 });

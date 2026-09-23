@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Recordable } from "@vben/types";
 import type { VbenFormSchema } from "#/adapter/form";
 
 import { computed, onMounted, ref } from "vue";
@@ -93,7 +94,7 @@ async function handleSubmit(values: Recordable<any>) {
       email: (values.email ?? "").trim(),
     });
     // 用接口返回的最新资料刷新用户信息，左侧头像等展示即时更新
-    userStore.setUserInfo(profile);
+    userStore.setUserInfo({ ...profile, avatar: profile.avatar ?? "" });
     message.success("保存成功");
   } finally {
     saveLoading.value = false;

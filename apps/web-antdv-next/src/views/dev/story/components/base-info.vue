@@ -20,7 +20,14 @@ const props = defineProps({
 
 const router = useRouter();
 
-const userList = computed(() => props.storyInfo.userList || []);
+// 头像组要求 avatar 必有值,接口里该字段可能缺失,统一降级为空串
+const userList = computed(() =>
+  (props.storyInfo.userList || []).map((user) => ({
+    ...user,
+    avatar: user.avatar ?? '',
+    realName: user.realName ?? '',
+  })),
+);
 const thisUser = computed(() => props.storyInfo.thisUser);
 // 关联流程列表:按绑定时间倒序,含自动发起的需求流程和审批落地创建的来源审批实例
 const workflowInstances = computed(

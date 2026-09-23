@@ -6,7 +6,7 @@ import { computed, h, nextTick, ref } from 'vue';
 
 import { useVbenDrawer, VbenDescriptions } from '@vben/common-ui';
 
-import { Divider, Spin, Tag } from 'antdv-next';
+import { Spin, Tag } from 'antdv-next';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getScheduleDetailApi } from '#/api/medical';
@@ -179,7 +179,7 @@ const [SlotGrid, slotGridApi] = useVbenVxeGrid<MedicalScheduleApi.ScheduleSlot>(
   },
 );
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<{ scheduleId: string }>({
   async onOpenChange(isOpen) {
     if (!isOpen) {
       detail.value = undefined;
@@ -187,7 +187,9 @@ const [Drawer, drawerApi] = useVbenDrawer({
       return;
     }
 
-    const { scheduleId } = drawerApi.getData<{ scheduleId: string }>();
+    const data = drawerApi.getData();
+    if (!data) return;
+    const { scheduleId } = data;
     loading.value = true;
     try {
       const value = await getScheduleDetailApi(scheduleId);

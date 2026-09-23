@@ -35,7 +35,7 @@ const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<Partial<ErpWarehouseApi.Warehouse>>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -60,7 +60,7 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
 
-    const data = modalApi.getData<Partial<ErpWarehouseApi.Warehouse>>() ?? {};
+    const data = modalApi.getData() ?? {};
     warehouseId.value = data.warehouseId;
     rowVersion.value = data.rowVersion;
     await formApi.reset();

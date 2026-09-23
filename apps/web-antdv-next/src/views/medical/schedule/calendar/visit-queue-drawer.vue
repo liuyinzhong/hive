@@ -94,14 +94,14 @@ const [Grid, gridApi] = useVbenVxeGrid<MedicalScheduleApi.VisitQueueItem>({
   } as VxeTableGridOptions<MedicalScheduleApi.VisitQueueItem>,
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<MedicalScheduleApi.Schedule>({
   async onOpenChange(isOpen) {
     if (!isOpen) {
       schedule.value = undefined;
       await gridApi.grid?.loadData?.([]);
       return;
     }
-    schedule.value = drawerApi.getData<MedicalScheduleApi.Schedule>();
+    schedule.value = drawerApi.getData();
     await nextTick();
     await gridApi.query();
   },

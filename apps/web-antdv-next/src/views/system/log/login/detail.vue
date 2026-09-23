@@ -19,10 +19,12 @@ import { $t } from '#/locales';
 const detail = ref<SystemLogApi.LoginLogDetail>();
 const loading = ref(false);
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<Pick<SystemLogApi.LoginLog, 'logId'>>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const { logId } = drawerApi.getData<Pick<SystemLogApi.LoginLog, 'logId'>>();
+    const data = drawerApi.getData();
+    if (!data) return;
+    const { logId } = data;
     loading.value = true;
     try {
       detail.value = await getLoginLogDetailApi(logId);

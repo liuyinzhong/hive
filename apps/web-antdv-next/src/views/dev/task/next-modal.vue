@@ -8,6 +8,7 @@ import { message, Steps, Row, Col, Divider } from 'antdv-next';
 import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
 import { getLocalDictList } from '#/dicts';
+import type { DevTaskApi } from '#/api/dev/task';
 import { nextTaskApi } from '#/api/dev/task';
 
 import { useNextFormSchema } from './data';
@@ -36,16 +37,18 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<DevTaskApi.DevTaskFace>({
   title: '流转任务',
   onConfirm: async () => {
     await formApi.validateAndSubmit();
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      formApi.setValues(modalApi.getData());
+      const data = modalApi.getData();
+      if (!data) return;
+      formApi.setValues({ ...data });
 
-      const taskStatus = modalApi.getData().taskStatus;
+      const taskStatus = data.taskStatus;
       current.value = stepsItems.findIndex(
         (item: any) => item.value === taskStatus,
       );

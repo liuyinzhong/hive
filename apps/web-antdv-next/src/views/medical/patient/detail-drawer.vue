@@ -24,11 +24,12 @@ const contactItems = computed(() =>
   usePatientContactDescriptionItems(detail.value),
 );
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<Pick<MedicalPatientApi.Patient, 'patientId'>>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
     const data =
-      drawerApi.getData<Pick<MedicalPatientApi.Patient, 'patientId'>>();
+      drawerApi.getData();
+    if (!data) return;
     loading.value = true;
     try {
       detail.value = await getPatientDetailApi(data.patientId);

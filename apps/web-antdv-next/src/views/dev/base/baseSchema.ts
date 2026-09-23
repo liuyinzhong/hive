@@ -15,6 +15,11 @@ import { h, nextTick, ref } from 'vue';
 import type { VbenFormSchema } from '#/adapter/form';
 import { Flex, Tag, TypographyText } from 'antdv-next';
 import { useDebounceFn } from '@vueuse/core';
+
+/** dependencies.componentProps 回调注入的表单上下文,这里只用到 setFieldValue */
+type SchemaFormApi = {
+  setFieldValue: (field: string, value: any) => void;
+};
 export const projectSchema = (config?: any): VbenFormSchema => {
   const base = {
     component: 'ApiSelect',
@@ -68,7 +73,10 @@ export const versionSchema = (config?: any): VbenFormSchema => {
       },
     }),
     dependencies: {
-      componentProps: (values, formApi) => {
+      componentProps: (
+        values: Record<string, any>,
+        formApi: SchemaFormApi,
+      ) => {
         if (!values.projectId) {
           return { ...config?.componentProps };
         }
@@ -118,7 +126,10 @@ export const moduleSchema = (config?: any): VbenFormSchema => {
     ...base,
     ...config,
     dependencies: {
-      componentProps: (values, formApi) => {
+      componentProps: (
+        values: Record<string, any>,
+        formApi: SchemaFormApi,
+      ) => {
         if (!values.projectId) {
           return { ...config?.componentProps };
         }
@@ -185,7 +196,10 @@ export const storySchema = (config?: any): VbenFormSchema => {
       },
     }),
     dependencies: {
-      componentProps: (values, formApi) => {
+      componentProps: (
+        values: Record<string, any>,
+        formApi: SchemaFormApi,
+      ) => {
         if (!values.versionId) {
           return { ...config?.componentProps };
         }

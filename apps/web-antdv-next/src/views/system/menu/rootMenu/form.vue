@@ -64,7 +64,7 @@ const schema: VbenFormSchema[] = [
     formItemClass: 'col-span-2 md:col-span-2',
     label: $t('system.menu.type'),
     dependencies: {
-      disabled: (values) => {
+      disabled: () => {
         return !!formData.value?.id;
       },
       triggerFields: ['id'],
@@ -96,17 +96,17 @@ const schema: VbenFormSchema[] = [
       .min(2, $t('ui.formRules.minLength', [$t('system.menu.pathName'), 2]))
       .max(30, $t('ui.formRules.maxLength', [$t('system.menu.pathName'), 30]))
       .regex(/^[A-Za-z]+$/, { message: '只能输入英文字母' })
-      .refine(
-        async (value: string) => {
-          return !(await isMenuNameExistsApi(value, formData.value?.id));
-        },
-        (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.pathName'),
-            value,
-          ]),
-        }),
-      ),
+      .superRefine(async (value: string, ctx) => {
+        if (await isMenuNameExistsApi(value, formData.value?.id)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: $t('ui.formRules.alreadyExists', [
+              $t('system.menu.pathName'),
+              value,
+            ]),
+          });
+        }
+      }),
     dependencies: {
       show: (values) => {
         return ['menu'].includes(values.type);
@@ -175,17 +175,17 @@ const schema: VbenFormSchema[] = [
         },
         $t('ui.formRules.startWith', [$t('system.menu.path'), '/']),
       )
-      .refine(
-        async (value: string) => {
-          return !(await isMenuPathExistsApi(value, formData.value?.id));
-        },
-        (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.path'),
-            value,
-          ]),
-        }),
-      ),
+      .superRefine(async (value: string, ctx) => {
+        if (await isMenuPathExistsApi(value, formData.value?.id)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: $t('ui.formRules.alreadyExists', [
+              $t('system.menu.path'),
+              value,
+            ]),
+          });
+        }
+      }),
   },
   {
     component: 'Input',
@@ -670,11 +670,11 @@ const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2 gap-x-4',
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<SystemMenuApi.SystemMenuFace>({
   onConfirm: onSubmit,
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = drawerApi.getData<SystemMenuApi.SystemMenuFace>();
+      const data = drawerApi.getData();
       if (data?.type === 'link') {
         data.linkSrc = data.meta?.link;
       } else if (data?.type === 'embedded') {

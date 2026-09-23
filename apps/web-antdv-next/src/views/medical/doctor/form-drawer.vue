@@ -32,7 +32,7 @@ const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<Partial<MedicalDoctorApi.Doctor>>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -56,7 +56,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<Partial<MedicalDoctorApi.Doctor>>() ?? {};
+    const data = drawerApi.getData() ?? {};
     doctorId.value = data.doctorId;
     await formApi.reset();
 

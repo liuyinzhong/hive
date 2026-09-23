@@ -145,7 +145,7 @@ const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-1',
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<ModalData>({
   async onConfirm() {
     if (!hasAccessByCodes(['product:skuPriceTier:save'])) {
       message.error($t('product.skuPriceTier.noSaveAccess'));
@@ -156,7 +156,8 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
 
-    const data = modalApi.getData<ModalData>();
+    const data = modalApi.getData();
+    if (!data) return;
     skuId.value = data.skuId;
     price.value = data.price;
     await formApi.reset();

@@ -51,10 +51,11 @@ const [Grid, gridApi] = useVbenVxeGrid<ProductSkuApi.ProductSkuPrice>({
   tableData: [],
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<ProductSpuDetailGridRow>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<ProductSpuDetailGridRow>();
+    const data = drawerApi.getData();
+    if (!data) return;
     currentSku.value = {
       packageSpecName: data.packageSpecName,
       skuCode: data.skuCode,

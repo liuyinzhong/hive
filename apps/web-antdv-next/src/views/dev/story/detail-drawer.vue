@@ -4,7 +4,6 @@ import type { DevStoryApi } from '#/api/dev';
 import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
-import { VbenTiptap } from '@vben/plugins/tiptap';
 
 import CopyButton from '#/components/CopyButton/index.vue';
 
@@ -18,11 +17,14 @@ defineOptions({
 /**
  * 抽屉实例
  */
-const [Drawer, DrawerApi] = useVbenDrawer({
+const [Drawer, DrawerApi] = useVbenDrawer<DevStoryApi.DevStoryFace>({
   showConfirmButton: false,
   onOpenChange: (open: boolean) => {
     if (open) {
-      storyInfo.value = DrawerApi.getData();
+      const data = DrawerApi.getData();
+      if (data) {
+        storyInfo.value = data;
+      }
     }
   },
 });

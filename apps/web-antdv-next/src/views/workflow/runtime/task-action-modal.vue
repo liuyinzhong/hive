@@ -17,6 +17,7 @@ import {
   compileVbenFormSchema,
   FORM_SCHEMA_WRAPPER_CLASS,
   getFormSchemaWrapperClass,
+  hydrateFormValues,
 } from '#/utils/form-schema';
 
 import {
@@ -128,7 +129,9 @@ async function loadApplication() {
       wrapperClass: getFormSchemaWrapperClass(detail.instance.formLayout),
     });
     await nextTick();
-    await applicationFormApi.setValues(detail.instance.variables ?? {});
+    await applicationFormApi.setValues(
+      hydrateFormValues(runtimeSchema, detail.instance.variables ?? {}),
+    );
   } catch {
     message.error($t('flow.runtime.message.loadFailed'));
   } finally {

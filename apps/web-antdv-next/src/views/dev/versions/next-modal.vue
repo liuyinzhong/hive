@@ -8,6 +8,7 @@ import { message, Row, Col, Steps, Divider } from 'antdv-next';
 import { useVbenForm } from '#/adapter/form';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
 import { getLocalDictList } from '#/dicts';
+import type { DevVersionApi } from '#/api/dev/versions';
 import { nextVersionApi } from '#/api/dev/versions';
 
 import { useNextFormSchema } from './data';
@@ -34,7 +35,7 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<DevVersionApi.DevVersionFace>({
   title: '流转版本',
   onConfirm: async () => {
     await formApi.validateAndSubmit();
@@ -42,8 +43,9 @@ const [Modal, modalApi] = useVbenModal({
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
       const data = modalApi.getData();
+      if (!data) return;
 
-      formApi.setValues(data);
+      formApi.setValues({ ...data });
       /* 设置当前步骤 */
       current.value = stepsItems.findIndex(
         (item: any) => item.value === data.releaseStatus,

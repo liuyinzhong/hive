@@ -14,7 +14,7 @@ const emit = defineEmits<{ success: [] }>();
 const schedule = ref<MedicalScheduleApi.Schedule>();
 const reason = ref('');
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<MedicalScheduleApi.Schedule>({
   async onConfirm() {
     if (!schedule.value || !reason.value.trim()) {
       message.warning($t('medical.schedule.stopReasonRequired'));
@@ -32,7 +32,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (!isOpen) return;
-    schedule.value = modalApi.getData<MedicalScheduleApi.Schedule>();
+    schedule.value = modalApi.getData();
     reason.value = '';
   },
 });

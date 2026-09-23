@@ -69,7 +69,7 @@ const [Form, formApi] = useVbenForm<TraceCodeFormValues>({
   wrapperClass: 'grid-cols-1',
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<TraceCodeModalData>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -90,7 +90,8 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = modalApi.getData<TraceCodeModalData>();
+    const data = modalApi.getData();
+    if (!data) return;
     contextLabel.value = data.contextLabel || '';
     const codes = data.codes || [];
     await formApi.reset();

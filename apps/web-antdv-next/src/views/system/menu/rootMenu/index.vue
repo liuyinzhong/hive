@@ -3,7 +3,7 @@ import type { VxeTableGridOptions } from "#/adapter/vxe-table";
 
 import { watchEffect } from "vue";
 
-import { Page, useVbenDrawer } from "@vben/common-ui";
+import { useVbenDrawer } from "@vben/common-ui";
 import { IconifyIcon, Plus } from "@vben/icons";
 import { $t } from "@vben/locales";
 

@@ -40,7 +40,7 @@ const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<ModalData>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid || !rpId.value) return;
@@ -67,7 +67,8 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
 
-    const data = modalApi.getData<ModalData>();
+    const data = modalApi.getData();
+    if (!data) return;
     enterpriseId.value = undefined;
     mpId.value = data.mpId;
     rowVersion.value = undefined;

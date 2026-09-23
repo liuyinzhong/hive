@@ -2,7 +2,7 @@
 import { Page } from '@vben/common-ui';
 
 import { message, Button } from 'antdv-next';
-function onSubmit(values: Record<string, any>) {
+function onSubmit(_values: Record<string, any>) {
   message.info('How many roads must a man walk down');
 }
 </script>

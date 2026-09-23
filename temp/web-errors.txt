@@ -1,0 +1,288 @@
+cache miss, executing caa1d61a26bfc175
+$ vue-tsc --noEmit --skipLibCheck
+src/adapter/component/table/CellProgress.ts(9,22): error TS6133: 'renderOpts' is declared but its value is never read.
+src/adapter/component/table/UserAvatar.ts(25,13): error TS6133: '_column' is declared but its value is never read.
+src/layouts/components/notification-center.vue(26,33): error TS6133: 'data' is declared but its value is never read.
+  Type 'undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+  Property 'componentProps' does not exist on type 'FormGroupSchema<ComponentType, ComponentPropsMap, FormValues>'.
+src/views/_core/profile/base-setting.vue(84,37): error TS2304: Cannot find name 'Recordable'.
+src/views/_core/profile/base-setting.vue(96,27): error TS2345: Argument of type 'SystemUserFace' is not assignable to parameter of type 'BasicUserInfo'.
+  Types of property 'avatar' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/views/base/classification/node/form-modal.vue(73,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/base/classification/node/form-modal.vue(77,34): error TS2339: Property 'classificationNodeId' does not exist on type '{}'.
+src/views/base/classification/node/form-modal.vue(78,36): error TS2339: Property 'classificationSystemId' does not exist on type '{}'.
+src/views/base/classification/node/form-modal.vue(79,22): error TS2339: Property 'parentId' does not exist on type '{}'.
+src/views/base/classification/node/form-modal.vue(80,24): error TS2339: Property 'rowVersion' does not exist on type '{}'.
+src/views/base/classification/node/form-modal.vue(81,24): error TS2339: Property 'systemCode' does not exist on type '{}'.
+src/views/base/classification/node/form-modal.vue(83,29): error TS2339: Property 'systemCode' does not exist on type '{}'.
+src/views/base/classification/system/form-drawer.vue(63,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/base/classification/system/form-drawer.vue(64,27): error TS2339: Property 'classificationSystemId' does not exist on type '{}'.
+src/views/base/classification/system/form-drawer.vue(65,29): error TS2339: Property 'rowVersion' does not exist on type '{}'.
+src/views/base/classification/system/form-drawer.vue(69,14): error TS2339: Property 'classificationSystemId' does not exist on type '{}'.
+src/views/base/classification/system/form-drawer.vue(72,62): error TS2339: Property 'classificationSystemId' does not exist on type '{}'.
+src/views/base/classification/system/form-drawer.vue(78,31): error TS2339: Property 'rowVersion' does not exist on type '{}'.
+src/views/base/enterprise/form-drawer.vue(63,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/base/enterprise/form-drawer.vue(64,31): error TS2339: Property 'enterpriseId' does not exist on type '{}'.
+src/views/base/enterprise/form-drawer.vue(65,29): error TS2339: Property 'rowVersion' does not exist on type '{}'.
+src/views/base/enterprise/form-drawer.vue(69,14): error TS2339: Property 'enterpriseId' does not exist on type '{}'.
+src/views/base/enterprise/form-drawer.vue(72,52): error TS2339: Property 'enterpriseId' does not exist on type '{}'.
+src/views/base/enterprise/form-drawer.vue(78,31): error TS2339: Property 'rowVersion' does not exist on type '{}'.
+src/views/dashboard/workspace/index.vue(4,21): error TS6133: 'reactive' is declared but its value is never read.
+src/views/dashboard/workspace/index.vue(4,31): error TS6133: 'ref' is declared but its value is never read.
+src/views/dashboard/workspace/index.vue(20,7): error TS6133: 'router' is declared but its value is never read.
+src/views/demo/index.vue(5,19): error TS6133: 'values' is declared but its value is never read.
+src/views/dev/base/baseSchema.ts(71,24): error TS7006: Parameter 'values' implicitly has an 'any' type.
+src/views/dev/base/baseSchema.ts(71,32): error TS7006: Parameter 'formApi' implicitly has an 'any' type.
+src/views/dev/base/baseSchema.ts(121,24): error TS7006: Parameter 'values' implicitly has an 'any' type.
+src/views/dev/base/baseSchema.ts(121,32): error TS7006: Parameter 'formApi' implicitly has an 'any' type.
+src/views/dev/base/baseSchema.ts(188,24): error TS7006: Parameter 'values' implicitly has an 'any' type.
+src/views/dev/base/baseSchema.ts(188,32): error TS7006: Parameter 'formApi' implicitly has an 'any' type.
+src/views/dev/bug/components/bug-detail.vue(6,10): error TS6133: 'confirm' is declared but its value is never read.
+src/views/dev/bug/components/bug-detail.vue(42,7): error TS6133: 'closeCurrentTab' is declared but its value is never read.
+src/views/dev/bug/detail-drawer.vue(7,1): error TS6133: 'VbenTiptap' is declared but its value is never read.
+src/views/dev/bug/detail-drawer.vue(10,1): error TS6133: 'UserAvatar' is declared but its value is never read.
+src/views/dev/bug/detail-drawer.vue(22,7): error TS2322: Type 'unknown' is not assignable to type 'DevBugFace | { [x: string]: any; bugId?: string | undefined; bugTitle?: string | undefined; bugNum?: number | undefined; returnNum?: number | undefined; bugRichText?: string | undefined; ... 19 more ...; updateDate?: string | ... 1 more ... | undefined; }'.
+src/views/dev/bug/detail-drawer.vue(36,7): error TS6133: 'submit' is declared but its value is never read.
+src/views/dev/bug/detail-drawer.vue(39,11): error TS6133: '_params' is declared but its value is never read.
+src/views/dev/bug/list.vue(55,26): error TS6133: 'filters' is declared but its value is never read.
+src/views/dev/bug/next-modal.vue(48,25): error TS2345: Argument of type 'unknown' is not assignable to parameter of type '{ [x: string]: any; }'.
+src/views/dev/bug/next-modal.vue(52,39): error TS18046: 'data' is of type 'unknown'.
+src/views/dev/project/home.vue(54,23): error TS6133: 'page' is declared but its value is never read.
+src/views/dev/project/home.vue(54,38): error TS6133: 'formValues' is declared but its value is never read.
+src/views/dev/project/home.vue(63,20): error TS6133: 'e' is declared but its value is never read.
+src/views/dev/story/components/base-info.vue(91,25): error TS2322: Type 'userListFace[]' is not assignable to type 'UserAvatarGroup[]'.
+  Type 'userListFace' is not assignable to type 'UserAvatarGroup'.
+    Types of property 'avatar' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+src/views/dev/story/components/story-detail.vue(8,3): error TS6133: 'confirm' is declared but its value is never read.
+src/views/dev/story/components/story-detail.vue(59,7): error TS6133: 'closeCurrentTab' is declared but its value is never read.
+src/views/dev/story/detail-drawer.vue(7,1): error TS6133: 'VbenTiptap' is declared but its value is never read.
+src/views/dev/story/detail-drawer.vue(25,7): error TS2322: Type 'unknown' is not assignable to type 'DevStoryFace | { [x: string]: any; storyId: string; pid?: string | undefined; storyTitle?: any; storyNum?: any; creatorName?: string | undefined; creatorId?: string | undefined; ... 17 more ...; workflowInstances?: { ...; }[] | undefined; }'.
+src/views/dev/story/list.vue(12,10): error TS6133: 'resetAllStores' is declared but its value is never read.
+src/views/dev/story/list.vue(12,26): error TS6133: 'useAccessStore' is declared but its value is never read.
+src/views/dev/story/list.vue(21,3): error TS6133: 'getProjectsListApi' is declared but its value is never read.
+src/views/dev/story/list.vue(37,7): error TS6133: 'router' is declared but its value is never read.
+src/views/dev/story/list.vue(40,19): error TS6133: 'userRoles' is declared but its value is never read.
+src/views/dev/story/list.vue(76,26): error TS6133: 'filters' is declared but its value is never read.
+src/views/dev/task/components/task-detail.vue(8,3): error TS6133: 'confirm' is declared but its value is never read.
+src/views/dev/task/components/task-detail.vue(50,7): error TS6133: 'closeCurrentTab' is declared but its value is never read.
+src/views/dev/task/detail-drawer.vue(20,7): error TS2322: Type 'unknown' is not assignable to type 'DevTaskFace | { [x: string]: any; taskId?: string | undefined; pid?: any; storyId?: string | undefined; storyTitle?: string | undefined; moduleId?: string | undefined; moduleTitle?: string | undefined; ... 19 more ...; avatar?: string | undefined; }'.
+src/views/dev/task/list.vue(12,10): error TS6133: 'Download' is declared but its value is never read.
+src/views/dev/task/list.vue(19,3): error TS6133: 'createTaskExportApi' is declared but its value is never read.
+src/views/dev/task/next-modal.vue(46,25): error TS2345: Argument of type 'unknown' is not assignable to parameter of type '{ [x: string]: any; }'.
+src/views/dev/task/next-modal.vue(48,26): error TS2571: Object is of type 'unknown'.
+src/views/dev/versions/list.vue(58,26): error TS6133: 'filters' is declared but its value is never read.
+src/views/dev/versions/next-modal.vue(46,25): error TS2345: Argument of type 'unknown' is not assignable to parameter of type '{ [x: string]: any; }'.
+src/views/dev/versions/next-modal.vue(49,39): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/components/trace-code-modal.vue(93,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/components/trace-code-modal.vue(94,26): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/components/trace-code-modal.vue(95,19): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/components/trace-code-modal.vue(98,53): error TS7006: Parameter 'traceCode' implicitly has an 'any' type.
+src/views/erp/inventory/movement-drawer.vue(97,5): error TS2322: Type 'unknown' is not assignable to type 'InventoryMovementDrawerData | undefined'.
+src/views/erp/inventory/movement-drawer.vue(97,43): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/otherOutbound/detail-drawer.vue(64,9): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/otherOutbound/detail-drawer.vue(70,54): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/purchaseInbound/detail-drawer.vue(82,9): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/purchaseInbound/detail-drawer.vue(88,56): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/purchaseInbound/form-drawer.vue(162,13): error TS2339: Property 'purchaseOrderId' does not exist on type 'unknown'.
+src/views/erp/purchaseInbound/form-drawer.vue(162,51): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/purchaseOrder/detail-drawer.vue(97,13): error TS2339: Property 'purchaseOrderId' does not exist on type 'unknown'.
+src/views/erp/purchaseOrder/detail-drawer.vue(97,51): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/purchaseOrder/form-drawer.vue(96,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/purchaseOrder/form-drawer.vue(97,29): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/purchaseOrder/form-drawer.vue(99,10): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/purchaseOrder/form-drawer.vue(111,54): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/form-modal.vue(63,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/warehouse/form-modal.vue(64,30): error TS2339: Property 'warehouseId' does not exist on type '{}'.
+src/views/erp/warehouse/form-modal.vue(65,29): error TS2339: Property 'rowVersion' does not exist on type '{}'.
+src/views/erp/warehouse/form-modal.vue(69,14): error TS2339: Property 'warehouseId' does not exist on type '{}'.
+src/views/erp/warehouse/form-modal.vue(72,51): error TS2339: Property 'warehouseId' does not exist on type '{}'.
+src/views/erp/warehouse/form-modal.vue(78,31): error TS2339: Property 'rowVersion' does not exist on type '{}'.
+src/views/erp/warehouse/location-drawer.vue(93,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/warehouse/location-drawer.vue(94,30): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-drawer.vue(95,25): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-form-modal.vue(76,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/warehouse/location-form-modal.vue(77,22): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-form-modal.vue(78,25): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-form-modal.vue(79,20): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-form-modal.vue(85,9): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-form-modal.vue(85,29): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-form-modal.vue(89,11): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/location-form-modal.vue(90,11): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/zone-drawer.vue(83,5): error TS2322: Type 'unknown' is not assignable to type 'Pick<Warehouse, "warehouseCode" | "warehouseId" | "warehouseName"> | undefined'.
+src/views/erp/warehouse/zone-drawer.vue(83,48): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/warehouse/zone-form-modal.vue(67,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/erp/warehouse/zone-form-modal.vue(68,18): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/zone-form-modal.vue(69,25): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/zone-form-modal.vue(75,9): error TS18046: 'data' is of type 'unknown'.
+src/views/erp/warehouse/zone-form-modal.vue(79,11): error TS18046: 'data' is of type 'unknown'.
+src/views/form/schema/components/form-schema-designer.vue(222,3): error TS2322: Type '{ formItemClass: (() => string) | `${string} ${string}`; children: FormFieldSchema<ComponentType, ComponentPropsMap, FormValues>[]; ... 9 more ...; wrapperClass?: WrapperClassType; }' is not assignable to type 'VbenFormSchema'.
+  Types of property 'formItemClass' are incompatible.
+    Type '(() => string) | `${string} ${string}`' is not assignable to type 'FormItemClassType | undefined'.
+      Type '() => string' is not assignable to type 'FormItemClassType | undefined'.
+src/views/medical/department/form-modal.vue(56,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/diagnosis/form-drawer.vue(56,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/diagnosis/form-drawer.vue(57,30): error TS2339: Property 'diagnosisId' does not exist on type '{}'.
+src/views/medical/doctor-workbench/prescription-drawer.vue(77,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/doctor-workbench/prescription-drawer.vue(78,20): error TS18046: 'data' is of type 'unknown'.
+src/views/medical/doctor-workbench/prescription-drawer.vue(79,28): error TS18046: 'data' is of type 'unknown'.
+src/views/medical/doctor-workbench/prescription-drawer.vue(80,30): error TS18046: 'data' is of type 'unknown'.
+src/views/medical/doctor-workbench/prescription-drawer.vue(80,61): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/views/medical/doctor-workbench/prescription-drawer.vue(82,30): error TS7006: Parameter 'detail' implicitly has an 'any' type.
+src/views/medical/doctor/detail-drawer.vue(28,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/doctor/detail-drawer.vue(31,47): error TS18046: 'data' is of type 'unknown'.
+src/views/medical/doctor/form-drawer.vue(59,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/doctor/form-drawer.vue(60,27): error TS2339: Property 'doctorId' does not exist on type '{}'.
+src/views/medical/doctor/form-drawer.vue(64,14): error TS2339: Property 'doctorId' does not exist on type '{}'.
+src/views/medical/doctor/form-drawer.vue(67,48): error TS2339: Property 'doctorId' does not exist on type '{}'.
+src/views/medical/doctor/form-drawer.vue(80,39): error TS2339: Property 'avatar' does not exist on type '{}'.
+src/views/medical/patient/detail-drawer.vue(31,25): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/patient/detail-drawer.vue(34,48): error TS18046: 'data' is of type 'unknown'.
+src/views/medical/patient/form-drawer.vue(55,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/patient/form-drawer.vue(56,28): error TS2339: Property 'patientId' does not exist on type '{}'.
+src/views/medical/patient/form-drawer.vue(60,14): error TS2339: Property 'patientId' does not exist on type '{}'.
+src/views/medical/patient/form-drawer.vue(63,49): error TS2339: Property 'patientId' does not exist on type '{}'.
+src/views/medical/patient/form-drawer.vue(70,23): error TS2339: Property 'address' does not exist on type '{}'.
+src/views/medical/patient/form-drawer.vue(71,36): error TS2339: Property 'emergencyContactName' does not exist on type '{}'.
+src/views/medical/patient/form-drawer.vue(72,37): error TS2339: Property 'emergencyContactPhone' does not exist on type '{}'.
+src/views/medical/patient/form-drawer.vue(73,40): error TS2339: Property 'emergencyContactRelation' does not exist on type '{}'.
+src/views/medical/patient/form-drawer.vue(74,22): error TS2339: Property 'remark' does not exist on type '{}'.
+src/views/medical/prescription-review/detail-drawer.vue(52,13): error TS2339: Property 'prescriptionId' does not exist on type 'unknown'.
+src/views/medical/prescription-review/detail-drawer.vue(52,50): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/registration-fee/form-drawer.vue(71,9): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/registration-fee/form-drawer.vue(73,28): error TS2339: Property 'feeRuleId' does not exist on type '{}'.
+src/views/medical/registration-fee/form-drawer.vue(77,14): error TS2339: Property 'feeRuleId' does not exist on type '{}'.
+src/views/medical/registration-fee/form-drawer.vue(77,32): error TS2339: Property 'effectiveDate' does not exist on type '{}'.
+src/views/medical/registration-fee/form-drawer.vue(78,42): error TS2339: Property 'effectiveDate' does not exist on type '{}'.
+src/views/medical/registration-fee/form-drawer.vue(88,23): error TS2339: Property 'feeRuleId' does not exist on type '{}'.
+src/views/medical/registration-fee/form-drawer.vue(89,24): error TS2339: Property 'feeRuleId' does not exist on type '{}'.
+src/views/medical/registration-fee/form-drawer.vue(89,53): error TS2339: Property 'expiryDate' does not exist on type '{}'.
+src/views/medical/registration/detail-drawer.vue(130,13): error TS2339: Property 'registrationId' does not exist on type 'unknown'.
+src/views/medical/registration/detail-drawer.vue(130,50): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/schedule/calendar/detail-drawer.vue(9,10): error TS6133: 'Divider' is declared but its value is never read.
+src/views/medical/schedule/calendar/detail-drawer.vue(190,13): error TS2339: Property 'scheduleId' does not exist on type 'unknown'.
+src/views/medical/schedule/calendar/detail-drawer.vue(190,46): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/schedule/calendar/form-drawer.vue(131,25): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/schedule/calendar/form-drawer.vue(132,29): error TS2339: Property 'scheduleId' does not exist on type '{}'.
+src/views/medical/schedule/calendar/form-drawer.vue(134,50): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/views/medical/schedule/calendar/form-drawer.vue(135,48): error TS2339: Property 'endTime' does not exist on type '{}'.
+src/views/medical/schedule/calendar/form-drawer.vue(136,35): error TS2339: Property 'defaultSlotQuota' does not exist on type '{}'.
+src/views/medical/schedule/calendar/form-drawer.vue(142,12): error TS2339: Property 'slots' does not exist on type '{}'.
+src/views/medical/schedule/calendar/form-drawer.vue(148,26): error TS2339: Property 'scheduleDate' does not exist on type '{}'.
+src/views/medical/schedule/calendar/generate-drawer.vue(91,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/schedule/calendar/generate-drawer.vue(92,31): error TS2339: Property 'anchorDate' does not exist on type '{}'.
+src/views/medical/schedule/calendar/stop-modal.vue(35,5): error TS2322: Type 'unknown' is not assignable to type 'Schedule | undefined'.
+src/views/medical/schedule/calendar/stop-modal.vue(35,39): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/schedule/calendar/visit-queue-drawer.vue(104,5): error TS2322: Type 'unknown' is not assignable to type 'Schedule | undefined'.
+src/views/medical/schedule/calendar/visit-queue-drawer.vue(104,40): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/schedule/template/form-drawer.vue(117,25): error TS2558: Expected 0 type arguments, but got 1.
+src/views/medical/schedule/template/form-drawer.vue(118,29): error TS2339: Property 'templateId' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(120,39): error TS2339: Property 'defaultSlotQuota' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(122,34): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(123,34): error TS2339: Property 'endTime' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(124,12): error TS2339: Property 'defaultSlotQuota' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(125,12): error TS2339: Property 'slotQuotaConfig' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(129,30): error TS2339: Property 'defaultSlotQuota' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(130,27): error TS2339: Property 'effectiveDate' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(131,43): error TS2339: Property 'endTime' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(132,45): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(133,20): error TS2339: Property 'status' does not exist on type '{}'.
+src/views/medical/schedule/template/form-drawer.vue(134,22): error TS2339: Property 'weekdays' does not exist on type '{}'.
+src/views/product/spu/components/mp/mp-form-modal.vue(70,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/product/spu/components/mp/mp-form-modal.vue(72,18): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/mp/mp-form-modal.vue(74,18): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/mp/mp-form-modal.vue(78,9): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/mp/mp-form-modal.vue(81,46): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/rp/rp-form-modal.vue(68,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/product/spu/components/rp/rp-form-modal.vue(69,18): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/rp/rp-form-modal.vue(71,19): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/rp/rp-form-modal.vue(75,9): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/rp/rp-form-modal.vue(78,46): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku-price/sku-price-drawer.vue(57,36): error TS2558: Expected 0 type arguments, but got 1.
+src/views/product/spu/components/sku-price/sku-price-drawer.vue(59,24): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku-price/sku-price-drawer.vue(60,16): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku-price/sku-price-drawer.vue(61,14): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku-price/sku-price-form-modal.vue(86,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/product/spu/components/sku-price/sku-price-form-modal.vue(87,19): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku-price/sku-price-form-modal.vue(88,19): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku-price/sku-price-tier-modal.vue(159,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/product/spu/components/sku-price/sku-price-tier-modal.vue(160,19): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku-price/sku-price-tier-modal.vue(161,19): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku/sku-form-modal.vue(190,35): error TS2558: Expected 0 type arguments, but got 1.
+src/views/product/spu/components/sku/sku-form-modal.vue(191,18): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku/sku-form-modal.vue(192,19): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku/sku-form-modal.vue(197,9): error TS18046: 'data' is of type 'unknown'.
+src/views/product/spu/components/sku/sku-form-modal.vue(200,47): error TS18046: 'data' is of type 'unknown'.
+src/views/system/dept/modules/form.vue(54,37): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/dept/modules/form.vue(56,19): error TS2339: Property 'pid' does not exist on type '{}'.
+src/views/system/dept/modules/form.vue(57,16): error TS2339: Property 'pid' does not exist on type '{}'.
+src/views/system/dept/modules/form.vue(59,9): error TS2739: Type '{}' is missing the following properties from type 'SystemDeptFace': deptId, deptTitle, status
+src/views/system/dept/modules/form.vue(60,27): error TS2345: Argument of type 'SystemDeptFace | undefined' is not assignable to parameter of type '{ [x: string]: any; }'.
+  Type 'undefined' is not assignable to type '{ [x: string]: any; }'.
+src/views/system/dict/list.vue(62,26): error TS6133: 'filters' is declared but its value is never read.
+src/views/system/downloadCenter/list.vue(59,36): error TS6133: 'data' is declared but its value is never read.
+src/views/system/log/login/detail.vue(25,13): error TS2339: Property 'logId' does not exist on type 'unknown'.
+src/views/system/log/login/detail.vue(25,41): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/log/operation/detail.vue(25,13): error TS2339: Property 'logId' does not exist on type 'unknown'.
+src/views/system/log/operation/detail.vue(26,25): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/menu/externalMenu/form.vue(135,25): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/menu/externalMenu/form.vue(136,33): error TS2339: Property 'id' does not exist on type '{}'.
+src/views/system/menu/externalMenu/form.vue(140,30): error TS2339: Property 'title' does not exist on type '{}'.
+src/views/system/menu/externalMenu/form.vue(142,20): error TS2339: Property 'name' does not exist on type '{}'.
+src/views/system/menu/externalMenu/form.vue(143,20): error TS2339: Property 'path' does not exist on type '{}'.
+src/views/system/menu/externalMenu/form.vue(144,22): error TS2339: Property 'status' does not exist on type '{}'.
+src/views/system/menu/externalMenu/form.vue(145,21): error TS2339: Property 'title' does not exist on type '{}'.
+src/views/system/menu/list.vue(5,1): error TS6133: '$t' is declared but its value is never read.
+src/views/system/menu/list.vue(7,10): error TS6133: 'TabPane' is declared but its value is never read.
+src/views/system/menu/list.vue(7,19): error TS6133: 'Tabs' is declared but its value is never read.
+src/views/system/menu/rootMenu/form.vue(67,18): error TS6133: 'values' is declared but its value is never read.
+src/views/system/menu/rootMenu/form.vue(103,9): error TS2345: Argument of type '(value: any) => { message: string; }' is not assignable to parameter of type 'string | { path?: PropertyKey[] | undefined; params?: Record<string, any> | undefined; abort?: boolean | undefined; when?: ((payload: ParsePayload<unknown>) => boolean) | undefined; error?: string | ... 1 more ... | undefined; message?: string | undefined; } | undefined'.
+src/views/system/menu/rootMenu/form.vue(103,10): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/views/system/menu/rootMenu/form.vue(182,9): error TS2345: Argument of type '(value: any) => { message: string; }' is not assignable to parameter of type 'string | { path?: PropertyKey[] | undefined; params?: Record<string, any> | undefined; abort?: boolean | undefined; when?: ((payload: ParsePayload<unknown>) => boolean) | undefined; error?: string | ... 1 more ... | undefined; message?: string | undefined; } | undefined'.
+src/views/system/menu/rootMenu/form.vue(182,10): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/views/system/menu/rootMenu/form.vue(677,38): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/menu/rootMenu/form.vue(678,17): error TS2339: Property 'type' does not exist on type '{}'.
+src/views/system/menu/rootMenu/form.vue(679,14): error TS2339: Property 'linkSrc' does not exist on type '{}'.
+src/views/system/menu/rootMenu/form.vue(679,29): error TS2339: Property 'meta' does not exist on type '{}'.
+src/views/system/menu/rootMenu/form.vue(680,24): error TS2339: Property 'type' does not exist on type '{}'.
+src/views/system/menu/rootMenu/form.vue(681,14): error TS2339: Property 'linkSrc' does not exist on type '{}'.
+src/views/system/menu/rootMenu/form.vue(681,29): error TS2339: Property 'meta' does not exist on type '{}'.
+src/views/system/menu/rootMenu/form.vue(684,9): error TS2740: Type '{}' is missing the following properties from type 'SystemMenuFace': authCode, id, name, path, and 3 more.
+src/views/system/menu/rootMenu/form.vue(685,27): error TS2345: Argument of type 'SystemMenuFace | undefined' is not assignable to parameter of type '{ [x: string]: any; }'.
+  Type 'undefined' is not assignable to type '{ [x: string]: any; }'.
+src/views/system/menu/rootMenu/form.vue(686,29): error TS18048: 'formData.value' is possibly 'undefined'.
+src/views/system/menu/rootMenu/form.vue(687,16): error TS18048: 'formData.value' is possibly 'undefined'.
+src/views/system/menu/rootMenu/index.vue(6,10): error TS6133: 'Page' is declared but its value is never read.
+src/views/system/param/add-modal.vue(62,26): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/param/add-modal.vue(66,21): error TS2339: Property 'id' does not exist on type '{}'.
+src/views/system/payChannel/add-modal.vue(112,37): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/payChannel/add-modal.vue(116,21): error TS2339: Property 'id' does not exist on type '{}'.
+src/views/system/payChannel/list.vue(175,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/views/system/payChannel/list.vue(176,27): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/views/system/user/detail.vue(6,43): error TS6133: 'VbenDescriptionsItem' is declared but its value is never read.
+src/views/system/user/detail.vue(19,7): error TS2322: Type 'unknown' is not assignable to type 'SystemUserFace | undefined'.
+src/views/system/user/detail.vue(19,44): error TS2558: Expected 0 type arguments, but got 1.
+src/views/system/user/list.vue(5,10): error TS6133: 'nextTick' is declared but its value is never read.
+src/views/system/user/list.vue(5,36): error TS6133: 'watch' is declared but its value is never read.
+src/views/system/user/list.vue(68,38): error TS6133: 'filters' is declared but its value is never read.
+src/views/workflow/runtime/field-permission.ts(18,36): error TS2538: Type 'undefined' cannot be used as an index type.
+src/views/workflow/runtime/field-permission.ts(19,57): error TS2339: Property 'disabled' does not exist on type 'VbenFormSchema'.
+  Property 'disabled' does not exist on type 'FormGroupSchema<ComponentType, ComponentPropsMap, FormValues>'.
+src/views/workflow/runtime/field-permission.ts(25,50): error TS2339: Property 'rules' does not exist on type 'VbenFormSchema'.
+  Property 'rules' does not exist on type 'FormGroupSchema<ComponentType, ComponentPropsMap, FormValues>'.
+src/views/workflow/runtime/start-modal.vue(128,5): error TS2322: Type '(string | undefined)[]' is not assignable to type 'string[]'.
+  Type 'string | undefined' is not assignable to type 'string'.
+    Type 'undefined' is not assignable to type 'string'.
+src/vtable/RichTextEditor.ts(152,5): error TS6133: 'newValue' is declared but its value is never read.
+src/vtable/RichTextEditor.ts(153,5): error TS6133: 'oldValue' is declared but its value is never read.
+src/vtable/SelectEditor.ts(177,5): error TS6133: 'oldValue' is declared but its value is never read.
+src/vtable/UploadFileEditor.ts(160,5): error TS6133: 'oldValue' is declared but its value is never read.
+src/vtable/UploadFileEditor.ts(251,15): error TS18048: 'file.size' is possibly 'undefined'.
+src/vtable/UploadFileEditor.ts(251,32): error TS18048: 'file.size' is possibly 'undefined'.
+[ELIFECYCLE] Command failed with exit code 2.

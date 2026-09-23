@@ -22,7 +22,7 @@ import { get } from '@vben/utils';
 
 export default {
   renderTableDefault(renderOpts: any, params: any) {
-    const { _column, row } = params;
+    const { row } = params;
 
     const avatar = get(row, renderOpts.props?.avatarField || 'avatar');
     const name = get(row, renderOpts.props?.nameField || 'realName');

@@ -124,10 +124,12 @@ const items = computed(() => {
   ];
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<{ registrationId: string }>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const { registrationId } = drawerApi.getData<{ registrationId: string }>();
+    const data = drawerApi.getData();
+    if (!data) return;
+    const { registrationId } = data;
     loading.value = true;
     try {
       detail.value = await getRegistrationDetailApi(registrationId);

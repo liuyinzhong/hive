@@ -23,7 +23,7 @@ const menuMessageStore = useMenuMessageStore();
 const ringing = ref(false);
 let ringingTimer: null | ReturnType<typeof setTimeout> = null;
 
-messageBus.newUnreadArrived.on((data: any) => {
+messageBus.newUnreadArrived.on(() => {
   ringing.value = true;
   if (ringingTimer) {
     clearTimeout(ringingTimer);

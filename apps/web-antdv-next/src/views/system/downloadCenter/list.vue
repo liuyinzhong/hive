@@ -56,7 +56,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
  * 因此不需要额外的版本号兜底。
  */
 const refreshListDebounced = debounce(() => gridApi.query(), 300);
-messageBus.downloadTaskChanged.on((data: any) => {
+messageBus.downloadTaskChanged.on(() => {
   refreshListDebounced();
 });
 onBeforeUnmount(() => refreshListDebounced.cancel());

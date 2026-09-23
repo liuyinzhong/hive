@@ -71,7 +71,7 @@ function expandFormValues(
   };
 }
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<PayChannelApi.PayChannelFace>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (valid) {
@@ -109,7 +109,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = modalApi.getData<PayChannelApi.PayChannelFace>() || {};
+      const data = modalApi.getData() || {};
       formData.value = data;
       formApi.setValues(expandFormValues(data));
       modalApi.setState({

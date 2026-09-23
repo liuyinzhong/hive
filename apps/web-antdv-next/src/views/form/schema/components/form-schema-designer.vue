@@ -225,7 +225,7 @@ function withDesignerState(
       typeof formItemClass === 'function'
         ? () => `${formItemClass()} ${designerClass}`
         : `${formItemClass ?? ''} ${designerClass}`,
-  };
+  } as VbenFormSchema;
 }
 
 function selectCanvasField(event: MouseEvent) {

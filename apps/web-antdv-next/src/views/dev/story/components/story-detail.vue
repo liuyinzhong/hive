@@ -5,13 +5,12 @@ import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import {
-  confirm,
   prompt,
   useVbenModal,
   VbenButton,
   VbenButtonGroup,
 } from '@vben/common-ui';
-import { useTabs, useRefresh } from '@vben/hooks';
+import { useRefresh } from '@vben/hooks';
 import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
 import {
@@ -56,7 +55,6 @@ const props = defineProps({
   },
 });
 
-const { closeCurrentTab } = useTabs();
 const { refresh } = useRefresh();
 
 // 跳转路由

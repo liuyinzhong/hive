@@ -125,7 +125,9 @@ async function selectDefinition(item: StartableDefinition) {
     startFieldPermissions.value = parseStartFieldPermissions(
       item.definition.flowData,
     );
-    startFieldNames.value = loaded.schema.map((field) => field.fieldName);
+    startFieldNames.value = loaded.schema
+      .map((field) => field.fieldName)
+      .filter((fieldName): fieldName is string => !!fieldName);
     applicationFormApi.setState({
       schema: applyFieldPermissions(
         loaded.schema,

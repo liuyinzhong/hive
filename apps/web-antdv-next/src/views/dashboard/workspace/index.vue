@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import type { AnalysisOverviewItem } from '@vben/common-ui';
 
-import { onMounted, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 
 import { AnalysisOverview, WorkbenchHeader } from '@vben/common-ui';
 import {
@@ -15,9 +14,6 @@ import { preferences } from '@vben/preferences';
 import { useUserStore } from '@vben/stores';
 
 const userStore = useUserStore();
-
-// eslint-disable-next-line unused-imports/no-unused-vars
-const router = useRouter();
 
 const overviewItems: AnalysisOverviewItem[] = [
   {

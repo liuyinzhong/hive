@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useVbenModal } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
+import type { DevBugApi } from '#/api/dev/bug';
 import { nextBugApi } from '#/api/dev/bug';
 import CommonPhrase from '#/components/CommonPhrase/index.vue';
 import { getLocalDictList } from '#/dicts';
@@ -36,7 +37,7 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [Modal, modalApi] = useVbenModal<DevBugApi.DevBugFace>({
   title: '流转缺陷',
   onConfirm: async () => {
     await formApi.validateAndSubmit();
@@ -44,8 +45,9 @@ const [Modal, modalApi] = useVbenModal({
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
       const data = modalApi.getData();
+      if (!data) return;
       formData.value = data;
-      formApi.setValues(data);
+      formApi.setValues({ ...data });
 
       /* 设置当前步骤 */
       current.value = stepsItems.findIndex(

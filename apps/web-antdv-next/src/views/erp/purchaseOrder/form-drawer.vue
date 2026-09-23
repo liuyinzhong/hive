@@ -86,14 +86,15 @@ const [Form, formApi] = useVbenForm<PurchaseOrderFormValues>({
   wrapperClass: 'grid-cols-1 gap-x-4 md:grid-cols-2',
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<{ purchaseOrderId?: string }>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (valid) await formApi.validateAndSubmit();
   },
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<{ purchaseOrderId?: string }>();
+    const data = drawerApi.getData();
+    if (!data) return;
     purchaseOrderId.value = data.purchaseOrderId;
     await formApi.reset();
     if (!data.purchaseOrderId) {

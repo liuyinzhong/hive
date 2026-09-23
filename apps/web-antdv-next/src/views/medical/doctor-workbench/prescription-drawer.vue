@@ -70,11 +70,12 @@ const frequencyOptions = computed(() =>
 );
 const routeOptions = computed(() => getLocalDictList('MED_MEDICATION_ROUTE'));
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<DrawerData>({
   footer: false,
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<DrawerData>();
+    const data = drawerApi.getData();
+    if (!data) return;
     record.value = data.record;
     recordReadonly.value = data.readonly;
     prescriptionList.value = data.record.prescriptions.map((item) => ({

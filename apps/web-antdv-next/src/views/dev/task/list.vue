@@ -9,14 +9,13 @@ import type { DevTaskApi } from '#/api/dev';
 import { onMounted } from 'vue';
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
-import { Download, Plus } from '@vben/icons';
+import { Plus } from '@vben/icons';
 
 import { Button, message } from 'antdv-next';
 
 import { useVbenVxeGrid, VbenTableAction } from '#/adapter/vxe-table';
 import { getProjectsListApi } from '#/api/dev';
 import {
-  createTaskExportApi,
   deleteTaskApi,
   getTaskListApi,
   updateTaskFieldApi,

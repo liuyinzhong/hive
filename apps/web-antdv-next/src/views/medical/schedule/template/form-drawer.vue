@@ -73,7 +73,7 @@ const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<Partial<MedicalScheduleApi.ScheduleTemplate>>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
@@ -114,7 +114,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
     const data =
-      drawerApi.getData<Partial<MedicalScheduleApi.ScheduleTemplate>>() ?? {};
+      drawerApi.getData() ?? {};
     templateId.value = data.templateId;
     await formApi.reset();
     previousDefaultQuota.value = data.defaultSlotQuota ?? 1;

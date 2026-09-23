@@ -22,10 +22,11 @@ const practiceItems = computed(() =>
   useDoctorPracticeDescriptionItems(detail.value),
 );
 
-const [Drawer, drawerApi] = useVbenDrawer({
+const [Drawer, drawerApi] = useVbenDrawer<Pick<MedicalDoctorApi.Doctor, 'doctorId'>>({
   async onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = drawerApi.getData<Pick<MedicalDoctorApi.Doctor, 'doctorId'>>();
+    const data = drawerApi.getData();
+    if (!data) return;
     loading.value = true;
     try {
       detail.value = await getDoctorDetailApi(data.doctorId);

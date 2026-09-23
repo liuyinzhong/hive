@@ -174,7 +174,7 @@ export class SelectEditor implements IEditor {
    */
   validateValue?(
     newValue?: any,
-    oldValue?: any,
+    _oldValue?: any,
     position?: CellAddress,
     table?: any,
   ): boolean | ValidateEnum {
