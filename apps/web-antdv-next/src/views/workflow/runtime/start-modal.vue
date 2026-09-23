@@ -18,17 +18,13 @@ import {
   FORM_SCHEMA_WRAPPER_CLASS,
   loadVbenFormSchema,
 } from '#/utils/form-schema';
-import { getLocalDictText, getLocalDictColor } from '#/dicts';
+import { getLocalDictText } from '#/dicts';
 import {
   applyFieldPermissions,
   parseStartFieldPermissions,
   pickVariablesByPermission,
 } from './field-permission';
 import type { WorkflowFieldPermissions } from './field-permission';
-
-interface StartableDefinition {
-  definition: WorkflowDefinitionApi.WorkflowDefinition;
-}
 
 const emit = defineEmits<{ success: [] }>();
 
@@ -45,22 +41,23 @@ const [ApplicationForm, applicationFormApi] = useVbenForm({
   wrapperClass: FORM_SCHEMA_WRAPPER_CLASS,
 });
 
-const startableDefinitions = computed<StartableDefinition[]>(() =>
-  definitions.value
-    .filter((definition) => definition.definitionId && definition.formSchemaId)
-    .map((definition) => ({ definition })),
+const startableDefinitions = computed<WorkflowDefinitionApi.WorkflowDefinition[]>(
+  () =>
+    definitions.value.filter(
+      (definition) => definition.definitionId && definition.formSchemaId,
+    ),
 );
 
 const selectedDefinition = computed(() =>
   startableDefinitions.value.find(
-    (item) => item.definition.definitionId === selectedDefinitionId.value,
+    (definition) => definition.definitionId === selectedDefinitionId.value,
   ),
 );
 
 const [Modal, modalApi] = useVbenModal({
   async onConfirm() {
     const selected = selectedDefinition.value;
-    if (!selected?.definition.definitionId) {
+    if (!selected?.definitionId) {
       message.warning($t('flow.form.runtime.selectApplication'));
       return;
     }
@@ -78,7 +75,7 @@ const [Modal, modalApi] = useVbenModal({
     modalApi.lock();
     try {
       await startWorkflowInstanceApi({
-        definitionId: selected.definition.definitionId,
+        definitionId: selected.definitionId,
         variables,
       });
       message.success($t('flow.runtime.instance.startSuccess'));
@@ -113,17 +110,17 @@ async function loadDefinitions() {
 }
 
 /** 选择申请类型并按发起节点字段权限加载其绑定的 Vben 表单 Schema。 */
-async function selectDefinition(item: StartableDefinition) {
-  const formSchemaId = item.definition.formSchemaId;
+async function selectDefinition(definition: WorkflowDefinitionApi.WorkflowDefinition) {
+  const formSchemaId = definition.formSchemaId;
   if (!formSchemaId) return;
   loading.value = true;
-  selectedDefinitionId.value = item.definition.definitionId;
+  selectedDefinitionId.value = definition.definitionId;
   await nextTick();
   try {
     const loaded = await loadVbenFormSchema(formSchemaId);
     // 发起节点字段权限:隐藏字段不渲染;存量流程未配置时按全部可编辑处理
     startFieldPermissions.value = parseStartFieldPermissions(
-      item.definition.flowData,
+      definition.flowData,
     );
     startFieldNames.value = loaded.schema
       .map((field) => field.fieldName)
@@ -168,28 +165,28 @@ function backToApplications() {
         />
         <div v-else class="application-grid">
           <button
-            v-for="item in startableDefinitions"
-            :key="item.definition.definitionId"
+            v-for="definition in startableDefinitions"
+            :key="definition.definitionId"
             class="application-item"
             type="button"
-            @click="selectDefinition(item)"
+            @click="selectDefinition(definition)"
           >
             <span class="application-icon">
               <IconifyIcon class="size-5" icon="lucide:file-pen-line" />
             </span>
             <span class="application-content">
-              <strong>{{ item.definition.definitionName }}</strong>
+              <strong>{{ definition.definitionName }}</strong>
               <span>
                 {{
-                  item.definition.remark ||
+                  definition.remark ||
                   $t('flow.form.runtime.fillApplication')
                 }}
               </span>
             </span>
-            <Tag v-if="item.definition.category">
+            <Tag v-if="definition.category">
               {{
-                getLocalDictText('WORKFLOW_CATEGORY', item.definition.category)
-              }}:v{{ item.definition.version }}
+                getLocalDictText('WORKFLOW_CATEGORY', definition.category)
+              }}:v{{ definition.version }}
             </Tag>
             <IconifyIcon class="size-4" icon="lucide:chevron-right" />
           </button>
@@ -203,8 +200,8 @@ function backToApplications() {
             {{ $t('flow.form.runtime.changeApplication') }}
           </Button>
           <div>
-            <strong>{{ selectedDefinition.definition.definitionName }}</strong>
-            <span>{{ selectedDefinition.definition.remark }}</span>
+            <strong>{{ selectedDefinition.definitionName }}</strong>
+            <span>{{ selectedDefinition.remark }}</span>
           </div>
         </div>
         <ApplicationForm />
