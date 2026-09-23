@@ -298,6 +298,8 @@ const copyTypeOptions = [
   { label: $t('flow.designer.actor.specifiedUser'), value: 'user' },
   { label: $t('flow.designer.actor.specifiedRole'), value: 'role' },
   { label: $t('flow.designer.actor.participant'), value: 'participant' },
+  { label: $t('flow.designer.actor.initiator'), value: 'starter' },
+  { label: $t('flow.designer.actor.initiatorLeader'), value: 'leader' },
 ];
 const conditionLogicOptions = [
   { label: $t('flow.designer.condition.all'), value: 'and' },
@@ -351,6 +353,19 @@ const activeAssigneeOptions = computed(() =>
 const activeCopyOptions = computed(() =>
   formState.copyType === 'role' ? roleOptions.value : userOptions.value,
 );
+// 抄送是否需要设计期选择对象:审批参与人、流程发起人、发起人直属上级由运行期解析,免选人
+const copyTypeNeedsSelection = computed(() =>
+  formState.copyType === 'user' || formState.copyType === 'role',
+);
+// 免选人抄送类型的提示词条(user/role 不渲染该提示,仅为类型完备)
+const copyTypeHintKeys: Record<WorkflowCopyType, string> = {
+  leader: 'flow.designer.actor.leaderCopyHint',
+  participant: 'flow.designer.actor.participantHint',
+  role: 'flow.designer.actor.participantHint',
+  starter: 'flow.designer.actor.initiatorCopyHint',
+  user: 'flow.designer.actor.participantHint',
+};
+const copyTypeHintKey = computed(() => copyTypeHintKeys[formState.copyType]);
 const generatedConditionExpression = computed(() => buildConditionExpression());
 
 watch(
@@ -745,13 +760,12 @@ function submit() {
   }
 
   if (nodeType.value === 'copy') {
-    if (formState.copyType !== 'participant' && formState.copyIds.length === 0) {
+    if (copyTypeNeedsSelection.value && formState.copyIds.length === 0) {
       message.warning($t('flow.designer.message.selectCopy'));
       return;
     }
     values.copyType = formState.copyType;
-    const copyIds =
-      formState.copyType === 'participant' ? [] : [...formState.copyIds];
+    const copyIds = copyTypeNeedsSelection.value ? [...formState.copyIds] : [];
     values.copyIds = copyIds;
     values.copyNames = resolveSelectionNames(
       copyIds,
@@ -981,10 +995,7 @@ defineExpose({ submit });
           />
         </label>
 
-        <label
-          v-if="formState.copyType !== 'participant'"
-          class="field"
-        >
+        <label v-if="copyTypeNeedsSelection" class="field">
           <span>
             {{
               formState.copyType === 'role'
@@ -1009,7 +1020,7 @@ defineExpose({ submit });
         </label>
 
         <div v-else class="field-hint">
-          {{ $t('flow.designer.actor.participantHint') }}
+          {{ $t(copyTypeHintKey) }}
         </div>
       </template>
 

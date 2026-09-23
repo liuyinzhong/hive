@@ -6,7 +6,12 @@ export type WorkflowAssigneeType =
 export type WorkflowApprovalMode = 'all' | 'any';
 export type WorkflowBranchMode = 'firstMatch';
 export type WorkflowConditionLogic = 'and' | 'or';
-export type WorkflowCopyType = 'participant' | 'role' | 'user';
+export type WorkflowCopyType =
+  | 'leader'
+  | 'participant'
+  | 'role'
+  | 'starter'
+  | 'user';
 export type WorkflowNodeType =
   | 'approve'
   | 'condition'

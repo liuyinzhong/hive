@@ -56,7 +56,9 @@
       "initiator": "Initiator",
       "initiatorHint": "The initiator of this instance will approve this node at runtime.",
       "participant": "Approval Participants",
-      "participantHint": "Resolved at runtime to the initiator plus everyone who has approved any node of this instance."
+      "participantHint": "Resolved at runtime to the initiator plus everyone who has approved any node of this instance.",
+      "initiatorCopyHint": "The initiator of this instance will receive this copy at runtime.",
+      "leaderCopyHint": "The initiator's direct superior will receive this copy at runtime; if the superior is unset, this node copies to no one."
     },
     "automation": {
       "title": "Automation Actions",

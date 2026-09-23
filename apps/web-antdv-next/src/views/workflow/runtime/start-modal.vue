@@ -18,13 +18,13 @@ import {
   FORM_SCHEMA_WRAPPER_CLASS,
   loadVbenFormSchema,
 } from '#/utils/form-schema';
-
+import { getLocalDictText, getLocalDictColor } from '#/dicts';
 import {
   applyFieldPermissions,
   parseStartFieldPermissions,
   pickVariablesByPermission,
-  type WorkflowFieldPermissions,
 } from './field-permission';
+import type { WorkflowFieldPermissions } from './field-permission';
 
 interface StartableDefinition {
   definition: WorkflowDefinitionApi.WorkflowDefinition;
@@ -179,13 +179,17 @@ function backToApplications() {
             </span>
             <span class="application-content">
               <strong>{{ item.definition.definitionName }}</strong>
-              <span>{{
-                item.definition.remark ||
-                $t('flow.form.runtime.fillApplication')
-              }}</span>
+              <span>
+                {{
+                  item.definition.remark ||
+                  $t('flow.form.runtime.fillApplication')
+                }}
+              </span>
             </span>
             <Tag v-if="item.definition.category">
-              {{ item.definition.category }}
+              {{
+                getLocalDictText('WORKFLOW_CATEGORY', item.definition.category)
+              }}:v{{ item.definition.version }}
             </Tag>
             <IconifyIcon class="size-4" icon="lucide:chevron-right" />
           </button>
