@@ -16,6 +16,7 @@ import {
 } from '#/utils/form-schema';
 
 import FormSchemaDesigner from './components/form-schema-designer.vue';
+import { confirmWorkflowImpact, willRepublishWorkflows } from './workflow-impact';
 
 defineOptions({ name: 'FormSchemaDesignerPage' });
 
@@ -67,6 +68,19 @@ async function loadSchema() {
 async function saveSchema() {
   if (!record.value) return;
   compileVbenFormSchema(schema.value);
+  if (
+    willRepublishWorkflows(
+      {
+        layout: record.value.layout,
+        schema: record.value.schema,
+        status: record.value.status,
+      },
+      { layout: formLayout.value, schema: schema.value, status: record.value.status },
+    ) &&
+    !(await confirmWorkflowImpact(formSchemaId))
+  ) {
+    return;
+  }
   await updateFormSchemaApi(formSchemaId, {
     category: record.value.category,
     layout: formLayout.value,
@@ -75,6 +89,12 @@ async function saveSchema() {
     schemaName: record.value.schemaName,
     status: record.value.status,
   });
+  // 同步保存基线，避免二次保存时误判仍有结构变化。
+  record.value = {
+    ...record.value,
+    layout: formLayout.value,
+    schema: structuredClone(schema.value),
+  };
   message.success($t('form.messages.saveSuccess'));
 }
 </script>

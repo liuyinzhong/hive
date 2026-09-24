@@ -31,6 +31,13 @@ export namespace FormSchemaApi {
     schemaName: string;
     status?: string;
   }
+
+  export interface WorkflowRefItem {
+    definitionId: string;
+    definitionKey: string;
+    definitionName: string;
+    status: number;
+  }
 }
 
 export function getFormSchemaListApi(params: Recordable<unknown>) {
@@ -50,6 +57,12 @@ export function getAllFormSchemasApi(params?: Recordable<unknown>) {
 export function getFormSchemaDetailApi(formSchemaId: string) {
   return requestClient.get<FormSchemaApi.FormSchemaRecord>(
     `/form/schemas/${formSchemaId}`,
+  );
+}
+
+export function getFormSchemaWorkflowsApi(formSchemaId: string) {
+  return requestClient.get<FormSchemaApi.WorkflowRefItem[]>(
+    `/form/schemas/${formSchemaId}/workflows`,
   );
 }
 

@@ -59,7 +59,9 @@
     "delete": "删除",
     "apply": "应用",
     "back": "返回",
-    "save": "保存"
+    "save": "保存",
+    "confirmSave": "确认保存",
+    "cancel": "取消"
   },
   "designer": {
     "title": "表单设计器",
@@ -78,7 +80,14 @@
     "deleteSuccess": "删除成功",
     "deleteConfirm": "确定删除“{0}”吗？",
     "invalidJson": "JSON 格式不正确",
-    "invalidSchemaJson": "Schema JSON 缺少 component 或 fieldName"
+    "invalidSchemaJson": "Schema JSON 缺少 component 或 fieldName",
+    "workflowImpactTitle": "保存将影响关联流程",
+    "workflowImpactTip": "本次修改会导致 {0} 个关联流程退回草稿，需重新发布后才能发起："
+  },
+  "workflowStatus": {
+    "draft": "草稿",
+    "published": "已发布",
+    "disabled": "已停用"
   },
   "permission": {
     "schemaCreate": "新增",

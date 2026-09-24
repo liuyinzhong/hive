@@ -9,6 +9,7 @@ import { createFormSchemaApi, updateFormSchemaApi } from '#/api/form';
 import { $t } from '#/locales';
 
 import { useFormSchemaBaseForm } from './data';
+import { confirmWorkflowImpact, willRepublishWorkflows } from './workflow-impact';
 
 const emit = defineEmits<{ success: [] }>();
 
@@ -35,20 +36,27 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 async function onSubmit(values: Record<string, unknown>) {
+  const existing: any = modalApi.getData();
+  const formSchemaId = existing?.formSchemaId;
+  const payload: FormSchemaApi.FormSchemaPayload = {
+    category: String(values.category ?? '') || undefined,
+    layout: String(
+      values.layout ?? 'single',
+    ) as FormSchemaApi.FormSchemaPayload['layout'],
+    remark: String(values.remark ?? '') || undefined,
+    schema: existing?.schema ?? [],
+    schemaName: String(values.schemaName ?? ''),
+    status: String(values.status ?? '1'),
+  };
+  if (
+    formSchemaId &&
+    willRepublishWorkflows(existing, payload) &&
+    !(await confirmWorkflowImpact(formSchemaId))
+  ) {
+    return;
+  }
   modalApi.lock();
   try {
-    const existing: any = modalApi.getData();
-    const formSchemaId = existing?.formSchemaId;
-    const payload: FormSchemaApi.FormSchemaPayload = {
-      category: String(values.category ?? '') || undefined,
-      layout: String(
-        values.layout ?? 'single',
-      ) as FormSchemaApi.FormSchemaPayload['layout'],
-      remark: String(values.remark ?? '') || undefined,
-      schema: existing?.schema ?? [],
-      schemaName: String(values.schemaName ?? ''),
-      status: String(values.status ?? '1'),
-    };
     await (formSchemaId
       ? updateFormSchemaApi(formSchemaId, payload)
       : createFormSchemaApi(payload));

@@ -59,7 +59,9 @@
     "delete": "Delete",
     "apply": "Apply",
     "back": "Back",
-    "save": "Save"
+    "save": "Save",
+    "confirmSave": "Save Anyway",
+    "cancel": "Cancel"
   },
   "designer": {
     "title": "Form Designer",
@@ -78,7 +80,14 @@
     "deleteSuccess": "Deleted successfully",
     "deleteConfirm": "Delete “{0}”?",
     "invalidJson": "Invalid JSON",
-    "invalidSchemaJson": "Schema JSON requires component and fieldName"
+    "invalidSchemaJson": "Schema JSON requires component and fieldName",
+    "workflowImpactTitle": "Saving will impact linked workflows",
+    "workflowImpactTip": "This change will revert {0} linked workflow(s) to draft. Republish them before starting new instances:"
+  },
+  "workflowStatus": {
+    "draft": "Draft",
+    "published": "Published",
+    "disabled": "Disabled"
   },
   "permission": {
     "schemaCreate": "Create",

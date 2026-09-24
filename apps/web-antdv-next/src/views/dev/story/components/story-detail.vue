@@ -218,7 +218,7 @@ defineExpose({
 <template>
   <div v-spinning="loading">
     <div>
-      <Row>
+      <Row :gutter="24">
         <Col :xs="24" :sm="24" :md="24" :lg="24" :xl="16" :xxl="16">
           <TypographyParagraph>
             <TypographyTitle :level="4">
