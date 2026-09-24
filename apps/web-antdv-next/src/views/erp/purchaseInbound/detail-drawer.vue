@@ -4,12 +4,10 @@ import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ErpPurchaseInboundApi } from '#/api/erp';
 
 import { computed, nextTick, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
-import { useAccess } from '@vben/access';
 import { useVbenDrawer, VbenDescriptions } from '@vben/common-ui';
 
-import { Button, Flex, Spin } from 'antdv-next';
+import { Spin } from 'antdv-next';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getPurchaseInboundDetailApi } from '#/api/erp';
@@ -20,8 +18,6 @@ import { usePurchaseInboundDetailColumns } from './data';
 
 const detail = ref<ErpPurchaseInboundApi.PurchaseInbound>();
 const loading = ref(false);
-const router = useRouter();
-const { hasAccessByCodes } = useAccess();
 
 const basicItems = computed<DescriptionsItemType[]>(() => [
   {
@@ -92,14 +88,6 @@ const [Drawer, drawerApi] = useVbenDrawer<Pick<ErpPurchaseInboundApi.PurchaseInb
     }
   },
 });
-
-function openPrintPreview() {
-  if (!detail.value?.inboundId) return;
-  router.push({
-    path: '/print/preview',
-    query: { inboundId: detail.value.inboundId },
-  });
-}
 </script>
 
 <template>
@@ -110,15 +98,6 @@ function openPrintPreview() {
   >
     <Spin :spinning="loading">
       <template v-if="detail">
-        <Flex class="mb-3" justify="end">
-          <Button
-            v-if="hasAccessByCodes(['print:purchaseInbound:print'])"
-            type="primary"
-            @click="openPrintPreview"
-          >
-            {{ $t('print.actions.print') }}
-          </Button>
-        </Flex>
         <VbenDescriptions
           bordered
           :column="2"

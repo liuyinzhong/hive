@@ -737,12 +737,6 @@ importers:
       '@vueuse/core':
         specifier: 'catalog:'
         version: 14.4.0(vue@3.5.41(typescript@6.0.3))
-      '@worm-vue3-print/canvas':
-        specifier: 1.3.1
-        version: 1.3.1(vue@3.5.41(typescript@6.0.3))
-      '@worm-vue3-print/core':
-        specifier: 1.3.1
-        version: 1.3.1
       antdv-next:
         specifier: 'catalog:'
         version: 1.5.4(date-fns@4.4.0)(vue@3.5.41(typescript@6.0.3))
@@ -6074,14 +6068,6 @@ packages:
     peerDependencies:
       vue: 3.5.41
 
-  '@worm-vue3-print/canvas@1.3.1':
-    resolution: {integrity: sha512-VnJ0F6H+J9ysgZaO92jIuXu+Y+PjXFTPJrObB2Yb05q9Cz/opTnIluNHOBnPJnevxo09aT5laRyVPiabcYvsug==}
-    peerDependencies:
-      vue: 3.5.41
-
-  '@worm-vue3-print/core@1.3.1':
-    resolution: {integrity: sha512-hhpXtbwyGx3RN/YbD+74dSwUAuH7bOOEMuS9OmiSvhHir0BopxLoIaYDG5vF23MKor/lxHhuEnmnp5ksbUd0Kw==}
-
   '@xmldom/xmldom@0.8.15':
     resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
     engines: {node: '>=10.0.0'}
@@ -7250,9 +7236,6 @@ packages:
   domhandler@5.0.3:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
-
-  dompurify@3.4.15:
-    resolution: {integrity: sha512-EUBjM+B+lkDE41iE82DDSCfkoPGfXx8IxFxPMjNzm/Uk4xDet77rTN9wqlxlVg71kK7XGuUMv6wUxJUwwv+Xyw==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -8541,9 +8524,6 @@ packages:
   js-yaml@4.3.2:
     resolution: {integrity: sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==}
     hasBin: true
-
-  jsbarcode@3.12.3:
-    resolution: {integrity: sha512-CuHU9hC6dPsHF5oVFMo8NW76uQVjH4L22CsP4hW+dNnGywJHC/B0ThA1CTDVLnxKLrrpYdicBLnd2xsgTfRnvg==}
 
   jsdoc-type-pratt-parser@7.2.0:
     resolution: {integrity: sha512-dh140MMgjyg3JhJZY/+iEzW+NO5xR2gpbDFKHqotCmexElVntw7GjWjt511+C/Ef02RU5TKYrJo/Xlzk+OLaTw==}
@@ -15915,20 +15895,6 @@ snapshots:
       vue: 3.5.41(typescript@6.0.3)
       xe-utils: 4.1.1
 
-  '@worm-vue3-print/canvas@1.3.1(vue@3.5.41(typescript@6.0.3))':
-    dependencies:
-      '@worm-vue3-print/core': 1.3.1
-      dompurify: 3.4.15
-      jsbarcode: 3.12.3
-      qrcode: 1.5.4
-      sortablejs: 1.15.7
-      vue: 3.5.41(typescript@6.0.3)
-
-  '@worm-vue3-print/core@1.3.1':
-    dependencies:
-      jsbarcode: 3.12.3
-      qrcode: 1.5.4
-
   '@xmldom/xmldom@0.8.15': {}
 
   '@yuku-codegen/binding-android-arm64@0.8.7':
@@ -17158,10 +17124,6 @@ snapshots:
   domhandler@5.0.3:
     dependencies:
       domelementtype: 2.3.0
-
-  dompurify@3.4.15:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
 
   domutils@3.2.2:
     dependencies:
@@ -18666,8 +18628,6 @@ snapshots:
   js-yaml@4.3.2:
     dependencies:
       argparse: 2.0.1
-
-  jsbarcode@3.12.3: {}
 
   jsdoc-type-pratt-parser@7.2.0: {}
 

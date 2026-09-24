@@ -6,8 +6,6 @@ import { preferences } from '@vben/preferences';
 import { initStores } from '@vben/stores';
 import '@vben/styles';
 import '@vben/styles/antdv-next';
-// worm-vue3-print 设计器内部控件基于原生样式，需全局引入一次
-import '@worm-vue3-print/canvas/style.css';
 
 import { useTitle } from '@vueuse/core';
 

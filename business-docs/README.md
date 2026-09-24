@@ -19,7 +19,6 @@
 | 产品档案 | SPU、RP、MP、SKU 和价格 | [product](./product/README.md) |
 | 医疗 | 科室、医生、患者、诊断、挂号费、排班、挂号候诊、接诊和处方审核 | [medical](./medical/README.md) |
 | ERP | 仓库、采购、入库、库存、追溯码和其它出库 | [erp](./erp/README.md) |
-| 打印 | 模板管理、设计器、预览和正式打印 | [print](./print/README.md) |
 | 开发管理 | 项目、版本、需求、任务、缺陷、统计和仪表盘 | [dev](./dev/README.md) |
 | 表单 | Schema 列表、设计器和预览 | [form](./form/README.md) |
 | 工作流 | 定义设计、发起、实例、待办和抄送 | [workflow](./workflow/README.md) |
@@ -33,7 +32,6 @@
 | src/views/product、src/api/product | [产品档案](./product/README.md) |
 | src/views/medical、src/api/medical | [医疗](./medical/README.md) |
 | src/views/erp、src/api/erp | [ERP](./erp/README.md) |
-| src/views/print、src/api/print | [打印](./print/README.md) |
 | src/views/dev、src/api/dev、src/api/statistics/dev.ts | [开发管理](./dev/README.md) |
 | src/views/dashboard | [开发统计 UI](./dev/statistics-ui.md)；analytics 部分接入开发统计，workspace 和部分图表仍是演示数据 |
 | src/views/form、src/api/form | [表单](./form/README.md) |
