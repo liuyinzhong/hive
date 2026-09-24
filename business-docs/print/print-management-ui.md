@@ -11,8 +11,8 @@
 
 - 设计器画布使用 `@worm-vue3-print/canvas` 的 `PrintDesigner` 组件（npm 固定版本引入），宿主页只负责模板元信息、保存/发布流程与权限，不实现画布逻辑。
 - 设计器左侧字段树来自后端字段注册表：页面通过映射函数把 `PrintFieldGroup[]` 转为 worm 的 `PrintBusinessField[]` 注入 `fields`，明细集合根（`items`，list 类型）作为表格数据源；不得手工输入任意字段路径。
-- 画布「保存」与页面「保存草稿」都提交完整 TemplateData JSON 和 rowVersion；模板名称、状态等元信息在宿主页维护，不在版式 JSON 内。
-- 画布「加载默认布局」按钮由 `load-default-template` 回调注入，返回 `createDefaultPrintTemplate()` 生成的默认版式。
+- 画布「保存」与页面「保存草稿」都提交完整版式 JSON 和 rowVersion：单页为裸 TemplateData，≥2 页为多页面 wrapper（`{ version, pages }`）；模板名称、状态等元信息在宿主页维护，不在版式 JSON 内。
+- 1.3.0 起设计器移除了内置「加载默认布局」按钮与 `load-default-template` prop，该入口改由宿主工具栏提供（受 `print:template:update` 权限控制）：把 `createDefaultPrintTemplate()` 的版式赋给 `initial-template`，设计器按引用变化重载画布并记一次历史，可用撤销回退。
 - 「预览」按钮打开免保存预览弹层：`getTemplateJson()` 取当前画布 JSON，配合选择的真实采购入库单数据（`getPurchaseInboundPrintDataApi`）交给 `PrintHtmlPreview` 渲染，打印调用其 `print()` 方法。
 - 并发冲突时提示重新加载，不能用旧 rowVersion 强行覆盖。
 - 发布前先保存需要发布的草稿，再执行独立发布动作；发布失败仍保留草稿供修正。

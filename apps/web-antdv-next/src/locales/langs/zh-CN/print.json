@@ -17,6 +17,7 @@
     "create": "新建模板",
     "delete": "删除",
     "design": "设计",
+    "loadDefault": "加载默认布局",
     "print": "打印",
     "preview": "真实预览",
     "publish": "发布",

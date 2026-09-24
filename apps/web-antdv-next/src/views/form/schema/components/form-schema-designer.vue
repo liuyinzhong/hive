@@ -53,6 +53,7 @@ const emit = defineEmits<{
 }>();
 
 const selectedFieldName = ref('');
+const fieldNameText = ref('');
 const componentPropsText = ref('{}');
 const dependenciesText = ref('');
 const advancedText = ref('{}');
@@ -115,7 +116,13 @@ const formItemSpan = computed(() => {
   return matched?.[1] ? Number(matched[1]) : 1;
 });
 
+// 设计态只读：输入类组件走原生 readonly，其余组件（Select/日期/开关等无 readonly 概念）
+// 由 controlClass 的 pointer-events-none 挡住交互，外观保持正常；预览表单是独立实例不受影响。
 const [DesignerForm, designerFormApi] = useVbenForm({
+  commonConfig: {
+    componentProps: { readonly: true },
+    controlClass: 'pointer-events-none',
+  },
   schema: [],
   showDefaultActions: false,
   wrapperClass: getDesignerWrapperClass(props.layout),
@@ -133,7 +140,10 @@ watch(
         wrapperClass: getDesignerWrapperClass(layout),
       });
     } catch {
-      designerFormApi.setState({ schema: [] });
+      // 编译失败时保留上一次有效 schema，避免编辑中间态（如字段名暂不合法）清空画布。
+      designerFormApi.setState({
+        wrapperClass: getDesignerWrapperClass(layout),
+      });
     }
   },
   { deep: true, immediate: true },
@@ -142,6 +152,10 @@ watch(
 watch(
   selectedField,
   (field) => {
+    // 草稿值与模型 trim 后一致时（如输入尾部空格）不回写，避免打断正在输入的内容。
+    if (field?.fieldName !== fieldNameText.value.trim()) {
+      fieldNameText.value = field?.fieldName ?? '';
+    }
     componentPropsText.value = JSON.stringify(
       field?.componentProps ?? {},
       null,
@@ -248,6 +262,7 @@ function insertField(component: string, targetIndex = props.modelValue.length) {
   const field: PersistentFormSchema = {
     component,
     componentProps: { ...meta.defaultProps },
+    controlClass: 'w-full',
     defaultValue: meta.defaultValue,
     fieldName,
     formItemClass: 'col-span-1 items-baseline',
@@ -269,12 +284,37 @@ function nextFieldName(component: string) {
 
 function updateSelected(values: Partial<PersistentFormSchema>) {
   if (selectedIndex.value < 0 || !selectedField.value) return;
+  const nextFieldName = values.fieldName;
+  if (
+    typeof nextFieldName === 'string' &&
+    nextFieldName !== selectedField.value.fieldName &&
+    props.modelValue.some(
+      (item, index) =>
+        index !== selectedIndex.value && item.fieldName === nextFieldName,
+    )
+  ) {
+    message.warning($t('form.messages.duplicateFieldName'));
+    return;
+  }
   const next = [...props.modelValue];
   const previousName = selectedField.value.fieldName;
   next[selectedIndex.value] = { ...selectedField.value, ...values };
   emit('update:modelValue', next);
   if (values.fieldName && values.fieldName !== previousName) {
     selectedFieldName.value = values.fieldName;
+  }
+}
+
+function updateFieldName(value: string) {
+  fieldNameText.value = value;
+  const trimmed = value.trim();
+  // 空值不落模型：字段名清空时保留模型与画布现状，失焦时回填旧值。
+  if (trimmed) updateSelected({ fieldName: trimmed });
+}
+
+function restoreFieldName() {
+  if (!fieldNameText.value.trim()) {
+    fieldNameText.value = selectedField.value?.fieldName ?? '';
   }
 }
 
@@ -393,15 +433,31 @@ function applyJson(
 }
 
 function applyAdvancedJson() {
+  let parsed: PersistentFormSchema;
   try {
-    const parsed = JSON.parse(advancedText.value) as PersistentFormSchema;
-    if (!parsed.fieldName || !parsed.component) {
-      throw new Error('Schema requires fieldName and component');
-    }
-    updateSelected(parsed);
+    parsed = JSON.parse(advancedText.value) as PersistentFormSchema;
   } catch {
-    message.error($t('form.messages.invalidSchemaJson'));
+    message.error($t('form.messages.invalidJson'));
+    return;
   }
+  if (!parsed.fieldName || !parsed.component) {
+    message.error($t('form.messages.invalidSchemaJson'));
+    return;
+  }
+  // 应用前对替换后的整份 schema 编译校验，失败时不覆盖当前有效设计。
+  const candidate = [...props.modelValue];
+  candidate[selectedIndex.value] = { ...selectedField.value, ...parsed };
+  try {
+    compileVbenFormSchema(candidate);
+  } catch (error) {
+    message.error(
+      error instanceof Error
+        ? error.message
+        : $t('form.messages.invalidSchemaJson'),
+    );
+    return;
+  }
+  updateSelected(parsed);
 }
 
 function applyDependenciesJson() {
@@ -494,8 +550,9 @@ function applyDependenciesJson() {
                     $t('form.fields.fieldName')
                   }}</TypographyText>
                   <Input
-                    :value="selectedField.fieldName"
-                    @update:value="updateSelected({ fieldName: $event })"
+                    :value="fieldNameText"
+                    @blur="restoreFieldName"
+                    @update:value="updateFieldName"
                   />
                 </Flex>
                 <Flex :gap="6" component="label" vertical>

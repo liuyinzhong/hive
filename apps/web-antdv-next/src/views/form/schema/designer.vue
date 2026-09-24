@@ -90,10 +90,13 @@ async function saveSchema() {
     status: record.value.status,
   });
   // 同步保存基线，避免二次保存时误判仍有结构变化。
+  // 这里用 JSON 往返而不是 structuredClone：schema.value 是 Vue 响应式代理，
+  // V8 的 structuredClone 拒绝克隆 Proxy（DataCloneError），且 JSON 往返结果
+  // 与接口落库后再读回的数据完全一致，基线比对才不会失真。
   record.value = {
     ...record.value,
     layout: formLayout.value,
-    schema: structuredClone(schema.value),
+    schema: JSON.parse(JSON.stringify(schema.value)) as PersistentFormSchema[],
   };
   message.success($t('form.messages.saveSuccess'));
 }

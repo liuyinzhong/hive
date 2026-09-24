@@ -5,8 +5,8 @@ import type { ErpPurchaseInboundApi } from '#/api/erp';
 import type {
   PrintDocumentData,
   PrintTemplateDetail,
+  PrintTemplateLayout,
   PrintTemplateMetadata,
-  TemplateData,
 } from '#/api/print';
 
 import { computed, onMounted, ref, watch } from 'vue';
@@ -51,7 +51,7 @@ const previewRef = ref<InstanceType<typeof PrintHtmlPreview>>();
 
 // 免保存预览：画布当前 JSON + 真实单据数据
 const previewVisible = ref(false);
-const previewTemplate = ref<null | TemplateData>(null);
+const previewTemplate = ref<null | PrintTemplateLayout>(null);
 const previewData = ref<PrintDocumentData>();
 const previewInboundId = ref('');
 const previewInboundOptions = ref<Array<{ label: string; value: string }>>([]);
@@ -95,7 +95,7 @@ async function loadDesigner() {
   }
 }
 
-async function saveDraft(showMessage = true, json?: string) {
+async function saveDraft(showMessage = true, json?: string | PrintTemplateLayout) {
   if (!template.value || !hasAccessByCodes(['print:template:update'])) {
     message.warning($t('print.messages.noUpdatePermission'));
     return false;
@@ -136,13 +136,18 @@ async function publishDraft() {
   }
 }
 
-function toRawTemplate(json: string | TemplateData): TemplateData {
-  return typeof json === 'string' ? (JSON.parse(json) as TemplateData) : json;
+function toRawTemplate(json: string | PrintTemplateLayout): PrintTemplateLayout {
+  return typeof json === 'string' ? (JSON.parse(json) as PrintTemplateLayout) : json;
 }
 
-/** worm 工具栏「加载默认布局」回调 */
+/**
+ * 宿主侧「加载默认布局」入口：1.3.0 起设计器移除了内置按钮与 load-default-template prop，
+ * 改由宿主把新的 TemplateData 赋给 initial-template——设计器按引用变化重载画布，
+ * 并记一次历史，可用撤销回退。
+ */
 function loadDefaultTemplate() {
-  return createDefaultPrintTemplate();
+  if (!template.value) return;
+  template.value.draftLayout = createDefaultPrintTemplate();
 }
 
 function printPreview() {
@@ -208,6 +213,12 @@ async function loadPreviewData() {
               : $t('print.template.statusDraft')
           }}
         </Tag>
+        <Button
+          v-if="hasAccessByCodes(['print:template:update'])"
+          @click="loadDefaultTemplate"
+        >
+          {{ $t('print.actions.loadDefault') }}
+        </Button>
         <Button @click="router.back()">{{ $t('print.actions.back') }}</Button>
         <Button
           :disabled="!hasAccessByCodes(['print:template:update'])"
@@ -234,9 +245,8 @@ async function loadPreviewData() {
           :fields="businessFields"
           :initial-template="template.draftLayout"
           :is-edit="true"
-          :load-default-template="loadDefaultTemplate"
           @preview="openPreview"
-          @save="(json: string) => saveDraft(true, json)"
+          @save="(json: string | PrintTemplateLayout) => saveDraft(true, json)"
         />
 
         <Teleport to="body">

@@ -81,6 +81,7 @@
     "deleteConfirm": "Delete “{0}”?",
     "invalidJson": "Invalid JSON",
     "invalidSchemaJson": "Schema JSON requires component and fieldName",
+    "duplicateFieldName": "Field name already exists",
     "workflowImpactTitle": "Saving will impact linked workflows",
     "workflowImpactTip": "This change will revert {0} linked workflow(s) to draft. Republish them before starting new instances:"
   },

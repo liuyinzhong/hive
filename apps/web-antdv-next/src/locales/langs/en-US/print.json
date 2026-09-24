@@ -17,6 +17,7 @@
     "create": "New Template",
     "delete": "Delete",
     "design": "Design",
+    "loadDefault": "Load Default Layout",
     "print": "Print",
     "preview": "Live Preview",
     "publish": "Publish",

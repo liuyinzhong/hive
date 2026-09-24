@@ -81,6 +81,7 @@
     "deleteConfirm": "确定删除“{0}”吗？",
     "invalidJson": "JSON 格式不正确",
     "invalidSchemaJson": "Schema JSON 缺少 component 或 fieldName",
+    "duplicateFieldName": "字段标识已存在",
     "workflowImpactTitle": "保存将影响关联流程",
     "workflowImpactTip": "本次修改会导致 {0} 个关联流程退回草稿，需重新发布后才能发起："
   },

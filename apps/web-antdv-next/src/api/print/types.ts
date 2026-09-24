@@ -1,10 +1,17 @@
-import type { TemplateData } from '@worm-vue3-print/canvas';
+import type {
+  MultiPageTemplateData,
+  TemplateData,
+} from '@worm-vue3-print/canvas';
 
 /**
  * 打印模板版式协议：直接复用 worm-vue3-print 的 TemplateData，
  * 后端只做边界校验并原样存储（draft_layout/published_layout longtext）。
+ * 1.3.0 起设计器支持多页面模板：单页输出裸 TemplateData，≥2 页输出 wrapper。
  */
-export type { TemplateData };
+export type { MultiPageTemplateData, TemplateData };
+
+/** 版式载体：单页为裸 TemplateData，多页为 { version, pages } wrapper */
+export type PrintTemplateLayout = MultiPageTemplateData | TemplateData;
 
 export type PrintDocumentType = 'PURCHASE_INBOUND';
 
@@ -23,8 +30,8 @@ export interface PrintTemplateListItem {
 }
 
 export interface PrintTemplateDetail extends PrintTemplateListItem {
-  draftLayout: TemplateData;
-  publishedLayout: TemplateData | null;
+  draftLayout: PrintTemplateLayout;
+  publishedLayout: PrintTemplateLayout | null;
 }
 
 export interface PrintFieldDefinition {
@@ -62,12 +69,12 @@ export interface PrintDocumentBundle {
 
 export interface CreatePrintTemplateRequest {
   documentType: PrintDocumentType;
-  draftLayout: TemplateData;
+  draftLayout: PrintTemplateLayout;
   templateName: string;
 }
 
 export interface UpdatePrintTemplateRequest {
-  draftLayout: TemplateData;
+  draftLayout: PrintTemplateLayout;
   rowVersion: number;
   templateName: string;
 }
