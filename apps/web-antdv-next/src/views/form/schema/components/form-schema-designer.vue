@@ -428,7 +428,7 @@ function applyDependenciesJson() {
           >
             <div
               :ref="(element) => setPaletteContainer(group.key, element)"
-              class="grid gap-2"
+              class="grid gap-2 grid-cols-2"
             >
               <Button
                 v-for="item in group.items"
@@ -437,7 +437,6 @@ function applyDependenciesJson() {
                 class="cursor-grab active:cursor-grabbing"
                 :data-component="item.component"
               >
-                <IconifyIcon icon="lucide:grip-vertical" />
                 {{ item.title }}
               </Button>
             </div>
